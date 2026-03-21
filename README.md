@@ -32,7 +32,26 @@ app.get('/', (req, res) => {
 2. deben crear un archivo html en la carpeta views, y llamarlo en app.js
 
 
-//Tienen libertad de diseñar siguiemto la idea, pueden agregar coasas en home, tarjetas etc.  Pero obvio sin afectar la posision y propiedades de los menos
+//Tienen libertad de diseñar siguiemto la idea, pueden agregar coasas en home, tarjetas etc.  Pero obvio sin afectar la posision y propiedades de los menus
 
 //falta los iconos de la barra de navegacion
 //falta mas estilo en la barra de navegacion
+
+
+//  PARA LOS ICONOS
+
+Pagina: https://fonts.google.com/icons?icon.size=24&icon.color=%23e3e3e3
+
+en el html deben poner: <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+para obtener la libreria.
+
+para usar el icono solo deben ir a la pagina, buscar el icono, copiar el codigo que les da y pegarlo en el html, por ejemplo:
+
+<span class="material-symbols-outlined">
+    home
+</span>
+
+//incluso lo pueden trabajar directamente en css 
+
+que es lo mas importatnte el class="material-symbols-outlined" y el nombre del icono que en este caso es home. y ustedes lo trabajan a su manera, para que se vea bien en pc y movil deben usar las media queries que estan en el css home.
