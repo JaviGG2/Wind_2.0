@@ -16,8 +16,8 @@ clases)
 
 como ya les dije, el home.html tiene dos estilos css
 
-<link rel="stylesheet" href="/css/home.css">
-<link rel="stylesheet" href="/css/menu.css">
+<!--<link rel="stylesheet" href="/css/home.css">
+<link rel="stylesheet" href="/css/menu.css">-->
 
 El primero es el estilo de la base, y el segundo es el estilo del menu. 
 
@@ -48,9 +48,9 @@ para obtener la libreria.
 
 para usar el icono solo deben ir a la pagina, buscar el icono, copiar el codigo que les da y pegarlo en el html, por ejemplo:
 
-<span class="material-symbols-outlined">
-    homes
-</span>
+<!--<span class="material-symbols-outlined">
+    home
+</span>-->
 
 //incluso lo pueden trabajar directamente en css 
 
