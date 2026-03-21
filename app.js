@@ -9,7 +9,7 @@ app.use(express.static('public'));
 
 // 2. Ruta principal para mostrar tu HTML
 app.get('/', (req, res) => {
-    // res.sendFile necesita la ruta absoluta del archivo
+
     res.sendFile(path.join(__dirname, 'views', 'home.html'));
 });
 
