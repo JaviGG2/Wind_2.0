@@ -49,7 +49,7 @@ para obtener la libreria.
 para usar el icono solo deben ir a la pagina, buscar el icono, copiar el codigo que les da y pegarlo en el html, por ejemplo:
 
 <span class="material-symbols-outlined">
-    home
+    homes
 </span>
 
 //incluso lo pueden trabajar directamente en css 
