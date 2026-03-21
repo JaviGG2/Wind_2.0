@@ -32,7 +32,7 @@ app.get('/', (req, res) => {
 2. deben crear un archivo html en la carpeta views, y llamarlo en app.js
 
 
-//Tienen libertad de diseñar siguiemto la idea, pueden agregar coasas en home, tarjetas etc.  Pero obvio sin afectar la posision y propiedades de los menus
+//Tienen libertad de diseñar siguiemto la idea, pueden agregar coasas en home, tarjetas etc.  Pero obvio sin afectar la posision y propiedades de los menos
 
 //falta los iconos de la barra de navegacion
 //falta mas estilo en la barra de navegacion
