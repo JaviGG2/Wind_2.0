@@ -55,3 +55,5 @@ para usar el icono solo deben ir a la pagina, buscar el icono, copiar el codigo 
 //incluso lo pueden trabajar directamente en css 
 
 que es lo mas importatnte el class="material-symbols-outlined" y el nombre del icono que en este caso es home. y ustedes lo trabajan a su manera, para que se vea bien en pc y movil deben usar las media queries que estan en el css home.
+
+
