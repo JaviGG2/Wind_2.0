@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turismo en Coro y La Vela</title>
+    <link rel="stylesheet" href="/css/menu.css">
+    
+    <!-- Leaflet CSS para el mapa -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <style>
+        body {
+            background-color: #fcf9f2;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-bottom: 20px;
+        }
+        .map-container {
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        h1 {
+            text-align: center;
+            color: #8E3024;
+            margin-bottom: 5px;
+            margin-top: 60px; /* Espacio para que el menú no lo tape */
+            font-size: 28px;
+        }
+        p.description {
+            text-align: center;
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 16px;
+            padding: 0 10px;
+        }
+        
+        /* Contenedor de leyendas de colores */
+        .legend-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            background: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        .color-box {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+        
+        /* Contenedor del Mapa */
+        #map {
+            height: 60vh;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border: 3px solid #e2d1b3;
+            z-index: 1;
+        }
+        
+        /* Estilos del Popup en el Mapa */
+        .leaflet-popup-content-wrapper {
+            border-radius: 12px;
+            background: #fffdfa;
+            width: 260px; /* Un poco más ancho para albergar los textos de transporte */
+        }
+        .leaflet-popup-content b {
+            color: #333;
+            font-size: 16px;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        /* Caja de información de transporte dentro del popup */
+        .transport-info {
+            background: #fdf5e6;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #555;
+            border-left: 4px solid #d4b581;
+        }
+        .transport-info strong {
+            display: block;
+            color: #8E3024;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .custom-pin {
+            filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3));
+        }
+    </style>
+</head>
+
+<body>
+    <div class="map-container">
+        <h1>Explora Coro, Médanos y La Vela</h1>
+        <p class="description">Descubre los sitios coloniales, las playas históricas de La Vela y las imponentes dunas de arena en un solo mapa interactivo.</p>
+        
+        <!-- Leyenda de colores -->
+        <div class="legend-container">
+            <div class="legend-item">
+                <div class="color-box" style="background-color: #8E3024;"></div>
+                Casco Histórico
+            </div>
+            <div class="legend-item">
+                <div class="color-box" style="background-color: #F39C12;"></div>
+                Médanos de Coro
+            </div>
+            <div class="legend-item">
+                <div class="color-box" style="background-color: #2980B9;"></div>
+                La Vela de Coro
+            </div>
+        </div>
+
+        <!-- Mapa -->
+        <div id="map"></div>
+    </div>
+
+    <!-- Scripts de Leaflet y Menu -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="/js/menu.js"></script>
+
+    <script>
+        // Inicializar el mapa centrado de forma general entre Coro y La Vela
+        var map = L.map('map').setView([11.4300, -69.6200], 12);
+
+        // Capa de teselas (diseño limpio)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap &copy; CARTO'
+        }).addTo(map);
+
+        // -- INFORMACIÓN DE LAS 3 RUTAS PRINCIPALES --
+        var routes = [
+            {
+                id: "colonial",
+                name: "Ruta Casco Histórico",
+                color: "#8E3024", // Rojo colonial ladrillo
+                transport: "🚶 <b>Recomendación:</b> Lo ideal es caminar este circuito.<br>🚌 <b>Busetas:</b> Las líneas que dicen 'Centro' y 'Pantano' te dejan a pocas cuadras.<br>🚕 <b>Taxis:</b> Disponibles desde cualquier punto de la ciudad hacia la zona colonial.",
+                sites: [
+                    { name: "Catedral Basílica de Santa Ana", coords: [11.4113, -69.6781], info: "Primera diócesis de Venezuela. Joya colonial ineludible." },
+                    { name: "Cruz de San Clemente", coords: [11.4116, -69.6786], info: "Marcador de la fundación de la ciudad (1527)." },
+                    { name: "Casa de las Ventanas de Hierro", coords: [11.4114, -69.6792], info: "Con hermosos acabados traídos desde Europa." },
+                    { name: "Balcón de los Arcaya", coords: [11.4111, -69.6793], info: "Un icono obligatorio para tus fotos de arquitectura." }
+                ]
+            },
+            {
+                id: "medanos",
+                name: "Ruta Médanos de Coro",
+                color: "#F39C12", // Amarillo arena (Dunas)
+                transport: "🚘 <b>Auto:</b> Puedes llegar por cuenta propia y estacionar por la autopista Coro-Punto Fijo.<br>🚌 <b>Autobuses:</b> TransFalcón (Línea Punto Fijo) o busetas 'La Retama' que te dejan exactamente en la entrada.<br>🚕 <b>Taxis:</b> Muy comunes desde el centro de la ciudad al monumento.",
+                sites: [
+                    { name: "Monumento a la Madre", coords: [11.4285, -69.6602], info: "Punto de referencia popular cerca de la entrada vial de los médanos." },
+                    { name: "Entrada Médanos (Redoma)", coords: [11.4241, -69.6649], info: "Acceso oficial peatonal y principal área de recreación de senderismo." },
+                    { name: "Dunas Centrales", coords: [11.4423, -69.6682], info: "Zonas de mayor altitud para deslizarte por la arena y tomar excelentes atardeceres." }
+                ]
+            },
+            {
+                id: "lavela",
+                name: "Ruta La Vela de Coro",
+                color: "#2980B9", // Azul costero
+                transport: "🚌 <b>Busetas interurbanas:</b> Salen continuamente desde el Terminal de Coro hacia La Vela. El pasaje es accesible y tarda 20 min.<br>🚕 <b>Terminal a Terminal:</b> Carritos por puesto directos al casco central del puerto.",
+                sites: [
+                    { name: "Paseo Generalísimo Francisco de Miranda", coords: [11.4589, -69.5683], info: "Plaza conmemorativa donde se izó por primera vez el tricolor nacional en 1806." },
+                    { name: "Casco Histórico La Vela", coords: [11.4556, -69.5694], info: "Casas coloridas y calles empedradas de estilo antillano (Patrimonio de la Humanidad)." },
+                    { name: "Bulevar y Puerto Comercial", coords: [11.4600, -69.5660], info: "Embarcaderos históricos y zona de contacto comercial comercial con Aruba y Curazao." }
+                ]
+            }
+        ];
+
+        // Función para inyectar SVG y crear un marcador de color personalizado
+        function createIcon(colorHex) {
+            var svgTemplate = `
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${colorHex}" width="34px" height="46px">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+            `;
+            return L.divIcon({
+                className: "custom-pin",
+                html: svgTemplate,
+                iconSize: [34, 46],
+                iconAnchor: [17, 46],
+                popupAnchor: [0, -42]
+            });
+        }
+
+        var globalCoords = [];
+
+        // Generar rutas y marcadores del mapa iterando sobre el JSON creado
+        routes.forEach(function(route) {
+            var localCoords = [];
+            var customMarkerIcon = createIcon(route.color);
+
+            route.sites.forEach(function(site) {
+                // Crear el punto (marcador)
+                var marker = L.marker(site.coords, {icon: customMarkerIcon}).addTo(map);
+                
+                // Ventana emergente (Popup)
+                var htmlPopup = `
+                    <div style="text-align:center;">
+                        <span style="display:inline-block; width:12px; height:12px; border-radius:50%; background-color:${route.color}; margin-right:5px;"></span>
+                        <b style="display:inline-block;">${route.name}</b>
+                    </div>
+                    <hr style="margin: 8px 0; border: 0; border-top: 1px solid #ddd;">
+                    <b>${site.name}</b>
+                    <span style='font-size: 14px; color: #666; display:block; margin-bottom: 5px;'>${site.info}</span>
+                    <div class='transport-info'>
+                        <strong>Cómo llegar / Transporte:</strong>
+                        ${route.transport}
+                    </div>
+                `;
+                
+                marker.bindPopup(htmlPopup);
+                
+                localCoords.push(site.coords);
+                globalCoords.push(site.coords);
+            });
+
+            // Trazar línea de ruta conectando los puntos entre sí del arreglo
+            L.polyline(localCoords, {
+                color: route.color,
+                weight: 5,
+                opacity: 0.8,
+                dashArray: '5, 10', // Líneas segmentadas indicando 'ruta'
+                lineJoin: 'round'
+            }).addTo(map);
+        });
+
+        // Automatizar el plano del Mapa para mostrar todas las rutas (Coro Centro, Médanos y La Vela)
+        var boundsGroup = new L.featureGroup(globalCoords.map(coord => L.marker(coord)));
+        map.fitBounds(boundsGroup.getBounds(), { padding: [50, 50] });
+
+    </script>
+</body>
+
+</html>

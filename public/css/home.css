@@ -1,61 +1,30 @@
-/* Version Movil ---- Anyuil */
+/* Base styles for home.html can go here */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f5f5f5;
+    background: #fde7d2;
+    color: rgb(0, 0, 0);
+}
+
 @media (max-width: 768px) {
     .app-container {
         display: block;
     }
 
-    .barra-navegacion {
-        position: fixed;
-        bottom: 15px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80%;
-        padding: 18px;
-        border-radius: 50px;
-        justify-content: space-around;
-        flex-direction: row;
-    }
-
     .contenido-principal {
         padding: 20px;
         padding-bottom: 100px;
-
     }
 }
 
-/* Version PC ---- Armando*/
+
 @media (min-width: 769px) {
     .app-container {
         display: flex;
         width: 100%;
         min-height: 100vh;
-    }
-
-    .barra-navegacion {
-        flex-direction: column;
-        width: 250px;
-        height: calc(100vh - 20px);
-        position: fixed;
-        top: 10px;
-        left: 0;
-        padding: 40px 20px;
-        gap: 20px;
-        box-sizing: border-box;
-
-        margin-left: 5px;
-        margin-top: 0px;
-        border-radius: 15px;
-        margin-bottom: 10px;
-    }
-
-    .nav-link {
-        font-size: 1.2rem;
-        padding: 10px;
-        border-radius: 8px;
-    }
-
-    .nav-link:hover {
-        background: rgba(255, 255, 255, 0.05);
     }
 
     .contenido-principal {
@@ -64,6 +33,7 @@
         background: #fde7d2;
         min-width: 0;
         margin-left: 270px;
-
     }
+
+
 }
