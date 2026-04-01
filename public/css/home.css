@@ -6,17 +6,51 @@ body {
     background-color: #f5f5f5;
     background: #fde7d2;
     color: rgb(0, 0, 0);
+
+}
+
+@keyframes enfocar {
+    0% {
+        filter: blur(12px);
+        opacity: 0;
+    }
+
+    100% {
+        filter: blur(0px);
+        opacity: 1;
+    }
+}
+
+@keyframes parpadeo-cursor {
+
+    from,
+    to {
+        border-color: transparent
+    }
+
+    50% {
+        border-color: #ff4500;
+    }
 }
 
 @media (max-width: 768px) {
     .app-container {
         display: block;
+
     }
 
     .contenido-principal {
         padding: 20px;
         padding-bottom: 100px;
+        animation: enfocar 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
+
+
+
     }
+
+
+
+
 }
 
 
@@ -33,6 +67,7 @@ body {
         background: #fde7d2;
         min-width: 0;
         margin-left: 270px;
+        animation: enfocar 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
     }
 
 

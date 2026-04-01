@@ -1,0 +1,37 @@
+{
+  "id": "com.wind.app",
+  "name": "Wind",
+  "short_name": "Wind",
+  "description": "Explora Coro con Wind.",
+  "icons": [
+    {
+      "src": "/img/app.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/app.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/app.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#ff4500",
+  "orientation": "portrait",
+  "categories": [
+    "lifestyle",
+    "utilities"
+  ],
+  "screenshots": [],
+  "shortcuts": []
+}

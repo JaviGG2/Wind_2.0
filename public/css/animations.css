@@ -1,0 +1,174 @@
+/* 
+  LIBRERÍA DE ANIMACIONES WIND 
+  Una colección de animaciones CSS premium para tus componentes.
+  Uso: Agrega el nombre de la clase a cualquier elemento.
+*/
+
+/* --- ANIMACIONES DE APARICIÓN (FADE) --- */
+
+.aparecer {
+    animation: aparecer 0.6s ease-out forwards;
+}
+
+.aparecer-con-retraso {
+    animation: aparecer 0.6s ease-out 0.3s forwards;
+    opacity: 0;
+}
+
+@keyframes aparecer {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* --- ANIMACIONES DE DESLIZAMIENTO --- */
+
+.deslizar-arriba {
+    animation: deslizarArriba 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.deslizar-abajo {
+    animation: deslizarAbajo 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes deslizarArriba {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes deslizarAbajo {
+    from { transform: translateY(-30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* --- ESCALA Y REBOTE --- */
+
+.escalar-entrar {
+    animation: escalarEntrar 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes escalarEntrar {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* --- EFECTOS CONTINUOS --- */
+
+.flotar {
+    animation: flotar 3s ease-in-out infinite;
+}
+
+@keyframes flotar {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.latido {
+    animation: latido 2s infinite;
+}
+
+@keyframes latido {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.brillo-pulsante {
+    animation: brilloPulsante 2s infinite;
+}
+
+@keyframes brilloPulsante {
+    0%, 100% { box-shadow: 0 0 5px rgba(255, 69, 0, 0.2); }
+    50% { box-shadow: 0 0 20px rgba(255, 69, 0, 0.6); }
+}
+
+/* --- UTILIDADES INTERACTIVAS --- */
+
+.elevar-al-pasar {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.elevar-al-pasar:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.brillo-al-pasar:hover {
+    filter: drop-shadow(0 0 8px rgba(255, 69, 0, 0.8));
+    transition: filter 0.3s ease;
+}
+
+/* --- EFECTOS DE REVELACIÓN --- */
+
+.revelar-texto {
+    position: relative;
+    overflow: hidden;
+}
+
+.revelar-texto::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #ff4500;
+    transform: translateX(-101%);
+    animation: revelarBloque 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+/* --- ANIMACIONES DE TEXTO --- */
+
+.escritura {
+    overflow: hidden;
+    border-right: .15em solid #ff4500;
+    white-space: nowrap;
+    margin: 0 auto;
+    letter-spacing: .15em;
+    animation: 
+      escribiendo 3.5s steps(40, end),
+      parpadeo-cursor .75s step-end infinite;
+}
+
+@keyframes escribiendo {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes parpadeo-cursor {
+  from, to { border-color: transparent }
+  50% { border-color: #ff4500; }
+}
+
+.texto-enfoque {
+    animation: enfocar 1s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
+}
+
+@keyframes enfocar {
+    0% { filter: blur(12px); opacity: 0; }
+    100% { filter: blur(0px); opacity: 1; }
+}
+
+.texto-espaciado {
+    animation: espaciar 0.7s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
+}
+
+@keyframes espaciar {
+    0% { letter-spacing: -0.5em; opacity: 0; }
+    40% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+
+.texto-brillo {
+  background: linear-gradient(to right, #ffffff 20%, #ff4500 40%, #ff4500 60%, #ffffff 80%);
+  background-size: 200% auto;
+  color: #000;
+  background-clip: text;
+  text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: brilloTexto 3s linear infinite;
+}
+
+@keyframes brilloTexto {
+  to { background-position: 200% center; }
+}
