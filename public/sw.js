@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wind-v1';
+const CACHE_NAME = 'wind-v3'; // Incrementado para invalidar caché previo de la API
 const ASSETS = [
     '/',
     '/css/home.css',
@@ -12,6 +12,9 @@ const ASSETS = [
 
 // Instalar el Service Worker y cachear recursos estáticos
 self.addEventListener('install', (event) => {
+    // Forzar que el Service Worker se active inmediatamente
+    self.skipWaiting();
+    
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
             return cache.addAll(ASSETS);
@@ -26,32 +29,39 @@ self.addEventListener('activate', (event) => {
             return Promise.all(
                 keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
             );
+        }).then(() => {
+            // Tomar el control de todas las pestañas abiertas inmediatamente
+            return self.clients.claim();
         })
     );
 });
 
-// Estrategia: Cache First (con fallback a red y actualización dinámica)
+// Estrategia: Stale-While-Revalidate
+// Sirve desde caché para velocidad, pero actualiza en segundo plano para la próxima vez
 self.addEventListener('fetch', (event) => {
+    // Ignorar peticiones dinámicas de API y autenticación para evitar falsos estados de sesión o cachés obsoletos
+    if (event.request.url.includes('/auth/') || 
+        event.request.url.includes('/admin/') || 
+        event.request.url.includes('/juegos/')) {
+        return; // Permite que la petición vaya directamente a la red
+    }
+
     event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            if (cachedResponse) {
-                return cachedResponse;
-            }
-
-            return fetch(event.request).then((networkResponse) => {
-                // Solo cachear respuestas exitosas de nuestro origen o fuentes confiables
-                if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+        caches.open(CACHE_NAME).then((cache) => {
+            return cache.match(event.request).then((cachedResponse) => {
+                const fetchPromise = fetch(event.request).then((networkResponse) => {
+                    // Actualizar el caché con la respuesta de la red
+                    if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+                        cache.put(event.request, networkResponse.clone());
+                    }
                     return networkResponse;
-                }
-
-                const responseToCache = networkResponse.clone();
-                caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, responseToCache);
+                }).catch(() => {
+                    // Si falla la red, ya devolvimos el caché (si existía)
                 });
 
-                return networkResponse;
+                // Devolver el caché si existe, de lo contrario esperar a la red
+                return cachedResponse || fetchPromise;
             });
         })
     );
 });
-

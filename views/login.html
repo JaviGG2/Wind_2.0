@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Wind</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <main class="contenedor-principal">
+        <div class="tarjeta-registro">
+            <h2>Iniciar Sesión</h2>
+            <p>Ingresa tus credenciales para acceder a Wind.</p>
+            
+            <form id="formulario-login">
+                <div class="grupo-campo">
+                    <label for="correo">Correo Electrónico:</label>
+                    <input type="email" id="correo" required placeholder="ejemplo@correo.com">
+                </div>
+                <div class="grupo-campo">
+                    <label for="contrasena">Contraseña:</label>
+                    <input type="password" id="contrasena" required placeholder="Tu contraseña">
+                </div>
+                <button type="submit" class="boton-enviar">Entrar</button>
+            </form>
+
+            <div id="mensaje-consola" class="mensaje-oculto"></div>
+            
+            <p class="texto-secundario">
+                ¿No tienes cuenta? <a href="registro.html" class="enlace-secundario">Regístrate aquí</a>
+            </p>
+        </div>
+    </main>
+
+    <script src="js/login.js"></script>
+</body>
+</html>

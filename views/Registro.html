@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Wind Patrimonio</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <main class="contenedor-principal">
+        <div class="tarjeta-registro">
+            <h2>Crear Cuenta en Wind</h2>
+            <p>Únete a nuestra comunidad para descubrir y preservar la historia.</p>
+            
+            <form id="formulario-registro">
+                <div class="grupo-campo">
+                    <label for="nombre">Nombre Completo:</label>
+                    <input type="text" id="nombre" required placeholder="Ej. Juan Pérez">
+                </div>
+                <div class="grupo-campo">
+                    <label for="correo">Correo Electrónico:</label>
+                    <input type="email" id="correo" required placeholder="ejemplo@correo.com">
+                </div>
+                <div class="grupo-campo">
+                    <label for="contrasena">Contraseña:</label>
+                    <input type="password" id="contrasena" required placeholder="Mínimo 6 caracteres">
+                </div>
+                <button type="submit" class="boton-enviar">Registrarse</button>
+            </form>
+
+            <div id="mensaje-consola" class="mensaje-oculto"></div>
+            <a href="login.html" class="boton-secundario">Volver a iniciar sesión</a>
+        </div>
+    </main>
+
+    <script src="js/registro.js"></script>
+</body>
+</html>
