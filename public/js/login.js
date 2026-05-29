@@ -20,10 +20,12 @@ formulario.addEventListener('submit', async (evento) => {
 
         if (respuesta.ok) {
             mostrarMensaje(resultado.mensaje || '¡Bienvenido!', 'exito');
-            // Redirigir al usuario a la página principal o panel después de 1.5 segundos
+            formulario.reset();
+            
+            // Redirige al panel central de control en 1.2 segundos
             setTimeout(() => {
-                window.location.href = '/dashboard.html'; // Cambia esto por tu página principal luego
-            }, 1500);
+                window.location.href = 'dashboard.html';
+            }, 1200);
         } else {
             mostrarMensaje(resultado.mensaje || 'Error al iniciar sesión.', 'error');
         }

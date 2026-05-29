@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diseñar Trivia Patrimonial - Wind</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <main class="contenedor-principal">
+        <div class="tarjeta-registro">
+            <h2>Crear Nueva Trivia</h2>
+            <p>Redacta preguntas oficiales para educar a los usuarios de Wind.</p>
+            
+            <form id="formulario-crear-juego">
+                <div class="grupo-campo">
+                    <label for="pregunta">Pregunta o Desafío Histórico:</label>
+                    <textarea id="pregunta" rows="3" required placeholder="Ej. ¿Quién mandó a construir la Casa de los Arcaya?"></textarea>
+                </div>
+
+                <div class="grupo-campo">
+                    <label for="opcion_a">Opción A:</label>
+                    <input type="text" id="opcion_a" required placeholder="Texto de la opción A">
+                </div>
+
+                <div class="grupo-campo">
+                    <label for="opcion_b">Opción B:</label>
+                    <input type="text" id="opcion_b" required placeholder="Texto de la opción B">
+                </div>
+
+                <div class="grupo-campo">
+                    <label for="opcion_c">Opción C:</label>
+                    <input type="text" id="opcion_c" required placeholder="Texto de la opción C">
+                </div>
+
+                <div class="grupo-campo">
+                    <label for="opcion_correcta">Indique la Opción Correcta:</label>
+                    <select id="opcion_correcta" required>
+                        <option value="" disabled selected>Selecciona la respuesta verdadera...</option>
+                        <option value="A">Opción A</option>
+                        <option value="B">Opción B</option>
+                        <option value="C">Opción C</option>
+                    </select>
+                </div>
+
+                <div class="grupo-campo">
+                    <label for="puntos_recompensa">Puntos de Recompensa:</label>
+                    <input type="number" id="puntos_recompensa" min="5" max="50" value="10" required>
+                </div>
+
+                <button type="submit" class="boton-enviar">Publicar Juego</button>
+            </form>
+
+            <div id="mensaje-consola" class="mensaje-oculto"></div>
+            
+            <p style="margin-top: 15px; text-align: center; font-size: 0.9rem;">
+                <a href="dashboard.html" style="color: var(--primario); text-decoration: none; font-weight: bold;">← Volver al Panel</a>
+            </p>
+        </div>
+    </main>
+
+    <script src="js/crear-juego.js"></script>
+</body>
+</html>

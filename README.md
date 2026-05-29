@@ -5,7 +5,7 @@ Instrucciones:
 
 a/ PARA INICIAR EL PROYECTO:
 1. Abrir la terminal en la carpeta del proyecto.
-2. Ejecutar el comando:node app.js
+2. Ejecutar el comando:npm run dev (Primero tienen que instalar nodemon)
 3. Abrir el navegador en la dirección: http://localhost:3000
 
 b/ PARA EDITAR EL MENU

@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
+const path = require('path');
 const db = require('./config/db'); // Importa tu Pool de Neon.tech
 require('dotenv').config();
 
@@ -112,6 +113,9 @@ app.post('/auth/login', async (req, res) => {
             correo: usuario.correo,
             rol: usuario.rol
         };
+        req.session.usuarioId = usuario.id;
+        req.session.nombre = usuario.nombre;
+        req.session.rol = usuario.rol;
 
         return res.status(200).json({
             mensaje: `¡Bienvenido de vuelta, ${usuario.nombre}!`,
@@ -124,6 +128,113 @@ app.post('/auth/login', async (req, res) => {
     }
 });
 
+// ==========================================
+// RUTA: Obtener los Datos del Usuario Autenticado
+// ==========================================
+app.get('/auth/perfil', (req, res) => {
+    if (!req.session.usuario && !req.session.usuarioId) {
+        return res.status(401).json({ mensaje: 'No autorizado. Inicie sesión.' });
+    }
+    // Devolvemos el estado actual de la sesión
+    res.json({
+        id: req.session.usuario?.id || req.session.usuarioId,
+        nombre: req.session.usuario?.nombre || req.session.nombre,
+        rol: req.session.usuario?.rol || req.session.rol
+    });
+});
+
+// ==========================================
+// RUTA: Ascender Rol del Usuario en Tiempo Real
+// ==========================================
+app.post('/auth/ascender', async (req, res) => {
+    if (!req.session.usuarioId) {
+        return res.status(401).json({ mensaje: 'Debes iniciar sesión para realizar esta acción.' });
+    }
+
+    const { respuestaExamen } = req.body;
+
+    // Regla de Negocio: Validamos la prueba interna en el servidor 
+    if (respuestaExamen !== 'correcto') {
+        return res.status(400).json({ mensaje: 'Evaluación reprobada. Revisa tus conocimientos históricos sobre Coro e inténtalo de nuevo.' });
+    }
+
+    try {
+        // Ejecutamos la actualización directa en Neon.tech
+        await db.query('UPDATE usuarios SET rol = $1 WHERE id = $2', ['Especialista', req.session.usuarioId]);
+        
+        // ¡SUPER IMPORTANTE! Actualizamos la sesión en la memoria de Node.js para que las demás rutas lean el cambio
+        req.session.rol = 'Especialista';
+
+        res.json({ 
+            mensaje: '¡Felicidades! Has aprobado la prueba interna. Tu rol ha sido actualizado a Especialista.',
+            nuevoRol: 'Especialista'
+        });
+    } catch (error) {
+        console.error('Error al ascender rol:', error);
+        res.status(500).json({ mensaje: 'Error interno al procesar la solicitud de ascenso.' });
+    }
+});
+
+// ==========================================
+// RUTA: Cerrar Sesión (Logout)
+// ==========================================
+app.post('/auth/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) return res.status(500).json({ mensaje: 'No se pudo cerrar la sesión.' });
+        res.clearCookie('connect.sid'); // Limpia la cookie del navegador
+        res.json({ mensaje: 'Sesión destruida con éxito.' });
+    });
+});
+
+// ==========================================
+// RUTA: Servir Vista de Creación de Juegos (Solo Especialistas)
+// ==========================================
+app.get('/crear-juego', (req, res) => {
+    if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
+        return res.redirect('/login.html');
+    }
+    res.sendFile(path.join(__dirname, 'views', 'crear-juego.html'));
+});
+
+// ==========================================
+// RUTA: Insertar Nueva Trivia Creada por Especialista
+// ==========================================
+app.post('/admin/crear-juego', async (req, res) => {
+    // Seguridad a nivel de servidor
+    if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
+        return res.status(403).json({ mensaje: 'Acceso denegado: Rol insuficiente.' });
+    }
+
+    const { pregunta, opcion_a, opcion_b, opcion_c, opcion_correcta, puntos_recompensa } = req.body;
+
+    // Validación básica de campos
+    if (!pregunta || !opcion_a || !opcion_b || !opcion_c || !opcion_correcta) {
+        return res.status(400).json({ mensaje: 'Todos los campos de la trivia son obligatorios.' });
+    }
+
+    try {
+        const queryTexto = `
+            INSERT INTO juegos (pregunta, opcion_a, opcion_b, opcion_c, opcion_correcta, puntos_recompensa)
+            VALUES ($1, $2, $3, $4, $5, $6)
+        `;
+        const valores = [
+            pregunta,
+            opcion_a,
+            opcion_b,
+            opcion_c,
+            opcion_correcta, // Guardará 'A', 'B' o 'C'
+            parseInt(puntos_recompensa) || 10
+        ];
+
+        await db.query(queryTexto, valores);
+
+        return res.status(201).json({ mensaje: '¡Nueva trivia patrimonial publicada con éxito!' });
+
+    } catch (error) {
+        console.error('❌ Error al guardar juego creado por especialista:', error);
+        return res.status(500).json({ mensaje: 'Error interno al guardar la trivia.' });
+    }
+});
 
 // ==========================================
 // INICIAR EL ESCUCHADOR EN EL PUERTO LOCAL

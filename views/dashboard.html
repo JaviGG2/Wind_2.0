@@ -3,71 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Wind</title>
+    <title>Panel de Control - Wind</title>
     <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
     <main class="contenedor-principal">
-        <div class="dashboard-contenedor">
-            <section class="dashboard-header">
-                <div>
-                    <p class="texto-secundario">Panel de control</p>
-                    <h1>Bienvenido a Wind</h1>
-                    <p class="dashboard-subtitle">Aquí puedes ver tu progreso, acceder a funciones rápidas y volver a la sesión cuando lo necesites.</p>
-                </div>
-                <div>
-                    <a href="login.html" class="boton-secundario">Cerrar sesión</a>
-                </div>
-            </section>
+        <div class="tarjeta-registro" style="max-width: 600px;">
+            <h2>Panel de Control (Wind)</h2>
+            <p id="bienvenida-usuario">Cargando datos del perfil...</p>
+            
+            <div id="seccion-natural" class="zona-modulo" style="display: none; margin-top: 20px; padding: 15px; border: 1px dashed #ccc; border-radius: 8px;">
+                <h3>Perfil: Usuario Natural</h3>
+                <p style="font-size: 0.9rem; color: #555;">Actualmente puedes ver relatos, comentar y participar en los juegos patrimoniales.</p>
+                <button id="btn-solicitar-ascenso" class="boton-enviar" style="background-color: #28a745; margin-top: 10px;">Solicitar Ascenso a Especialista</button>
+            </div>
 
-            <section class="tarjeta-resumen">
-                <article class="card-resumen">
-                    <span>Progreso</span>
-                    <strong>72%</strong>
-                    <p class="texto-secundario">Completaste tus objetivos del mes.</p>
-                </article>
-                <article class="card-resumen">
-                    <span>Puntos</span>
-                    <strong>0</strong>
-                    <p class="texto-secundario">Aún no has jugado ninguna partida.</p>
-                </article>
-                <article class="card-resumen">
-                    <span>Temas activos</span>
-                    <strong>8</strong>
-                    <p class="texto-secundario">Tienes contenido patrimonial pendiente por revisar.</p>
-                </article>
-                <article class="card-resumen">
-                    <span>Notificaciones</span>
-                    <strong>3 nuevas</strong>
-                    <p class="texto-secundario">Hay actualizaciones disponibles en tu área.</p>
-                </article>
-            </section>
+            <div id="quiz-evaluacion" style="display: none; margin-top: 20px; padding: 15px; background: #f8f9fa; border-left: 4px solid var(--primario); text-align: left;">
+                <h4>Examen de Validación Histórica (Coro)</h4>
+                <p style="font-size: 0.85rem; color: #666; margin-bottom: 15px;">Responde correctamente para demostrar tus conocimientos y adquirir privilegios de edición.</p>
+                
+                <form id="form-evaluacion">
+                    <p><strong>1. ¿Cómo llamaban los indígenas Caquetíos a la ciudad de Coro? </strong></p>
+                    <label><input type="radio" name="p1" value="incorrecto1"> Ciudad del Barro</label><br>
+                    <label><input type="radio" name="p1" value="correcto"> la ciudad del viento </label><br>
+                    <label><input type="radio" name="p1" value="incorrecto2"> Valle de los Ríos</label>
+                    
+                    <button type="submit" class="boton-enviar" style="margin-top: 15px;">Enviar Evaluación</button>
+                </form>
+            </div>
 
-            <section class="dashboard-panel">
-                <div class="panel">
-                    <div class="panel-title">
-                        <h3>Acciones rápidas</h3>
-                        <span class="panel-meta">Todo en un solo lugar</span>
-                    </div>
-                    <div class="panel-lista">
-                        <p>• Revisar últimas noticias históricas</p>
-                        <p>• Subir nuevo contenido como especialista</p>
-                        <p>• Consultar tus puntos y logros</p>
-                    </div>
-                </div>
-                <div class="panel">
-                    <div class="panel-title">
-                        <h3>Resumen personal</h3>
-                        <span class="panel-meta">Tu cuenta</span>
-                    </div>
-                    <div class="panel-lista">
-                        <p>Nombre: Usuario Wind</p>
-                        <p>Rol: Natural</p>
-                        <p>Estado: Activo</p>
-                    </div>
-                </div>
-            </section>
+            <div id="seccion-especialista" class="zona-modulo" style="display: none; margin-top: 20px; padding: 15px; border: 1px solid var(--primario); border-radius: 8px; background-color: #eef7ff;">
+                <h3>⚡ Herramientas de Especialista</h3>
+                <p style="font-size: 0.9rem; color: #333;">Cuentas con permisos institucionales exclusivos para la preservación digital del patrimonio.</p>
+                
+                <a href="subir-tema.html" class="boton-enviar" style="display: inline-block; text-align: center; text-decoration: none; margin-top: 10px; margin-right: 10px;">Ir a Publicar Tema Histórico</a>
+                
+                <a href="crear-juego.html" class="boton-enviar" style="display: inline-block; text-align: center; text-decoration: none; margin-top: 10px; background-color: #6f42c1;">Diseñar Nueva Trivia</a>
+            </div>
+
+            <div id="mensaje-consola" class="mensaje-oculto" style="margin-top: 15px;"></div>
+            
+            <button id="btn-logout" class="boton-secundario" style="margin-top: 20px; width: 100%;">Cerrar Sesión</button>
         </div>
     </main>
+
+    <script src="js/dashboard.js"></script>
 </body>
 </html>
