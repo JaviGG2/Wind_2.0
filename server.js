@@ -48,25 +48,31 @@ app.get('/dashboard.html', (req, res) => {
 // RUTA 1: Registro Único de Usuarios
 // ==========================================
 app.post('/auth/registro', async (req, res) => {
-    const { nombre, correo, contrasena } = req.body;
-    if (!nombre || !correo || !contrasena) {
-        return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+    const { nombre, username, correo, contrasena } = req.body;
+    
+    if (!nombre || !username || !correo || !contrasena) {
+        return res.status(400).json({ mensaje: 'Todos los campos son obligatorios.' });
     }
 
     try {
         const hash = await bcrypt.hash(contrasena, 10);
-        // Por defecto se registra como rol 'Natural'
-        await db.query(
-            'INSERT INTO usuarios (nombre, correo, contrasena, rol) VALUES ($1, $2, $3, $4)',
-            [nombre, correo, hash, 'Natural']
-        );
-        res.status(201).json({ message: 'Registro exitoso. Ahora puedes iniciar sesión.' });
+        
+        // Creamos la consulta limpia
+        const queryTexto = 'INSERT INTO usuarios (nombre, username, correo, contrasena, rol) VALUES ($1, $2, $3, $4, $5)';
+        
+        // Creamos el arreglo asegurando que 'username' vaya estrictamente en la segunda posición ($2)
+        const valores = [nombre, username, correo, hash, 'Natural'];
+
+        // Ejecutamos pasándole las variables ordenadas
+        await db.query(queryTexto, valores);
+        
+        res.status(201).json({ mensaje: 'Registro exitoso. Ahora puedes iniciar sesión.' });
     } catch (error) {
         if (error.code === '23505') {
-            return res.status(400).json({ error: 'El correo ya está registrado.' });
+            return res.status(400).json({ mensaje: 'El correo o nombre de usuario ya está registrado.' });
         }
         console.error('Error en registro:', error);
-        res.status(500).json({ error: 'Error en el registro. Inténtalo de nuevo más tarde.' });
+        res.status(500).json({ mensaje: 'Error en el registro. Inténtalo de nuevo más tarde.' });
     }
 });
 
@@ -76,12 +82,12 @@ app.post('/auth/registro', async (req, res) => {
 app.post('/auth/login', async (req, res) => {
     const { correo, contrasena } = req.body;
     if (!correo || !contrasena) {
-        return res.status(400).json({ error: 'Correo y contraseña son obligatorios.' });
+        return res.status(400).json({ mensaje: 'Correo y contraseña son obligatorios.' });
     }
 
     try {
         const result = await db.query('SELECT * FROM usuarios WHERE correo = $1', [correo]);
-        if (result.rows.length === 0) return res.status(401).json({ error: 'Usuario no encontrado.' });
+        if (result.rows.length === 0) return res.status(401).json({ mensaje: 'Usuario no encontrado.' });
 
         const usuario = result.rows[0];
         const coincide = await bcrypt.compare(contrasena, usuario.contrasena);
@@ -91,13 +97,13 @@ app.post('/auth/login', async (req, res) => {
             req.session.usuarioId = usuario.id;
             req.session.rol = usuario.rol;
             req.session.nombre = usuario.nombre;
-            res.json({ message: `Bienvenido ${usuario.nombre}. Rol: ${usuario.rol}` });
+            res.json({ mensaje: `Bienvenido ${usuario.nombre}. Rol: ${usuario.rol}` });
         } else {
-            res.status(401).json({ error: 'Contraseña incorrecta.' });
+            res.status(401).json({ mensaje: 'Contraseña incorrecta.' });
         }
     } catch (error) {
         console.error('Error en login:', error);
-        res.status(500).json({ error: 'Error en el servidor.' });
+        res.status(500).json({ mensaje: 'Error en el servidor.' });
     }
 });
 

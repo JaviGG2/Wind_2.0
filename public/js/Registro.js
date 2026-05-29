@@ -7,11 +7,13 @@ formulario.addEventListener('submit', async (evento) => {
     // Extraemos los valores limpios de los inputs del formulario
     const nombre = document.getElementById('nombre').value;
     const correo = document.getElementById('correo').value;
+    const username = document.getElementById('username').value;
     const contrasena = document.getElementById('contrasena').value;
 
     // Estructuramos el objeto con la información [cite: 255]
     const datosUsuario = {
         nombre: nombre,
+        username: username,
         correo: correo,
         contrasena: contrasena
     };

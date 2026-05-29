@@ -38,10 +38,10 @@ app.use(express.static('public'));
 // RUTA POST: Registro de Usuarios
 // ==========================================
 app.post('/auth/registro', async (req, res) => {
-    const { nombre, correo, contrasena } = req.body;
+    const { nombre, username, correo, contrasena } = req.body;
 
     // Validación básica en el servidor
-    if (!nombre || !correo || !contrasena) {
+    if (!nombre || !username || !correo || !contrasena) {
         return res.status(400).json({ mensaje: 'Todos los campos son obligatorios.' });
     }
 
@@ -55,10 +55,10 @@ app.post('/auth/registro', async (req, res) => {
 
         // Consulta SQL parametrizada
         const consultaSQL = `
-            INSERT INTO usuarios (nombre, correo, contrasena, rol)
-            VALUES ($1, $2, $3, $4)
+            INSERT INTO usuarios (nombre, username, correo, contrasena, rol)
+            VALUES ($1, $2, $3, $4, $5)
         `;
-        const valores = [nombre, correo, contrasenaEncriptada, 'Natural'];
+        const valores = [nombre, username, correo, contrasenaEncriptada, 'Natural'];
 
         await db.query(consultaSQL, valores);
 
@@ -80,33 +80,32 @@ app.post('/auth/registro', async (req, res) => {
 // RUTA POST: Inicio de Sesión (Login)
 // ==========================================
 app.post('/auth/login', async (req, res) => {
-    const { correo, contrasena } = req.body;
+    const { correo, username, contrasena } = req.body;
+    const identificador = correo || username;
 
     // Validación básica
-    if (!correo || !contrasena) {
-        return res.status(400).json({ mensaje: 'Todos los campos son obligatorios.' });
+    if (!identificador || !contrasena) {
+        return res.status(400).json({ mensaje: 'El correo/usuario y la contraseña son obligatorios.' });
     }
 
     try {
-        // Buscar usuario en Neon por correo
-        const consultaSQL = 'SELECT * FROM usuarios WHERE correo = $1';
-        const resultadoBD = await db.query(consultaSQL, [correo]);
+        // Buscar usuario en Neon por correo o nombre de usuario
+        const consultaSQL = correo
+            ? 'SELECT * FROM usuarios WHERE correo = $1'
+            : 'SELECT * FROM usuarios WHERE username = $1';
+        const resultadoBD = await db.query(consultaSQL, [identificador]);
 
-        // Si no devuelve filas, el correo no existe en el sistema
         if (resultadoBD.rows.length === 0) {
             return res.status(401).json({ mensaje: 'El correo o la contraseña son incorrectos.' });
         }
 
         const usuario = resultadoBD.rows[0];
-
-        // Comparar contraseña ingresada con el hash encriptado
         const contrasenaCorrecta = await bcrypt.compare(contrasena, usuario.contrasena);
 
         if (!contrasenaCorrecta) {
             return res.status(401).json({ mensaje: 'El correo o la contraseña son incorrectos.' });
         }
 
-        // Crear la sesión del usuario en el servidor
         req.session.usuario = {
             id: usuario.id,
             nombre: usuario.nombre,
@@ -114,7 +113,6 @@ app.post('/auth/login', async (req, res) => {
             rol: usuario.rol
         };
 
-        // Responder con éxito
         return res.status(200).json({
             mensaje: `¡Bienvenido de vuelta, ${usuario.nombre}!`,
             usuario: req.session.usuario
