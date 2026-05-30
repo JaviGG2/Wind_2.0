@@ -5,6 +5,7 @@ formulario.addEventListener('submit', async (evento) => {
     evento.preventDefault();
 
     const datosJuego = {
+        categoria_id: document.getElementById('categoria_id')?.value,
         pregunta: document.getElementById('pregunta').value,
         opcion_a: document.getElementById('opcion_a').value,
         opcion_b: document.getElementById('opcion_b').value,

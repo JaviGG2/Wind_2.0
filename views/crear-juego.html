@@ -11,8 +11,18 @@
         <div class="tarjeta-registro">
             <h2>Crear Nueva Trivia</h2>
             <p>Redacta preguntas oficiales para educar a los usuarios de Wind.</p>
-            
             <form id="formulario-crear-juego">
+                <div class="grupo-campo">
+                    <label for="categoria_id">Categoría de la Trivia:</label>
+                    <select id="categoria_id" required>
+                        <option value="" disabled selected>Selecciona un eje temático...</option>
+                        <option value="1">Arquitectura Colonial</option>
+                        <option value="2">Tradiciones Indígenas (Caquetíos)</option>
+                        <option value="3">Personajes Históricos</option>
+                        <option value="4">Leyendas Falconianas</option>
+                    </select>
+                </div>
+
                 <div class="grupo-campo">
                     <label for="pregunta">Pregunta o Desafío Histórico:</label>
                     <textarea id="pregunta" rows="3" required placeholder="Ej. ¿Quién mandó a construir la Casa de los Arcaya?"></textarea>

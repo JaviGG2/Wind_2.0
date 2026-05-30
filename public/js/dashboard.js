@@ -73,20 +73,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (res.ok) window.location.href = 'login.html';
     });
 
-    // Función auxiliar para prender/apagar componentes de la interfaz
-    function configurarVistasPorRol(rol, juegosCreados = []) {
+   // Función auxiliar para prender/apagar componentes de la interfaz
+    function configurarVistasPorRol(rol) {
         if (rol === 'Especialista') {
             seccionNatural.style.display = 'none';
             seccionEspecialista.style.display = 'block';
-            seccionJuegosCreados.style.display = 'block';
-            mostrarJuegosCreados(juegosCreados);
+            
+            // Si tienes un contenedor específico para los juegos creados con este id, lo encendemos
+            if (typeof seccionJuegosCreados !== 'undefined') {
+                seccionJuegosCreados.style.display = 'block';
+            }
+
+            // Llamamos a nuestra función que viaja al backend y trae el historial fresquito
+            cargarMisJuegosCreados();
+
         } else {
             seccionNatural.style.display = 'block';
             seccionEspecialista.style.display = 'none';
-            seccionJuegosCreados.style.display = 'none';
+            
+            if (typeof seccionJuegosCreados !== 'undefined') {
+                seccionJuegosCreados.style.display = 'none';
+            }
+            
+            // Aquí puedes activar la función para cargar las trivias del usuario natural
+            if (typeof cargarModuloJuegos === 'function') {
+                cargarModuloJuegos();
+            }
         }
     }
-
+   
     function mostrarJuegosCreados(juegos) {
         listaJuegosCreados.innerHTML = '';
 
@@ -121,3 +136,54 @@ document.addEventListener('DOMContentLoaded', async () => {
         bloqueMensaje.className = `mensaje-alerta ${tipo}`;
     }
 });
+
+// Función para cargar las trivias creadas en el espacio del Especialista
+async function cargarMisJuegosCreados() {
+    const contenedorLista = document.getElementById('lista-juegos-especialista');
+    if (!contenedorLista) return;
+
+    try {
+        const respuesta = await fetch('/admin/mis-juegos');
+        if (!respuesta.ok) {
+            contenedorLista.innerHTML = '<p style="color: red; font-size: 0.85rem;">No se pudo cargar el historial.</p>';
+            return;
+        }
+
+        const juegos = await respuesta.json();
+        
+        if (juegos.length === 0) {
+            contenedorLista.innerHTML = '<p style="font-size: 0.85rem; color: #777; text-align: center;">Aún no has publicado ninguna trivia.</p>';
+            return;
+        }
+
+        // Limpiamos el texto de "Cargando..."
+        contenedorLista.innerHTML = '';
+
+        // Recorremos los juegos y armamos los bloques HTML puros (Vanilla JS)
+        juegos.forEach(juego => {
+            const tarjeta = document.createElement('div');
+            tarjeta.style = 'background: #fff; padding: 12px; border: 1px solid #d0e3ff; border-radius: 6px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); text-align: left;';
+            
+            tarjeta.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                    <span style="font-size: 0.7rem; font-weight: bold; background: #e2e9ff; color: #0056b3; padding: 2px 6px; border-radius: 10px;">
+                        📂 ${juego.categoria_nombre || 'General'}
+                    </span>
+                    <span style="font-size: 0.7rem; font-weight: bold; background: #fff3cd; color: #856404; padding: 2px 6px; border-radius: 10px;">
+                        💎 ${juego.puntos_recompensa} Pts
+                    </span>
+                </div>
+                <p style="font-weight: bold; font-size: 0.9rem; margin: 4px 0; color: #333;">${juego.pregunta}</p>
+                <div style="font-size: 0.8rem; color: #666; padding-left: 5px;">
+                    <span style="${juego.opcion_correcta === 'A' ? 'color: green; font-weight: bold;' : ''}">A) ${juego.opcion_a}</span> | 
+                    <span style="${juego.opcion_correcta === 'B' ? 'color: green; font-weight: bold;' : ''}">B) ${juego.opcion_b}</span> | 
+                    <span style="${juego.opcion_correcta === 'C' ? 'color: green; font-weight: bold;' : ''}">C) ${juego.opcion_c}</span>
+                </div>
+            `;
+            contenedorLista.appendChild(tarjeta);
+        });
+
+    } catch (error) {
+        contenedorLista.innerHTML = '<p style="color: red; font-size: 0.85rem;">Error de conexión con el historial.</p>';
+    }
+}
