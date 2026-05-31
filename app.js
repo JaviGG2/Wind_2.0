@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
 const path = require('path');
+const fs = require('fs');
 const db = require('./config/db'); // Importa tu Pool de Neon.tech
 require('dotenv').config();
 
@@ -285,6 +286,103 @@ app.get('/admin/mis-juegos', async (req, res) => {
     }
 });
 
+// ==========================================
+// RUTA: Servir la Vista de Subida de Temas (Solo Especialistas)
+// ==========================================
+app.get('/subir-tema.html', (req, res) => {
+    if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
+        return res.redirect('/login.html');
+    }
+    res.sendFile(path.join(__dirname, 'views', 'subir-tema.html'));
+});
+
+const multer = require('multer');
+
+// Configuración de almacenamiento para las imágenes de portada
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const uploadDir = path.join(__dirname, 'public', 'uploads');
+        fs.mkdirSync(uploadDir, { recursive: true });
+        cb(null, uploadDir); // Las imágenes se guardarán físicamente en esta carpeta
+    },
+    filename: function (req, file, cb) {
+        // Renombramos el archivo con la fecha actual + nombre original para evitar duplicados
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+
+const upload = multer({ storage: storage });
+
+// ==========================================
+// RUTA ADAPTABLE: Sube temas detectando las columnas reales de tu base de datos
+// ==========================================
+app.post('/admin/subir-tema', (req, res) => {
+    upload.single('imagen_portada')(req, res, async function (err) {
+        if (err) {
+            console.error('❌ Error de Multer:', err.message);
+            return res.status(400).json({ mensaje: 'Error al procesar la imagen de portada.' });
+        }
+
+        if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
+            return res.status(403).json({ mensaje: 'Acceso denegado.' });
+        }
+
+        const { categoria_id, titulo, contenido } = req.body;
+        const rutaImagen = req.file ? `uploads/${req.file.filename}` : 'uploads/defecto.jpg';
+
+        try {
+            // 1. Preguntamos a la base de datos cómo se llaman exactamente tus columnas en "temas"
+            const columnasInfo = await db.query(`
+                SELECT column_name 
+                FROM information_schema.columns 
+                WHERE table_name = 'temas';
+            `);
+            
+            const listaColumnas = columnasInfo.rows.map(c => c.column_name.toLowerCase());
+            console.log('📋 Columnas reales encontradas en Neon:', listaColumnas);
+
+            // 2. Mapeamos dinámicamente los nombres de tus columnas para armar la Query perfecta
+            const colCategoria = listaColumnas.includes('categoria_id') ? 'categoria_id' : 'id_categoria';
+            const colCreador = listaColumnas.includes('creador_id') ? 'creador_id' : (listaColumnas.includes('usuario_id') ? 'usuario_id' : 'id_usuario');
+            const colImagen = listaColumnas.includes('imagen_portada') ? 'imagen_portada' : (listaColumnas.includes('imagen') ? 'imagen' : 'portada');
+            const colFecha = listaColumnas.includes('fecha_publicacion') ? 'fecha_publicacion' : (listaColumnas.includes('fecha') ? 'fecha' : null);
+
+            // Verificamos si las columnas críticas existen antes de lanzar el INSERT
+            if (!listaColumnas.includes('titulo') || !listaColumnas.includes('contenido')) {
+                return res.status(500).json({ mensaje: 'Las columnas básicas (titulo o contenido) no existen en la tabla temas.' });
+            }
+
+            // 3. Construimos la consulta con los nombres reales de tu base de datos
+            let campos = `titulo, contenido, ${colCategoria}, ${colCreador}`;
+            let valoresAsignados = `$1, $2, $3, $4`;
+            let parametros = [titulo, contenido, parseInt(categoria_id), req.session.usuarioId];
+
+            // Si tu tabla tiene la columna para guardar la ruta de la foto, la incluimos
+            if (listaColumnas.includes(colImagen)) {
+                campos += `, ${colImagen}`;
+                valoresAsignados += `, $5`;
+                parametros.push(rutaImagen);
+            }
+
+            // Si tu tabla tiene campo de fecha manual, lo incluimos
+            if (colFecha) {
+                campos += `, ${colFecha}`;
+                valoresAsignados += `, NOW()`;
+            }
+
+            const queryFinal = `INSERT INTO temas (${campos}) VALUES (${valoresAsignados})`;
+            
+            // 4. Ejecutamos la inserción real
+            await db.query(queryFinal, parametros);
+            return res.status(201).json({ mensaje: '¡Tema histórico publicado con éxito!' });
+
+        } catch (error) {
+            // Revisa tu consola de VS Code, aquí saldrá la verdad absoluta de Neon
+            console.error('❌ ERROR CRÍTICO EN NEON:', error.message);
+            return res.status(500).json({ mensaje: 'Error interno en el servidor al guardar el tema.' });
+        }
+    });
+});
 // ==========================================
 // INICIAR EL ESCUCHADOR EN EL PUERTO LOCAL
 // ==========================================

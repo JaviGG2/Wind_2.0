@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publicar Tema Histórico - Wind</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <main class="contenedor-principal">
+        <div class="tarjeta-registro" style="max-width: 600px;">
+            <h2>Publicar Contenido Patrimonial</h2>
+            <p>Registra crónicas, datos arquitectónicos o tradiciones oficiales de Coro.</p>
+            
+            <form id="formulario-subir-tema" enctype="multipart/form-data">
+                
+                <div class="grupo-campo">
+                    <label for="categoria_id">Eje Temático / Categoría:</label>
+                    <select id="categoria_id" required>
+                        <option value="" disabled selected>Selecciona una categoría...</option>
+                        <option value="1">Arquitectura Colonial</option>
+                        <option value="2">Tradiciones Indígenas (Caquetíos)</option>
+                        <option value="3">Personajes Históricos</option>
+                        <option value="4">Leyendas Falconianas</option>
+                    </select>
+                </div>
+
+                <div class="grupo-campo">
+                    <label for="titulo">Título del Tema:</label>
+                    <input type="text" id="titulo" required placeholder="Ej. La Cruz de San Clemente">
+                </div>
+
+                <div class="grupo-campo">
+                    <label for="imagen_portada">Imagen de Portada (JPG / PNG):</label>
+                    <input type="file" id="imagen_portada" accept="image/*">
+                </div>
+
+                <div class="grupo-campo">
+                    <label for="contenido">Contenido del Artículo:</label>
+                    <textarea id="contenido" rows="8" required placeholder="Redacta la investigación histórica..."></textarea>
+                </div>
+
+                <button type="submit" class="boton-enviar">Publicar Tema Oficial</button>
+            </form>
+
+            <div id="mensaje-consola" style="margin-top: 15px; font-weight: bold; text-align: center;"></div>
+
+            <p style="margin-top: 20px; text-align: center; font-size: 0.9rem;">
+                <a href="dashboard.html" style="color: var(--primario); text-decoration: none; font-weight: bold;">← Volver al Panel</a>
+            </p>
+        </div> </main>
+
+    <script src="js/subir-tema.js"></script>
+</body>
+</html>
