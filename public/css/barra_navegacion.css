@@ -1,0 +1,122 @@
+/* lo basico de la pagina */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* barra de navegacion */
+.navbar {
+    position: fixed; /* La hace estática al hacer scroll */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between; /* Logo a la izquierda, botón a la derecha */
+    align-items: center;
+    padding: 0 5%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 1000; /* Siempre por encima de todo */
+}
+
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-size:20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+
+/* boton de imagen abrir */
+.menu-open-btn {
+    cursor: pointer;
+}
+
+
+.menu-open-btn img {
+    height: 30px; /* Tamaño del botón de menú */
+    display: block;
+}
+
+
+/* Ocultamos el checkbox */
+.input-hidden {
+    display: none;
+}
+
+
+/* Menu (CENTRO DE PANTALLA) */
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color:  #f25c05ec; /* Fondo del menu */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* Inicialmente oculto */
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s ease;
+}
+
+
+/* logica de abrir con el checkbox */
+/* "Si el input está marcado, muestra el menu" */
+#btn-menu:checked ~ .menu-overlay {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/* estilo interno del menu */
+.menu-links ul {
+    list-style: none;
+    text-align: center;
+}
+
+
+.menu-links li {
+    margin: 20px 0;
+}
+
+
+.menu-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 2.5rem;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+
+.menu-links a:hover {
+    color: #ffc400;
+}
+
+
+/* Boton cerrar */
+.menu-close-btn {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    color: white;
+    font-size: 50px;
+    cursor: pointer;
+}
+
+/* Estilo del texto */
+.logo-text {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 700;
+    color: #f25c05;
+    font-size: 1.1rem;
+}

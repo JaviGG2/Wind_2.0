@@ -4,6 +4,7 @@ const session = require('express-session');
 const path = require('path');
 const fs = require('fs');
 const db = require('./config/db'); // Importa tu Pool de Neon.tech
+const nunjucks = require('nunjucks');
 require('dotenv').config();
 
 const app = express();
@@ -11,6 +12,14 @@ const app = express();
 // ==========================================
 // CONFIGURACIÓN DE MIDDLEWARES
 // ==========================================
+
+//Permite a express saber que vamos a utilizar nunjucks
+nunjucks.configure('views', {
+    autoescape: true,
+    express: app,
+    watch: true // Te permite ver cambios en el HTML sin reiniciar el servidor
+});
+app.set('view engine', 'html');
 
 // Permite a Express entender datos en formato JSON enviados en el body
 app.use(express.json());
@@ -383,6 +392,27 @@ app.post('/admin/subir-tema', (req, res) => {
         }
     });
 });
+
+app.get('/barra_navegacion', (req, res) => {
+res.render('barra_navegacion');
+});
+
+app.get('/relatos', (req, res) => {
+res.render('relatos');
+});
+
+app.get('/comunidad', (req, res) => {
+res.render('comunidad');
+});
+
+app.get('/historias', (req, res) => {
+res.render('historias');
+});
+
+app.get('/juegos', (req, res) => {
+res.render('juegos');
+});
+
 // ==========================================
 // INICIAR EL ESCUCHADOR EN EL PUERTO LOCAL
 // ==========================================
