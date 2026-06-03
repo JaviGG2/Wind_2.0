@@ -32,8 +32,26 @@
                 <button type="submit" class="boton-enviar">Registrarse</button>
             </form>
 
+            <div id="seccion-codigo" style="display: none;">
+    <h2>Verifica tu Cuenta</h2>
+    <p>Ingresa el código de 6 dígitos que enviamos a tu correo electrónico.</p>
+    
+    <form id="form-verificar">
+        <input type="hidden" id="verificar-correo">
+        
+        <div class="grupo-campo">
+            <label for="codigo-input">Código de Seguridad:</label>
+            <input type="text" id="codigo-input" maxlength="6" placeholder="000000" required style="text-align: center; letter-spacing: 5px; font-size: 24px;">
+        </div>
+        
+        <button type="submit" class="btn-naranja">Activar Cuenta</button>
+    </form>
+    
+    <div id="mensaje-codigo" style="margin-top: 15px; color: #ff4d4d;"></div>
+</div>
+
             <div id="mensaje-consola" class="mensaje-oculto"></div>
-            <a href="login.html" class="boton-secundario">Volver a iniciar sesión</a>
+            <a href="login" class="boton-secundario">Volver a iniciar sesión</a>
         </div>
     </main>
 

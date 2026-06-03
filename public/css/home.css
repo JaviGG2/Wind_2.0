@@ -1,0 +1,22 @@
+.contenido-principal {
+    padding: 30px 24px;
+}
+
+.content-home {
+    max-width: 900px;
+    margin-left: 24px;
+    margin-right: auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 20px;
+}
+
+@media (min-width: 769px) {
+    .contenido-principal {
+        margin-left: 280px;
+    }
+
+    .content-home {
+        margin-left: 40px;
+    }
+}

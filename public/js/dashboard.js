@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 4. Manejador para cerrar sesión de manera limpia
     btnLogout.addEventListener('click', async () => {
         const res = await fetch('/auth/logout', { method: 'POST' });
-        if (res.ok) window.location.href = 'login.html';
+        if (res.ok) window.location.href = 'login';
     });
 
    // Función auxiliar para prender/apagar componentes de la interfaz
@@ -167,10 +167,10 @@ async function cargarMisJuegosCreados() {
             tarjeta.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                     <span style="font-size: 0.7rem; font-weight: bold; background: #e2e9ff; color: #0056b3; padding: 2px 6px; border-radius: 10px;">
-                        📂 ${juego.categoria_nombre || 'General'}
+                        ${juego.categoria_nombre || 'General'}
                     </span>
                     <span style="font-size: 0.7rem; font-weight: bold; background: #fff3cd; color: #856404; padding: 2px 6px; border-radius: 10px;">
-                        💎 ${juego.puntos_recompensa} Pts
+                        ${juego.puntos_recompensa} Pts
                     </span>
                 </div>
                 <p style="font-weight: bold; font-size: 0.9rem; margin: 4px 0; color: #333;">${juego.pregunta}</p>

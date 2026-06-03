@@ -24,7 +24,7 @@ formulario.addEventListener('submit', async (evento) => {
             
             // Redirige al panel central de control en 1.2 segundos
             setTimeout(() => {
-                window.location.href = 'dashboard.html';
+                window.location.href = 'home';
             }, 1200);
         } else {
             mostrarMensaje(resultado.mensaje || 'Error al iniciar sesión.', 'error');
