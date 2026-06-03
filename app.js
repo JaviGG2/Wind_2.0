@@ -197,10 +197,7 @@ app.get('/crear-juego', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'crear-juego.html'));
 });
 
-// ==========================================
-// RUTA: Insertar Nueva Trivia Creada por Especialista
-// ==========================================
-    // ==========================================
+
 // RUTA: Insertar Nueva Trivia Creada por Especialista
 // ==========================================
 app.post('/admin/crear-juego', async (req, res) => {
