@@ -34,9 +34,9 @@ app.use(session({
 
 app.use(express.static('public'));
 
-// ==========================================
+
 // IMPORTACIÓN E INYECCIÓN DE RUTAS MODULARES
-// ==========================================
+
 const authRoutes = require('./routes/authRoutes');
 const juegoRoutes = require('./routes/juegoRoutes');
 const temaRoutes = require('./routes/temaRoutes');
@@ -65,14 +65,18 @@ app.get('/dashboard', verificarSesion, (req, res) => {
     res.render('dashboard'); // Renderiza views/dashboard.html
 });
 
+
+
 // Las demás páginas se quedan públicas o accesibles según tu lógica:
 app.get('/comunidad', (req, res) => res.render('comunidad'));
-app.get('/relatos', (req, res) => res.render('relatos'));
+app.get('/relatos', verificarSesion, (req, res) => res.render('relatos'));
 app.get('/historias', (req, res) => res.render('historias'));
 app.get('/juegos', (req, res) => res.render('juegos'));
 app.get('/barra_navegacion', (req, res) => res.render('barra_navegacion'));
 app.get('/registro', (req, res) => res.render('Registro'));
 app.get('/login', (req, res) => res.render('login'));
+app.get('/', (req, res) => res.render('login'));
+
 
 // INICIAR EL ESCUCHADOR EN EL PUERTO LOCAL
 

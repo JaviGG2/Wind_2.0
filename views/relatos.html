@@ -3,11 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Relatos</title>
 </head>
 <body>
     <h1>Relatos</h1>
     <script src="js/Relatos.js"></script>
+
+    <div id="relatos-container">
+        <form id="form-relato">
+            <label for ="titulo">Título del Relato:</label>
+            <input type="text" id="titulo-relato" name="titulo" required>
+
+            <label for0 "conteido">Contenido del Relato:</label>
+            <textarea if="contenido-relato" name="contenido" required></textarea>
+
+            <button type=""submit">Publicar Relato</button>
+            
+        </form>
+        
+        <div id="mesaje-consola"></div>
+</div>  
 </body>
 </html>
-{% include "barra_navegacion.html" %}

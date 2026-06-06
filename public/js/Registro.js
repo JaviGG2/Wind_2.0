@@ -63,9 +63,9 @@ formulario.addEventListener('submit', async (evento) => {
     }
 });
 
-// =========================================================================
+
 // 2. NUEVO EVENTO: Escucha del Formulario de Verificación de Código
-// =========================================================================
+
 formVerificar.addEventListener('submit', async (evento) => {
     evento.preventDefault();
 

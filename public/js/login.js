@@ -34,6 +34,48 @@ formulario.addEventListener('submit', async (evento) => {
     }
 });
 
+formVerificar.addEventListener('submit', async (evento) => {
+    evento.preventDefault();
+
+    const correo = verificarCorreoInput.value;
+    const codigo = codigoInput.value;
+
+    try {
+        // Le pegamos al nuevo endpoint que creamos en el authController
+        const respuesta = await fetch('/auth/verificar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ correo, codigo })
+        });
+
+        const resultado = await respuesta.json();
+
+        if (respuesta.ok) {
+            // Si el código coincide, mostramos éxito y limpiamos la interfaz
+            seccionCodigo.innerHTML = `
+                <h3 style="color: #2ecc71; text-align: center;">${resultado.mensaje}</h3>
+                <p style="text-align: center; color: #666;">Redirigiendo al inicio de sesión...</p>
+            `;
+            
+            // Esperamos 3 segundos para que el usuario lea el mensaje y redirigimos
+            setTimeout(() => {
+                window.location.href = '/login'; // Tu ruta limpia del login sin .html
+            }, 3000);
+        } else {
+            // Si el código está mal escrito o expiró, pintamos el error abajo del input
+            txtMensajeCodigo.textContent = resultado.mensaje || 'Código inválido.';
+            txtMensajeCodigo.style.color = '#ff4d4d';
+        }
+
+    } catch (error) {
+        txtMensajeCodigo.textContent = 'Error al procesar la verificación con el servidor.';
+        txtMensajeCodigo.style.color = '#ff4d4d';
+    }
+});
+
+
 function mostrarMensaje(texto, tipo) {
     bloqueMensaje.textContent = texto;
     bloqueMensaje.className = `mensaje-alerta ${tipo}`;
