@@ -7,21 +7,25 @@
 </head>
 <body>
     <h1>Relatos</h1>
-    <script src="js/Relatos.js"></script>
+
 
     <div id="relatos-container">
         <form id="form-relato">
             <label for ="titulo">Título del Relato:</label>
             <input type="text" id="titulo-relato" name="titulo" required>
 
-            <label for0 "conteido">Contenido del Relato:</label>
-            <textarea if="contenido-relato" name="contenido" required></textarea>
+            <label for ="conteido">Contenido del Relato:</label>
+            <textarea id="contenido-relato" name="contenido" required></textarea>
 
-            <button type=""submit">Publicar Relato</button>
-            
+            <button type="submit">Publicar Relato</button>
         </form>
         
         <div id="mesaje-consola"></div>
-</div>  
+    </div>
+
+        <div id="lista-relatos" style="margin-top: 30px;"></div>
+
+    <script src="js/Relatos.js"></script>
+    
 </body>
 </html>

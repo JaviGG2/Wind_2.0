@@ -40,10 +40,12 @@ app.use(express.static('public'));
 const authRoutes = require('./routes/authRoutes');
 const juegoRoutes = require('./routes/juegoRoutes');
 const temaRoutes = require('./routes/temaRoutes');
+const relatoRoutes = require('./routes/relatoRoutes');
 
 app.use(authRoutes);
 app.use(juegoRoutes);
 app.use(temaRoutes);
+app.use(relatoRoutes);
 app.use('/auth', authRoutes); // Prefijo para rutas de autenticación
 
 // Aquí puedes añadir más adelante app.use(comentarioRoutes); si creas sus archivos

@@ -13,7 +13,7 @@ exports.crearRelato = async (req, res) => {
 
     try {
         const querySQL = `
-            INSERT INTO relatos_community (titulo, contenido, usuario_id, fecha_publicacion)
+            INSERT INTO relatos_community (titulo, contenido_relato, usuario_id, fecha_publicacion)
             VALUES ($1, $2, $3, NOW())
         `;
 
@@ -23,5 +23,24 @@ exports.crearRelato = async (req, res) => {
     } catch (error) {
         console.error('Error al crear relato:', error);
         res.status(500).json({ error: 'Error al crear el relato' });
+    }
+};
+
+exports.obtenerRelatos = async (req, res) => {
+    try {
+        // Trae todos los relatos ordenados desde el más reciente al más antiguo
+        const querySQL = `
+            SELECT id, titulo, contenido_relato, fecha_publicacion, usuario_id 
+            FROM relatos_community 
+            ORDER BY fecha_publicacion DESC
+        `;
+        
+        const resultado = await db.query(querySQL);
+        
+        // Enviamos las filas obtenidas al cliente
+        res.status(200).json(resultado.rows);
+    } catch (error) {
+        console.error('Error al obtener los relatos:', error);
+        res.status(500).json({ error: 'Error al obtener los relatos' });
     }
 };

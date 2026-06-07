@@ -1,4 +1,4 @@
-ok segun todo lo que tenemos me vas a explicar poco a poco como distrubir el app.js: const express = require('express');
+//ok segun todo lo que tenemos me vas a explicar poco a poco como distrubir el app.js: const express = require('express');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
 const path = require('path');

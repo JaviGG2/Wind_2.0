@@ -7,6 +7,8 @@ router.get('/relatos', verificarSesion, (req, res) => {
     res.render('relatos'); // Renderiza views/relatos.html usando Nunjucks
 });
 
+router.get('/api/relatos', relatoController.obtenerRelatos);
+
 router.post('/api/relatos', verificarSesion, relatoController.crearRelato);
 
 module.exports = router;
