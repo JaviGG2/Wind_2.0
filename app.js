@@ -86,6 +86,6 @@ app.get('/', (req, res) => res.render('login'));
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`El servidor de Wind se encuentra activo.`);
-    console.log(`Registro: http://localhost:${PORT}/registro.html`);
-    console.log(`Login: http://localhost:${PORT}/login.html`);
+    console.log(`Registro: http://localhost:${PORT}/registro`);
+    console.log(`Login: http://localhost:${PORT}/login`);
 });

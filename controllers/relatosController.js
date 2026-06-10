@@ -37,7 +37,6 @@ exports.obtenerRelatos = async (req, res) => {
         
         const resultado = await db.query(querySQL);
         
-        // Enviamos las filas obtenidas al cliente
         res.status(200).json(resultado.rows);
     } catch (error) {
         console.error('Error al obtener los relatos:', error);

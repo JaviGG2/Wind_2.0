@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diseñar Trivia Patrimonial - Wind</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <main class="contenedor-principal">
+        <div class="tarjeta-registro">
+            <h2>Crear Nueva Trivia</h2>
+            <p>Redacta preguntas oficiales para educar a los usuarios de Wind.</p>
+            
+<!-- MINI FORMULARIO DE GÉNEROS -->
+<div class="grupo-campo">
+    <label for="selector-genero">Género del Juego:</label>
+    <select id="selector-genero" onchange="controlarFormulario()">
+        <option value="" disabled selected>-- Selecciona un género --</option>
+        <option value="quiz">Quiz </option>
+        <option value="Memory"> Juego de Memoria / Memory Game </option>
+        <option value="Match">Match</option>
+        <option value="Scramblee"> Scramblee </option>
+    </select>
+</div>
+            
+            <form id="formulario-quiz" class="formulario-juego" style="display: none;">
+                <div class="grupo-campo">
+                    <label for="categoria_id">Categoría de la Trivia:</label>
+                    <select id="categoria_id" required>
+                        <option value="" disabled selected>Selecciona un eje temático...</option>
+                        <option value="1">Arquitectura Colonial</option>
+                        <option value="2">Tradiciones Indígenas (Caquetíos)</option>
+                        <option value="3">Personajes Históricos</option>
+                        <option value="4">Leyendas Falconianas</option>
+                    </select>
+                </div>
+
+                <div class="grupo-campo">
+                    <label for="pregunta">Pregunta o Desafío Histórico:</label>
+                    <textarea id="pregunta" rows="3" required placeholder="Ej. ¿Quién mandó a construir la Casa de los Arcaya?"></textarea>
+                </div>
+
+                <div class="grupo-campo">
+                    <label for="opcion_a">Opción A:</label>
+                    <input type="text" id="opcion_a" required placeholder="Texto de la opción A">
+                </div>
+
+                <div class="grupo-campo">
+                    <label for="opcion_b">Opción B:</label>
+                    <input type="text" id="opcion_b" required placeholder="Texto de la opción B">
+                </div>
+
+                <div class="grupo-campo">
+                    <label for="opcion_c">Opción C:</label>
+                    <input type="text" id="opcion_c" required placeholder="Texto de la opción C">
+                </div>
+
+                <div class="grupo-campo">
+                    <label for="opcion_correcta">Indique la Opción Correcta:</label>
+                    <select id="opcion_correcta" required>
+                        <option value="" disabled selected>Selecciona la respuesta verdadera...</option>
+                        <option value="A">Opción A</option>
+                        <option value="B">Opción B</option>
+                        <option value="C">Opción C</option>
+                    </select>
+                </div>
+
+                <div class="grupo-campo">
+                    <label for="puntos_recompensa">Puntos de Recompensa:</label>
+                    <input type="number" id="puntos_recompensa" min="5" max="50" value="10" required>
+                </div>
+
+                <button type="submit" class="boton-enviar">Publicar Juego</button>
+            </form>
+            
+            
+            <!-- FORMULARIO: MEMORY -->
+<form id="formulario-Memory" style="display: none;">
+    <div class="grupo-campo">
+        <label>Nombre del Juego:</label>
+        <input type="text" id="memory-nombre" required placeholder="Ej. Memoria Colonial">
+    </div>
+
+    <div id="contenedor-parejas">
+        <!-- Pareja inicial -->
+        <div class="bloque-pareja" data-id="1">
+            <label>Pareja 1:</label>
+            <input type="text" name="pareja_texto_1" required placeholder="Palabra o concepto">
+        </div>
+    </div>
+    
+    <!--Boton de Recompensa-->
+    
+    <div class="grupo-campo" style="margin-top: 15px;">
+    <label for="puntos_memory">Puntos de Recompensa:</label>
+    <input type="number" id="puntos_memory" min="5" max="50" value="10" required>
+    </div>
+
+    <button type="button" onclick="agregarParejaMemory()">+ Añadir Pareja</button>
+    <button type="submit">Publicar Juego</button>
+</form>
+
+
+<!-- FORMULARIO: MATCH (DINÁMICO CON PREGUNTA Y RESPUESTA) -->
+<form id="formulario-Match" style="display: none;">
+    <div class="grupo-campo">
+        <label>Nombre del Juego:</label>
+        <input type="text" id="match-nombre" required placeholder="Ej. Conecta la Historia">
+    </div>
+
+    <div id="contenedor-match">
+        <!-- Fila inicial -->
+        <div class="bloque-match" data-id="1" style="margin-bottom: 10px;">
+            <label>Fila 1:</label>
+            <input type="text" name="match_pregunta_1" required placeholder="Pregunta o Concepto A" style="margin-bottom: 5px;">
+            <input type="text" name="match_respuesta_1" required placeholder="Respuesta o Concepto B">
+        </div>
+    </div>
+    
+    <!--Boton de puntos-->
+    
+    <div class="grupo-campo" style="margin-top: 15px;">
+    <label for="puntos_match">Puntos de Recompensa:</label>
+    <input type="number" id="puntos_match" min="5" max="50" value="10" required>
+    </div>
+
+    <button type="button" onclick="agregarFilaMatch()">+ Añadir Pregunta/Respuesta</button>
+    <button type="submit">Publicar Juego</button>
+</form>
+
+
+<!-- FORMULARIO: SCRAMBLEE -->
+<form id="formulario-Scramblee" style="display: none;">
+    <div class="grupo-campo">
+        <label>Nombre del Juego:</label>
+        <input type="text" id="scramble-nombre" required placeholder="Ej. Descubre la Palabra">
+    </div>
+    <div class="grupo-campo">
+        <label>Palabra Correcta:</label>
+        <input type="text" id="scramble-palabra" required placeholder="Ej. FALCON">
+    </div>
+    <div class="grupo-campo">
+        <label>Pista:</label>
+        <input type="text" id="scramble-pista" required placeholder="Ej. Estado de Venezuela">
+    </div>
+    
+    <div class="grupo-campo">
+    <label for="puntos_scramble">Puntos de Recompensa:</label>
+    <input type="number" id="puntos_scramble" min="5" max="50" value="10" required>
+    </div>
+
+    <button type="submit">Publicar Juego</button>
+    </form>
+
+
+            <div id="mensaje-consola" class="mensaje-oculto"></div>
+            
+            <p style="margin-top: 15px; text-align: center; font-size: 0.9rem;">
+                <a href="dashboard.html" style="color: var(--primario); text-decoration: none; font-weight: bold;">← Volver al Panel</a>
+            </p>
+        </div>
+    </main>
+
+    <script src="js/crear-juego.js"></script>
+
+
+<script>
+
+let cMemory = 1, cMatch = 1;
+
+function controlarFormulario() {
+    //Guarda lo que eligió el usuario osea las opciones 
+    var genero = document.getElementById("selector-genero").value;
+    
+    // Ocultamos todos los formularios a las malas para limpiar la pantalla
+    document.getElementById("formulario-quiz").style.display = "none";
+    document.getElementById("formulario-Memory").style.display = "none";
+    document.getElementById("formulario-Match").style.display = "none";
+    document.getElementById("formulario-Scramblee").style.display = "none";
+    
+    //Si el usuario elige quiz o cualquier otra opción, quita el miniformulario y lo muestra en pantalla el formulario correspondiente 
+    if (["quiz", "Memory", "Match", "Scramblee"].includes(genero)) {
+        document.getElementById("formulario-" + genero).style.display = "block";
+    }
+}
+
+function agregarParejaMemory() {
+    let cont = document.getElementById("contenedor-parejas");
+    const boton = window.event.target;
+        if (cont.children.length >= 10) {
+        // Buscamos el último input de texto que está dentro del contenedor
+        const ultimoInput = cont.querySelector(".bloque-pareja:last-child input");
+        if (ultimoInput) {
+            ultimoInput.setCustomValidity("Límite alcanzado: Máximo 10 parejas.");
+            ultimoInput.reportValidity();
+        }
+        return;
+    }
+    
+    // Si no ha llegado al límite, limpiamos cualquier error viejo de los inputs
+    cont.querySelectorAll(".bloque-pareja input").forEach(inp => inp.setCustomValidity(""));
+
+        
+    boton.setCustomValidity("");
+    
+    cMemory = cMemory + 1;
+    let n = cont.children.length + 1;
+    
+    // Sumamos el nuevo HTML directo al contenedor de forma limpia
+   let nuevoDiv = document.createElement("div");
+   nuevoDiv.className = "bloque-pareja";
+   nuevoDiv.innerHTML = `<label>Pareja ${n}:</label><input type="text" name="pareja_texto_${cMemory}" required placeholder="Concepto">`;
+   cont.appendChild(nuevoDiv);
+    }
+
+function agregarFilaMatch() {
+    let cont = document.getElementById("contenedor-match");
+        const boton = window.event.target;
+        
+        if (cont.children.length >= 10) {
+        // Buscamos el último input de la última fila creada
+        const ultimoInput = cont.querySelector(".bloque-match:last-child input");
+        if (ultimoInput) {
+            ultimoInput.setCustomValidity("Límite alcanzado: Máximo 10 filas.");
+            ultimoInput.reportValidity();
+        }
+        return;
+    }
+    
+    // Si no ha llegado al límite, limpiamos cualquier error viejo de los inputs
+    cont.querySelectorAll(".bloque-match input").forEach(inp => inp.setCustomValidity(""));
+
+    
+    cMatch = cMatch + 1;
+    let n = cont.children.length + 1;
+    
+    // Sumamos la nueva fila directa al contenedor de forma limpia
+        let nuevoDiv = document.createElement("div");
+    nuevoDiv.className = "bloque-match";
+    nuevoDiv.style.marginBottom = "10px";
+    nuevoDiv.innerHTML = `
+        <label>Fila ${n}:</label>
+        <input type="text" name="match_pregunta_${cMatch}" required placeholder="Pregunta" style="margin-bottom:5px">
+        <input type="text" name="match_respuesta_${cMatch}" required placeholder="Respuesta">
+    `;
+    cont.appendChild(nuevoDiv);
+    }
+    
+</script>
+
+
+</body>
+</html>
