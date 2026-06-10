@@ -34,7 +34,7 @@ exports.subirTema = async (req, res) => {
         return res.status(201).json({ mensaje: '¡Tema histórico publicado con éxito!' });
 
     } catch (error) {
-        console.error('ERROR REAL EN NEON:', error.message);
+        console.error('❌ ERROR REAL EN NEON:', error.message);
         
         // Si el error es porque la columna se llama diferente, te lo dirá en la consola de VS Code
         return res.status(500).json({ 
