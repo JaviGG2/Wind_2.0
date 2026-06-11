@@ -27,6 +27,7 @@
 
     <script src="/js/menu.js"></script>
     <script src="/js/search.js"></script>
+    <script src="/js/home.js"></script>
 
 
 
@@ -40,6 +41,14 @@
         <main class="contenido-principal">
             <div id="buscar-placeholder"></div>
             <h1 class="titulo" href="/Wiss">Homeee</h1>
+            <section class="inicio-temas">
+                <div class="inicio-temas-header">
+                    <h2>Temas Históricos</h2>
+                    <p>Descubre los últimos contenidos patrimoniales publicados en Wind.</p>
+                </div>
+                <div id="temas-mensaje" class="texto-secundario" style="margin-bottom: 18px;">Cargando temas...</div>
+                <div id="temas-listado" class="temas-listado"></div>
+            </section>
             <div class="content-home">
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque, quod.</p>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque, quod.</p>
@@ -61,16 +70,7 @@
     </div>
 
     <!-- CARGA DE SCRIPTS PARA SEGURIDAD -->
-    <script src="/js/auth.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            const user = await checkUser();
-            if (!user) {
-                console.log("Acceso denegado. Redirigiendo...");
-                window.location.href = '/auth';
-            }
-        });
-    </script>
+    <!-- La ruta /home ya está protegida por servidor, no necesita auth.js adicional -->
 </body>
 
 </html>

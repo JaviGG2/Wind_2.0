@@ -13,6 +13,7 @@ router.get('/subir-tema.html', (req, res) => {
 });
 
 // Pasamos el cargador de imágenes directo en el enrutador
+router.get('/api/temas', temaController.listarTemas);
 router.post('/admin/subir-tema', upload.single('imagen_portada'), temaController.subirTema);
 
 module.exports = router;

@@ -1,13 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/menu.css">
+    <link rel="stylesheet" href="/css/search.css">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Wind">
+    <link rel="apple-touch-icon" href="/img/app.png">
+    <meta name="theme-color" content="#ff4500">
+    <title>Juegos</title>
 </head>
 <body>
-    Juegos
-    <script src="js/Juegos.js"></script>
+    <script src="/js/menu.js"></script>
+    <div class="app-container">
+        <div id="menu-placeholder"></div>
+        <main class="contenido-principal">
+            <h1>Juegos</h1>
+            <section id="juegos-disponibles">
+                <p>Cargando juegos...</p>
+            </section>
+        </main>
+    </div>
+    <script src="/js/juegos.js"></script>
 </body>
 </html>
-{% include "barra_navegacion.html" %}

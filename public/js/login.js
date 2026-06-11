@@ -10,6 +10,7 @@ formulario.addEventListener('submit', async (evento) => {
     try {
         const respuesta = await fetch('/auth/login', {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },

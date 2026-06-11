@@ -1,5 +1,9 @@
+
+
 .contenido-principal {
     padding: 30px 24px;
+    font-family: arial, segoe ui;
+    color:rgb(14, 14, 14)
 }
 
 .content-home {
@@ -9,6 +13,83 @@
     padding: 20px;
     background: rgba(255, 255, 255, 0.03);
     border-radius: 20px;
+}
+.tema-
+.inicio-temas {
+    margin-bottom: 28px;
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.inicio-temas-header h2 {
+    margin: 0 0 8px 0;
+    font-size: 1.5rem;
+}
+
+.inicio-temas-header p {
+    margin: 0;
+    color: #d0d7ff;
+    font-size: 0.95rem;
+}
+
+.temas-listado {
+    display: grid;
+    gap: 18px;
+    margin-top: 20px;
+}
+
+.tarjeta-tema {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 18px;
+    background: #111;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tema-imagen {
+    min-height: 150px;
+    background-size: cover;
+    background-position: center;
+}
+
+.tema-contenido {
+    padding: 18px;
+}
+
+.tema-contenido h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.15rem;
+}
+
+.tema-titulo {
+    color: #ffffff;
+}
+
+.tema-contenido p {
+    color: #d0d7ff;
+    line-height: 1.7;
+    margin: 0 0 14px 0;
+}
+
+.tema-meta span {
+    font-size: 0.85rem;
+    color: #8f97b0;
+}
+
+@media (max-width: 820px) {
+    .temas-listado {
+        grid-template-columns: 1fr;
+    }
+    .tarjeta-tema {
+        grid-template-columns: 1fr;
+    }
+    .tema-imagen {
+        min-height: 180px;
+    }
 }
 
 @media (min-width: 769px) {
@@ -20,3 +101,5 @@
         margin-left: 40px;
     }
 }
+
+

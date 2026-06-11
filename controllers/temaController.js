@@ -42,3 +42,23 @@ exports.subirTema = async (req, res) => {
         });
     }
 };
+
+exports.listarTemas = async (req, res) => {
+    try {
+        // Devolvemos el tema junto al nombre de la categoría y el autor (si existen)
+        const result = await db.query(
+            `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion,
+                    c.nombre AS categoria_nombre,
+                    u.nombre AS creador_nombre
+             FROM temas t
+             LEFT JOIN categorias c ON t.categoria_id = c.id
+             LEFT JOIN usuarios u ON t.creador_id = u.id
+             ORDER BY t.fecha_publicacion DESC
+             LIMIT 50`
+        );
+        return res.json(result.rows);
+    } catch (error) {
+        console.error('Error al listar temas:', error.message);
+        return res.status(500).json({ mensaje: 'No se pudieron obtener los temas.' });
+    }
+};

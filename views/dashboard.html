@@ -4,12 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Control - Wind</title>
-    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="/css/estilos.css">
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/menu.css">
+    <link rel="stylesheet" href="/css/search.css">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Wind">
+    <link rel="apple-touch-icon" href="/img/app.png">
+    <meta name="theme-color" content="#ff4500">
+
 </head>
 <body>
 
-    <script>/js/menu.js</script>
-    <main class="contenedor-principal">
+    <script src="/js/menu.js"></script>
+    <div class="app-container">
+        <div id="menu-placeholder"></div>
+        <main class="contenido-principal contenedor-principal">
         <div class="tarjeta-registro" style="max-width: 600px;">
             <h2>Panel de Control (Wind)</h2>
             <p id="bienvenida-usuario">Cargando datos del perfil...</p>
@@ -38,8 +50,8 @@
             <h3>Herramientas de Especialista</h3>
     <p style="font-size: 0.9rem; color: #333;">Cuentas con permisos institucionales exclusivos para la preservación digital del patrimonio.</p>
     
-    <a href="subir-tema.html" class="boton-enviar" style="display: inline-block; text-align: center; text-decoration: none; margin-top: 10px; margin-right: 10px;">Ir a Publicar Tema Histórico</a>
-    <a href="crear-juego.html" class="boton-enviar" style="display: inline-block; text-align: center; text-decoration: none; margin-top: 10px; background-color: #6f42c1;">Diseñar Nueva Trivia</a>
+    <a href="/subir-tema" class="boton-enviar" style="display: inline-block; text-align: center; text-decoration: none; margin-top: 10px; margin-right: 10px;">Ir a Publicar Tema Histórico</a>
+    <a href="/crear-juego" class="boton-enviar" style="display: inline-block; text-align: center; text-decoration: none; margin-top: 10px; background-color: #6f42c1;">Diseñar Nueva Trivia</a>
 
     <div id="historial-juegos-admin" style="margin-top: 25px; padding-top: 15px; border-top: 1px solid #bce0fd;">
         <h4>Mis Trivias Publicadas</h4>
@@ -56,7 +68,9 @@
             <button id="btn-logout" class="boton-secundario" style="margin-top: 20px; width: 100%;">Cerrar Sesión</button>
         </div>
     </main>
+    </div>
 
-    <script src="js/dashboard.js"></script>
+    <script src="/js/juegos.js"></script>
+    <script src="/js/dashboard.js"></script>
 </body>
 </html>
