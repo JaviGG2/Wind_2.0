@@ -1,0 +1,11 @@
+/* Archivo placeholder para search.css
+   Añadido para evitar errores 404 cuando se carga desde plantillas
+   Ajusta estilos según se necesite más tarde. */
+
+.search-box {
+  display: block;
+}
+
+.search-results {
+  margin-top: 12px;
+}

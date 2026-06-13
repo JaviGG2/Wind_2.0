@@ -4,6 +4,7 @@ const express = require('express');
 const session = require('express-session');
 const nunjucks = require('nunjucks');
 require('dotenv').config();
+const path = require('path');
 
 const app = express();
 
@@ -39,6 +40,8 @@ app.use((req, res, next) => {
 
 // Servir estáticos
 app.use(express.static('public'));
+// Servir carpeta de uploads para que las imágenes subidas sean accesibles públicamente
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // IMPORTACIÓN DE RUTAS MODULARES
 const authRoutes = require('./routes/authRoutes');
@@ -79,6 +82,10 @@ app.get('/subir-tema', verificarSesion, esEspecialista, (req, res) => {
     res.render('subir-tema');
 });
 
+app.get('/ver-tema', verificarSesion, (req, res) => {
+    res.render('ver-tema'); //
+});
+
 // Las demás páginas públicas o de información general
 app.get('/comunidad', (req, res) => res.render('comunidad'));
 app.get('/historias', (req, res) => res.render('historias'));
@@ -86,6 +93,7 @@ app.get('/juegos', (req, res) => res.render('juegos'));
 app.get('/barra_navegacion', (req, res) => res.render('barra_navegacion'));
 app.get('/registro', (req, res) => res.render('Registro'));
 app.get('/login', (req, res) => res.render('login'));
+
 app.get('/', (req, res) => res.render('login'));
 
 // INICIAR EL ESCUCHADOR EN EL PUERTO LOCAL

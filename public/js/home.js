@@ -35,24 +35,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function crearTarjetaTema(tema) {
-        const tarjeta = document.createElement('article');
-        tarjeta.className = 'tarjeta-tema';
+    const tarjeta = document.createElement('article');
+    tarjeta.className = 'tarjeta-tema';
+    // Le ponemos una manito al cursor para que sepa que es cliqueable
+    tarjeta.style.cursor = 'pointer'; 
 
-        tarjeta.innerHTML = `
-            <div class="tema-imagen" style="background-image: url('${tema.imagen_portada || '/img/app.png'}');"></div>
-            <div class="tema-contenido">
-                <h3 class="tema-titulo">${tema.titulo || 'Tema sin título'}</h3>
-                <p>${crearExtracto(tema.contenido)}</p>
-                <div class="tema-meta">
-                    <span class="tema-categoria">${tema.categoria_nombre || 'General'}</span>
-                    <span class="tema-autor">Publicado por: ${tema.creador_nombre || 'Anónimo'}</span>
-                    <span class="tema-fecha">${tema.fecha_publicacion ? new Date(tema.fecha_publicacion).toLocaleDateString('es-VE') : ''}</span>
-                </div>
+    tarjeta.innerHTML = `
+        <div class="tema-imagen" style="background-image: url('${tema.imagen_portada || '/img/app.png'}');"></div>
+        <div class="tema-contenido">
+            <h3 class="tema-titulo">${tema.titulo || 'Tema sin título'}</h3>
+            <p>${crearExtracto(tema.contenido)}</p>
+            <div class="tema-meta">
+                <span class="tema-categoria">${tema.categoria_nombre || 'General'}</span>
+                <span class="tema-autor">Por: ${tema.creador_nombre || 'Anónimo'}</span>
             </div>
-        `;
+            <div style="margin-top: 15px; text-align: right;">
+                <span class="btn-explorar" style="font-weight: bold; color: #d35400;">
+                    Explorar Contenido →
+                </span>
+            </div>
+        </div>
+    `;
 
-        return tarjeta;
+    // 🔑 LA SOLUCIÓN MANDATORIA: Al hacer clic en CUALQUIER parte de la tarjeta,
+    // obligamos al navegador a mudarse de página, rompiendo cualquier bloqueo.
+    tarjeta.addEventListener('click', (evento) => {
+        // Evitamos que otros scripts interfieran
+        evento.stopPropagation(); 
+        
+        // Lo mandamos directo a la nueva vista con su ID
+        window.location.href = `/ver-tema?id=${tema.id}`;
+    });
+
+    return tarjeta;
     }
+    
 
     function crearExtracto(texto) {
         if (!texto) return 'Contenido no disponible.';

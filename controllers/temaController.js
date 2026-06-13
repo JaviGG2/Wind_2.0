@@ -62,3 +62,57 @@ exports.listarTemas = async (req, res) => {
         return res.status(500).json({ mensaje: 'No se pudieron obtener los temas.' });
     }
 };
+
+exports.obtenerTemaPorId = async (req, res) => {
+    const rawId = req.params.id;
+    console.log(`obtenerTemaPorId: petición recibida para id='${rawId}'`);
+
+    // Intentamos usar el valor tal cual: si es numérico lo tratamos como entero,
+    // si no, haremos una búsqueda flexible por texto (útil si usas slugs).
+    const temaIdNum = parseInt(rawId, 10);
+
+    try {
+        let result;
+
+        if (!Number.isNaN(temaIdNum)) {
+            result = await db.query(
+                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion,
+                        c.nombre AS categoria_nombre,
+                        u.nombre AS creador_nombre
+                 FROM temas t
+                 LEFT JOIN categorias c ON t.categoria_id = c.id
+                 LEFT JOIN usuarios u ON t.creador_id = u.id
+                 WHERE t.id = $1
+                 LIMIT 1`,
+                [temaIdNum]
+            );
+        }
+
+        // Si no encontramos resultado con el entero (o no era numérico), intentamos búsqueda por texto
+        if (!result || !result.rows || result.rows.length === 0) {
+            console.log(`obtenerTemaPorId: intento alternativo por texto con '${rawId}'`);
+            result = await db.query(
+                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion,
+                        c.nombre AS categoria_nombre,
+                        u.nombre AS creador_nombre
+                 FROM temas t
+                 LEFT JOIN categorias c ON t.categoria_id = c.id
+                 LEFT JOIN usuarios u ON t.creador_id = u.id
+                 WHERE t.id::text = $1 OR t.slug = $1
+                 LIMIT 1`,
+                [rawId]
+            );
+        }
+
+        console.log('obtenerTemaPorId: filas devueltas =', (result.rows || []).length);
+
+        if (!result.rows || result.rows.length === 0) {
+            return res.status(404).json({ mensaje: 'Tema no encontrado.' });
+        }
+
+        return res.json(result.rows[0]);
+    } catch (error) {
+        console.error('Error al obtener tema por id:', error);
+        return res.status(500).json({ mensaje: 'Error al obtener el tema.' });
+    }
+};
