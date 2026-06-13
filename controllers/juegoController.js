@@ -67,3 +67,39 @@ exports.misJuegos = async (req, res) => {
         return res.status(500).json({ mensaje: 'Error al cargar el historial de trivias.' });
     }
 };
+
+// 3. Listar juegos publicados (público)
+exports.listarPublicos = async (req, res) => {
+    try {
+        const queryTexto = `
+            SELECT j.id, j.pregunta, j.categoria_id, j.puntos_recompensa, c.nombre AS categoria_nombre
+            FROM juegos j
+            LEFT JOIN categorias c ON j.categoria_id = c.id
+            ORDER BY j.id DESC
+            LIMIT 50
+        `;
+        const resultado = await db.query(queryTexto);
+        return res.json(resultado.rows);
+    } catch (error) {
+        console.error('Error al listar juegos públicos:', error.message);
+        return res.status(500).json({ mensaje: 'Error al cargar juegos publicados.' });
+    }
+};
+
+// 4. Eliminar juego (sólo Especialista)
+exports.eliminarJuego = async (req, res) => {
+    if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
+        return res.status(403).json({ mensaje: 'Acceso denegado.' });
+    }
+
+    const id = parseInt(req.params.id, 10);
+    if (Number.isNaN(id)) return res.status(400).json({ mensaje: 'Id inválido.' });
+
+    try {
+        await db.query('DELETE FROM juegos WHERE id = $1', [id]);
+        return res.json({ mensaje: 'Juego eliminado.' });
+    } catch (error) {
+        console.error('Error al eliminar juego:', error.message);
+        return res.status(500).json({ mensaje: 'Error al eliminar el juego.' });
+    }
+};

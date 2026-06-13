@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/home.css">
     <link rel="stylesheet" href="/css/menu.css">
     <link rel="stylesheet" href="/css/search.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="manifest" href="/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -22,55 +23,102 @@
     <div class="app-container">
         <div id="menu-placeholder"></div>
         <main class="contenido-principal contenedor-principal">
-        <div class="tarjeta-registro" style="max-width: 600px;">
-            <h2>Panel de Control (Wind)</h2>
-            <p id="bienvenida-usuario">Cargando datos del perfil...</p>
-            
-            <div id="seccion-natural" class="zona-modulo" style="display: none; margin-top: 20px; padding: 15px; border: 1px dashed #ccc; border-radius: 8px;">
-                <h3>Perfil: Usuario Natural</h3>
-                <p style="font-size: 0.9rem; color: #555;">Actualmente puedes ver relatos, comentar y participar en los juegos patrimoniales.</p>
-                <button id="btn-solicitar-ascenso" class="boton-enviar" style="background-color: #28a745; margin-top: 10px;">Solicitar Ascenso a Especialista</button>
-            </div>
+        <div class="dashboard-root">
+            <header class="dashboard-header">
+                <div class="perfil-cabecera">
+                    <img id="perfil-avatar" src="/img/avatar.svg" alt="avatar" class="perfil-avatar">
+                    <div class="perfil-info">
+                        <div class="perfil-meta">
+                            <h2 id="nombre-usuario">Panel de Control</h2>
+                            <div id="username" class="muted username">&nbsp;</div>
+                        </div>
+                        <div id="rol-usuario" class="rol-usuario">Cargando perfil...</div>
+                    </div>
+                    <div class="perfil-acciones">
+                        <button id="btn-logout" class="boton-secundario">Cerrar Sesión</button>
+                    </div>
+                </div>
+                <p id="bienvenida-usuario" class="bienvenida-text">Bienvenido a tu panel personal.</p>
+            </header>
 
-            <div id="quiz-evaluacion" style="display: none; margin-top: 20px; padding: 15px; background: #f8f9fa; border-left: 4px solid var(--primario); text-align: left;">
+            <section id="seccion-natural" class="zona-modulo natural" style="display:none;">
+                <h3>Perfil: Usuario Natural</h3>
+                <p class="muted">Actualmente puedes ver relatos, comentar y participar en los juegos patrimoniales.</p>
+                <div class="acciones-row"><button id="btn-solicitar-ascenso" class="boton-enviar">Solicitar Ascenso a Especialista</button></div>
+            </section>
+
+            <section id="quiz-evaluacion" class="zona-modulo evaluacion" style="display:none;">
                 <h4>Examen de Validación Histórica (Coro)</h4>
-                <p style="font-size: 0.85rem; color: #666; margin-bottom: 15px;">Responde correctamente para demostrar tus conocimientos y adquirir privilegios de edición.</p>
-                
+                <p class="muted">Responde correctamente para demostrar tus conocimientos y adquirir privilegios de edición.</p>
                 <form id="form-evaluacion">
                     <p><strong>1. ¿Cómo llamaban los indígenas Caquetíos a la ciudad de Coro? </strong></p>
                     <label><input type="radio" name="p1" value="incorrecto1"> Ciudad del Barro</label><br>
                     <label><input type="radio" name="p1" value="correcto"> la ciudad del viento </label><br>
                     <label><input type="radio" name="p1" value="incorrecto2"> Valle de los Ríos</label>
-                    
-                    <button type="submit" class="boton-enviar" style="margin-top: 15px;">Enviar Evaluación</button>
+                    <div class="acciones-row"><button type="submit" class="boton-enviar">Enviar Evaluación</button></div>
                 </form>
-            </div>
+            </section>
 
-            <div id="seccion-especialista" class="zona-modulo" style="display: none; margin-top: 20px; padding: 15px; border: 1px solid var(--primario); border-radius: 8px; background-color: #eef7ff;">
-            <h3>Herramientas de Especialista</h3>
-    <p style="font-size: 0.9rem; color: #333;">Cuentas con permisos institucionales exclusivos para la preservación digital del patrimonio.</p>
-    
-    <a href="/subir-tema" class="boton-enviar" style="display: inline-block; text-align: center; text-decoration: none; margin-top: 10px; margin-right: 10px;">Ir a Publicar Tema Histórico</a>
-    <a href="/crear-juego" class="boton-enviar" style="display: inline-block; text-align: center; text-decoration: none; margin-top: 10px; background-color: #6f42c1;">Diseñar Nueva Trivia</a>
+            <section id="seccion-especialista" class="zona-modulo especialista" style="display:none;">
+                <h3>Herramientas de Especialista</h3>
+                <p class="muted">Cuentas con permisos institucionales exclusivos para la preservación digital del patrimonio.</p>
+                <div class="acciones-row">
+                    <a href="/subir-tema" class="boton-enviar">Ir a Publicar Tema Histórico</a>
+                    <a href="/crear-juego" class="boton-enviar secundario">Diseñar Nueva Trivia</a>
+                </div>
 
-    <div id="historial-juegos-admin" style="margin-top: 25px; padding-top: 15px; border-top: 1px solid #bce0fd;">
-        <h4>Mis Trivias Publicadas</h4>
-        <p style="font-size: 0.8rem; color: #555; margin-bottom: 12px;">Listado en tiempo real de los desafíos lúdicos que has aportado al sistema.</p>
-        
-        <div id="lista-juegos-especialista">
-            <p style="font-size: 0.85rem; color: #888; text-align: center;">Cargando historial...</p>
-        </div>
-    </div>
-</div>
+            </section>
 
-            <div id="mensaje-consola" class="mensaje-oculto" style="margin-top: 15px;"></div>
-            
-            <button id="btn-logout" class="boton-secundario" style="margin-top: 20px; width: 100%;">Cerrar Sesión</button>
+            <section id="seccion-contenidos" class="zona-modulo">
+                <h3>Mis Contenidos</h3>
+                <p class="muted">Explora y administra tus temas y juegos desde un solo lugar.</p>
+                
+                <div class="tabs-container">
+                    <div class="tabs-header">
+                        <button class="tab-button active" onclick="switchTab('juegos')">Juegos</button>
+                        <button class="tab-button" onclick="switchTab('temas')">Temas</button>
+                    </div>
+                    
+                    <div id="tab-juegos" class="tab-content active">
+                        <div class="juego-panel" style="margin-top: 15px;">
+                            <h4>Juegos Publicados</h4>
+                            <p class="muted">Estos juegos ya están disponibles para la comunidad.</p>
+                            <div id="lista-juegos-publicados" class="lista-juegos">
+                                <p class="muted center">Cargando juegos publicados...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab-temas" class="tab-content" style="display: none;">
+                        <h4>Temas Subidos</h4>
+                        <p class="muted">Tus temas históricos publicados en la plataforma.</p>
+                        <div id="lista-temas-subidos" class="lista-temas" style="min-height: 140px; margin-top:12px;">
+                            <p class="muted center">Cargando temas subidos...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div id="mensaje-consola" class="mensaje-oculto"></div>
         </div>
     </main>
     </div>
 
     <script src="/js/juegos.js"></script>
     <script src="/js/dashboard.js"></script>
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+                content.style.display = 'none';
+            });
+            
+            event.currentTarget.classList.add('active');
+            const targetTab = document.getElementById('tab-' + tabId);
+            targetTab.classList.add('active');
+            targetTab.style.display = 'block';
+        }
+    </script>
 </body>
 </html>

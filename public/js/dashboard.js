@@ -12,19 +12,49 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         const res = await fetch('/auth/perfil', {
             method: 'GET',
-            credentials: 'include' // 👈 OBLIGATORIO para que lea la sesión global
+            credentials: 'include' // OBLIGATORIO para que lea la sesión global
         });
+        console.debug('[dashboard] /auth/perfil status', res.status);
         if (!res.ok) {
             // Si no está logueado, lo mandamos al login de inmediato
+            console.warn('[dashboard] perfil no autorizado, redirigiendo a login');
             window.location.href = 'login';
             return;
         }
 
-        const usuario = await res.json();
-        bienvenida.innerHTML = `¡Hola, <strong>${usuario.nombre}</strong>! Bienvenido a la plataforma web de preservación digital.`;
+        // Intentamos parsear JSON y mostrarlo en consola para depuración
+        let usuario;
+        try {
+            usuario = await res.json();
+        } catch (errJson) {
+            const texto = await res.text();
+            console.error('[dashboard] fallo al parsear JSON de /auth/perfil:', errJson, texto);
+            mostrarMensaje('Error al leer perfil (respuesta inválida).', 'error');
+            return;
+        }
+        console.debug('[dashboard] perfil payload', usuario);
+
+        // Rellenar header: nombre, username y rol
+        const nombreElem = document.getElementById('nombre-usuario');
+        const usernameElem = document.getElementById('username');
+        const rolElem = document.getElementById('rol-usuario');
+        const avatarElem = document.getElementById('perfil-avatar');
+
+        if (nombreElem) nombreElem.textContent = usuario.nombre || 'Sin nombre';
+        if (usernameElem) usernameElem.textContent = usuario.username ? `${usuario.username}` : '';
+        if (rolElem) rolElem.textContent = usuario.rol || '';
+        if (avatarElem && usuario.imagen_perfil) avatarElem.src = usuario.imagen_perfil;
+
+        if (!usuario.nombre) {
+            mostrarMensaje('Perfil cargado pero falta el nombre en la sesión.', 'error');
+            console.warn('[dashboard] perfil sin nombre:', usuario);
+        }
+
+        bienvenida.innerHTML = `¡Hola, <strong>${usuario.nombre || 'Usuario'}</strong>! Bienvenido a la plataforma web de preservación digital.`;
 
         // 2. Renderizado condicional según el Rol de la Base de Datos
         configurarVistasPorRol(usuario.rol);
+        if (typeof cargarMisTemas === 'function') cargarMisTemas();
 
     } catch (error) {
         bienvenida.textContent = 'Error de conexión con el panel.';
@@ -85,23 +115,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (rol === 'Especialista') {
             seccionNatural.style.display = 'none';
             seccionEspecialista.style.display = 'block';
-            
-            // Si tienes un contenedor específico para los juegos creados con este id, lo encendemos
-            if (typeof seccionJuegosCreados !== 'undefined') {
-                seccionJuegosCreados.style.display = 'block';
-            }
-
-            // Llamamos a nuestra función que viaja al backend y trae el historial fresquito
-            cargarMisJuegosCreados();
+            // Se eliminan las referencias a la sección de juegos creados y su carga para especialistas
+            // if (typeof seccionJuegosCreados !== 'undefined') { seccionJuegosCreados.style.display = 'block'; } // Eliminado
+            // cargarMisJuegosCreados(); // Eliminado
+            if (typeof cargarMisTemas === 'function') cargarMisTemas();
 
         } else {
             seccionNatural.style.display = 'block';
             seccionEspecialista.style.display = 'none';
-            
-            if (typeof seccionJuegosCreados !== 'undefined') {
-                seccionJuegosCreados.style.display = 'none';
-            }
-            
+            // Se elimina la referencia a la sección de juegos creados para usuarios naturales
+            // if (typeof seccionJuegosCreados !== 'undefined') { seccionJuegosCreados.style.display = 'none'; } // Eliminado
             // Aquí puedes activar la función para cargar las trivias del usuario natural
             if (typeof cargarModuloJuegos === 'function') {
                 cargarModuloJuegos();

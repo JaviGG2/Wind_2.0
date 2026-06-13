@@ -13,5 +13,7 @@ router.get('/crear-juego', (req, res) => {
 
 router.post('/admin/crear-juego', juegoController.crearJuego);
 router.get('/admin/mis-juegos', juegoController.misJuegos);
+router.get('/api/juegos', juegoController.listarPublicos);
+router.delete('/admin/juegos/:id', juegoController.eliminarJuego);
 
 module.exports = router;

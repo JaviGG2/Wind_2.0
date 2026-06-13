@@ -31,15 +31,48 @@ app.use(session({
 }));
 
 // Evitar que el navegador almacene páginas privadas en caché
+// Servir activos con políticas de caché específicas para evitar que cambios en CSS/JS se queden viejos
+app.use('/css', express.static(path.join(__dirname, 'public', 'css'), {
+    maxAge: 0,
+    setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.css')) {
+            res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+        }
+    }
+}));
+app.use('/js', express.static(path.join(__dirname, 'public', 'js'), {
+    maxAge: 0,
+    setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.js')) {
+            res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+        }
+    }
+}));
+app.use('/img', express.static(path.join(__dirname, 'public', 'img'), { maxAge: '7d' }));
+app.use('/fonts', express.static(path.join(__dirname, 'public', 'fonts'), { maxAge: '7d' }));
+app.use('/manifest.json', express.static(path.join(__dirname, 'public', 'manifest.json'), { maxAge: '1h' }));
+app.use('/sw.js', express.static(path.join(__dirname, 'public', 'sw.js'), { maxAge: '1h' }));
+app.use(express.static(path.join(__dirname, 'public'), { maxAge: '7d' }));
+
+// Servir carpeta de uploads (cacheable)
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), { maxAge: '7d' }));
+
+// Evitar que el navegador almacene páginas privadas en caché, pero NO afectar
+// a los activos estáticos que queremos cachear (imágenes, CSS, JS)
 app.use((req, res, next) => {
+    const staticExts = ['.js', '.css', '.png', '.jpg', '.jpeg', '.svg', '.webp', '.ico', '.json'];
+    const ext = path.extname(req.path).toLowerCase();
+
+    // Si la petición es para un asset estático o la carpeta /uploads, no forzamos no-store
+    if (staticExts.includes(ext) || req.path.startsWith('/uploads') || req.path.startsWith('/img') || req.path.startsWith('/css') || req.path.startsWith('/js')) {
+        return next();
+    }
+
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
     next();
 });
-
-// Servir estáticos
-app.use(express.static('public'));
 // Servir carpeta de uploads para que las imágenes subidas sean accesibles públicamente
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -80,6 +113,10 @@ app.get('/relatos', verificarSesion, (req, res) => {
 
 app.get('/subir-tema', verificarSesion, esEspecialista, (req, res) => {
     res.render('subir-tema');
+});
+
+app.get('/editar-tema', verificarSesion, esEspecialista, (req, res) => {
+    res.render('editar-tema');
 });
 
 app.get('/ver-tema', verificarSesion, (req, res) => {

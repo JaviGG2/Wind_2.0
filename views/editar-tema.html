@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Tema Histórico - Wind</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/menu.css">
+    <link rel="stylesheet" href="/css/search.css">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Wind">
+    <link rel="apple-touch-icon" href="/img/app.png">
+    <meta name="theme-color" content="#ff4500">
+
+</head>
+<body>
+    <script src="/js/menu.js"></script>
+    <main class="contenedor-principal">
+        <div class="tarjeta-registro" style="max-width: 600px;">
+            <h2>Editar Tema Patrimonial</h2>
+            <p>Modifica los datos de tu investigación histórica.</p>
+            
+            <form id="formulario-editar-tema" enctype="multipart/form-data">
+                <input type="hidden" id="tema_id" name="id">
+                
+                <div class="grupo-campo">
+                    <label for="categoria_id">Eje Temático / Categoría:</label>
+                    <select id="categoria_id" name="categoria_id" required>
+                        <option value="" disabled selected>Selecciona una categoría...</option>
+                        <option value="1">Arquitectura Colonial</option>
+                        <option value="2">Tradiciones Indígenas (Caquetíos)</option>
+                        <option value="3">Personajes Históricos</option>
+                        <option value="4">Leyendas Falconianas</option>
+                    </select>
+                </div>
+
+                <div class="grupo-campo">
+                    <label for="titulo">Título del Tema:</label>
+                    <input type="text" id="titulo" name="titulo" required placeholder="Ej. La Cruz de San Clemente">
+                </div>
+
+                <div class="grupo-campo">
+                    <label for="imagen_portada">Actualizar Imagen de Portada (Opcional):</label>
+                    <input type="file" id="imagen_portada" name="imagen_portada" accept="image/*">
+                    <div id="imagen-actual-contenedor" style="margin-top: 10px; display: none;">
+                        <p style="font-size: 0.85rem; color: #666;">Imagen actual:</p>
+                        <img id="imagen-actual" src="" alt="Imagen actual" style="max-width: 100px; border-radius: 6px;">
+                    </div>
+                </div>
+
+                <div class="grupo-campo">
+                    <label for="contenido">Contenido del Artículo:</label>
+                    <textarea id="contenido" name="contenido" rows="8" required placeholder="Redacta la investigación histórica..."></textarea>
+                </div>
+
+                <button type="submit" class="boton-enviar">Actualizar Tema</button>
+            </form>
+
+            <div id="mensaje-consola" style="margin-top: 15px; font-weight: bold; text-align: center;"></div>
+
+            <p style="margin-top: 20px; text-align: center; font-size: 0.9rem;">
+                <a href="/dashboard" style="color: var(--primario); text-decoration: none; font-weight: bold;">← Volver al Panel</a>
+            </p>
+        </div>
+    </main>
+
+    <script src="/js/editar-tema.js"></script>
+</body>
+</html>

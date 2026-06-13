@@ -178,6 +178,7 @@ exports.login = async (req, res) => {
         req.session.usuario = {
             id: usuario.id,
             nombre: usuario.nombre,
+            username: usuario.username,
             correo: usuario.correo,
             rol: usuario.rol
         };
@@ -198,12 +199,17 @@ exports.login = async (req, res) => {
 
 // 4. Obtener Perfil
 exports.perfil = (req, res) => {
+    // Log para depuración: muestra la sesión en la consola del servidor
+    console.debug('[authController.perfil] session:', req.session);
+
     if (!req.session.usuario && !req.session.usuarioId) {
         return res.status(401).json({ mensaje: 'No autorizado. Inicie sesión.' });
     }
+
     res.json({
         id: req.session.usuario?.id || req.session.usuarioId,
         nombre: req.session.usuario?.nombre || req.session.nombre,
+        username: req.session.usuario?.username || null,
         rol: req.session.usuario?.rol || req.session.rol
     });
 };
