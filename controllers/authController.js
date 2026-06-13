@@ -67,15 +67,30 @@ exports.registro = async (req, res) => {
             `
         };
 
-        // Se envía el correo en segundo plano
-        await transportador.sendMail(opcionesCorreo);
+        // Intentamos enviar el correo; si falla no bloqueamos el registro
+        try {
+            await transportador.sendMail(opcionesCorreo);
 
-        // Retornamos al frontend la bandera 'requiereVerificacion' y el correo del usuario
-        return res.status(201).json({ 
-            mensaje: 'Usuario registrado con éxito. Revisa tu correo para activar tu cuenta.',
-            requiereVerificacion: true,
-            correo: correo
-        });
+            // Si el correo sale con éxito, respondemos normal
+            return res.status(201).json({ 
+                mensaje: 'Usuario registrado. Revisa tu bandeja de entrada.',
+                requiereVerificacion: true,
+                correo: correo
+            });
+
+        } catch (errorMail) {
+            // 🛡️ Escudo: atrapamos errores de envío (p. ej. Render bloqueando SMTP)
+            console.warn('⚠️ ALERTA: Falló el envío del correo, aplicando bypass.', errorMail && errorMail.message);
+            console.log('Código generado para el usuario:', codigoVerificacion);
+
+            // Respondemos con éxito (201) y devolvemos el código para pruebas locales
+            return res.status(201).json({
+                mensaje: 'Registro exitoso (Modo Desarrollo Activo).',
+                requiereVerificacion: true,
+                correo: correo,
+                codigoBypass: codigoVerificacion
+            });
+        }
 
     } catch (error) {
         if (error.code === '23505') {

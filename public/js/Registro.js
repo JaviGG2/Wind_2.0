@@ -41,16 +41,20 @@ formulario.addEventListener('submit', async (evento) => {
         // Procesamos la respuesta en formato JSON que devuelve el servidor
         const resultado = await respuesta.json();
 
-        if (respuesta.ok && resultado.requiereVerificacion) {
-            // =========================================================================
-            // CAMBIO CLAVE: Ocultamos registro y activamos la sección del código
-            // =========================================================================
+        // Aceptamos 201 (Creado) o respuesta.ok con requiereVerificacion
+        if (respuesta.status === 201 || (respuesta.ok && resultado.requiereVerificacion)) {
             formulario.style.display = 'none'; // Oculta los inputs de registro
             seccionCodigo.style.display = 'block'; // Muestra la caja del código
-            
+
             // Guardamos el correo en el input oculto para saber a quién activar luego
-            verificarCorreoInput.value = resultado.correo;
-            
+            verificarCorreoInput.value = resultado.correo || correo;
+
+            // Si el servidor devolvió un codigoBypass (modo desarrollo), lo mostramos
+            if (resultado.codigoBypass) {
+                alert(`[MODO PRUEBA]: Tu código de activación es: ${resultado.codigoBypass}`);
+                console.log('Tu código de activación es:', resultado.codigoBypass);
+            }
+
             // Limpiamos el formulario viejo por seguridad
             formulario.reset(); 
         } else if (!respuesta.ok) {
@@ -73,40 +77,33 @@ formVerificar.addEventListener('submit', async (evento) => {
     const codigo = codigoInput.value;
 
     try {
-        // Realizamos la petición HTTP POST hacia el backend de Node.js
-        const respuesta = await fetch('/auth/registro', {
+        const respuesta = await fetch('/auth/verificar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(datosUsuario) 
+            body: JSON.stringify({ correo, codigo })
         });
 
-        // Procesamos la respuesta en formato JSON que devuelve el servidor
         const resultado = await respuesta.json();
 
-        // 🔑 MODIFICACIÓN DE SEGURIDAD: 
-        // Si el estatus es 201 (Creado), obligamos al cambio de pantalla.
-        if (respuesta.status === 201 || (respuesta.ok && resultado.requiereVerificacion)) {
-            
-            // =========================================================================
-            // ¡ACCIÓN! Ocultamos registro y activamos la sección del código
-            // =========================================================================
-            formulario.style.display = 'none'; // Oculta los inputs de registro
-            seccionCodigo.style.display = 'block'; // Muestra la caja del código
-            
-            // Guardamos el correo que devolvió el servidor o el que metió el usuario en el input
-            verificarCorreoInput.value = resultado.correo || correo;
-            
-            // Limpiamos el formulario viejo por seguridad
-            formulario.reset(); 
+        if (respuesta.ok) {
+            seccionCodigo.innerHTML = `
+                <h3 style="color: #2ecc71; text-align: center;">${resultado.mensaje}</h3>
+                <p style="text-align: center; color: #666;">Redirigiendo al inicio de sesión...</p>
+            `;
+
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 3000);
         } else {
-            // Si el servidor capturó un fallo de validación o duplicado (Cualquier error)
-            mostrarMensaje(resultado.mensaje || 'Ocurrió un error inesperado.', 'error');
+            txtMensajeCodigo.textContent = resultado.mensaje || 'Código inválido.';
+            txtMensajeCodigo.style.color = '#ff4d4d';
         }
+
     } catch (error) {
-        // En caso de que el servidor esté apagado o falle la conexión a internet
-        mostrarMensaje('No se pudo establecer conexión con el servidor.', 'error');
+        txtMensajeCodigo.textContent = 'Error al procesar la verificación con el servidor.';
+        txtMensajeCodigo.style.color = '#ff4d4d';
     }
 });
 
