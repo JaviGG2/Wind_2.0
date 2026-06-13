@@ -228,11 +228,23 @@ exports.ascender = async (req, res) => {
 
     try {
         await db.query('UPDATE usuarios SET rol = $1 WHERE id = $2', ['Especialista', req.session.usuarioId]);
+        
+        // Actualizar AMBOS campos de sesión para que perfil() los lea correctamente
         req.session.rol = 'Especialista';
+        if (req.session.usuario) {
+            req.session.usuario.rol = 'Especialista';
+        }
 
-        res.json({ 
-            mensaje: '¡Felicidades! Has aprobado la prueba interna. Tu rol ha sido actualizado a Especialista.',
-            nuevoRol: 'Especialista'
+        // Forzar que la sesión se guarde antes de responder
+        req.session.save((err) => {
+            if (err) {
+                console.error('Error al guardar la sesión:', err);
+                return res.status(500).json({ mensaje: 'Error al guardar el ascenso en la sesión.' });
+            }
+            res.json({ 
+                mensaje: '¡Felicidades! Has aprobado la prueba interna. Tu rol ha sido actualizado a Especialista.',
+                nuevoRol: 'Especialista'
+            });
         });
     } catch (error) {
         console.error('Error al ascender rol:', error);

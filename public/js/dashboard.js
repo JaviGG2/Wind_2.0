@@ -112,23 +112,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
    // Función auxiliar para prender/apagar componentes de la interfaz
     function configurarVistasPorRol(rol) {
+        const seccionContenidos = document.getElementById('seccion-contenidos');
+        const seccionRelatos = document.getElementById('seccion-relatos');
+
         if (rol === 'Especialista') {
             seccionNatural.style.display = 'none';
             seccionEspecialista.style.display = 'block';
-            // Se eliminan las referencias a la sección de juegos creados y su carga para especialistas
-            // if (typeof seccionJuegosCreados !== 'undefined') { seccionJuegosCreados.style.display = 'block'; } // Eliminado
-            // cargarMisJuegosCreados(); // Eliminado
-            if (typeof cargarMisTemas === 'function') cargarMisTemas();
+            if (seccionContenidos) seccionContenidos.style.display = 'block';
+            if (seccionRelatos) seccionRelatos.style.display = 'block';
 
+            if (typeof cargarMisTemas === 'function') cargarMisTemas();
+            if (typeof cargarMisRelatos === 'function') cargarMisRelatos();
         } else {
             seccionNatural.style.display = 'block';
             seccionEspecialista.style.display = 'none';
-            // Se elimina la referencia a la sección de juegos creados para usuarios naturales
-            // if (typeof seccionJuegosCreados !== 'undefined') { seccionJuegosCreados.style.display = 'none'; } // Eliminado
-            // Aquí puedes activar la función para cargar las trivias del usuario natural
-            if (typeof cargarModuloJuegos === 'function') {
-                cargarModuloJuegos();
-            }
+            if (seccionContenidos) seccionContenidos.style.display = 'none';
+            if (seccionRelatos) seccionRelatos.style.display = 'block';
+
+            if (typeof cargarMisRelatos === 'function') cargarMisRelatos();
         }
     }
    
@@ -136,4 +137,63 @@ document.addEventListener('DOMContentLoaded', async () => {
         bloqueMensaje.textContent = texto;
         bloqueMensaje.className = `mensaje-alerta ${tipo}`;
     }
+
+    // Función para cargar los relatos del usuario activo
+    async function cargarMisRelatos() {
+        const contenedor = document.getElementById('lista-mis-relatos');
+        if (!contenedor) return;
+
+        try {
+            const res = await fetch('/api/mis-relatos');
+            if (!res.ok) throw new Error('Error al obtener relatos');
+
+            const relatos = await res.json();
+            contenedor.innerHTML = '';
+
+            if (relatos.length === 0) {
+                contenedor.innerHTML = '<p class="muted center">Aún no has publicado ningún relato.</p>';
+                return;
+            }
+
+            relatos.forEach(relato => {
+                const item = document.createElement('div');
+                item.className = 'lista-item-card';
+
+                const info = document.createElement('div');
+                info.className = 'lista-item-info';
+                
+                const title = document.createElement('h5');
+                title.textContent = relato.titulo;
+                
+                const meta = document.createElement('small');
+                meta.className = 'muted';
+                meta.textContent = `Publicado: ${new Date(relato.fecha_publicacion).toLocaleDateString()}`;
+
+                info.appendChild(title);
+                info.appendChild(meta);
+                item.appendChild(info);
+
+                const acciones = document.createElement('div');
+                acciones.className = 'lista-item-acciones';
+
+                const verBtn = document.createElement('button');
+                verBtn.className = 'boton-enviar';
+                verBtn.textContent = 'Ver';
+                verBtn.addEventListener('click', () => {
+                    // Muestra el relato, podrías llevarlo a una página /ver-relato
+                    alert(`Relato: ${relato.titulo}\n\n${relato.contenido_relato}`);
+                });
+                acciones.appendChild(verBtn);
+
+                item.appendChild(acciones);
+                contenedor.appendChild(item);
+            });
+        } catch (error) {
+            console.error('Error cargando relatos:', error);
+            contenedor.innerHTML = '<p class="muted center error">No se pudieron cargar tus relatos.</p>';
+        }
+    }
+
+    // Exponer la función globalmente para que pueda ser llamada en configurarVistasPorRol
+    window.cargarMisRelatos = cargarMisRelatos;
 });

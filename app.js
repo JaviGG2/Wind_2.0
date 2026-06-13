@@ -54,8 +54,8 @@ app.use('/manifest.json', express.static(path.join(__dirname, 'public', 'manifes
 app.use('/sw.js', express.static(path.join(__dirname, 'public', 'sw.js'), { maxAge: '1h' }));
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: '7d' }));
 
-// Servir carpeta de uploads (cacheable)
-app.use('/uploads', express.static(path.join(__dirname, 'uploads'), { maxAge: '7d' }));
+// Servir carpeta de uploads (Multer guarda aquí las imágenes)
+app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads'), { maxAge: '7d' }));
 
 // Evitar que el navegador almacene páginas privadas en caché, pero NO afectar
 // a los activos estáticos que queremos cachear (imágenes, CSS, JS)
@@ -73,8 +73,8 @@ app.use((req, res, next) => {
     res.setHeader('Expires', '0');
     next();
 });
-// Servir carpeta de uploads para que las imágenes subidas sean accesibles públicamente
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Servir carpeta de uploads (redundante, ya cubierta arriba, pero mantenemos para compatibilidad)
+app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 
 // IMPORTACIÓN DE RUTAS MODULARES
 const authRoutes = require('./routes/authRoutes');
@@ -109,6 +109,10 @@ app.get('/dashboard', verificarSesion, (req, res) => {
 // Sección de Relatos: Protegida con guardián
 app.get('/relatos', verificarSesion, (req, res) => {
     res.render('relatos');
+});
+
+app.get('/crear-relato', verificarSesion, (req, res) => {
+    res.render('crear-relato');
 });
 
 app.get('/subir-tema', verificarSesion, esEspecialista, (req, res) => {

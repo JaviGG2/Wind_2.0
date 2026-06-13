@@ -43,3 +43,25 @@ exports.obtenerRelatos = async (req, res) => {
         res.status(500).json({ error: 'Error al obtener los relatos' });
     }
 };
+
+exports.obtenerMisRelatos = async (req, res) => {
+    if (!req.session.usuarioId) {
+        return res.status(401).json({ error: 'No autorizado' });
+    }
+
+    try {
+        const querySQL = `
+            SELECT id, titulo, contenido_relato, fecha_publicacion, usuario_id 
+            FROM relatos_community 
+            WHERE usuario_id = $1
+            ORDER BY fecha_publicacion DESC
+        `;
+        
+        const resultado = await db.query(querySQL, [req.session.usuarioId]);
+        
+        res.status(200).json(resultado.rows);
+    } catch (error) {
+        console.error('Error al obtener mis relatos:', error);
+        res.status(500).json({ error: 'Error al obtener tus relatos' });
+    }
+};

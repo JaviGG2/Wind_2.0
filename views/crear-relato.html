@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Relato - Wind</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/menu.css">
+    <link rel="stylesheet" href="/css/search.css">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Wind">
+    <link rel="apple-touch-icon" href="/img/app.png">
+    <meta name="theme-color" content="#ff4500">
+
+</head>
+<body>
+    <script src="/js/menu.js"></script>
+    <main class="contenedor-principal">
+        <div class="tarjeta-registro" style="max-width: 600px;">
+            <h2>Publicar un Nuevo Relato</h2>
+            <p>Comparte tus experiencias, historias y anécdotas con la comunidad.</p>
+            
+            <form id="formulario-crear-relato">
+                <div class="grupo-campo">
+                    <label for="titulo">Título del Relato:</label>
+                    <input type="text" id="titulo" name="titulo" required placeholder="Ej. Mi visita a los Médanos">
+                </div>
+
+                <div class="grupo-campo">
+                    <label for="contenido">Contenido del Relato:</label>
+                    <textarea id="contenido" name="contenido" rows="8" required placeholder="Escribe tu historia aquí..."></textarea>
+                </div>
+
+                <button type="submit" class="boton-enviar">Publicar Relato</button>
+            </form>
+
+            <div id="mensaje-consola" style="margin-top: 15px; font-weight: bold; text-align: center;"></div>
+
+            <p style="margin-top: 20px; text-align: center; font-size: 0.9rem;">
+                <a href="/dashboard" style="color: var(--primario); text-decoration: none; font-weight: bold;">← Volver al Panel</a>
+            </p>
+        </div>
+    </main>
+
+    <script src="/js/crear-relato.js"></script>
+</body>
+</html>
