@@ -8,6 +8,6 @@ router.post('/auth/login', authController.login);
 router.get('/auth/perfil', authController.perfil);
 router.post('/auth/ascender', authController.ascender);
 router.post('/auth/logout', authController.logout);
-router.post('/verificar', authController.verificarCodigo);
+router.post('/auth/verificar', authController.verificarCodigo);
 
 module.exports = router;

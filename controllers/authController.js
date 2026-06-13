@@ -50,9 +50,11 @@ exports.registro = async (req, res) => {
 
         // Configuración y diseño del correo electrónico
         const opcionesCorreo = {
-            from: '"Wind - Ciudad del Viento" <no-reply@windapp.com>',
+            from: `"Wind - Ciudad del Viento" <${process.env.CORREO_EMISOR}>`,
             to: correo,
+            replyTo: process.env.CORREO_EMISOR,
             subject: 'Código de activación de cuenta - Wind',
+            text: `Hola ${nombre},\n\nGracias por registrarte en Wind. Tu código de activación es: ${codigoVerificacion}\n\nSi no solicitaste este registro, ignora este mensaje.`,
             html: `
                 <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; border: 1px solid #eee; padding: 20px; border-radius: 8px;">
                     <h2 style="color: #333; text-align: center;">¡Hola, ${nombre}!</h2>
