@@ -84,11 +84,145 @@
 
             <!-- Enlace inferior para abandonar el juego -->
             <p style="margin-top: 20px; text-align: center; font-size: 0.9rem;">
-                <a href="dashboard" style="text-decoration: none; font-weight: bold; color: var(--primario);">← Volver al Panel</a>
+                <a href="dashboard.html" style="text-decoration: none; font-weight: bold; color: var(--primario);">← Volver al Panel</a>
             </p>
         </div>
     </main>
 
     <script src="js/ejecutar-juego.js"></script>
+    
+    <script>
+        let palabraCorrectaScramblee = "";
+let primeraCarta = null, segundaCarta = null;
+let elementoTema = null, elementoRespuesta = null;
+
+document.addEventListener("DOMContentLoaded", async () => {
+    const parametrosURL = new URLSearchParams(window.location.search);
+    const idDelJuego = parametrosURL.get("id");
+
+    if (!idDelJuego) {
+        document.getElementById("mostrar-titulo-global").innerText = "Error: Falta ID.";
+        return;
+    }
+
+    try {
+        const URL_API = `https://api-tu-proyecto.com{idDelJuego}`; 
+        const respuesta = await fetch(URL_API);
+        if (!respuesta.ok) throw new Error("No existe el juego.");
+        const juego = await respuesta.json();
+
+        document.getElementById("mostrar-titulo-global").innerText = juego.titulo;
+        document.getElementById("mostrar-puntos-global").innerText = juego.puntos_recompensa;
+
+        const cajaDelJuego = document.getElementById(juego.genero);
+        if (cajaDelJuego) {
+            cajaDelJuego.style.display = "block";
+            renderizarMinijuego(juego.genero, juego);
+        }
+    } catch (error) {
+        document.getElementById("mostrar-titulo-global").innerText = "Error de conexión.";
+    }
+});
+
+function renderizarMinijuego(genero, datos) {
+    if (genero === "quiz") {
+        document.getElementById("mostrar-quiz-pregunta").innerText = datos.pregunta;
+        document.getElementById("contenedor-opciones-quiz").innerHTML = `
+            <button class="btn-opcion" onclick="validarQuiz('A', '${datos.opcion_correcta}')">A) ${datos.opcion_a}</button>
+            <button class="btn-opcion" onclick="validarQuiz('C', '${datos.opcion_correcta}')">C) ${datos.opcion_c}</button>
+        `;
+    }
+    else if (genero === "Memory") {
+        const palabras = datos.pregunta.split(", ");
+        const cartas = [...palabras, ...palabras].sort(() => Math.random() - 0.5);
+        const tablero = document.getElementById("tablero");
+        tablero.innerHTML = "";
+
+        cartas.forEach(palabra => {
+            const wrapper = document.createElement("div");
+            wrapper.className = "carta-container";
+            wrapper.innerHTML = `
+                <div class="carta-inner" data-valor="${palabra}" onclick="voltearCarta(this)">
+                    <div class="carta-front">?</div>
+                    <div class="carta-back">${palabra}</div>
+                </div>`;
+            tablero.appendChild(wrapper);
+        });
+    }
+    else if (genero === "Match") {
+        const temas = datos.pregunta.split(", ");
+        const respuestas = datos.opcion_a.split(", ").sort(() => Math.random() - 0.5);
+        
+        const colTemas = document.getElementById("columna-temas");
+        const colRespuestas = document.getElementById("columna-respuestas");
+        colTemas.innerHTML = ""; colRespuestas.innerHTML = "";
+
+        temas.forEach(t => colTemas.innerHTML += `<button class="btn-match" onclick="seleccionarMatch(this, 'tema')">${t}</button>`);
+        respuestas.forEach(r => colRespuestas.innerHTML += `<button class="btn-match" onclick="seleccionarMatch(this, 'respuesta')">${r}</button>`);
+    }
+    else if (genero === "Scramblee") {
+        document.getElementById("mostrar-scramble-pista").innerText = datos.pregunta;
+        palabraCorrectaScramblee = datos.opcion_a.toUpperCase().trim();
+        document.getElementById("mostrar-scramble-letras").innerText = palabraCorrectaScramblee.split('').sort(() => Math.random() - 0.5).join(' ');
+    }
+}
+
+// Mecánica Quiz
+function validarQuiz(seleccion, correcta) {
+    if (seleccion === correcta) alert("¡Correcto! Ganaste tus XP.");
+    else alert("Incorrecto, intenta de nuevo.");
+}
+
+// Mecánica Scramblee
+function evaluarScramble() {
+    const res = document.getElementById("respuesta-scramble-jugador").value.toUpperCase().trim();
+    if (res === palabraCorrectaScramblee) alert("¡Palabra Correcta!");
+    else alert("Incorrecto.");
+}
+
+// Mecánica Memory
+function voltearCarta(cartaInner) {
+    if (cartaInner.classList.contains("volteada") || cartaInner.classList.contains("emparejada")) return;
+    cartaInner.classList.add("volteada");
+
+    if (!primeraCarta) { primeraCarta = cartaInner; } 
+    else {
+        segundaCarta = cartaInner;
+        if (primeraCarta.getAttribute("data-valor") === segundaCarta.getAttribute("data-valor")) {
+            primeraCarta.classList.add("emparejada");
+            segundaCarta.classList.add("emparejada");
+            primeraCarta = null; segundaCarta = null;
+        } else {
+            setTimeout(() => {
+                primeraCarta.classList.remove("volteada");
+                segundaCarta.classList.remove("volteada");
+                primeraCarta = null; segundaCarta = null;
+            }, 1000);
+        }
+    }
+}
+
+// Mecánica Match (Diseño Activo por Estados)
+function seleccionarMatch(boton, tipo) {
+    if (tipo === 'tema') {
+        if (elementoTema) elementoTema.classList.remove("seleccionado");
+        elementoTema = boton;
+    } else {
+        if (elementoRespuesta) elementoRespuesta.classList.remove("seleccionado");
+        elementoRespuesta = boton;
+    }
+    boton.classList.add("seleccionado");
+
+    if (elementoTema && elementoRespuesta) {
+        elementoTema.classList.remove("seleccionado");
+        elementoRespuesta.classList.remove("seleccionado");
+        elementoTema.classList.add("conectado");
+        elementoRespuesta.classList.add("conectado");
+        elementoTema = null; elementoRespuesta = null;
+    }
+}
+
+    </script>
+    
 </body>
 </html>
