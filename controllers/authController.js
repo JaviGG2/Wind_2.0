@@ -9,8 +9,8 @@ const nodemailer = require('nodemailer');
 // CONFIGURACIÓN AVANZADA Y SEGURA PARA GMAIL
 const transportador = nodemailer.createTransport({
     host: 'smtp.gmail.com',
-    port: 465,
-    secure: true, // true obliga a usar SSL en el puerto 465
+    port: 587,
+    secure: false, // true obliga a usar SSL en el puerto 465
     auth: {
         user: process.env.CORREO_EMISOR,
         pass: process.env.CORREO_PASSWORD
