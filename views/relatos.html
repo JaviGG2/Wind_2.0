@@ -6,26 +6,30 @@
     <title>Relatos</title>
 </head>
 <body>
+<body>
     <h1>Relatos</h1>
 
-
     <div id="relatos-container">
-        <form id="form-relato">
-            <label for ="titulo">Título del Relato:</label>
+        <form id="form-relato" enctype="multipart/form-data">
+            <label for="titulo-relato">Título del Relato:</label>
             <input type="text" id="titulo-relato" name="titulo" required>
 
-            <label for ="conteido">Contenido del Relato:</label>
+            <label for="contenido-relato">Contenido del Relato:</label>
             <textarea id="contenido-relato" name="contenido" required></textarea>
+
+            <label for="imagen-relato">Seleccionar Imagen (Opcional):</label>
+            <input type="file" id="imagen-relato" name="imagen" accept="image/*">
 
             <button type="submit">Publicar Relato</button>
         </form>
-        
-        <div id="mesaje-consola"></div>
+
+        <div id="mensaje-consola"></div>
     </div>
 
-        <div id="lista-relatos" style="margin-top: 30px;"></div>
+    <div id="lista-relatos" style="margin-top: 30px;"></div>
 
-    <script src="/js/Relatos.js"></script>
+    <script src="js/Relatos.js"></script>
+</body>
     
 </body>
 </html>

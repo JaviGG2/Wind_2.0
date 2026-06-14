@@ -1,15 +1,12 @@
-const formulario = document.getElementById ("form-relato");
-const mensaje = document.getElementById ("mensaje-consola");
+const formulario = document.getElementById("form-relato");
+const mensaje = document.getElementById("mensaje-consola");
 const listaRelatos = document.getElementById("lista-relatos");
-//buscar los elementos del HTML
-
 
 async function cargarRelatos() {
     try {
-        const respuesta = await fetch("/api/relatos"); // Petición GET por defecto
+        const respuesta = await fetch("/api/relatos"); 
         const relatos = await respuesta.json();
         
-        // Limpiar el contenedor antes de renderizar para no duplicar
         listaRelatos.innerHTML = ""; 
 
         if (relatos.length === 0) {
@@ -17,13 +14,20 @@ async function cargarRelatos() {
             return;
         }
 
-        // Recorrer los relatos que devolvió el servidor y agregarlos al HTML
         relatos.forEach(relato => {
             const div = document.createElement("div");
             div.classList.add("tarjeta-relato");
+
+            let imagenHTML = "";
+            if (relato.imagen_url) {
+                // Genera la etiqueta de la imagen si existe en la base de datos de Neon
+                imagenHTML = `<img src="${relato.imagen_url}" alt="Imagen del relato" style="max-width: 100%; height: auto; border-radius: 8px; margin-top: 10px; display: block;">`;
+            }
+
             div.innerHTML = `
                 <h3>${relato.titulo}</h3>
                 <p>${relato.contenido_relato}</p>
+                ${imagenHTML} <br>
                 <small>Publicado el: ${new Date(relato.fecha_publicacion).toLocaleDateString()}</small>
                 <hr>
             `;
@@ -33,42 +37,28 @@ async function cargarRelatos() {
         console.error("Error al cargar los relatos:", error);
     }
 }
+
 // Llamar a la función automáticamente cuando cargue la página por primera vez
 cargarRelatos();
 
-// aqui es donde se escucha el evento de submit del formulario
-// =========================================================================
-// ESCUCHADOR PARA ENVIAR NUEVOS RELATOS (POST)
-// =========================================================================
+// Escuchador de eventos para el envío del formulario
 formulario.addEventListener("submit", async (evento) => {
-    evento.preventDefault(); // Detiene la recarga de la página
+    evento.preventDefault(); 
 
-    // 1. CAPTURAR los textos en el momento exacto en que se hace click en enviar
-    const tituloInput = document.getElementById("titulo-relato").value;
-    const contenidoInput = document.getElementById("contenido-relato").value;
+    const formData = new FormData(formulario);
 
-    // 2. ARMAR el objeto JSON con los valores reales
-    const datosRelato = {
-        titulo: tituloInput,
-        contenido: contenidoInput
-    };
-
-    // 3. ENVIAR los datos mediante la red
     try {
         const respuesta = await fetch("/api/relatos", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(datosRelato)
+            body: formData // Envía el formulario con textos e imágenes juntos
         });
 
         const resultado = await respuesta.json();
 
         if (respuesta.ok) {
             mensaje.textContent = "¡Relato enviado con éxito!";
-            formulario.reset(); // Limpia los cuadros de texto
-            cargarRelatos();    // Actualiza la lista para ver el nuevo relato abajo
+            formulario.reset(); 
+            cargarRelatos();    
         } else {
             mensaje.textContent = resultado.error || "Error al enviar el relato";
         }
@@ -77,4 +67,4 @@ formulario.addEventListener("submit", async (evento) => {
         mensaje.textContent = "Error de red al intentar conectar con el servidor";
         console.error("Error al enviar el relato:", error);
     }
-}); // <--- La llave y el paréntesis deben cerrarse al final de TODO el proceso
+});
