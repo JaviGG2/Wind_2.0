@@ -71,14 +71,30 @@ exports.misJuegos = async (req, res) => {
 // 3. Listar juegos publicados (público)
 exports.listarPublicos = async (req, res) => {
     try {
-        const queryTexto = `
-            SELECT j.id, j.pregunta, j.categoria_id, j.puntos_recompensa, c.nombre AS categoria_nombre
-            FROM juegos j
-            LEFT JOIN categorias c ON j.categoria_id = c.id
-            ORDER BY j.id DESC
-            LIMIT 50
-        `;
-        const resultado = await db.query(queryTexto);
+        const categoriaId = req.query.categoria ? parseInt(req.query.categoria, 10) : null;
+        let queryTexto;
+        let params = [];
+
+        if (categoriaId && !Number.isNaN(categoriaId)) {
+            queryTexto = `
+                SELECT j.id, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.categoria_id, j.puntos_recompensa, c.nombre AS categoria_nombre
+                FROM juegos j
+                LEFT JOIN categorias c ON j.categoria_id = c.id
+                WHERE j.categoria_id = $1
+                ORDER BY j.id DESC
+                LIMIT 100
+            `;
+            params = [categoriaId];
+        } else {
+            queryTexto = `
+                SELECT j.id, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.categoria_id, j.puntos_recompensa, c.nombre AS categoria_nombre
+                FROM juegos j
+                LEFT JOIN categorias c ON j.categoria_id = c.id
+                ORDER BY j.id DESC
+                LIMIT 100
+            `;
+        }
+        const resultado = await db.query(queryTexto, params);
         return res.json(resultado.rows);
     } catch (error) {
         console.error('Error al listar juegos públicos:', error.message);
@@ -101,5 +117,72 @@ exports.eliminarJuego = async (req, res) => {
     } catch (error) {
         console.error('Error al eliminar juego:', error.message);
         return res.status(500).json({ mensaje: 'Error al eliminar el juego.' });
+    }
+};
+
+// 5. Responder trivia y guardar puntos
+exports.responderJuego = async (req, res) => {
+    if (!req.session.usuarioId) {
+        return res.status(401).json({ mensaje: 'Debes iniciar sesión para jugar.' });
+    }
+
+    const { juego_id, respuesta_usuario } = req.body;
+
+    if (!juego_id || !respuesta_usuario) {
+        return res.status(400).json({ mensaje: 'Faltan datos de la respuesta.' });
+    }
+
+    try {
+        const juegoRes = await db.query('SELECT * FROM juegos WHERE id = $1', [juego_id]);
+        if (juegoRes.rows.length === 0) {
+            return res.status(404).json({ mensaje: 'Juego no encontrado.' });
+        }
+
+        const juego = juegoRes.rows[0];
+
+        const respuestaUpper = String(respuesta_usuario).trim().toUpperCase();
+        const correctaRaw = String(juego.opcion_correcta).trim();
+        const correctaUpper = correctaRaw.toUpperCase();
+
+        const letraCorrecta = ['A', 'B', 'C'].includes(correctaUpper) ? correctaUpper : null;
+
+        const resolverLetra = (texto) => {
+            const t = texto.toUpperCase();
+            if (t === (juego.opcion_a || '').trim().toUpperCase()) return 'A';
+            if (t === (juego.opcion_b || '').trim().toUpperCase()) return 'B';
+            if (t === (juego.opcion_c || '').trim().toUpperCase()) return 'C';
+            return null;
+        };
+
+        const targetUpper = letraCorrecta || resolverLetra(correctaRaw) || '';
+        const esCorrecta = ['A', 'B', 'C'].includes(respuestaUpper) && respuestaUpper === targetUpper;
+
+        if (!esCorrecta) {
+            return res.json({
+                correcto: false,
+                puntos_ganados: 0,
+                mensaje: 'Respuesta incorrecta. ¡Sigue intentando!'
+            });
+        }
+
+        const puntos = Number(juego.puntos_recompensa) || 10;
+        if (!Number.isFinite(puntos)) {
+            return res.json({
+                correcto: false,
+                puntos_ganados: 0,
+                mensaje: 'Puntos inválidos en la trivia.'
+            });
+        }
+
+        await db.query('UPDATE usuarios SET puntos = puntos + $1 WHERE id = $2', [puntos, req.session.usuarioId]);
+
+        return res.json({
+            correcto: true,
+            puntos_ganados: puntos,
+            mensaje: `¡Correcto! Has ganado ${puntos} pts.`
+        });
+    } catch (error) {
+        console.error('Error al procesar la trivia:', error.message);
+        return res.status(500).json({ mensaje: 'Error al procesar el juego.' });
     }
 };

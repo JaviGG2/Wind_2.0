@@ -35,12 +35,15 @@ exports.crearRelato = async (req, res) => {
 
 exports.obtenerRelatos = async (req, res) => {
     try {
+        // Trae todos los relatos ordenados desde el más reciente al más antiguo
         const querySQL = `
-            SELECT id, titulo, contenido_relato, imagen_url, fecha_publicacion, usuario_id 
+            SELECT id, titulo, contenido_relato, fecha_publicacion, usuario_id 
             FROM relatos_community 
             ORDER BY fecha_publicacion DESC
         `;
+        
         const resultado = await db.query(querySQL);
+        
         res.status(200).json(resultado.rows);
     } catch (error) {
         console.error('Error al obtener relatos:', error);

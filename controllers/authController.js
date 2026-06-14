@@ -198,7 +198,7 @@ exports.login = async (req, res) => {
 };
 
 // 4. Obtener Perfil
-exports.perfil = (req, res) => {
+exports.perfil = async (req, res) => {
     // Log para depuración: muestra la sesión en la consola del servidor
     console.debug('[authController.perfil] session:', req.session);
 
@@ -206,12 +206,71 @@ exports.perfil = (req, res) => {
         return res.status(401).json({ mensaje: 'No autorizado. Inicie sesión.' });
     }
 
-    res.json({
-        id: req.session.usuario?.id || req.session.usuarioId,
-        nombre: req.session.usuario?.nombre || req.session.nombre,
-        username: req.session.usuario?.username || null,
-        rol: req.session.usuario?.rol || req.session.rol
-    });
+    const usuarioId = req.session.usuario?.id || req.session.usuarioId;
+
+    try {
+        let extra = {};
+        let result;
+        try {
+            result = await db.query(
+                'SELECT puntos, imagen_perfil FROM usuarios WHERE id = $1',
+                [usuarioId]
+            );
+        } catch (error) {
+            if (error.code === '42703') {
+                result = await db.query(
+                    'SELECT puntos FROM usuarios WHERE id = $1',
+                    [usuarioId]
+                );
+            } else {
+                throw error;
+            }
+        }
+        extra = result.rows[0] || {};
+
+        return res.json({
+            id: usuarioId,
+            nombre: req.session.usuario?.nombre || req.session.nombre,
+            username: req.session.usuario?.username || null,
+            rol: req.session.usuario?.rol || req.session.rol,
+            puntos: extra.puntos || 0,
+            imagen_perfil: extra.imagen_perfil || null
+        });
+    } catch (error) {
+        console.error('Error al obtener perfil extendido:', error);
+        return res.json({
+            id: usuarioId,
+            nombre: req.session.usuario?.nombre || req.session.nombre,
+            username: req.session.usuario?.username || null,
+            rol: req.session.usuario?.rol || req.session.rol,
+            puntos: 0,
+            imagen_perfil: null
+        });
+    }
+};
+
+// 4b. Actualizar Foto de Perfil
+exports.actualizarFotoPerfil = async (req, res) => {
+    if (!req.session.usuarioId) {
+        return res.status(401).json({ mensaje: 'Debes iniciar sesión.' });
+    }
+
+    if (!req.file) {
+        return res.status(400).json({ mensaje: 'No se recibió ninguna imagen.' });
+    }
+
+    const rutaImagen = `/uploads/${req.file.filename}`;
+
+    try {
+        await db.query(
+            'UPDATE usuarios SET imagen_perfil = $1 WHERE id = $2',
+            [rutaImagen, req.session.usuarioId]
+        );
+        return res.json({ mensaje: 'Foto de perfil actualizada.', imagen_perfil: rutaImagen });
+    } catch (error) {
+        console.error('Error al actualizar foto de perfil:', error);
+        return res.status(500).json({ mensaje: 'Error al guardar la foto de perfil.' });
+    }
 };
 
 // 5. Ascender Rol

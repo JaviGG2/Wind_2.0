@@ -1,5 +1,5 @@
-const formulario = document.getElementById("form-relato");
-const mensaje = document.getElementById("mensaje-consola");
+const formulario = document.getElementById ("form-relato");
+const mensaje = document.getElementById ("mensaje-consola");
 const listaRelatos = document.getElementById("lista-relatos");
 
 async function cargarRelatos() {
@@ -37,28 +37,42 @@ async function cargarRelatos() {
         console.error("Error al cargar los relatos:", error);
     }
 }
-
 // Llamar a la función automáticamente cuando cargue la página por primera vez
 cargarRelatos();
 
-// Escuchador de eventos para el envío del formulario
+// aqui es donde se escucha el evento de submit del formulario
+// =========================================================================
+// ESCUCHADOR PARA ENVIAR NUEVOS RELATOS (POST)
+// =========================================================================
 formulario.addEventListener("submit", async (evento) => {
-    evento.preventDefault(); 
+    evento.preventDefault(); // Detiene la recarga de la página
 
-    const formData = new FormData(formulario);
+    // 1. CAPTURAR los textos en el momento exacto en que se hace click en enviar
+    const tituloInput = document.getElementById("titulo-relato").value;
+    const contenidoInput = document.getElementById("contenido-relato").value;
 
+    // 2. ARMAR el objeto JSON con los valores reales
+    const datosRelato = {
+        titulo: tituloInput,
+        contenido: contenidoInput
+    };
+
+    // 3. ENVIAR los datos mediante la red
     try {
         const respuesta = await fetch("/api/relatos", {
             method: "POST",
-            body: formData // Envía el formulario con textos e imágenes juntos
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(datosRelato)
         });
 
-        const resultado = await respuesta.json();
+                const resultado = await respuesta.json();
 
         if (respuesta.ok) {
             mensaje.textContent = "¡Relato enviado con éxito!";
-            formulario.reset(); 
-            cargarRelatos();    
+            formulario.reset(); // Limpia los cuadros de texto
+            cargarRelatos();    // Actualiza la lista para ver el nuevo relato abajo
         } else {
             mensaje.textContent = resultado.error || "Error al enviar el relato";
         }
