@@ -1,21 +1,41 @@
-const { Pool } = require('pg'); // Asegúrate de usar llaves { Pool } y no paréntesis
+const { Pool } = require('pg');
 require('dotenv').config();
+
+if (!process.env.DATABASE_URL) {
+    console.error('ERROR CRITICO: DATABASE_URL no está definida en el archivo .env');
+    console.error('Crea un archivo .env en la raíz del proyecto con:');
+    console.error('DATABASE_URL=postgresql://usuario:password@host:puerto/nombre_db');
+    process.exit(1);
+}
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
-        rejectUnauthorized: false // Esto es obligatorio para conectar con Neon de forma segura
+        rejectUnauthorized: false
     }
 });
 
+// Probar conexión al iniciar
 pool.connect((err, client, release) => {
     if (err) {
-        return console.error('Error crítico al conectar con Neon.tech:', err.stack);
+        console.error('Error al conectar con la base de datos:', err.message);
+        console.error('Verifica que DATABASE_URL sea correcta en tu archivo .env');
+        return;
     }
-    console.log('¡Éxito! Conectado correctamente al servidor PostgreSQL en Neon.');
+    console.log('Base de datos conectada correctamente');
     release();
 });
 
 module.exports = {
-    query: (text, params) => pool.query(text, params)
+    query: async (text, params) => {
+        try {
+            const result = await pool.query(text, params);
+            return result;
+        } catch (error) {
+            console.error('Error en consulta SQL:', error.message);
+            console.error('Query:', text);
+            console.error('Params:', params);
+            throw error;
+        }
+    }
 };

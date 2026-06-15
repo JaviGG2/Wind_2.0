@@ -29,10 +29,18 @@ async function cargarRelatos(categoria = '') {
             ? `/api/relatos?categoria=${encodeURIComponent(categoria)}`
             : '/api/relatos';
 
+        console.log('[comunidad] Fetching relatos desde:', url);
         const res = await fetch(url, { credentials: 'include' });
-        if (!res.ok) throw new Error('Error al obtener relatos');
+        console.log('[comunidad] Response status:', res.status, res.statusText);
+        
+        if (!res.ok) {
+            const errorText = await res.text();
+            console.error('[comunidad] Error response body:', errorText);
+            throw new Error(`Error ${res.status}: ${res.statusText}`);
+        }
 
         const relatos = await res.json();
+        console.log('[comunidad] Relatos recibidos:', relatos.length, relatos);
         todosLosRelatos = relatos;
 
         grid.innerHTML = '';

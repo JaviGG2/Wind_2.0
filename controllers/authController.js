@@ -315,7 +315,10 @@ exports.ascender = async (req, res) => {
 exports.logout = (req, res) => {
     req.session.destroy((err) => {
         if (err) return res.status(500).json({ mensaje: 'No se pudo cerrar la sesión.' });
-        res.clearCookie('connect.sid');
+        res.clearCookie('connect.sid', { path: '/' });
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
         res.json({ mensaje: 'Sesión destruida con éxito.' });
     });
 };

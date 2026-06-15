@@ -3,6 +3,7 @@ const path = require('path');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
 const db = require('./config/db');
+const relatoRoutes = require('./routes/relatoRoutes');
 require('dotenv').config();
 
 const app = express();
@@ -152,6 +153,9 @@ app.post('/juegos/responder', async (req, res) => {
         res.status(500).send('Error al procesar el juego.');
     }
 });
+
+// Registrar rutas de relatos para el servidor actual
+app.use(relatoRoutes);
 
 // Iniciar el servidor
 const PORT = process.env.PORT || 3000;

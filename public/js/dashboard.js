@@ -12,17 +12,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         const res = await fetch('/auth/perfil', {
             method: 'GET',
-            credentials: 'include' // OBLIGATORIO para que lea la sesión global
+            credentials: 'include'
         });
         console.debug('[dashboard] /auth/perfil status', res.status);
         if (!res.ok) {
-            // Si no está logueado, lo mandamos al login de inmediato
             console.warn('[dashboard] perfil no autorizado, redirigiendo a login');
             window.location.href = 'login';
             return;
         }
 
-        // Intentamos parsear JSON y mostrarlo en consola para depuración
         let usuario;
         try {
             usuario = await res.json();
@@ -50,13 +48,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.warn('[dashboard] perfil sin nombre:', usuario);
         }
 
-        bienvenida.innerHTML = `¡Hola, <strong>${usuario.nombre || 'Usuario'}</strong>! Bienvenido a la plataforma web de preservación digital.`;
+        bienvenida.innerHTML = `¡Hola, <strong>${usuario.nombre || 'Usuario'}</strong> Bienvenido a la plataforma web de preservación digital.`;
 
-        // 2. Renderizado condicional según el Rol de la Base de Datos
         configurarVistasPorRol(usuario.rol);
         if (typeof cargarMisTemas === 'function') cargarMisTemas();
+        if (typeof cargarMisJuegosCreados === 'function') cargarMisJuegosCreados();
+        if (typeof cargarMisRelatos === 'function') cargarMisRelatos();
 
     } catch (error) {
+        console.error('[dashboard] Error cargando perfil:', error);
         bienvenida.textContent = 'Error de conexión con el panel.';
     }
 
@@ -69,10 +69,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 3. Procesar el envío del examen de conocimientos históricos
     formEvaluacion.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
-        // Obtener la opción que seleccionó el usuario
+
         const opcionSeleccionada = document.querySelector('input[name="p1"]:checked');
-        
+
         if (!opcionSeleccionada) {
             mostrarMensaje('Por favor, selecciona una respuesta.', 'error');
             return;
@@ -91,7 +90,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (resAscenso.ok) {
                 mostrarMensaje(resultado.mensaje, 'exito');
                 quizEvaluacion.style.display = 'none';
-                // Cambiamos dinámicamente la vista al nuevo rol desbloqueado
                 configurarVistasPorRol(resultado.nuevoRol);
             } else {
                 mostrarMensaje(resultado.mensaje, 'error');
@@ -110,29 +108,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (res.ok) window.location.replace('/login');
     });
 
-   // Función auxiliar para prender/apagar componentes de la interfaz
+    // Función auxiliar para prender/apagar componentes de la interfaz
     function configurarVistasPorRol(rol) {
         const seccionContenidos = document.getElementById('seccion-contenidos');
         const seccionRelatos = document.getElementById('seccion-relatos');
 
         if (rol === 'Especialista') {
-            seccionNatural.style.display = 'none';
-            seccionEspecialista.style.display = 'block';
+            if (seccionNatural) seccionNatural.style.display = 'none';
+            if (seccionEspecialista) seccionEspecialista.style.display = 'block';
             if (seccionContenidos) seccionContenidos.style.display = 'block';
             if (seccionRelatos) seccionRelatos.style.display = 'block';
 
             if (typeof cargarMisTemas === 'function') cargarMisTemas();
+            if (typeof cargarMisJuegosCreados === 'function') cargarMisJuegosCreados();
             if (typeof cargarMisRelatos === 'function') cargarMisRelatos();
         } else {
-            seccionNatural.style.display = 'block';
-            seccionEspecialista.style.display = 'none';
+            if (seccionNatural) seccionNatural.style.display = 'block';
+            if (seccionEspecialista) seccionEspecialista.style.display = 'none';
             if (seccionContenidos) seccionContenidos.style.display = 'none';
             if (seccionRelatos) seccionRelatos.style.display = 'block';
 
             if (typeof cargarMisRelatos === 'function') cargarMisRelatos();
         }
     }
-   
+
     function mostrarMensaje(texto, tipo) {
         bloqueMensaje.textContent = texto;
         bloqueMensaje.className = `mensaje-alerta ${tipo}`;
@@ -161,10 +160,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 const info = document.createElement('div');
                 info.className = 'lista-item-info';
-                
+
                 const title = document.createElement('h5');
                 title.textContent = relato.titulo;
-                
+
                 const meta = document.createElement('small');
                 meta.className = 'muted';
                 meta.textContent = `Publicado: ${new Date(relato.fecha_publicacion).toLocaleDateString()}`;
@@ -180,7 +179,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 verBtn.className = 'boton-enviar';
                 verBtn.textContent = 'Ver';
                 verBtn.addEventListener('click', () => {
-                    // Muestra el relato, podrías llevarlo a una página /ver-relato
                     alert(`Relato: ${relato.titulo}\n\n${relato.contenido_relato}`);
                 });
                 acciones.appendChild(verBtn);
@@ -194,6 +192,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // Exponer la función globalmente para que pueda ser llamada en configurarVistasPorRol
+    // Exponer las funciones globalmente
     window.cargarMisRelatos = cargarMisRelatos;
+    window.cargarMisJuegosCreados = cargarMisJuegosCreados;
 });

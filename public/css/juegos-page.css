@@ -24,20 +24,22 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* ----- HERO JUEGOS ----- */
+/* ----- HERO JUEGOS OPTIMIZADO ----- */
 .juegos-hero {
     position: relative;
-    background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
-    padding: 60px 32px;
+    /* Cambiado a un degradado suave y luminoso que funde con el fondo de la app */
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); 
+    padding: 60px 32px 80px; 
     margin: 0 0 40px 0;
-    border-radius: 0 0 32px 32px;
+    border-radius: 0 0 32px 32px; 
     overflow: hidden;
-    color: #fff;
+    color: var(--c-texto); /* Texto oscuro para que contraste a la perfección */
     display: flex;
     justify-content: center;
+    border-bottom: 1px solid var(--c-border); /* Una línea sutil para delimitar el final del hero */
 }
 
-.hero-particles {
+ero-particles {
     position: absolute;
     inset: 0;
     pointer-events: none;
@@ -46,45 +48,42 @@ body {
 .particle {
     position: absolute;
     font-size: 2rem;
-    opacity: 0.1;
-    animation: float 6s ease-in-out infinite;
+    opacity: 0.05; /* Opacidad muy baja para que los iconos floten como marcas de agua tenues */
+    animation: float 8s ease-in-out infinite;
 }
 
 .p1 {
     top: 15%;
-    left: 10%;
+    left: 8%;
     animation-delay: 0s;
-    font-size: 3rem;
+    font-size: 3.2rem;
 }
 
 .p2 {
     top: 20%;
-    right: 15%;
-    animation-delay: 1s;
-    font-size: 2.5rem;
+    right: 10%;
+    animation-delay: 1.5s;
+    font-size: 2.6rem;
 }
 
 .p3 {
-    bottom: 20%;
-    left: 20%;
-    animation-delay: 2s;
-    font-size: 2rem;
+    bottom: 25%;
+    left: 15%;
+    animation-delay: 3s;
+    font-size: 2.2rem;
 }
 
 .p4 {
-    bottom: 15%;
-    right: 10%;
-    animation-delay: 1.5s;
-    font-size: 3.5rem;
+    bottom: 20%;
+    right: 8%;
+    animation-delay: 4.5s;
+    font-size: 3.8rem;
 }
 
 @keyframes float {
-
-    0%,
-    100% {
+    0%, 100% {
         transform: translateY(0) rotate(0deg);
     }
-
     50% {
         transform: translateY(-20px) rotate(10deg);
     }
@@ -93,7 +92,7 @@ body {
 .hero-content {
     position: relative;
     z-index: 1;
-    max-width: 600px;
+    max-width: 640px;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -101,42 +100,47 @@ body {
 }
 
 .hero-icon {
-    width: 72px;
-    height: 72px;
-    background: linear-gradient(135deg, #FF4500, #ff8c42);
-    border-radius: 20px;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #FF4500, #ff7300);
+    border-radius: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 24px;
-    box-shadow: 0 12px 32px rgba(255, 69, 0, 0.3);
-    transform: rotate(-10deg);
+    box-shadow: 0 12px 28px rgba(255, 69, 0, 0.25); /* Sombra suavizada para fondo claro */
+    transform: rotate(-8deg);
+    transition: transform 0.3s ease;
+}
+
+.hero-icon:hover {
+    transform: rotate(0deg) scale(1.05);
 }
 
 .hero-icon .material-symbols-outlined {
-    font-size: 36px;
+    font-size: 40px;
     color: #fff;
-    transform: rotate(10deg);
 }
 
 .hero-title {
-    font-size: clamp(2rem, 6vw, 3rem);
+    font-size: clamp(2.2rem, 6vw, 3.2rem);
     font-weight: 800;
     margin: 0 0 16px 0;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    color: var(--c-texto);
 }
 
 .hero-subtitle {
     font-size: 1.1rem;
-    color: #9ca3af;
+    color: var(--c-muted); /* Usa tu variable de texto secundario gris */
     line-height: 1.6;
-    margin: 0 0 32px 0;
+    margin: 0 0 36px 0;
 }
 
 .hero-stats {
     display: flex;
-    gap: 20px;
+    gap: 16px;
     justify-content: center;
     flex-wrap: wrap;
 }
@@ -144,17 +148,63 @@ body {
 .stat-bubble {
     display: flex;
     align-items: center;
-    gap: 12px;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(8px);
-    padding: 12px 24px;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 14px;
+    background: #f1f5f9; /* Un gris azulado suave y sólido para que resalte en el fondo blanco */
+    padding: 14px 24px;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0; /* Borde sutil para darle definición */
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.stat-bubble:hover {
+    transform: translateY(-2px);
+    background: #e2e8f0;
+}
+
+.stat-bubble strong {
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #0f172a; /* Texto principal oscuro */
+}
+
+.stat-bubble small {
+    font-size: 0.75rem;
+    color: #000000; /* Gris oscuro para que las etiquetas secundarias sean totalmente legibles */
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+    font-weight: 600; /* Un poco más de grosor para mejorar la lectura */
+}
+
+.hero-stats {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.stat-bubble {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255, 255, 255, 0.06); 
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 14px 28px; 
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.stat-bubble:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.1); 
 }
 
 .stat-bubble .material-symbols-outlined {
     color: var(--c-primario);
-    font-size: 1.5rem;
+    font-size: 1.6rem;
 }
 
 .stat-bubble div {
@@ -164,74 +214,87 @@ body {
 }
 
 .stat-bubble strong {
-    font-size: 1.1rem;
+    font-size: 1.2rem; 
+    font-weight: 700;
     line-height: 1.2;
 }
 
 .stat-bubble small {
     font-size: 0.75rem;
-    color: #9ca3af;
+    color: rgba(233, 142, 22, 0.5); 
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
+    margin-top: 2px;
 }
 
-/* ----- FILTROS ----- */
+/* ----- FILTROS OPTIMIZADOS ----- */
 .filtros-seccion {
     padding: 0 32px;
-    margin-bottom: 32px;
+    margin-bottom: 40px; 
 }
 
 .filtros-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 16px;
+    margin-bottom: 20px; 
 }
 
 .filtros-titulo {
-    font-size: 1.25rem;
+    font-size: 1.35rem; 
     font-weight: 700;
+    letter-spacing: -0.01em;
     margin: 0;
 }
 
 .relatos-count {
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     color: var(--c-muted);
+    font-weight: 500;
+    background: rgba(18, 18, 18, 0.04); 
+    padding: 4px 12px;
+    border-radius: 8px;
 }
 
 .filtros-chips {
     display: flex;
-    gap: 12px;
+    gap: 14px; 
     flex-wrap: wrap;
 }
 
 .chip {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 18px;
+    gap: 8px; 
+    padding: 10px 22px; 
     border-radius: 999px;
     border: 1px solid var(--c-border);
     background: var(--c-card);
     color: var(--c-muted);
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 150ms ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02); 
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1); 
 }
 
 .chip:hover {
     border-color: var(--c-primario);
     color: var(--c-primario);
+    background: var(--c-card);
+    transform: translateY(-2px); 
+    box-shadow: 0 4px 12px rgba(255, 69, 0, 0.08);
 }
-
 .chip.active {
     background: var(--c-primario);
-    color: #fff;
+    color: #ffffff;
     border-color: var(--c-primario);
+    transform: translateY(0); 
+    box-shadow: 0 8px 20px var(--c-primario-glow);
 }
 
 /* ----- GRID DE JUEGOS ----- */
+/* ----- GRID Y CONTENEDOR DE JUEGOS ----- */
 .juegos-grid-section {
     padding: 0 32px 80px;
 }
@@ -239,118 +302,14 @@ body {
 .juegos-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 24px;
+    gap: 32px; /* Incrementado de 24px a 32px para una separación más limpia entre tarjetas */
 }
 
+/* ----- TARJETA DE JUEGO (CONSOLIDADA Y DESAHOGADA) ----- */
 .juego-card {
     background: var(--c-card);
     border-radius: var(--radius-md);
-    padding: 24px;
-    border: 1px solid var(--c-border);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-    transition: transform 200ms ease, box-shadow 200ms ease;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-}
-
-.juego-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: var(--c-primario);
-    opacity: 0;
-    transition: opacity 200ms ease;
-}
-
-.juego-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(18, 18, 18, 0.08);
-}
-
-.juego-card:hover::before {
-    opacity: 1;
-}
-
-.juego-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 16px;
-}
-
-.juego-cat {
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--c-primario);
-    background: var(--c-primario-light);
-    padding: 4px 10px;
-    border-radius: 6px;
-}
-
-.juego-pts {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-weight: 700;
-    color: #eab308;
-    background: #fef9c3;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 0.85rem;
-}
-
-.juego-pts .material-symbols-outlined {
-    font-size: 1.1rem;
-}
-
-.btn-jugar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    padding: 12px;
-    background: var(--c-texto);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all 150ms ease;
-    margin-top: auto;
-}
-
-.juego-card:hover .btn-jugar {
-    background: var(--c-primario);
-    transform: scale(1.02);
-}
-
-.juego-pregunta-texto {
-    font-size: 1.05rem;
-    font-weight: 600;
-    line-height: 1.5;
-    color: var(--c-texto);
-    margin: 0 0 20px 0;
-    flex: 1;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.juego-card {
-    background: var(--c-card);
-    border-radius: var(--radius-md);
-    padding: 24px;
+    padding: 32px; /* Espaciado interno amplio para evitar que el contenido choque con los bordes */
     border: 1px solid var(--c-border);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
     transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -359,7 +318,7 @@ body {
     position: relative;
     overflow: hidden;
     cursor: pointer;
-    min-height: 220px;
+    min-height: 260px; /* Altura mínima expandida para dar holgura al texto */
 }
 
 .juego-card::before {
@@ -369,7 +328,7 @@ body {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, var(--c-primario), #ff8c42);
+    background: linear-gradient(90deg, var(--c-primario), #ff8c42); /* Degradado limpio */
     opacity: 0;
     transition: opacity 200ms ease;
 }
@@ -384,62 +343,152 @@ body {
     opacity: 1;
 }
 
+/* ----- ELEMENTOS INTERNOS DE LA TARJETA ----- */
+.juego-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Alinea los elementos arriba para dar espacio si el texto se divide */
+    gap: 12px; /* Evita que la categoría y los puntos se peguen */
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.juego-cat {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--c-primario);
+    background: var(--c-primario-light);
+    padding: 6px 12px;
+    border-radius: 6px;
+    /* Las siguientes propiedades controlan que el texto largo no rompa feo */
+    white-space: normal; 
+    line-height: 1.3;
+    max-width: 70%; /* Le deja un 30% del espacio asegurado a la burbuja de puntos */
+}
+
+.juego-pts {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    color: #eab308;
+    background: #fef9c3;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    flex-shrink: 0; /* Impide que la burbuja de puntos se encoja o se deforme */
+}
+
+.juego-pts .material-symbols-outlined {
+    font-size: 1.1rem;
+}
+
+.juego-pregunta-texto {
+    font-size: 1.15rem; /* Un poco más grande para mejor legibilidad */
+    font-weight: 700;
+    line-height: 1.6; /* Interlineado desahogado */
+    color: var(--c-texto);
+    margin: 0 0 28px 0; /* Separación marcada antes del botón */
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ----- BOTÓN DE ACCIÓN ----- */
+.btn-jugar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 20px; /* Área de clic más alta y cómoda */
+    background: var(--c-texto);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 150ms ease;
+    margin-top: auto; /* Empuja el botón al fondo de la tarjeta de forma consistente */
+}
+
+.juego-card:hover .btn-jugar {
+    background: var(--c-primario);
+    transform: scale(1.02);
+}
+
+/* ----- ESTADOS DE CARGA (SKELETON) ----- */
 .loading-skeleton {
     display: contents;
 }
 
 .skeleton-juego {
-    height: 180px;
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    height: 260px; /* Ajustado para que coincida exactamente con la nueva min-height de la tarjeta */
+    background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%); /* Tonos grises más suaves */
     background-size: 200% 100%;
-    animation: shimmer 1.4s infinite;
+    animation: shimmer 1.4s infinite linear;
     border-radius: var(--radius-md);
 }
 
-/* ----- MODAL INTERACTIVO ----- */
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* ----- MODAL INTERACTIVO OPTIMIZADO ----- */
 .juego-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.85);
-    backdrop-filter: blur(8px);
+    background: rgba(15, 23, 42, 0.4); /* Bajada la opacidad del fondo para un look traslúcido más limpio */
+    backdrop-filter: blur(12px); /* Incrementado el desenfoque para dar máxima prioridad al modal */
+    -webkit-backdrop-filter: blur(12px);
     z-index: 12000;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
-    animation: fadeIn 200ms ease;
+    padding: 24px;
+    animation: fadeIn 250ms ease;
 }
 
 .juego-modal-card {
-    background: #fff;
+    background: #ffffff;
     width: 100%;
-    max-width: 520px;
+    max-width: 560px; /* Ampliado de 520px a 560px para dar más desahogo horizontal */
     border-radius: var(--radius-lg);
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 32px 64px rgba(15, 23, 42, 0.15); /* Sombra más suave y moderna sin negros puros */
     position: relative;
     overflow: hidden;
-    animation: slideUp 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation: slideUp 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .juego-estado {
-    padding: 40px 32px;
+    padding: 40px; /* Padding uniforme en todos sus lados para simetría perfecta */
 }
 
 .modal-close {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 24px;
+    right: 24px;
     background: #f3f4f6;
     border: none;
-    width: 36px;
-    height: 36px;
+    width: 40px; /* Ligeramente más grande para facilitar el toque */
+    height: 40px;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--c-muted);
-    transition: all 150ms ease;
+    transition: all 200ms ease;
 }
 
 .modal-close:hover {
@@ -452,8 +501,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 18px;
     border-bottom: 1px solid var(--c-border);
 }
 
@@ -462,13 +511,13 @@ body {
     font-weight: 700;
     color: var(--c-muted);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
 }
 
 .juego-pts-label {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     font-weight: 700;
     color: #eab308;
 }
@@ -477,44 +526,44 @@ body {
     font-size: 0.9rem;
     color: var(--c-primario);
     font-weight: 700;
-    margin: 0 0 10px 0;
+    margin: 0 0 12px 0;
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
 .juego-contador {
-    font-weight: 500;
+    font-weight: 600;
     color: var(--c-muted);
     font-size: 0.85rem;
 }
 
 .juego-pregunta {
-    font-size: 1.3rem;
+    font-size: 1.4rem; /* Un punto más grande para dar impacto a la interrogante */
     font-weight: 800;
     color: var(--c-texto);
-    line-height: 1.35;
-    margin: 0 0 28px 0;
+    line-height: 1.4;
+    margin: 0 0 32px 0; /* Mayor separación antes de listar las opciones */
 }
 
 .juego-opciones {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px; /* Mayor separación entre botones de respuesta */
 }
 
 .opcion-btn {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 18px; /* Más espacio entre el contenedor de la letra y el texto de la respuesta */
     width: 100%;
-    padding: 16px 18px;
-    background: #fff;
+    padding: 18px 22px; /* Botones más altos y cómodos */
+    background: #ffffff;
     border: 2px solid #e5e7eb;
-    border-radius: 14px;
+    border-radius: 16px; /* Bordes más circulares en sintonía con el modal */
     cursor: pointer;
     text-align: left;
-    transition: all 180ms ease;
+    transition: all 200ms ease;
     font-family: inherit;
 }
 
@@ -522,72 +571,81 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
-    background: #fff;
+    width: 38px;
+    height: 38px;
+    background: #ffffff;
     border: 2px solid #e5e7eb;
     border-radius: 10px;
     font-weight: 700;
     color: var(--c-texto);
     flex-shrink: 0;
-    font-size: 0.9rem;
-    transition: all 180ms ease;
+    font-size: 0.95rem;
+    transition: all 200ms ease;
 }
 
 .opcion-texto {
     font-size: 1rem;
     font-weight: 600;
     color: var(--c-texto);
+    line-height: 1.4;
 }
 
+/* Efectos de interacción limpios */
 .opcion-btn:hover {
     background: var(--c-primario-light);
     border-color: var(--c-primario);
-    box-shadow: 0 4px 16px rgba(255, 69, 0, 0.1);
-    transform: translateX(4px);
+    box-shadow: 0 6px 20px rgba(255, 69, 0, 0.06);
+    transform: scale(1.01); /* Sustituido el desplazamiento por un escalado sutil hacia el frente */
 }
 
 .opcion-btn:hover .opcion-letra {
     border-color: var(--c-primario);
-    color: #fff;
+    color: #ffffff;
     background: var(--c-primario);
 }
 
-/* Estados al responder */
+/* Estados al responder (Mantienen el mismo desahogo pero fijan el color estático) */
 .opcion-btn.correcta {
-    background: #ecfdf5;
+    background: #f0fdf4; /* Un verde un pelo más suave y moderno */
     border-color: #10b981;
     cursor: default;
+    transform: none;
+    box-shadow: none;
 }
 
 .opcion-btn.correcta .opcion-letra {
     background: #10b981;
     border-color: #10b981;
-    color: #fff;
+    color: #ffffff;
 }
 
 .opcion-btn.incorrecta {
     background: #fef2f2;
     border-color: #ef4444;
     cursor: default;
+    transform: none;
+    box-shadow: none;
 }
 
 .opcion-btn.incorrecta .opcion-letra {
     background: #ef4444;
     border-color: #ef4444;
-    color: #fff;
+    color: #ffffff;
 }
 
-/* --- Resultado View --- */
+/* --- VISTA DE RESULTADOS OPTIMIZADA --- */
 #juego-resultado {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .resultado-icon {
-    width: 88px;
-    height: 88px;
+    width: 96px; /* Incrementado para mayor impacto visual */
+    height: 96px;
     border-radius: 50%;
-    margin: 0 auto 24px;
+    margin: 12px auto 28px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -595,84 +653,96 @@ body {
 }
 
 .resultado-icon.success {
-    background: #ecfdf5;
-    color: #10b981;
+    background: #d1fae5; /* Verde ligeramente más vivo para celebración */
+    color: #065f46;
 }
 
 .resultado-icon.error {
-    background: #fef2f2;
-    color: #ef4444;
+    background: #fee2e2; /* Rojo suave */
+    color: #991b1b;
 }
 
 .resultado-icon .material-symbols-outlined {
-    font-size: 44px;
+    font-size: 48px;
 }
 
 .resultado-titulo {
-    font-size: 1.7rem;
+    font-size: 1.8rem;
     font-weight: 800;
-    margin: 0 0 10px 0;
+    margin: 0 0 12px 0;
+    letter-spacing: -0.01em;
+    color: var(--c-texto);
 }
 
 .resultado-mensaje {
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     color: var(--c-muted);
-    margin: 0 0 24px 0;
-    line-height: 1.5;
+    margin: 0 0 28px 0;
+    line-height: 1.6;
+    max-width: 400px; /* Evita líneas de texto demasiado largas */
 }
 
 .resultado-puntos {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     background: linear-gradient(135deg, #fef9c3, #fef08a);
     color: #a16207;
     font-weight: 800;
     font-size: 1.15rem;
     padding: 14px 28px;
-    border-radius: 14px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 12px rgba(234, 179, 8, 0.2);
+    border-radius: 16px;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 20px rgba(234, 179, 8, 0.15);
 }
 
 .resultado-puntos .material-symbols-outlined {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
 }
 
+/* Contenedor de retroalimentación desahogado */
 .resultado-respuesta-correcta {
-    background: #f9fafb;
-    padding: 18px;
-    border-radius: 14px;
-    margin-bottom: 28px;
+    background: #f8fafc; /* Gris azulado muy limpio */
+    padding: 24px; /* Incrementado para que respire el texto explicativo */
+    border-radius: 16px;
+    margin-bottom: 32px;
     text-align: left;
     border: 1px solid var(--c-border);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .resultado-respuesta-correcta p {
-    margin: 0 0 8px 0;
-    font-size: 0.9rem;
+    margin: 0 0 10px 0;
+    font-size: 0.88rem;
     color: var(--c-muted);
-    font-weight: 600;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .resultado-respuesta-correcta strong {
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     color: var(--c-texto);
+    line-height: 1.5;
+    font-weight: 600;
+    display: block;
 }
 
 .resultado-acciones {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
+    width: 100%;
 }
 
 .btn-siguiente {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
     width: 100%;
-    padding: 16px;
+    padding: 18px; /* Botón con mayor área de acción */
     border: none;
     border-radius: 14px;
     background: var(--c-primario);
@@ -680,13 +750,13 @@ body {
     font-weight: 700;
     font-size: 1.05rem;
     cursor: pointer;
-    box-shadow: 0 8px 24px rgba(255, 69, 0, 0.3);
-    transition: all 150ms ease;
+    box-shadow: 0 8px 24px var(--c-primario-glow);
+    transition: all 200ms ease;
 }
 
 .btn-siguiente:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(255, 69, 0, 0.4);
+    box-shadow: 0 12px 32px rgba(255, 69, 0, 0.35);
     background: #e63e00;
 }
 
@@ -695,8 +765,9 @@ body {
     border: none;
     color: var(--c-muted);
     font-weight: 600;
-    padding: 12px;
+    padding: 14px;
     cursor: pointer;
+    font-size: 0.95rem;
     transition: color 150ms ease;
 }
 
@@ -704,23 +775,17 @@ body {
     color: var(--c-texto);
 }
 
-/* Animaciones */
+/* --- ANIMACIONES GENERALES --- */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 @keyframes slideUp {
     from {
         opacity: 0;
-        transform: translateY(20px) scale(0.98);
+        transform: translateY(24px) scale(0.98);
     }
-
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -730,120 +795,128 @@ body {
 @keyframes popIn {
     from {
         opacity: 0;
-        transform: scale(0.8);
+        transform: scale(0.85);
     }
-
     to {
         opacity: 1;
         transform: scale(1);
     }
 }
 
+/* --- ADAPTABILIDAD (MEDIA QUERIES) ACTUALIZADA --- */
 @media (max-width: 768px) {
     .juegos-hero {
-        padding: 36px 20px;
+        padding: 48px 24px 60px; /* Ajustado proporcionalmente al nuevo aire del hero */
+        border-radius: 0 0 24px 24px;
+        margin-bottom: 32px;
     }
 
     .hero-title {
-        font-size: 1.75rem;
+        font-size: 2rem;
     }
 
     .hero-subtitle {
-        font-size: 0.95rem;
+        font-size: 1rem;
+        margin-bottom: 32px;
     }
 
     .hero-stats {
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
         align-items: stretch;
+        width: 100%;
     }
 
     .stat-bubble {
         justify-content: center;
+        padding: 12px 20px;
     }
 
-    .filtros-seccion,
+    .filtros-seccion {
+        padding: 0 24px;
+        margin-bottom: 32px;
+    }
+
     .juegos-grid-section {
-        padding: 0 16px;
+        padding: 0 24px 60px;
     }
 
     .filtros-titulo {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
     }
 
     .filtros-chips {
-        gap: 8px;
+        gap: 10px;
     }
 
     .chip {
-        padding: 6px 14px;
-        font-size: 0.82rem;
+        padding: 8px 16px;
+        font-size: 0.88rem;
     }
 
     .juegos-grid {
         grid-template-columns: 1fr;
-        gap: 16px;
+        gap: 24px; /* Mantiene un respiro sano en móviles */
     }
 
     .juego-card {
-        padding: 20px;
-        min-height: auto;
+        padding: 28px; /* Reducido sutilmente pero manteniendo el look holgado */
+        min-height: 240px;
     }
 
     .juego-pregunta-texto {
-        font-size: 0.95rem;
-        margin-bottom: 16px;
+        font-size: 1.05rem;
+        margin-bottom: 20px;
     }
 
     .btn-jugar {
         padding: 14px;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
     }
 
+    /* Comportamiento del Modal en Móviles (Tipo Bottom Sheet) */
     .juego-modal-overlay {
         align-items: flex-end;
         padding: 0;
-        animation: fadeIn 200ms ease;
     }
 
     .juego-modal-card {
         max-width: 100%;
-        border-radius: 20px 20px 0 0;
-        animation: slideUpMobile 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
-        max-height: 92vh;
+        border-radius: 24px 24px 0 0;
+        animation: slideUpMobile 350ms cubic-bezier(0.32, 0.94, 0.6, 1);
+        max-height: 90vh;
         overflow-y: auto;
     }
 
     .juego-estado {
-        padding: 24px 20px 32px;
+        padding: 32px 24px 40px;
     }
 
     .juego-pregunta {
-        font-size: 1.1rem;
+        font-size: 1.25rem;
+        margin-bottom: 24px;
     }
 
     .opcion-btn {
-        padding: 14px;
+        padding: 16px 20px;
     }
 
     .modal-close {
-        top: 16px;
-        right: 16px;
+        top: 20px;
+        right: 20px;
     }
 }
 
 @keyframes slideUpMobile {
     from {
-        opacity: 0;
-        transform: translateY(40px);
+        transform: translateY(100%);
     }
-
     to {
-        opacity: 1;
         transform: translateY(0);
     }
 }
 
+/* Espaciado estructural para barras laterales activas en escritorio */
 @media (min-width: 769px) {
     .contenido-principal {
         margin-left: 270px;

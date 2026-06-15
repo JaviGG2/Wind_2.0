@@ -1,11 +1,11 @@
 /* Lógica de juegos independiente del dashboard */
 
 async function cargarMisJuegosCreados() {
-    const contenedorLista = document.getElementById('lista-juegos-creados');
+    const contenedorLista = document.getElementById('lista-juegos-publicados');
     if (!contenedorLista) return;
 
     try {
-        const respuesta = await fetch('/admin/mis-juegos');
+        const respuesta = await fetch('/admin/mis-juegos', { credentials: 'include' });
         if (!respuesta.ok) {
             contenedorLista.innerHTML = '<p style="color: red; font-size: 0.85rem;">No se pudo cargar el historial.</p>';
             return;
@@ -18,41 +18,59 @@ async function cargarMisJuegosCreados() {
             return;
         }
 
-        renderJuegosCreados(juegos);
+        contenedorLista.innerHTML = '';
+        juegos.forEach(juego => {
+            const tarjeta = document.createElement('div');
+            tarjeta.className = 'lista-item-card';
+
+            const contentWrapper = document.createElement('div');
+            contentWrapper.className = 'lista-item-content';
+
+            const info = document.createElement('div');
+            info.className = 'lista-item-info';
+            info.innerHTML = `
+                <div class="lista-item-titulo">${juego.pregunta}</div>
+                <div class="lista-item-subtitulo">${juego.categoria_nombre || 'General'}</div>
+            `;
+            contentWrapper.appendChild(info);
+
+            const acciones = document.createElement('div');
+            acciones.className = 'lista-item-acciones';
+
+            const verBtn = document.createElement('button');
+            verBtn.className = 'boton-enviar';
+            verBtn.textContent = 'Jugar';
+            verBtn.addEventListener('click', () => {
+                window.location.href = `/juegos?juego=${juego.id}`;
+            });
+            acciones.appendChild(verBtn);
+
+            const delBtn = document.createElement('button');
+            delBtn.className = 'btn-ghost';
+            delBtn.textContent = 'Eliminar';
+            delBtn.addEventListener('click', async () => {
+                if (!confirm('¿Eliminar este juego? Esta acción no se puede deshacer.')) return;
+                try {
+                    const r = await fetch(`/admin/juegos/${juego.id}`, { method: 'DELETE', credentials: 'include' });
+                    if (!r.ok) {
+                        const txt = await r.text();
+                        alert('No se pudo eliminar: ' + txt);
+                        return;
+                    }
+                    tarjeta.remove();
+                } catch (err) {
+                    alert('Error al eliminar el juego.');
+                }
+            });
+            acciones.appendChild(delBtn);
+
+            tarjeta.appendChild(contentWrapper);
+            tarjeta.appendChild(acciones);
+            contenedorLista.appendChild(tarjeta);
+        });
     } catch (error) {
         contenedorLista.innerHTML = '<p style="color: red; font-size: 0.85rem;">Error de conexión con el historial.</p>';
     }
-}
-
-function renderJuegosCreados(juegos) {
-    const contenedorLista = document.getElementById('lista-juegos-creados');
-    if (!contenedorLista) return;
-
-    contenedorLista.innerHTML = '';
-
-    juegos.forEach(juego => {
-        const tarjeta = document.createElement('div');
-        tarjeta.style.cssText = 'background: #fff; padding: 12px; border: 1px solid #d0e3ff; border-radius: 6px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); text-align: left;';
-
-        tarjeta.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                <span style="font-size: 0.7rem; font-weight: bold; background: #e2e9ff; color: #0056b3; padding: 2px 6px; border-radius: 10px;">
-                    ${juego.categoria_nombre || 'General'}
-                </span>
-                <span style="font-size: 0.7rem; font-weight: bold; background: #fff3cd; color: #856404; padding: 2px 6px; border-radius: 10px;">
-                    ${juego.puntos_recompensa} Pts
-                </span>
-            </div>
-            <p style="font-weight: bold; font-size: 0.9rem; margin: 4px 0; color: #333;">${juego.pregunta}</p>
-            <div style="font-size: 0.8rem; color: #666; padding-left: 5px; line-height: 1.5;">
-                <span style="${juego.opcion_correcta === 'A' ? 'color: green; font-weight: bold;' : ''}">A) ${juego.opcion_a}</span><br>
-                <span style="${juego.opcion_correcta === 'B' ? 'color: green; font-weight: bold;' : ''}">B) ${juego.opcion_b}</span><br>
-                <span style="${juego.opcion_correcta === 'C' ? 'color: green; font-weight: bold;' : ''}">C) ${juego.opcion_c}</span>
-            </div>
-        `;
-
-        contenedorLista.appendChild(tarjeta);
-    });
 }
 
 /* ------------------ Juegos Publicados (público) ------------------ */
@@ -149,9 +167,9 @@ async function cargarJuegosPublicados() {
     }
 }
 
-// Auto-inicializar carga de juegos publicados cuando se carga este script
+// Auto-inicializar carga de juegos del usuario en dashboard
 document.addEventListener('DOMContentLoaded', () => {
-    cargarJuegosPublicados();
+    cargarMisJuegosCreados();
 });
 
 /* ------------------ Temas Subidos (usuario) ------------------ */

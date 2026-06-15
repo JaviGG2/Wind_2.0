@@ -249,4 +249,5 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarDatosJuegos();
 
     $('#juego-close-btn')?.addEventListener('click', cerrarModal);
+    $('#btn-siguiente-juego')?.addEventListener('click', siguienteTrivia);
 });

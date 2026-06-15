@@ -33,21 +33,58 @@ exports.crearRelato = async (req, res) => {
     }
 };
 
+// 2. Listar relatos publicados (público)
 exports.obtenerRelatos = async (req, res) => {
     try {
-        // Trae todos los relatos ordenados desde el más reciente al más antiguo
-        const querySQL = `
-            SELECT id, titulo, contenido_relato, fecha_publicacion, usuario_id 
-            FROM relatos_community 
-            ORDER BY fecha_publicacion DESC
-        `;
-        
-        const resultado = await db.query(querySQL);
-        
-        res.status(200).json(resultado.rows);
+        let querySQL;
+        let params = [];
+
+        const categoria = req.query.categoria ? String(req.query.categoria).trim() : '';
+
+        if (categoria && categoria !== 'undefined' && categoria !== 'null') {
+            querySQL = `
+                SELECT r.id, r.titulo, r.contenido_relato, r.fecha_publicacion,
+                       r.usuario_id, r.imagen_url,
+                       u.nombre AS autor_nombre
+                FROM relatos_community r
+                LEFT JOIN usuarios u ON r.usuario_id = u.id
+                WHERE r.categoria = $1
+                ORDER BY r.fecha_publicacion DESC
+                LIMIT 200
+            `;
+            params = [categoria];
+        } else {
+            querySQL = `
+                SELECT r.id, r.titulo, r.contenido_relato, r.fecha_publicacion,
+                       r.usuario_id, r.imagen_url,
+                       u.nombre AS autor_nombre
+                FROM relatos_community r
+                LEFT JOIN usuarios u ON r.usuario_id = u.id
+                ORDER BY r.fecha_publicacion DESC
+                LIMIT 200
+            `;
+        }
+
+        console.log('[relatosController] Ejecutando query:', querySQL.replace(/\s+/g, ' ').trim());
+        console.log('[relatosController] Params:', params);
+
+        const resultado = await db.query(querySQL, params);
+
+        console.log('[relatosController] Relatos encontrados:', resultado.rows.length);
+        return res.json(resultado.rows);
     } catch (error) {
-        console.error('Error al obtener relatos:', error);
-        res.status(500).json({ error: 'Error al obtener los relatos' });
+        console.error('[relatosController] ERROR al obtener relatos:');
+        console.error('  Codigo:', error.code);
+        console.error('  Mensaje:', error.message);
+        console.error('  Detail:', error.detail);
+        console.error('  Hint:', error.hint);
+        console.error('  Position:', error.position);
+        console.error('  Query completo:', error.query);
+        return res.status(500).json({
+            error: 'Error al obtener los relatos',
+            detalle: error.message,
+            codigo: error.code
+        });
     }
 };
 

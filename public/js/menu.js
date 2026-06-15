@@ -51,6 +51,14 @@ function insertarBarra() {
   iniciarScrollMenu();
 }
 
+window.addEventListener('pageshow', (event) => {
+  const navigationEntries = performance.getEntriesByType('navigation');
+  const navType = navigationEntries[0]?.type;
+  if (event.persisted || navType === 'back_forward') {
+    window.location.reload();
+  }
+});
+
 // Lógica para ocultar el menú al hacer scroll (Móvil)
 function iniciarScrollMenu() {
   let lastScrollTop = 0;

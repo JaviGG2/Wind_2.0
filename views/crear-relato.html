@@ -23,7 +23,7 @@
             <h2>Publicar un Nuevo Relato</h2>
             <p>Comparte tus experiencias, historias y anécdotas con la comunidad.</p>
             
-            <form id="formulario-crear-relato">
+            <form id="formulario-crear-relato" enctype="multipart/form-data">
                 <div class="grupo-campo">
                     <label for="titulo">Título del Relato:</label>
                     <input type="text" id="titulo" name="titulo" required placeholder="Ej. Mi visita a los Médanos">
@@ -32,6 +32,11 @@
                 <div class="grupo-campo">
                     <label for="contenido">Contenido del Relato:</label>
                     <textarea id="contenido" name="contenido" rows="8" required placeholder="Escribe tu historia aquí..."></textarea>
+                </div>
+
+                <div class="grupo-campo">
+                    <label for="imagen">Imagen (opcional):</label>
+                    <input type="file" id="imagen" name="imagen" accept="image/*">
                 </div>
 
                 <button type="submit" class="boton-enviar">Publicar Relato</button>

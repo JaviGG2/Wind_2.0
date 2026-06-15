@@ -15,15 +15,23 @@ document.addEventListener('DOMContentLoaded', () => {
         // Recolectar datos
         const titulo = document.getElementById('titulo').value;
         const contenido = document.getElementById('contenido').value;
+        const imagen = document.getElementById('imagen').files[0];
+
+        const formData = new FormData();
+        formData.append('titulo', titulo);
+        formData.append('contenido', contenido);
+        if (imagen) formData.append('imagen', imagen);
 
         try {
-            const respuesta = await fetch('/api/relatos', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ titulo, contenido })
-            });
+        const formData = new FormData();
+        formData.append('titulo', titulo);
+        formData.append('contenido', contenido);
+
+        const respuesta = await fetch('/api/relatos', {
+            method: 'POST',
+            credentials: 'include',
+            body: formData
+        });
 
             const resultado = await respuesta.json();
 
@@ -32,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 consola.textContent = '¡Relato publicado exitosamente!';
                 form.reset();
                 setTimeout(() => {
-                    window.location.href = '/dashboard';
+                    window.location.href = '/comunidad';
                 }, 1500);
             } else {
                 consola.style.color = 'red';
