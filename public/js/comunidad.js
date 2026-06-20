@@ -89,6 +89,10 @@ function crearCardRelato(relato, index) {
         ? relato.contenido_relato.substring(0, 200).trim() + (relato.contenido_relato.length > 200 ? '...' : '')
         : '';
 
+    const imgHtml = relato.imagen_url
+        ? `<div class="relato-imagen"><img src="${relato.imagen_url}" alt="${sanitizar(relato.titulo)}" loading="lazy"></div>`
+        : '';
+
     card.innerHTML = `
         <div class="relato-card-header">
             <div class="relato-autor-row">
@@ -100,6 +104,7 @@ function crearCardRelato(relato, index) {
             </div>
             <span class="relato-cat-badge">${sanitizar(categoria)}</span>
         </div>
+        ${imgHtml}
         <h3 class="relato-titulo">${sanitizar(relato.titulo || 'Sin título')}</h3>
         <p class="relato-extracto">${sanitizar(extracto)}</p>
         <button class="relato-leer-mas" data-id="${relato.id}">
@@ -133,12 +138,15 @@ function abrirModal(relato) {
 
     titulo.textContent = relato.titulo || 'Sin título';
     categoria.textContent = relato.categoria || 'General';
+    const imgModal = relato.imagen_url
+        ? `<div class="modal-imagen"><img src="${relato.imagen_url}" alt="${sanitizar(relato.titulo)}"></div>`
+        : '';
     meta.innerHTML = `
         <span class="material-symbols-outlined" style="font-size:1rem;">person</span> ${sanitizar(autor)}
         &nbsp;·&nbsp;
         <span class="material-symbols-outlined" style="font-size:1rem;">calendar_month</span> ${fecha}
     `;
-    cuerpo.textContent = relato.contenido_relato || '';
+    cuerpo.innerHTML = imgModal + `<div class="modal-contenido-texto">${sanitizar(relato.contenido_relato || '')}</div>`;
 
     overlay.style.display = 'flex';
     document.body.style.overflow = 'hidden';

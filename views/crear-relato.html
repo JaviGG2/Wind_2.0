@@ -24,7 +24,7 @@
         <main class="contenido-principal">
             <div class="crear-container">
                 <header class="crear-header">
-                    <h1><span class="material-symbols-outlined" style="font-size: 2.2rem; vertical-align: middle;">chat</span> Publicar un Nuevo Relato</h1>
+                    <h1><span class="material-symbols-outlined">chat</span> Publicar un Nuevo Relato</h1>
                     <p class="muted">Comparte tus experiencias, historias y anécdotas con la comunidad.</p>
                 </header>
 
@@ -47,10 +47,10 @@
                                     <span class="material-symbols-outlined">add_photo_alternate</span>
                                     <span>Seleccionar imagen (opcional)</span>
                                 </label>
-                                <input type="file" id="imagen" name="imagen" accept="image/*" style="display: none;">
-                                <div id="preview-container" style="display: none; margin-top: 14px; text-align: center; width: 100%;">
-                                    <img id="image-preview" src="#" alt="Vista previa" style="max-width: 100%; max-height: 200px; border-radius: 8px; border: 1px solid var(--card-border);">
-                                    <p style="margin: 6px 0 0; font-size: 0.85rem; color: var(--color-muted);">Imagen seleccionada</p>
+                                <input type="file" id="imagen" name="imagen" accept="image/*" class="hidden-input">
+                                <div id="preview-container">
+                                    <img id="image-preview" src="#" alt="Vista previa">
+                                    <p class="texto-imagen-seleccionada">Imagen seleccionada</p>
                                 </div>
                             </div>
                         </div>
@@ -60,9 +60,9 @@
 
                     <div id="mensaje-consola" class="mensaje-oculto"></div>
 
-                    <p style="margin-top: 24px; text-align: center; margin-bottom: 0;">
+                    <p class="enlace-volver">
                         <a href="/dashboard" class="enlace-secundario">
-                            <span class="material-symbols-outlined" style="font-size: 1.1rem; vertical-align: middle;">arrow_back</span> Volver al Panel
+                            <span class="material-symbols-outlined">arrow_back</span> Volver al Panel
                         </a>
                     </p>
                 </div>
@@ -84,7 +84,7 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     imagePreview.src = e.target.result;
-                    previewContainer.style.display = 'block';
+                    previewContainer.classList.add('mostrar');
                     labelUpload.innerHTML = '<span class="material-symbols-outlined">autorenew</span><span>Cambiar imagen</span>';
                 }
                 reader.readAsDataURL(file);

@@ -19,6 +19,7 @@ router.post('/admin/subir-tema', upload.single('imagen_portada'), temaController
 // Ruta pública para obtener un tema por ID o slug
 router.get('/api/temas/:id', temaController.obtenerTemaPorId);
 router.get('/admin/mis-temas', verificarSesion, temaController.misTemas);
+router.post('/api/temas/:id/like', temaController.likeTema);
 
 // DELETE tema (solo especialista)
 router.put('/admin/temas/:id', verificarSesion, upload.single('imagen_portada'), temaController.actualizarTema);

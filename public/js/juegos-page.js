@@ -85,13 +85,14 @@ function renderGrid(juegos) {
     contenedor.innerHTML = '';
 
     if (juegos.length === 0) {
-        contenedor.innerHTML = '<p style="color:#777; text-align:center; width:100%;">No hay trivias disponibles.</p>';
+        contenedor.innerHTML = '<div class="juegos-empty"><span class="material-symbols-outlined">sports_esports</span><p>No hay trivias disponibles en esta categoría.</p></div>';
         return;
     }
 
-    juegos.forEach(juego => {
+    juegos.forEach((juego, index) => {
         const tarjeta = document.createElement('article');
         tarjeta.className = 'juego-card';
+        tarjeta.style.animationDelay = `${index * 60}ms`;
         tarjeta.innerHTML = `
             <div class="juego-card-header">
                 <span class="juego-cat">${juego.categoria_nombre || 'General'}</span>

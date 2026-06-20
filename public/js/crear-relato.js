@@ -23,15 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (imagen) formData.append('imagen', imagen);
 
         try {
-        const formData = new FormData();
-        formData.append('titulo', titulo);
-        formData.append('contenido', contenido);
-
-        const respuesta = await fetch('/api/relatos', {
-            method: 'POST',
-            credentials: 'include',
-            body: formData
-        });
+            const respuesta = await fetch('/api/relatos', {
+                method: 'POST',
+                credentials: 'include',
+                body: formData
+            });
 
             const resultado = await respuesta.json();
 

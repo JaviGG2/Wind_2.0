@@ -39,7 +39,7 @@ body {
     border-bottom: 1px solid var(--c-border); /* Una línea sutil para delimitar el final del hero */
 }
 
-ero-particles {
+.hero-particles {
     position: absolute;
     inset: 0;
     pointer-events: none;
@@ -149,57 +149,16 @@ ero-particles {
     display: flex;
     align-items: center;
     gap: 14px;
-    background: #f1f5f9; /* Un gris azulado suave y sólido para que resalte en el fondo blanco */
+    background: #f1f5f9;
     padding: 14px 24px;
     border-radius: 16px;
-    border: 1px solid #e2e8f0; /* Borde sutil para darle definición */
+    border: 1px solid #e2e8f0;
     transition: transform 0.2s ease, background 0.2s ease;
 }
 
 .stat-bubble:hover {
     transform: translateY(-2px);
     background: #e2e8f0;
-}
-
-.stat-bubble strong {
-    font-size: 1.2rem;
-    font-weight: 700;
-    line-height: 1.2;
-    color: #0f172a; /* Texto principal oscuro */
-}
-
-.stat-bubble small {
-    font-size: 0.75rem;
-    color: #000000; /* Gris oscuro para que las etiquetas secundarias sean totalmente legibles */
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-top: 2px;
-    font-weight: 600; /* Un poco más de grosor para mejorar la lectura */
-}
-
-.hero-stats {
-    display: flex;
-    gap: 16px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.stat-bubble {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    background: rgba(255, 255, 255, 0.06); 
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: 14px 28px; 
-    border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    transition: transform 0.2s ease, background 0.2s ease;
-}
-
-.stat-bubble:hover {
-    transform: translateY(-2px);
-    background: rgba(255, 255, 255, 0.1); 
 }
 
 .stat-bubble .material-symbols-outlined {
@@ -214,17 +173,19 @@ ero-particles {
 }
 
 .stat-bubble strong {
-    font-size: 1.2rem; 
+    font-size: 1.2rem;
     font-weight: 700;
     line-height: 1.2;
+    color: #0f172a;
 }
 
 .stat-bubble small {
     font-size: 0.75rem;
-    color: rgba(233, 142, 22, 0.5); 
+    color: var(--c-muted, #6b7280);
     text-transform: uppercase;
     letter-spacing: 0.06em;
     margin-top: 2px;
+    font-weight: 600;
 }
 
 /* ----- FILTROS OPTIMIZADOS ----- */
@@ -309,7 +270,7 @@ ero-particles {
 .juego-card {
     background: var(--c-card);
     border-radius: var(--radius-md);
-    padding: 32px; /* Espaciado interno amplio para evitar que el contenido choque con los bordes */
+    padding: 32px;
     border: 1px solid var(--c-border);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
     transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -318,7 +279,14 @@ ero-particles {
     position: relative;
     overflow: hidden;
     cursor: pointer;
-    min-height: 260px; /* Altura mínima expandida para dar holgura al texto */
+    min-height: 260px;
+    opacity: 0;
+    animation: cardFadeIn 400ms ease forwards;
+}
+
+@keyframes cardFadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .juego-card::before {
@@ -436,12 +404,30 @@ ero-particles {
 }
 
 @keyframes shimmer {
-    0% {
-        background-position: 200% 0;
-    }
-    100% {
-        background-position: -200% 0;
-    }
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.juegos-empty {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    color: var(--c-muted);
+}
+
+.juegos-empty .material-symbols-outlined {
+    font-size: 3.5rem;
+    color: rgba(255, 69, 0, 0.2);
+    margin-bottom: 16px;
+}
+
+.juegos-empty p {
+    font-size: 1rem;
+    margin: 0 0 20px;
 }
 
 /* ----- MODAL INTERACTIVO OPTIMIZADO ----- */
@@ -474,13 +460,13 @@ ero-particles {
     padding: 40px; /* Padding uniforme en todos sus lados para simetría perfecta */
 }
 
-.modal-close {
+.juego-modal-card .modal-close {
     position: absolute;
     top: 24px;
     right: 24px;
     background: #f3f4f6;
     border: none;
-    width: 40px; /* Ligeramente más grande para facilitar el toque */
+    width: 40px;
     height: 40px;
     border-radius: 50%;
     cursor: pointer;
@@ -491,7 +477,7 @@ ero-particles {
     transition: all 200ms ease;
 }
 
-.modal-close:hover {
+.juego-modal-card .modal-close:hover {
     background: #e5e7eb;
     color: var(--c-texto);
     transform: rotate(90deg);

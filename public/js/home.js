@@ -51,12 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function crearTarjetaTema(tema, user) {
     const tarjeta = document.createElement('article');
     tarjeta.className = 'tarjeta-tema';
-    // Le ponemos una manito al cursor para que sepa que es cliqueable
-    tarjeta.style.cursor = 'pointer'; 
+    tarjeta.style.cursor = 'pointer';
     const avatar = tema.creador_avatar || '/img/avatar.svg';
-
-    // Mostrar botones de acción si el usuario es especialista o es el creador
-    const showActions = user && (user.rol === 'Especialista' || user.id === tema.creador_id);
+    const likesCount = tema.likes || 0;
 
     tarjeta.innerHTML = `
         <div class="tema-imagen" style="background-image: url('${tema.imagen_portada || '/img/app.png'}');"></div>
@@ -64,12 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="creator-row">
                 <img class="creator-avatar" src="${avatar}" alt="avatar" />
                 <div class="creator-name">${tema.creador_nombre || 'Anónimo'}</div>
-                ${showActions ? `
-                    <div class="tema-actions">
-                        <button class="btn-action btn-edit" data-id="${tema.id}">Editar</button>
-                        <button class="btn-action btn-delete" data-id="${tema.id}">Eliminar</button>
-                    </div>
-                ` : ''}
             </div>
 
             <h3 class="tema-titulo">${tema.titulo || 'Tema sin título'}</h3>
@@ -78,50 +69,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="tema-categoria">${tema.categoria_nombre || 'General'}</span>
                 <span class="tema-autor">Publicado: ${tema.fecha_publicacion ? new Date(tema.fecha_publicacion).toLocaleDateString() : 'Desconocida'}</span>
             </div>
-            <div style="margin-top: 15px; text-align: right;">
-                <span class="btn-explorar" style="font-weight: bold; color: #d35400;">
-                    Explorar Contenido →
+            <div class="tema-footer">
+                <button class="btn-like" data-id="${tema.id}">
+                    <span class="material-symbols-outlined like-icon">favorite</span>
+                    <span class="like-count">${likesCount}</span>
+                </button>
+                <span class="btn-explorar">
+                    Explorar <span class="material-symbols-outlined" style="font-size:1rem;">arrow_forward</span>
                 </span>
             </div>
         </div>
     `;
 
-    // Añadir listeners a los botones de acción (si existen)
-    const btnEdit = tarjeta.querySelector('.btn-edit');
-    if (btnEdit) {
-        btnEdit.addEventListener('click', (ev) => {
-            ev.stopPropagation();
-            // Redirigir a una página de edición (si existe)
-            window.location.href = `/admin/editar-tema?id=${tema.id}`;
-        });
-    }
-
-    const btnDelete = tarjeta.querySelector('.btn-delete');
-    if (btnDelete) {
-        btnDelete.addEventListener('click', async (ev) => {
-            ev.stopPropagation();
-            if (!confirm('¿Eliminar este tema? Esta acción es irreversible.')) return;
-            try {
-                const res = await fetch(`/admin/temas/${tema.id}`, { method: 'DELETE', credentials: 'include' });
-                if (res.ok) {
-                    tarjeta.remove();
-                } else {
-                    const js = await res.json().catch(() => ({}));
-                    alert(js.mensaje || 'No se pudo eliminar el tema.');
-                }
-            } catch (error) {
-                alert('Error de conexión al eliminar el tema.');
+    const btnLike = tarjeta.querySelector('.btn-like');
+    btnLike.addEventListener('click', async (ev) => {
+        ev.stopPropagation();
+        try {
+            const res = await fetch(`/api/temas/${tema.id}/like`, { method: 'POST', credentials: 'include' });
+            if (res.ok) {
+                const data = await res.json();
+                btnLike.querySelector('.like-count').textContent = data.likes;
+                btnLike.classList.add('liked');
+            } else if (res.status === 401) {
+                window.location.href = '/login.html';
             }
-        });
-    }
+        } catch (e) {
+            console.error('Error al dar like:', e);
+        }
+    });
 
-    // 🔑 LA SOLUCIÓN MANDATORIA: Al hacer clic en CUALQUIER parte de la tarjeta,
-    // obligamos al navegador a mudarse de página, rompiendo cualquier bloqueo.
     tarjeta.addEventListener('click', (evento) => {
-        // Evitamos que otros scripts interfieran
-        evento.stopPropagation(); 
-        
-        // Lo mandamos directo a la nueva vista con su ID
+        evento.stopPropagation();
         window.location.href = `/ver-tema?id=${tema.id}`;
     });
 

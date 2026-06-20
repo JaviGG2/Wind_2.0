@@ -39,7 +39,7 @@ async function subirAImagekit(file, folder = '') {
         return result.url;
     } catch (error) {
         console.error('Error subiendo a ImageKit, usando almacenamiento local:', error.message);
-        return `uploads/${file.filename}`;
+        return `/uploads/${file.filename}`;
     }
 }
 

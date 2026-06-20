@@ -84,34 +84,47 @@
     font-size: var(--font-sm);
 }
 
-.tema-actions {
-    margin-left: auto;
+.tema-footer {
+    margin-top: 15px;
     display: flex;
-    gap: 6px;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.btn-action {
-    padding: 6px 10px;
-    border-radius: var(--radius-sm);
-    font-weight: 600;
-    font-size: var(--font-xs);
-    cursor: pointer;
-    border: 1px solid var(--borde);
+.btn-like {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1.5px solid rgba(18,18,18,0.08);
+    border-radius: 999px;
     background: transparent;
     color: var(--texto-sec);
-    transition: all var(--transition);
+    font-weight: 600;
+    font-size: var(--font-sm);
+    cursor: pointer;
+    transition: all 200ms ease;
 }
 
-.btn-action.btn-edit {
-    color: var(--primario);
-    border-color: rgba(255, 69, 0, 0.15);
-    background: var(--primario-light);
+.btn-like:hover {
+    border-color: #e11d48;
+    color: #e11d48;
+    background: #fff1f2;
 }
 
-.btn-action.btn-delete {
-    color: #dc2626;
-    border-color: rgba(220, 38, 38, 0.15);
-    background: #fef2f2;
+.btn-like.liked {
+    border-color: #e11d48;
+    color: #e11d48;
+    background: #fff1f2;
+}
+
+.btn-like .like-icon {
+    font-size: 1.1rem;
+    font-variation-settings: 'FILL' 0;
+}
+
+.btn-like.liked .like-icon {
+    font-variation-settings: 'FILL' 1;
 }
 
 .tema-contenido h3 {

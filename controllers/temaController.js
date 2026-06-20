@@ -92,7 +92,7 @@ exports.listarTemas = async (req, res) => {
 
         if (categoriaId && !Number.isNaN(categoriaId)) {
             result = await db.query(
-                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id,
+                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes,
                     c.nombre AS categoria_nombre,
                     u.nombre AS creador_nombre
              FROM temas t
@@ -105,7 +105,7 @@ exports.listarTemas = async (req, res) => {
             );
         } else {
             result = await db.query(
-                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id,
+                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes,
                     c.nombre AS categoria_nombre,
                     u.nombre AS creador_nombre
              FROM temas t
@@ -135,7 +135,7 @@ exports.obtenerTemaPorId = async (req, res) => {
 
         if (!Number.isNaN(temaIdNum)) {
             result = await db.query(
-                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id,
+                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes,
                         c.nombre AS categoria_nombre,
                         u.nombre AS creador_nombre
                  FROM temas t
@@ -147,11 +147,10 @@ exports.obtenerTemaPorId = async (req, res) => {
             );
         }
 
-        // Si no encontramos resultado con el entero (o no era numérico), intentamos búsqueda por texto
         if (!result || !result.rows || result.rows.length === 0) {
             console.log(`obtenerTemaPorId: intento alternativo por texto con '${rawId}'`);
             result = await db.query(
-                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id,
+                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes,
                         c.nombre AS categoria_nombre,
                         u.nombre AS creador_nombre
                  FROM temas t
@@ -173,6 +172,23 @@ exports.obtenerTemaPorId = async (req, res) => {
     } catch (error) {
         console.error('Error al obtener tema por id:', error);
         return res.status(500).json({ mensaje: 'Error al obtener el tema.' });
+    }
+};
+
+exports.likeTema = async (req, res) => {
+    if (!req.session.usuarioId) return res.status(401).json({ mensaje: 'Debes iniciar sesión.' });
+    const id = parseInt(req.params.id, 10);
+    if (Number.isNaN(id)) return res.status(400).json({ mensaje: 'ID inválido.' });
+    try {
+        const result = await db.query(
+            'UPDATE temas SET likes = COALESCE(likes, 0) + 1 WHERE id = $1 RETURNING likes',
+            [id]
+        );
+        if (result.rows.length === 0) return res.status(404).json({ mensaje: 'Tema no encontrado.' });
+        return res.json({ likes: result.rows[0].likes });
+    } catch (error) {
+        console.error('Error al dar like:', error.message);
+        return res.status(500).json({ mensaje: 'Error al procesar el like.' });
     }
 };
 
