@@ -1,4 +1,5 @@
-const db = require('../config/db'); // Tu conexión a PostgreSQL/Neon
+const db = require('../config/db');
+const { subirAImagekit } = require('../middlewares/subidaImagen');
 
 exports.crearRelato = async (req, res) => {
     if (!req.session.usuarioId) {
@@ -12,11 +13,7 @@ exports.crearRelato = async (req, res) => {
     }
 
     try {
-        // Si Multer atrapó la imagen, guardamos la ruta web. Si no, queda en null
-        let imagenUrl = null;
-        if (req.file) {
-            imagenUrl = `/uploads/${req.file.filename}`;
-        }
+        const imagenUrl = req.file ? await subirAImagekit(req.file, 'comunidad') : null;
 
         const querySQL = `
             INSERT INTO relatos_community (titulo, contenido_relato, usuario_id, imagen_url, fecha_publicacion)

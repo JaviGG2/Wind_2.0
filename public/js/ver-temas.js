@@ -51,6 +51,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             imgPortadaEl.style.backgroundImage = `url('/img/app.png')`;
         }
 
+        fetch('/api/historial/registrar', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tipo_contenido: 'tema', contenido_id: tema.id })
+        }).catch(() => {});
+
         // 4. Intercambiar visibilidad
         bloqueCarga.style.display = 'none';
         bloqueContenido.style.display = 'block';

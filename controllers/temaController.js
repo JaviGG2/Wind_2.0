@@ -1,22 +1,21 @@
 // controllers/temaController.js
 const db = require('../config/db');
+const { subirAImagekit } = require('../middlewares/subidaImagen');
 
 exports.subirTema = async (req, res) => {
-    // 1. Verificación de seguridad
     if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
         return res.status(403).json({ mensaje: 'Acceso denegado: Se requieren permisos de Especialista.' });
     }
 
     const { categoria_id, titulo, contenido } = req.body;
-    const rutaImagen = req.file ? `uploads/${req.file.filename}` : 'uploads/defecto.jpg';
 
-    // Validación básica en el servidor
     if (!titulo || !contenido) {
         return res.status(400).json({ mensaje: 'El título y el contenido son obligatorios.' });
     }
 
     try {
-        // Query directa y limpia. (Asegúrate de que estos campos existan en tu tabla)
+        const rutaImagen = req.file ? await subirAImagekit(req.file, 'temas') : null;
+
         const queryFinal = `
             INSERT INTO temas (titulo, contenido, categoria_id, creador_id, imagen_portada, fecha_publicacion) 
             VALUES ($1, $2, $3, $4, $5, NOW())
@@ -60,7 +59,7 @@ exports.actualizarTema = async (req, res) => {
     try {
         let queryFinal, parametros;
         if (req.file) {
-            const rutaImagen = `uploads/${req.file.filename}`;
+            const rutaImagen = await subirAImagekit(req.file, 'temas');
             queryFinal = `
                 UPDATE temas SET titulo = $1, contenido = $2, categoria_id = $3, imagen_portada = $4 
                 WHERE id = $5 AND creador_id = $6

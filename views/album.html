@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Álbum - Wind</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/estilos.css">
+    <link rel="stylesheet" href="/css/menu.css">
+    <link rel="stylesheet" href="/css/search.css">
+    <link rel="stylesheet" href="/css/album.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Wind">
+    <link rel="apple-touch-icon" href="/img/app.png">
+    <meta name="theme-color" content="#ff4500">
+</head>
+<body>
+    <script src="/js/menu.js"></script>
+    <div class="app-layout">
+        <div id="menu-placeholder"></div>
+        <main class="contenido-principal">
+            <div class="album-root">
+                <header class="album-header">
+                    <h1><span class="material-symbols-outlined" style="vertical-align:middle;">photo_library</span> Mi Álbum de Recuerdos</h1>
+                    <p class="muted">Sube y guarda tus fotos con una pequeña descripción para recordar los mejores momentos.</p>
+                </header>
+
+                <section class="album-subida">
+                    <h3>Subir nuevo recuerdo</h3>
+                    <form id="form-subir-foto" class="form-subida">
+                        <div class="subida-imagen">
+                            <label for="input-foto" class="label-subida">
+                                <span class="material-symbols-outlined">add_photo_alternate</span>
+                                <span>Seleccionar foto</span>
+                            </label>
+                            <input type="file" id="input-foto" accept="image/*" required hidden>
+                            <div id="vista-previa" class="vista-previa" style="display:none;">
+                                <img id="preview-img" alt="Vista previa">
+                                <button type="button" id="btn-cambiar-foto" class="btn-cambiar-foto">Cambiar foto</button>
+                            </div>
+                        </div>
+                        <div class="grupo-campo">
+                            <label for="input-descripcion">Descripción</label>
+                            <textarea id="input-descripcion" placeholder="¿Qué recuerdo guarda esta foto?" maxlength="300" rows="3"></textarea>
+                            <small class="contador-caracteres"><span id="contador">0</span>/300</small>
+                        </div>
+                        <button type="submit" id="btn-subir" class="boton-enviar">Subir recuerdo</button>
+                    </form>
+                    <div id="mensaje-album" class="mensaje-oculto"></div>
+                </section>
+
+                <section class="album-galeria">
+                    <h3>Mis recuerdos</h3>
+                    <div id="galeria-fotos" class="grid-fotos">
+                        <p class="muted center">Cargando tus recuerdos...</p>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    <script src="/js/album.js"></script>
+</body>
+</html>

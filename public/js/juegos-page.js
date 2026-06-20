@@ -121,6 +121,13 @@ async function abrirJuego(id) {
     const juego = juegosCache.find(j => j.id === id);
     if (!juego) return;
 
+    fetch('/api/historial/registrar', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tipo_contenido: 'juego', contenido_id: id })
+    }).catch(() => {});
+
     state.indice = juegosCache.findIndex(j => j.id === id);
     mostrarModalJuego(juego);
 }

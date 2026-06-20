@@ -4,63 +4,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publicar Tema Histórico - Wind</title>
-    <link rel="stylesheet" href="/css/estilos.css">
-    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link class="sheet" rel="stylesheet" href="/css/estilos.css">
     <link rel="stylesheet" href="/css/menu.css">
     <link rel="stylesheet" href="/css/search.css">
+    <link rel="stylesheet" href="/css/formularios-crear.css">
+    <link rel="stylesheet" href="/css/subir-tema.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="manifest" href="/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Wind">
     <link rel="apple-touch-icon" href="/img/app.png">
     <meta name="theme-color" content="#ff4500">
-
 </head>
 <body>
     <script src="/js/menu.js"></script>
-    <main class="contenedor-principal">
-        <div class="tarjeta-registro" style="max-width: 600px;">
-            <h2>Publicar Contenido Patrimonial</h2>
-            <p>Registra crónicas, datos arquitectónicos o tradiciones oficiales de Coro.</p>
-            
-            <form id="formulario-subir-tema" enctype="multipart/form-data">
-                
-                <div class="grupo-campo">
-                    <label for="categoria_id">Eje Temático / Categoría:</label>
-                    <select id="categoria_id" required>
-                        <option value="" disabled selected>Selecciona una categoría...</option>
-                        <option value="1">Arquitectura Colonial</option>
-                        <option value="2">Tradiciones Indígenas (Caquetíos)</option>
-                        <option value="3">Personajes Históricos</option>
-                        <option value="4">Leyendas Falconianas</option>
-                    </select>
+    <div class="app-layout">
+        <div id="menu-placeholder"></div>
+        <main class="contenido-principal">
+            <div class="crear-container">
+                <header class="crear-header">
+                    <h1><span class="material-symbols-outlined">menu_book</span> Publicar Tema Histórico</h1>
+                    <p class="muted">Registra crónicas, datos arquitectónicos o tradiciones oficiales de Coro.</p>
+                </header>
+
+                <div class="crear-card">
+                    <form id="formulario-subir-tema" enctype="multipart/form-data">
+                        
+                        <div class="grupo-campo">
+                            <label for="categoria_id">Eje Temático / Categoría:</label>
+                            <select id="categoria_id" required>
+                                <option value="" disabled selected>Selecciona una categoría...</option>
+                                <option value="1">Arquitectura Colonial</option>
+                                <option value="2">Tradiciones Indígenas (Caquetíos)</option>
+                                <option value="3">Personajes Históricos</option>
+                                <option value="4">Leyendas Falconianas</option>
+                            </select>
+                        </div>
+
+                        <div class="grupo-campo">
+                            <label for="titulo">Título del Tema:</label>
+                            <input type="text" id="titulo" required placeholder="Ej. La Cruz de San Clemente">
+                        </div>
+
+                        <div class="grupo-campo">
+                            <label>Imagen de Portada (JPG / PNG):</label>
+                            <div class="subida-archivo-zona">
+                                <label for="imagen_portada" class="label-subida-archivo">
+                                    <span class="material-symbols-outlined">add_photo_alternate</span>
+                                    <span>Seleccionar imagen de portada</span>
+                                </label>
+                                <input type="file" id="imagen_portada" accept="image/*" class="hidden-input">
+                                <div id="preview-container">
+                                    <img id="image-preview" src="#" alt="Vista previa">
+                                    <p class="texto-imagen-seleccionada">Imagen seleccionada</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grupo-campo">
+                            <label for="contenido">Contenido del Artículo:</label>
+                            <textarea id="contenido" rows="8" required placeholder="Redacta la investigación histórica..."></textarea>
+                        </div>
+
+                        <button type="submit" class="boton-enviar">Publicar Tema Oficial</button>
+                    </form>
+
+                    <div id="mensaje-consola" class="mensaje-oculto"></div>
+
+                    <p class="enlace-volver">
+                        <a href="/dashboard" class="enlace-secundario">
+                            <span class="material-symbols-outlined">arrow_back</span> Volver al Panel
+                        </a>
+                    </p>
                 </div>
-
-                <div class="grupo-campo">
-                    <label for="titulo">Título del Tema:</label>
-                    <input type="text" id="titulo" required placeholder="Ej. La Cruz de San Clemente">
-                </div>
-
-                <div class="grupo-campo">
-                    <label for="imagen_portada">Imagen de Portada (JPG / PNG):</label>
-                    <input type="file" id="imagen_portada" accept="image/*">
-                </div>
-
-                <div class="grupo-campo">
-                    <label for="contenido">Contenido del Artículo:</label>
-                    <textarea id="contenido" rows="8" required placeholder="Redacta la investigación histórica..."></textarea>
-                </div>
-
-                <button type="submit" class="boton-enviar">Publicar Tema Oficial</button>
-            </form>
-
-            <div id="mensaje-consola" style="margin-top: 15px; font-weight: bold; text-align: center;"></div>
-
-            <p style="margin-top: 20px; text-align: center; font-size: 0.9rem;">
-                <a href="/dashboard" style="color: var(--primario); text-decoration: none; font-weight: bold;">← Volver al Panel</a>
-            </p>
-        </div> </main>
+            </div>
+        </main>
+    </div>
 
     <script src="/js/subir-tema.js"></script>
+    <script>
+        const fileInput = document.getElementById('imagen_portada');
+        const previewContainer = document.getElementById('preview-container');
+        const imagePreview = document.getElementById('image-preview');
+        const labelUpload = document.querySelector('.label-subida-archivo');
+
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    previewContainer.classList.add('mostrar');
+                    labelUpload.innerHTML = '<span class="material-symbols-outlined">autorenew</span><span>Cambiar imagen de portada</span>';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
 </body>
 </html>

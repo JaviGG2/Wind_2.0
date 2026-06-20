@@ -3,72 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diseñar Trivia Patrimonial - Wind</title>
+    <title>Diseñar Juego - Wind</title>
+    <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/estilos.css">
+    <link rel="stylesheet" href="/css/menu.css">
+    <link rel="stylesheet" href="/css/search.css">
+    <link rel="stylesheet" href="/css/formularios-crear.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
-    <main class="contenedor-principal">
-        <div class="tarjeta-registro">
-            <h2>Crear Nueva Trivia</h2>
-            <p>Redacta preguntas oficiales para educar a los usuarios de Wind.</p>
-            <form id="formulario-crear-juego">
-                <div class="grupo-campo">
-                    <label for="categoria_id">Categoría de la Trivia:</label>
-                    <select id="categoria_id" required>
-                        <option value="" disabled selected>Selecciona un eje temático...</option>
-                        <option value="1">Arquitectura Colonial</option>
-                        <option value="2">Tradiciones Indígenas (Caquetíos)</option>
-                        <option value="3">Personajes Históricos</option>
-                        <option value="4">Leyendas Falconianas</option>
-                    </select>
+    <script src="/js/menu.js"></script>
+    <div class="app-layout">
+        <div id="menu-placeholder"></div>
+        <main class="contenido-principal">
+            <div class="crear-container">
+                <header class="crear-header">
+                    <h1><span class="material-symbols-outlined" style="font-size: 2.2rem; vertical-align: middle;">extension</span> Diseñar Nuevo Juego</h1>
+                    <p class="muted">Elige el tipo de juego y crea una experiencia patrimonial única.</p>
+                </header>
+
+                <div class="crear-card">
+                    <!-- Selector de Género -->
+                    <div class="grupo-campo">
+                        <label for="selector-genero">Tipo de Juego:</label>
+                        <select id="selector-genero" onchange="controlarFormulario()">
+                            <option value="" disabled selected>-- Selecciona un género --</option>
+                            <option value="quiz">Trivia (Quiz)</option>
+                            <option value="Memory">Juego de Memoria</option>
+                            <option value="Match">Emparejar (Match)</option>
+                            <option value="Scramblee">Palabra Desordenada (Scramblee)</option>
+                        </select>
+                    </div>
+
+                    <!-- FORMULARIO: QUIZ -->
+                    <form id="formulario-quiz" class="formulario-juego" style="display: none;">
+                        <div class="grupo-campo">
+                            <label for="quiz-nombre">Nombre del Juego:</label>
+                            <input type="text" id="quiz-nombre" required placeholder="Ej. Reto Colonial">
+                        </div>
+                        <div class="grupo-campo">
+                            <label for="pregunta">Pregunta:</label>
+                            <textarea id="pregunta" rows="3" required placeholder="Ej. ¿Quién construyó esto?"></textarea>
+                        </div>
+                        <div class="trivia-opciones-grid">
+                            <input type="text" id="opcion_a" required placeholder="Opción A">
+                            <input type="text" id="opcion_b" required placeholder="Opción B">
+                            <input type="text" id="opcion_c" required placeholder="Opción C">
+                        </div>
+                        <div class="grupo-campo">
+                            <label for="opcion_correcta">Correcta:</label>
+                            <select id="opcion_correcta" required>
+                                <option value="A">Opción A</option>
+                                <option value="B">Opción B</option>
+                                <option value="C">Opción C</option>
+                            </select>
+                        </div>
+                        <div class="grupo-campo">
+                            <label for="puntos_quiz">Puntos:</label>
+                            <input type="number" id="puntos_quiz" value="10" min="5" max="50">
+                        </div>
+                        <button type="submit" class="boton-enviar">Publicar Trivia</button>
+                    </form>
+
+                    <!-- FORMULARIO: MEMORY -->
+                    <form id="formulario-Memory" class="formulario-juego" style="display: none;">
+                        <div class="grupo-campo">
+                            <label>Nombre del Juego:</label>
+                            <input type="text" id="memory-nombre" required placeholder="Ej. Memoria Colonial">
+                        </div>
+                        <div id="contenedor-parejas" class="grupo-campo">
+                            <label>Parejas (conceptos):</label>
+                            <div class="bloque-pareja"><input type="text" required placeholder="Palabra"></div>
+                        </div>
+                        <button type="button" class="btn-outline" onclick="agregarParejaMemory()">+ Añadir Pareja</button>
+                        <div class="grupo-campo">
+                            <label for="puntos_memory">Puntos:</label>
+                            <input type="number" id="puntos_memory" value="10" min="5" max="50">
+                        </div>
+                        <button type="submit" class="boton-enviar">Publicar Juego</button>
+                    </form>
+
+                    <!-- FORMULARIO: MATCH -->
+                    <form id="formulario-Match" class="formulario-juego" style="display: none;">
+                        <div class="grupo-campo">
+                            <label>Nombre del Juego:</label>
+                            <input type="text" id="match-nombre" required placeholder="Ej. Conecta la Historia">
+                        </div>
+                        <div id="contenedor-match" class="grupo-campo">
+                            <label>Parejas (Concepto A - Concepto B):</label>
+                            <div class="bloque-match" style="display: flex; gap: 8px;">
+                                <input type="text" required placeholder="A">
+                                <input type="text" required placeholder="B">
+                            </div>
+                        </div>
+                        <button type="button" class="btn-outline" onclick="agregarFilaMatch()">+ Añadir Fila</button>
+                        <div class="grupo-campo">
+                            <label for="puntos_match">Puntos:</label>
+                            <input type="number" id="puntos_match" value="10" min="5" max="50">
+                        </div>
+                        <button type="submit" class="boton-enviar">Publicar Juego</button>
+                    </form>
+
+                    <!-- FORMULARIO: SCRAMBLEE -->
+                    <form id="formulario-Scramblee" class="formulario-juego" style="display: none;">
+                        <div class="grupo-campo">
+                            <label>Nombre del Juego:</label>
+                            <input type="text" id="scramble-nombre" required placeholder="Ej. Descubre la Palabra">
+                        </div>
+                        <div class="grupo-campo">
+                            <label>Palabra Correcta:</label>
+                            <input type="text" id="scramble-palabra" required placeholder="Ej. FALCON">
+                        </div>
+                        <div class="grupo-campo">
+                            <label>Pista:</label>
+                            <input type="text" id="scramble-pista" required placeholder="Ej. Estado de Venezuela">
+                        </div>
+                        <div class="grupo-campo">
+                            <label for="puntos_scramble">Puntos:</label>
+                            <input type="number" id="puntos_scramble" value="10" min="5" max="50">
+                        </div>
+                        <button type="submit" class="boton-enviar">Publicar Juego</button>
+                    </form>
+                    
+                    <div id="mensaje-consola" class="mensaje-oculto"></div>
                 </div>
-
-                <div class="grupo-campo">
-                    <label for="pregunta">Pregunta o Desafío Histórico:</label>
-                    <textarea id="pregunta" rows="3" required placeholder="Ej. ¿Quién mandó a construir la Casa de los Arcaya?"></textarea>
-                </div>
-
-                <div class="grupo-campo">
-                    <label for="opcion_a">Opción A:</label>
-                    <input type="text" id="opcion_a" required placeholder="Texto de la opción A">
-                </div>
-
-                <div class="grupo-campo">
-                    <label for="opcion_b">Opción B:</label>
-                    <input type="text" id="opcion_b" required placeholder="Texto de la opción B">
-                </div>
-
-                <div class="grupo-campo">
-                    <label for="opcion_c">Opción C:</label>
-                    <input type="text" id="opcion_c" required placeholder="Texto de la opción C">
-                </div>
-
-                <div class="grupo-campo">
-                    <label for="opcion_correcta">Indique la Opción Correcta:</label>
-                    <select id="opcion_correcta" required>
-                        <option value="" disabled selected>Selecciona la respuesta verdadera...</option>
-                        <option value="A">Opción A</option>
-                        <option value="B">Opción B</option>
-                        <option value="C">Opción C</option>
-                    </select>
-                </div>
-
-                <div class="grupo-campo">
-                    <label for="puntos_recompensa">Puntos de Recompensa:</label>
-                    <input type="number" id="puntos_recompensa" min="5" max="50" value="10" required>
-                </div>
-
-                <button type="submit" class="boton-enviar">Publicar Juego</button>
-            </form>
-
-            <div id="mensaje-consola" class="mensaje-oculto"></div>
-            
-            <p style="margin-top: 15px; text-align: center; font-size: 0.9rem;">
-                <a href="/dashboard" style="color: var(--primario); text-decoration: none; font-weight: bold;">← Volver al Panel</a>
-            </p>
-        </div>
-    </main>
+            </div>
+        </main>
+    </div>
 
     <script src="/js/crear-juego.js"></script>
+    <script>
+        function controlarFormulario() {
+            const genero = document.getElementById("selector-genero").value;
+            document.querySelectorAll('.formulario-juego').forEach(f => f.style.display = 'none');
+            const target = document.getElementById("formulario-" + genero);
+            if (target) target.style.display = "block";
+        }
+        function agregarParejaMemory() {
+            const cont = document.getElementById("contenedor-parejas");
+            const div = document.createElement("div");
+            div.className = "bloque-pareja";
+            div.innerHTML = `<input type="text" required placeholder="Palabra">`;
+            cont.appendChild(div);
+        }
+        function agregarFilaMatch() {
+            const cont = document.getElementById("contenedor-match");
+            const div = document.createElement("div");
+            div.className = "bloque-match";
+            div.style.display = "flex"; div.style.gap = "8px";
+            div.innerHTML = `<input type="text" required placeholder="A"><input type="text" required placeholder="B">`;
+            cont.appendChild(div);
+        }
+    </script>
 </body>
 </html>

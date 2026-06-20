@@ -4,52 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Relato - Wind</title>
+    <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/estilos.css">
-    <link rel="stylesheet" href="/css/home.css">
     <link rel="stylesheet" href="/css/menu.css">
     <link rel="stylesheet" href="/css/search.css">
+    <link rel="stylesheet" href="/css/formularios-crear.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="manifest" href="/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Wind">
     <link rel="apple-touch-icon" href="/img/app.png">
     <meta name="theme-color" content="#ff4500">
-
 </head>
 <body>
     <script src="/js/menu.js"></script>
-    <main class="contenedor-principal">
-        <div class="tarjeta-registro" style="max-width: 600px;">
-            <h2>Publicar un Nuevo Relato</h2>
-            <p>Comparte tus experiencias, historias y anécdotas con la comunidad.</p>
-            
-            <form id="formulario-crear-relato" enctype="multipart/form-data">
-                <div class="grupo-campo">
-                    <label for="titulo">Título del Relato:</label>
-                    <input type="text" id="titulo" name="titulo" required placeholder="Ej. Mi visita a los Médanos">
+    <div class="app-layout">
+        <div id="menu-placeholder"></div>
+        <main class="contenido-principal">
+            <div class="crear-container">
+                <header class="crear-header">
+                    <h1><span class="material-symbols-outlined" style="font-size: 2.2rem; vertical-align: middle;">chat</span> Publicar un Nuevo Relato</h1>
+                    <p class="muted">Comparte tus experiencias, historias y anécdotas con la comunidad.</p>
+                </header>
+
+                <div class="crear-card">
+                    <form id="formulario-crear-relato" enctype="multipart/form-data">
+                        <div class="grupo-campo">
+                            <label for="titulo">Título del Relato:</label>
+                            <input type="text" id="titulo" name="titulo" required placeholder="Ej. Mi visita a los Médanos">
+                        </div>
+
+                        <div class="grupo-campo">
+                            <label for="contenido">Contenido del Relato:</label>
+                            <textarea id="contenido" name="contenido" rows="8" required placeholder="Escribe tu historia aquí..."></textarea>
+                        </div>
+
+                        <div class="grupo-campo">
+                            <label>Imagen (opcional):</label>
+                            <div class="subida-archivo-zona">
+                                <label for="imagen" class="label-subida-archivo">
+                                    <span class="material-symbols-outlined">add_photo_alternate</span>
+                                    <span>Seleccionar imagen (opcional)</span>
+                                </label>
+                                <input type="file" id="imagen" name="imagen" accept="image/*" style="display: none;">
+                                <div id="preview-container" style="display: none; margin-top: 14px; text-align: center; width: 100%;">
+                                    <img id="image-preview" src="#" alt="Vista previa" style="max-width: 100%; max-height: 200px; border-radius: 8px; border: 1px solid var(--card-border);">
+                                    <p style="margin: 6px 0 0; font-size: 0.85rem; color: var(--color-muted);">Imagen seleccionada</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="boton-enviar">Publicar Relato</button>
+                    </form>
+
+                    <div id="mensaje-consola" class="mensaje-oculto"></div>
+
+                    <p style="margin-top: 24px; text-align: center; margin-bottom: 0;">
+                        <a href="/dashboard" class="enlace-secundario">
+                            <span class="material-symbols-outlined" style="font-size: 1.1rem; vertical-align: middle;">arrow_back</span> Volver al Panel
+                        </a>
+                    </p>
                 </div>
-
-                <div class="grupo-campo">
-                    <label for="contenido">Contenido del Relato:</label>
-                    <textarea id="contenido" name="contenido" rows="8" required placeholder="Escribe tu historia aquí..."></textarea>
-                </div>
-
-                <div class="grupo-campo">
-                    <label for="imagen">Imagen (opcional):</label>
-                    <input type="file" id="imagen" name="imagen" accept="image/*">
-                </div>
-
-                <button type="submit" class="boton-enviar">Publicar Relato</button>
-            </form>
-
-            <div id="mensaje-consola" style="margin-top: 15px; font-weight: bold; text-align: center;"></div>
-
-            <p style="margin-top: 20px; text-align: center; font-size: 0.9rem;">
-                <a href="/dashboard" style="color: var(--primario); text-decoration: none; font-weight: bold;">← Volver al Panel</a>
-            </p>
-        </div>
-    </main>
+            </div>
+        </main>
+    </div>
 
     <script src="/js/crear-relato.js"></script>
+    <script>
+        // Lógica interactiva para la vista previa de la imagen
+        const fileInput = document.getElementById('imagen');
+        const previewContainer = document.getElementById('preview-container');
+        const imagePreview = document.getElementById('image-preview');
+        const labelUpload = document.querySelector('.label-subida-archivo');
+
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                    labelUpload.innerHTML = '<span class="material-symbols-outlined">autorenew</span><span>Cambiar imagen</span>';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
 </body>
 </html>

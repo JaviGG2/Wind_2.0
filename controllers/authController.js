@@ -259,9 +259,10 @@ exports.actualizarFotoPerfil = async (req, res) => {
         return res.status(400).json({ mensaje: 'No se recibió ninguna imagen.' });
     }
 
-    const rutaImagen = `/uploads/${req.file.filename}`;
-
     try {
+        const { subirAImagekit } = require('../middlewares/subidaImagen');
+        const rutaImagen = await subirAImagekit(req.file, 'perfiles');
+
         await db.query(
             'UPDATE usuarios SET imagen_perfil = $1 WHERE id = $2',
             [rutaImagen, req.session.usuarioId]
@@ -270,44 +271,6 @@ exports.actualizarFotoPerfil = async (req, res) => {
     } catch (error) {
         console.error('Error al actualizar foto de perfil:', error);
         return res.status(500).json({ mensaje: 'Error al guardar la foto de perfil.' });
-    }
-};
-
-// 5. Ascender Rol
-exports.ascender = async (req, res) => {
-    if (!req.session.usuarioId) {
-        return res.status(401).json({ mensaje: 'Debes iniciar sesión para realizar esta acción.' });
-    }
-
-    const { respuestaExamen } = req.body;
-
-    if (respuestaExamen !== 'correcto') {
-        return res.status(400).json({ mensaje: 'Evaluación reprobada. Revisa tus conocimientos históricos sobre Coro e inténtalo de nuevo.' });
-    }
-
-    try {
-        await db.query('UPDATE usuarios SET rol = $1 WHERE id = $2', ['Especialista', req.session.usuarioId]);
-        
-        // Actualizar AMBOS campos de sesión para que perfil() los lea correctamente
-        req.session.rol = 'Especialista';
-        if (req.session.usuario) {
-            req.session.usuario.rol = 'Especialista';
-        }
-
-        // Forzar que la sesión se guarde antes de responder
-        req.session.save((err) => {
-            if (err) {
-                console.error('Error al guardar la sesión:', err);
-                return res.status(500).json({ mensaje: 'Error al guardar el ascenso en la sesión.' });
-            }
-            res.json({ 
-                mensaje: '¡Felicidades! Has aprobado la prueba interna. Tu rol ha sido actualizado a Especialista.',
-                nuevoRol: 'Especialista'
-            });
-        });
-    } catch (error) {
-        console.error('Error al ascender rol:', error);
-        res.status(500).json({ mensaje: 'Error interno al procesar la solicitud de ascenso.' });
     }
 };
 

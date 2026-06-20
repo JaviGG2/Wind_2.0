@@ -11,8 +11,10 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/home.css">
     <link rel="stylesheet" href="/css/menu.css">
+    <link rel="stylesheet" href="/css/search.css">
     <link rel="stylesheet" href="/css/juegos-page.css">
     <link rel="manifest" href="/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -24,8 +26,10 @@
 
 <body>
     <script src="/js/menu.js"></script>
+    <script src="/js/search.js"></script>
 
-    <div class="app-container">
+    <div class="app-layout">
+        <div id="buscar-placeholder"></div>
         <div id="menu-placeholder"></div>
 
         <main class="contenido-principal">
@@ -45,7 +49,7 @@
                             <span class="material-symbols-outlined">quiz</span>
                             <div>
                                 <strong id="total-juegos-count">—</strong>
-                                <small>Juegos disponibles</small>
+                                <small>Trivias disponibles</small>
                             </div>
                         </div>
                         <div class="stat-bubble">
@@ -62,7 +66,7 @@
             <!-- Filtros por Categoría -->
             <section class="filtros-seccion">
                 <div class="filtros-header">
-                    <h2 class="filtros-titulo">Selecciona un Juego</h2>
+                    <h2 class="filtros-titulo">Selecciona una Trivia</h2>
                     <div id="juegos-status" class="relatos-count">Cargando...</div>
                 </div>
                 <div class="filtros-chips" id="filtros-juegos">

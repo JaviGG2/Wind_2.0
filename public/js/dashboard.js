@@ -1,10 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const bienvenida = document.getElementById('bienvenida-usuario');
-    const seccionNatural = document.getElementById('seccion-natural');
-    const seccionEspecialista = document.getElementById('seccion-especialista');
-    const btnSolicitar = document.getElementById('btn-solicitar-ascenso');
-    const quizEvaluacion = document.getElementById('quiz-evaluacion');
-    const formEvaluacion = document.getElementById('form-evaluacion');
     const bloqueMensaje = document.getElementById('mensaje-consola');
     const btnLogout = document.getElementById('btn-logout');
 
@@ -47,12 +42,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             mostrarMensaje('Perfil cargado pero falta el nombre en la sesión.', 'error');
             console.warn('[dashboard] perfil sin nombre:', usuario);
         }
-
-        bienvenida.innerHTML = `¡Hola, <strong>${usuario.nombre || 'Usuario'}</strong> Bienvenido a la plataforma web de preservación digital.`;
+//
+        bienvenida.innerHTML = `¡Hola, <strong>${usuario.nombre || 'Usuario'}</strong>! Bienvenido a la plataforma web de preservación digital.`;
 
         configurarVistasPorRol(usuario.rol);
-        if (typeof cargarMisTemas === 'function') cargarMisTemas();
-        if (typeof cargarMisJuegosCreados === 'function') cargarMisJuegosCreados();
         if (typeof cargarMisRelatos === 'function') cargarMisRelatos();
 
     } catch (error) {
@@ -60,42 +53,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         bienvenida.textContent = 'Error de conexión con el panel.';
     }
 
-    // Mostrar el bloque del test al presionar el botón de solicitud
-    btnSolicitar.addEventListener('click', () => {
-        quizEvaluacion.style.display = 'block';
-        bloqueMensaje.className = 'mensaje-oculto';
-    });
-
-    // 3. Procesar el envío del examen de conocimientos históricos
-    formEvaluacion.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const opcionSeleccionada = document.querySelector('input[name="p1"]:checked');
-
-        if (!opcionSeleccionada) {
-            mostrarMensaje('Por favor, selecciona una respuesta.', 'error');
-            return;
-        }
-
+    document.getElementById('btn-agregar-categoria')?.addEventListener('click', async () => {
+        const input = document.getElementById('input-nueva-categoria');
+        const nombre = input?.value.trim();
+        if (!nombre) return;
         try {
-            const resAscenso = await fetch('/auth/ascender', {
+            const res = await fetch('/api/categorias', {
                 method: 'POST',
-                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ respuestaExamen: opcionSeleccionada.value })
+                credentials: 'include',
+                body: JSON.stringify({ nombre })
             });
-
-            const resultado = await resAscenso.json();
-
-            if (resAscenso.ok) {
-                mostrarMensaje(resultado.mensaje, 'exito');
-                quizEvaluacion.style.display = 'none';
-                configurarVistasPorRol(resultado.nuevoRol);
-            } else {
-                mostrarMensaje(resultado.mensaje, 'error');
+            if (!res.ok) {
+                const err = await res.json();
+                mostrarMensaje(err.mensaje || 'Error al crear categoría', 'error');
+                return;
             }
-        } catch (error) {
-            mostrarMensaje('Error al intentar comunicar la aprobación con el servidor.', 'error');
+            input.value = '';
+            mostrarMensaje('Categoría creada correctamente', 'exito');
+            cargarCategorias();
+        } catch (err) {
+            mostrarMensaje('Error al crear categoría', 'error');
         }
     });
 
@@ -112,29 +90,148 @@ document.addEventListener('DOMContentLoaded', async () => {
     function configurarVistasPorRol(rol) {
         const seccionContenidos = document.getElementById('seccion-contenidos');
         const seccionRelatos = document.getElementById('seccion-relatos');
+        const seccionAdmin = document.getElementById('seccion-admin');
+        const tituloContenidos = document.getElementById('titulo-contenidos');
+
+        if (seccionContenidos) seccionContenidos.style.display = 'block';
+        if (seccionRelatos) seccionRelatos.style.display = 'block';
 
         if (rol === 'Especialista') {
-            if (seccionNatural) seccionNatural.style.display = 'none';
-            if (seccionEspecialista) seccionEspecialista.style.display = 'block';
-            if (seccionContenidos) seccionContenidos.style.display = 'block';
-            if (seccionRelatos) seccionRelatos.style.display = 'block';
-
+            if (tituloContenidos) tituloContenidos.textContent = 'Mis Contenidos';
+            if (seccionAdmin) seccionAdmin.style.display = 'block';
             if (typeof cargarMisTemas === 'function') cargarMisTemas();
             if (typeof cargarMisJuegosCreados === 'function') cargarMisJuegosCreados();
-            if (typeof cargarMisRelatos === 'function') cargarMisRelatos();
+            cargarCategorias();
         } else {
-            if (seccionNatural) seccionNatural.style.display = 'block';
-            if (seccionEspecialista) seccionEspecialista.style.display = 'none';
-            if (seccionContenidos) seccionContenidos.style.display = 'none';
-            if (seccionRelatos) seccionRelatos.style.display = 'block';
-
-            if (typeof cargarMisRelatos === 'function') cargarMisRelatos();
+            if (tituloContenidos) tituloContenidos.textContent = 'Historial de Vistas';
+            if (seccionAdmin) seccionAdmin.style.display = 'none';
+            cargarHistorial();
         }
+    }
+
+    async function cargarCategorias() {
+        const cont = document.getElementById('lista-categorias');
+        if (!cont) return;
+        try {
+            const res = await fetch('/api/categorias');
+            if (!res.ok) throw new Error('Error');
+            const cats = await res.json();
+            if (cats.length === 0) {
+                cont.innerHTML = '<p class="muted center">No hay categorías registradas.</p>';
+                return;
+            }
+            cont.innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:8px;">' +
+                cats.map(c => `<span class="tag">${c.nombre}</span>`).join('') + '</div>';
+        } catch (err) {
+            cont.innerHTML = '<p class="muted center error">Error al cargar categorías.</p>';
+        }
+    }
+
+    async function cargarUsuarios() {
+        const cont = document.getElementById('lista-usuarios');
+        if (!cont) return;
+        try {
+            const res = await fetch('/api/usuarios', { credentials: 'include' });
+            if (!res.ok) throw new Error('Error');
+            const users = await res.json();
+            if (users.length === 0) {
+                cont.innerHTML = '<p class="muted center">No hay usuarios registrados.</p>';
+                return;
+            }
+            cont.innerHTML = '';
+            users.forEach(u => {
+                const item = document.createElement('div');
+                item.className = 'lista-item-card';
+                item.innerHTML = `
+                    <div class="lista-item-info">
+                        <h5>${u.nombre} <small style="color:var(--texto-muted)">(@${u.username})</small></h5>
+                        <small class="muted">${u.correo} · ${u.rol} · ${u.puntos || 0} pts ${u.cuenta_activa ? '· ✓ Activo' : ''}</small>
+                    </div>
+                `;
+                cont.appendChild(item);
+            });
+        } catch (err) {
+            cont.innerHTML = '<p class="muted center error">Error al cargar usuarios.</p>';
+        }
+    }
+
+    async function cargarHistorial() {
+        try {
+            const res = await fetch('/api/historial', { credentials: 'include' });
+            if (!res.ok) return;
+            const data = await res.json();
+            renderHistorialTemas(data.temas || []);
+            renderHistorialJuegos(data.juegos || []);
+        } catch (err) {
+            console.error('Error cargando historial:', err);
+        }
+    }
+
+    function renderHistorialTemas(temas) {
+        const cont = document.getElementById('lista-temas-subidos');
+        if (!cont) return;
+        if (temas.length === 0) {
+            cont.innerHTML = '<p class="muted center">Aún no has visitado ningún tema histórico.</p>';
+            return;
+        }
+        cont.innerHTML = '';
+        temas.forEach(t => {
+            const item = document.createElement('div');
+            item.className = 'lista-item-card';
+            item.innerHTML = `
+                <div class="lista-item-info">
+                    <h5>${t.titulo}</h5>
+                    <small class="muted">${t.categoria_nombre || 'General'} · ${new Date(t.fecha_vista).toLocaleDateString()}</small>
+                </div>
+                <div class="lista-item-acciones">
+                    <a href="/ver-tema?id=${t.id}" class="boton-enviar">Ver</a>
+                </div>
+            `;
+            cont.appendChild(item);
+        });
+    }
+
+    function renderHistorialJuegos(juegos) {
+        const cont = document.getElementById('lista-juegos-publicados');
+        if (!cont) return;
+        if (juegos.length === 0) {
+            cont.innerHTML = '<p class="muted center">Aún no has jugado ninguna trivia.</p>';
+            return;
+        }
+        cont.innerHTML = '';
+        juegos.forEach(j => {
+            const item = document.createElement('div');
+            item.className = 'lista-item-card';
+            item.innerHTML = `
+                <div class="lista-item-info">
+                    <h5>${j.pregunta}</h5>
+                    <small class="muted">${j.categoria_nombre || 'General'} · ${new Date(j.fecha_vista).toLocaleDateString()}</small>
+                </div>
+                <div class="lista-item-acciones">
+                    <a href="/juegos" class="boton-enviar">Jugar</a>
+                </div>
+            `;
+            cont.appendChild(item);
+        });
     }
 
     function mostrarMensaje(texto, tipo) {
         bloqueMensaje.textContent = texto;
-        bloqueMensaje.className = `mensaje-alerta ${tipo}`;
+        bloqueMensaje.className = `mensaje-oculto`;
+        if (tipo === 'exito') {
+            bloqueMensaje.style.display = 'block';
+            bloqueMensaje.style.background = '#dcfce7';
+            bloqueMensaje.style.color = '#16a34a';
+            bloqueMensaje.style.border = '1px solid #bbf7d0';
+        } else if (tipo === 'error') {
+            bloqueMensaje.style.display = 'block';
+            bloqueMensaje.style.background = '#fee2e2';
+            bloqueMensaje.style.color = '#dc2626';
+            bloqueMensaje.style.border = '1px solid #fecaca';
+        } else {
+            bloqueMensaje.style.display = 'none';
+        }
+        setTimeout(() => { bloqueMensaje.style.display = 'none'; }, 4000);
     }
 
     // Función para cargar los relatos del usuario activo
@@ -195,4 +292,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Exponer las funciones globalmente
     window.cargarMisRelatos = cargarMisRelatos;
     window.cargarMisJuegosCreados = cargarMisJuegosCreados;
+    window.cargarCategorias = cargarCategorias;
+    window.cargarUsuarios = cargarUsuarios;
 });

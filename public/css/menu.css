@@ -62,12 +62,17 @@
 
 /* FIN DEL DISEÑO */
 
+.app-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
 
 /* RESPONSIVE */
 
 /* Version Movil ---- Anyuil */
 @media (max-width: 768px) {
-    .app-container {
+    .app-layout {
         display: block;
     }
 
@@ -132,7 +137,7 @@
 
 /* Version PC ---- Armando */
 @media (min-width: 769px) {
-    .app-container {
+    .app-layout {
         display: flex;
         width: 100%;
         min-height: 100vh;
@@ -140,7 +145,7 @@
 
     .barra-navegacion {
         flex-direction: column;
-        width: 245px;
+        width: 260px;
         height: calc(100vh - 20px);
         position: fixed;
         top: 10px;

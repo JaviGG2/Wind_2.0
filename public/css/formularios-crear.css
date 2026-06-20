@@ -1,0 +1,241 @@
+.crear-container {
+    max-width: 700px;
+    margin: 32px auto;
+    padding: 0 20px;
+}
+
+.crear-header {
+    margin-bottom: 24px;
+}
+
+.crear-header h1 {
+    font-size: var(--font-2xl);
+    font-weight: 700;
+    color: var(--primario);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 6px;
+}
+
+.crear-header p {
+    color: var(--texto-sec);
+    font-size: var(--font-sm);
+    margin: 0;
+}
+
+.crear-card {
+    background: var(--bg-card);
+    border: 1px solid var(--borde);
+    border-radius: var(--radius-xl);
+    padding: 32px;
+    box-shadow: var(--sombra-md);
+}
+
+.grupo-campo {
+    margin-bottom: 20px;
+}
+
+.grupo-campo label {
+    display: block;
+    font-size: var(--font-sm);
+    font-weight: 600;
+    color: var(--texto);
+    margin-bottom: 8px;
+}
+
+.grupo-campo input,
+.grupo-campo textarea,
+.grupo-campo select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--borde);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    color: var(--texto);
+    font-size: var(--font-sm);
+    outline: none;
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.grupo-campo input:focus,
+.grupo-campo textarea:focus,
+.grupo-campo select:focus {
+    border-color: var(--primario);
+    box-shadow: 0 0 0 3px var(--primario-glow);
+}
+
+.grupo-campo input::placeholder,
+.grupo-campo textarea::placeholder {
+    color: var(--texto-muted);
+}
+
+.grupo-campo textarea {
+    min-height: 120px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.grupo-campo select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+}
+
+.subida-archivo-zona {
+    border: 2px dashed var(--borde);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    text-align: center;
+    transition: border-color var(--transition), background var(--transition);
+}
+
+.subida-archivo-zona:hover {
+    border-color: var(--primario);
+    background: var(--primario-light);
+}
+
+.label-subida-archivo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: var(--texto-sec);
+    font-weight: 500;
+    font-size: var(--font-sm);
+    transition: color var(--transition);
+}
+
+.label-subida-archivo:hover {
+    color: var(--primario);
+}
+
+.label-subida-archivo .material-symbols-outlined {
+    font-size: 1.5rem;
+}
+
+#preview-container {
+    margin-top: 14px;
+}
+
+#preview-container img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--borde);
+}
+
+#preview-container p {
+    margin: 6px 0 0;
+    font-size: var(--font-xs);
+    color: var(--texto-sec);
+}
+
+.trivia-opciones-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.bloque-pareja {
+    margin-bottom: 8px;
+}
+
+.bloque-match {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.bloque-match input {
+    flex: 1;
+}
+
+.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border: 1.5px solid var(--borde);
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--texto);
+    font-weight: 600;
+    font-size: var(--font-sm);
+    cursor: pointer;
+    transition: all var(--transition);
+    margin-bottom: 20px;
+}
+
+.btn-outline:hover {
+    border-color: var(--primario);
+    color: var(--primario);
+    background: var(--primario-light);
+}
+
+.formulario-juego {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--borde-light);
+}
+
+.boton-enviar {
+    width: 100%;
+    padding: 14px 16px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--primario);
+    color: #fff;
+    font-weight: 700;
+    font-size: var(--font-sm);
+    cursor: pointer;
+    transition: all var(--transition);
+    box-shadow: 0 4px 14px var(--primario-glow);
+}
+
+.boton-enviar:hover {
+    background: var(--primario-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px var(--primario-glow);
+}
+
+.mensaje-oculto {
+    display: none;
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: var(--radius-md);
+    background: var(--primario-light);
+    color: var(--primario);
+    border: 1px solid rgba(255, 69, 0, 0.18);
+    font-size: var(--font-sm);
+    font-weight: 500;
+}
+
+.enlace-secundario {
+    color: var(--primario);
+    font-weight: 600;
+    font-size: var(--font-sm);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.enlace-secundario:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+    .crear-container {
+        margin: 16px auto;
+        padding: 0 12px;
+    }
+    .crear-card {
+        padding: 20px;
+    }
+    .trivia-opciones-grid {
+        grid-template-columns: 1fr;
+    }
+}

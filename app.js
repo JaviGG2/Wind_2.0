@@ -81,6 +81,8 @@ const authRoutes = require('./routes/authRoutes');
 const juegoRoutes = require('./routes/juegoRoutes');
 const temaRoutes = require('./routes/temaRoutes');
 const relatoRoutes = require('./routes/relatoRoutes');
+const searchRoutes = require('./routes/searchRoutes');
+const historialRoutes = require('./routes/historialRoutes');
 
 
 // CORRECCIÓN CLAVE: Inyectamos todas las rutas de forma limpia en la raíz
@@ -90,6 +92,8 @@ app.use(juegoRoutes);
 app.use(temaRoutes);
 app.use(juegoRoutes);
 app.use(relatoRoutes);
+app.use(searchRoutes);
+app.use(historialRoutes);
 
 // IMPORTACIÓN DE FILTROS DE SEGURIDAD (MIDDLEWARES)
 const { verificarSesion, esEspecialista } = require('./middlewares/autenticacion');
@@ -135,13 +139,30 @@ app.get('/juegos', verificarSesion, (req, res) => res.render('juegos'));
 app.get('/barra_navegacion', (req, res) => res.render('barra_navegacion'));
 app.get('/registro', (req, res) => res.render('Registro'));
 app.get('/login', (req, res) => res.render('login'));
-
 app.get('/', (req, res) => res.render('login'));
+//app.get('/album', (req, res) => res.render('album'));
 
 // INICIAR EL ESCUCHADOR EN EL PUERTO LOCAL
+const db = require('./config/db');
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     console.log(`El servidor de Wind se encuentra activo.`);
     console.log(`Registro: http://localhost:${PORT}/registro`);
     console.log(`Login: http://localhost:${PORT}/login`);
+
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS historial_vistas (
+                id SERIAL PRIMARY KEY,
+                usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+                tipo_contenido VARCHAR(10) NOT NULL CHECK (tipo_contenido IN ('tema', 'juego')),
+                contenido_id INTEGER NOT NULL,
+                fecha_vista TIMESTAMP DEFAULT NOW(),
+                UNIQUE (usuario_id, tipo_contenido, contenido_id)
+            )
+        `);
+        console.log('Tabla historial_vistas lista.');
+    } catch (err) {
+        console.error('Error creando tabla historial_vistas:', err.message);
+    }
 });

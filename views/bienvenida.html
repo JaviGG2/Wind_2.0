@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a Wind - Patrimonio de Coro</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/estilos.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <style>
+        .bienvenida-card {
+            text-align: center;
+            padding: 40px 30px;
+            max-width: 500px;
+        }
+        .logo-bienvenida {
+            font-size: 4rem;
+            color: var(--primario);
+            margin-bottom: 10px;
+            display: block;
+        }
+        .titulo-bienvenida {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--texto);
+            font-weight: 800;
+        }
+        .subtitulo-bienvenida {
+            font-size: 1.1rem;
+            color: var(--texto-sec);
+            margin-bottom: 35px;
+            line-height: 1.6;
+        }
+        .acciones-bienvenida {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .btn-welcome-primary {
+            background: var(--primario);
+            color: white;
+            padding: 16px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: transform 0.2s, background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-welcome-primary:hover {
+            background: var(--primario-hover);
+            transform: translateY(-3px);
+        }
+        .btn-welcome-secondary {
+            background: transparent;
+            color: var(--texto);
+            border: 2px solid var(--borde);
+            padding: 16px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-welcome-secondary:hover {
+            border-color: var(--primario);
+            color: var(--primario);
+        }
+    </style>
+</head>
+<body>
+    <main class="contenedor-principal">
+        <div class="tarjeta-registro bienvenida-card">
+            <span class="material-symbols-outlined logo-bienvenida">wind_power</span>
+            <h1 class="titulo-bienvenida">Wind</h1>
+            <p class="subtitulo-bienvenida">
+                Descubre la magia de Coro, la Ciudad del Viento. 
+                Explora su historia, sus relatos y preserva el patrimonio cultural de nuestra tierra.
+            </p>
+            
+            <div class="acciones-bienvenida">
+                <a href="/registro" class="btn-welcome-primary">
+                    <span class="material-symbols-outlined">person_add</span>
+                    Empezar ahora
+                </a>
+                <a href="/login" class="btn-welcome-secondary">
+                    <span class="material-symbols-outlined">login</span>
+                    Ya tengo cuenta
+                </a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

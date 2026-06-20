@@ -27,9 +27,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('categoria_id').value = tema.categoria_id;
         }
 
-        if (tema.imagen_portada && tema.imagen_portada !== 'uploads/defecto.jpg') {
+        if (tema.imagen_portada) {
             const imgActual = document.getElementById('imagen-actual');
-            imgActual.src = '/' + tema.imagen_portada;
+            imgActual.src = tema.imagen_portada;
             document.getElementById('imagen-actual-contenedor').style.display = 'block';
         }
 

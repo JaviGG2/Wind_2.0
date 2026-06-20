@@ -14,6 +14,13 @@ const txtMensajeCodigo = document.getElementById('mensaje-codigo');
 formulario.addEventListener('submit', async (evento) => {
     evento.preventDefault(); // Evitamos que la página se recargue automáticamente
 
+    // Deshabilitamos el botón para evitar doble envío lento por SMTP
+    const botonEnviar = formulario.querySelector('button[type="submit"]');
+    if (botonEnviar) {
+        botonEnviar.disabled = true;
+        botonEnviar.textContent = 'Procesando...';
+    }
+
     // Extraemos los valores limpios de los inputs del formulario
     const nombre = document.getElementById('nombre').value;
     const correo = document.getElementById('correo').value;
@@ -60,10 +67,28 @@ formulario.addEventListener('submit', async (evento) => {
         } else if (!respuesta.ok) {
             // Si el servidor capturó un fallo de validación o duplicado (Status 400)
             mostrarMensaje(resultado.mensaje || 'Ocurrió un error inesperado.', 'error');
+            if (botonEnviar) {
+                botonEnviar.disabled = false;
+                botonEnviar.textContent = 'Registrarse';
+            }
         }
     } catch (error) {
         // En caso de que el servidor esté apagado o no haya conexión a internet
         mostrarMensaje('No se pudo establecer conexión con el servidor.', 'error');
+        if (botonEnviar) {
+            botonEnviar.disabled = false;
+            botonEnviar.textContent = 'Registrarse';
+        }
+    }
+});
+
+// NUEVO: Comprobamos si venimos redirigidos del login por cuenta inactiva
+window.addEventListener('DOMContentLoaded', () => {
+    const parametrosUrl = new URLSearchParams(window.location.search);
+    if (parametrosUrl.get('verificar') === 'true' && parametrosUrl.get('correo')) {
+        formulario.style.display = 'none';
+        seccionCodigo.style.display = 'block';
+        verificarCorreoInput.value = parametrosUrl.get('correo');
     }
 });
 

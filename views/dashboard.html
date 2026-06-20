@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Control - Wind</title>
+    <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/estilos.css">
-    <link rel="stylesheet" href="/css/home.css">
     <link rel="stylesheet" href="/css/menu.css">
     <link rel="stylesheet" href="/css/search.css">
     <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="manifest" href="/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -20,9 +21,9 @@
 <body>
 
     <script src="/js/menu.js"></script>
-    <div class="app-container">
+    <div class="app-layout">
         <div id="menu-placeholder"></div>
-        <main class="contenido-principal contenedor-principal">
+        <main class="contenido-principal">
         <div class="dashboard-root">
             <header class="dashboard-header">
                 <div class="perfil-cabecera">
@@ -35,41 +36,14 @@
                         <div id="rol-usuario" class="rol-usuario">Cargando perfil...</div>
                     </div>
                     <div class="perfil-acciones">
+                       
                         <button id="btn-logout" class="boton-secundario">Cerrar Sesión</button>
                     </div>
                 </div>
                 <p id="bienvenida-usuario" class="bienvenida-text">Bienvenido a tu panel personal.</p>
             </header>
 
-            <section id="seccion-natural" class="zona-modulo natural" style="display:none;">
-                <h3>Perfil: Usuario Natural</h3>
-                <p class="muted">Actualmente puedes ver relatos, comentar y participar en los juegos patrimoniales.</p>
-                <div class="acciones-row"><button id="btn-solicitar-ascenso" class="boton-enviar">Solicitar Ascenso a Especialista</button></div>
-            </section>
-
-            <section id="quiz-evaluacion" class="zona-modulo evaluacion" style="display:none;">
-                <h4>Examen de Validación Histórica (Coro)</h4>
-                <p class="muted">Responde correctamente para demostrar tus conocimientos y adquirir privilegios de edición.</p>
-                <form id="form-evaluacion">
-                    <p><strong>1. ¿Cómo llamaban los indígenas Caquetíos a la ciudad de Coro? </strong></p>
-                    <label><input type="radio" name="p1" value="incorrecto1"> Ciudad del Barro</label><br>
-                    <label><input type="radio" name="p1" value="correcto"> la ciudad del viento </label><br>
-                    <label><input type="radio" name="p1" value="incorrecto2"> Valle de los Ríos</label>
-                    <div class="acciones-row"><button type="submit" class="boton-enviar">Enviar Evaluación</button></div>
-                </form>
-            </section>
-
-            <section id="seccion-especialista" class="zona-modulo especialista" style="display:none;">
-                <h3>Herramientas de Especialista</h3>
-                <p class="muted">Cuentas con permisos institucionales exclusivos para la preservación digital del patrimonio.</p>
-                <div class="acciones-row">
-                    <a href="/subir-tema" class="boton-enviar">Ir a Publicar Tema Histórico</a>
-                    <a href="/crear-juego" class="boton-enviar secundario">Diseñar Nueva Trivia</a>
-                </div>
-
-            </section>
-
-            <section id="seccion-relatos" class="zona-modulo" style="display:none;">
+            <section id="seccion-relatos" class="zona-modulo">
                 <h3>Mis Relatos</h3>
                 <p class="muted">Aquí puedes gestionar tus relatos publicados y crear nuevos.</p>
                 <div class="acciones-row">
@@ -80,7 +54,7 @@
                 </div>
             </section>
             <section id="seccion-contenidos" class="zona-modulo">
-                <h3>Mis Contenidos</h3>
+                <h3 id="titulo-contenidos">Mis Contenidos</h3>
                 <p class="muted">Explora y administra tus temas y juegos desde un solo lugar.</p>
                 
                 <div class="tabs-container">
@@ -109,6 +83,48 @@
                 </div>
             </section>
 
+            <section id="seccion-admin" class="zona-modulo" style="display:none;">
+                <h3 id="titulo-admin">Admin</h3>
+                <p class="muted">Panel de administración para gestión de contenido y usuarios.</p>
+
+                <div class="tabs-container" style="margin-top:16px;">
+                    <div class="tabs-header">
+                        <button class="tab-button active" onclick="switchAdminTab('crear-juego')">Crear Juego</button>
+                        <button class="tab-button" onclick="switchAdminTab('crear-tema')">Crear Tema</button>
+                        <button class="tab-button" onclick="switchAdminTab('categorias')">Categorías</button>
+                        <button class="tab-button" onclick="switchAdminTab('usuarios')">Usuarios</button>
+                    </div>
+
+                    <div id="admin-tab-crear-juego" class="tab-content active" style="margin-top:16px;">
+                        <p class="muted">Diseña una nueva trivia patrimonial.</p>
+                        <a href="/crear-juego" class="boton-enviar" style="display:inline-flex;">Ir a Crear Juego</a>
+                    </div>
+
+                    <div id="admin-tab-crear-tema" class="tab-content" style="display:none; margin-top:16px;">
+                        <p class="muted">Publica un nuevo tema histórico oficial.</p>
+                        <a href="/subir-tema" class="boton-enviar" style="display:inline-flex;">Ir a Publicar Tema</a>
+                    </div>
+
+                    <div id="admin-tab-categorias" class="tab-content" style="display:none; margin-top:16px;">
+                        <p class="muted">Gestiona las categorías para temas y relatos.</p>
+                        <div style="display:flex; gap:10px; margin-bottom:16px;">
+                            <input type="text" id="input-nueva-categoria" class="input" placeholder="Nombre de la categoría" style="flex:1;">
+                            <button id="btn-agregar-categoria" class="boton-enviar" style="width:auto; padding:12px 20px;">Agregar</button>
+                        </div>
+                        <div id="lista-categorias" class="lista-temas">
+                            <p class="muted center">Cargando categorías...</p>
+                        </div>
+                    </div>
+
+                    <div id="admin-tab-usuarios" class="tab-content" style="display:none; margin-top:16px;">
+                        <p class="muted">Listado de todos los usuarios registrados.</p>
+                        <div id="lista-usuarios" class="lista-temas">
+                            <p class="muted center">Cargando usuarios...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <div id="mensaje-consola" class="mensaje-oculto"></div>
         </div>
     </main>
@@ -128,6 +144,23 @@
             const targetTab = document.getElementById('tab-' + tabId);
             targetTab.classList.add('active');
             targetTab.style.display = 'block';
+        }
+
+        function switchAdminTab(tabId) {
+            const container = document.getElementById('seccion-admin');
+            container.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            container.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+                content.style.display = 'none';
+            });
+            event.currentTarget.classList.add('active');
+            const targetTab = document.getElementById('admin-tab-' + tabId);
+            if (targetTab) {
+                targetTab.classList.add('active');
+                targetTab.style.display = 'block';
+            }
+            if (tabId === 'categorias' && typeof cargarCategorias === 'function') cargarCategorias();
+            if (tabId === 'usuarios' && typeof cargarUsuarios === 'function') cargarUsuarios();
         }
     </script>
 </body>
