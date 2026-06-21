@@ -1,4 +1,5 @@
 // controllers/authController.js
+const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const db = require('../config/db'); // Sube un nivel para buscar config
 const nodemailer = require('nodemailer');
@@ -31,6 +32,15 @@ exports.registro = async (req, res) => {
 
     if (contrasena.length < 6) {
         return res.status(400).json({ mensaje: 'La contraseña debe tener mínimo 6 caracteres.' });
+    }
+    if (!/[A-Z]/.test(contrasena)) {
+        return res.status(400).json({ mensaje: 'La contraseña debe contener al menos una mayúscula.' });
+    }
+    if (!/[0-9]/.test(contrasena)) {
+        return res.status(400).json({ mensaje: 'La contraseña debe contener al menos un número.' });
+    }
+    if (!/[^a-zA-Z0-9\s]/.test(contrasena)) {
+        return res.status(400).json({ mensaje: 'La contraseña debe contener al menos un carácter especial.' });
     }
 
     try {
@@ -175,6 +185,9 @@ exports.login = async (req, res) => {
             });
         }
 
+        const sessionToken = crypto.randomUUID();
+        await db.query('UPDATE usuarios SET session_token = $1 WHERE id = $2', [sessionToken, usuario.id]);
+
         req.session.usuario = {
             id: usuario.id,
             nombre: usuario.nombre,
@@ -185,6 +198,7 @@ exports.login = async (req, res) => {
         req.session.usuarioId = usuario.id;
         req.session.nombre = usuario.nombre;
         req.session.rol = usuario.rol;
+        req.session.session_token = sessionToken;
 
         return res.status(200).json({
             mensaje: `¡Bienvenido de vuelta, ${usuario.nombre}!`,

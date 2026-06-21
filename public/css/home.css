@@ -91,6 +91,32 @@
     justify-content: space-between;
 }
 
+.btn-comentario {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    border: 1.5px solid rgba(18,18,18,0.08);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--texto-sec);
+    font-weight: 600;
+    font-size: var(--font-sm);
+    text-decoration: none;
+    transition: all 200ms ease;
+}
+
+.btn-comentario:hover {
+    border-color: var(--primario);
+    color: var(--primario);
+    background: var(--primario-light);
+}
+
+.btn-comentario .material-symbols-outlined {
+    font-size: 1.1rem;
+    font-variation-settings: 'wght' 400;
+}
+
 .btn-like {
     display: inline-flex;
     align-items: center;

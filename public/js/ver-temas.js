@@ -2,11 +2,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const bloqueCarga = document.getElementById('bloque-carga');
     const bloqueContenido = document.getElementById('bloque-contenido');
 
-    // 1. Leer la URL
     const parametrosURL = new URLSearchParams(window.location.search);
-    const temaId = parametrosURL.get('id'); 
-    
-    console.log("ID del tema capturado desde la URL:", temaId); // Para verificar en consola
+    const temaId = parametrosURL.get('id');
 
     if (!temaId) {
         bloqueCarga.innerHTML = "<p> Error: No se especificó el ID del tema en la URL.</p>";
@@ -14,35 +11,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        // 2. Pedirle los datos al backend usando la ruta relativa correcta
         const respuesta = await fetch(`/api/temas/${temaId}`, {
             method: 'GET',
             credentials: 'include'
         });
 
         if (!respuesta.ok) {
-            // Intentamos leer el JSON de error para mostrar un mensaje más útil
             let errMsg = `Error ${respuesta.status}`;
             try {
                 const errJson = await respuesta.json();
                 if (errJson && errJson.mensaje) errMsg = errJson.mensaje;
-            } catch (e) {
-                // no JSON en la respuesta
-            }
+            } catch (e) {}
             throw new Error(errMsg || 'El tema no existe en la base de datos.');
         }
 
         const tema = await respuesta.json();
 
-        // 3. Sembrar los datos en el HTML
         document.getElementById('txt-titulo').textContent = tema.titulo || 'Sin título';
         document.getElementById('txt-categoria').textContent = tema.categoria_nombre || 'General';
         document.getElementById('txt-cuerpo').innerHTML = tema.contenido || 'Contenido vacío';
-        
+
         const imgPortadaEl = document.getElementById('img-portada');
         if (tema.imagen_portada) {
             let imgPath = tema.imagen_portada;
-            // Asegurar que la ruta comience con '/' para que el servidor la sirva correctamente
             if (!imgPath.startsWith('/') && !imgPath.startsWith('http')) {
                 imgPath = '/' + imgPath;
             }
@@ -58,12 +49,119 @@ document.addEventListener('DOMContentLoaded', async () => {
             body: JSON.stringify({ tipo_contenido: 'tema', contenido_id: tema.id })
         }).catch(() => {});
 
-        // 4. Intercambiar visibilidad
         bloqueCarga.style.display = 'none';
         bloqueContenido.style.display = 'block';
+
+        // Cargar comentarios
+        cargarComentarios(temaId);
+
+        // Scroll a comentarios si el hash lo indica
+        if (window.location.hash === '#comentarios') {
+            setTimeout(() => {
+                const el = document.getElementById('seccion-comentarios');
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
+        }
 
     } catch (error) {
         console.error("Error en ver-tema.js:", error);
         bloqueCarga.innerHTML = `<p style="color: red;">Error al cargar el contenido: ${error.message}</p>`;
+    }
+
+    // ---- COMENTARIOS ----
+
+    const comentarioInput = document.getElementById('comentario-input');
+    const comentarioEnviar = document.getElementById('comentario-enviar');
+    const comentariosLista = document.getElementById('comentarios-lista');
+    const comentariosCount = document.getElementById('comentarios-count');
+
+    async function cargarComentarios(temaId) {
+        try {
+            const res = await fetch(`/api/temas/${temaId}/comentarios`, { credentials: 'include' });
+            if (!res.ok) return;
+            const comentarios = await res.json();
+            if (Array.isArray(comentarios)) renderComentarios(comentarios);
+        } catch (e) {
+            console.error('Error al cargar comentarios:', e);
+        }
+    }
+
+    function renderComentarios(comentarios) {
+        comentariosCount.textContent = comentarios.length;
+        if (comentarios.length === 0) {
+            comentariosLista.innerHTML = '<p class="comentarios-vacio">Sin comentarios. Sé el primero en comentar.</p>';
+            return;
+        }
+        comentariosLista.innerHTML = comentarios.map(c => `
+            <div class="comentario-item" data-id="${c.id}">
+                <div class="comentario-avatar">
+                    <span class="material-symbols-outlined">person</span>
+                </div>
+                <div class="comentario-cuerpo">
+                    <div class="comentario-encabezado">
+                        <span class="comentario-autor">${c.usuario_nombre || 'Anónimo'}</span>
+                        <span class="comentario-fecha">${formatDate(c.fecha_creacion)}</span>
+                    </div>
+                    <div class="comentario-texto">${escapeHtml(c.contenido)}</div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    comentarioEnviar.addEventListener('click', async () => {
+        const texto = comentarioInput.value.trim();
+        if (!texto) return;
+
+        comentarioEnviar.disabled = true;
+        comentarioEnviar.textContent = 'Publicando...';
+
+        try {
+            const res = await fetch(`/api/temas/${temaId}/comentarios`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ contenido: texto })
+            });
+
+            if (res.status === 401) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            if (!res.ok) {
+                let msg = 'Error al publicar.';
+                try { const err = await res.json(); msg = err.mensaje || msg; } catch (_) {}
+                alert(msg);
+                return;
+            }
+
+            comentarioInput.value = '';
+            await cargarComentarios(temaId);
+        } catch (e) {
+            console.error('Error al enviar comentario:', e);
+            alert('Error de conexión.');
+        } finally {
+            comentarioEnviar.disabled = false;
+            comentarioEnviar.textContent = 'Publicar';
+        }
+    });
+
+    comentarioInput.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.key === 'Enter') {
+            e.preventDefault();
+            comentarioEnviar.click();
+        }
+    });
+
+    function formatDate(fecha) {
+        if (!fecha) return '';
+        const d = new Date(fecha);
+        return d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.appendChild(document.createTextNode(text));
+        return div.innerHTML;
     }
 });

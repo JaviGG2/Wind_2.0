@@ -77,6 +77,14 @@ formVerificar.addEventListener('submit', async (evento) => {
 });
 
 
+// Mostrar mensaje si venimos de sesión expirada
+window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('sesion_expirada') === 'true') {
+        mostrarMensaje('Tu sesión expiró porque iniciaste sesión en otro dispositivo.', 'error');
+    }
+});
+
 function mostrarMensaje(texto, tipo) {
     bloqueMensaje.textContent = texto;
     bloqueMensaje.className = `mensaje-alerta ${tipo}`;

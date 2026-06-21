@@ -141,6 +141,57 @@
     font-weight: 500;
 }
 
+.campo-con-ojo {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.campo-con-ojo input {
+    width: 100%;
+    padding-right: 44px;
+}
+
+.btn-ojo {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    color: var(--texto-muted, #888);
+    transition: color 150ms;
+}
+
+.btn-ojo:hover {
+    color: var(--texto);
+}
+
+.btn-ojo .material-symbols-outlined {
+    font-size: 1.3rem;
+    font-variation-settings: 'wght' 300;
+}
+
+.input-ayuda {
+    display: block;
+    font-size: .75rem;
+    color: var(--texto-muted, #888);
+    margin-top: 4px;
+    line-height: 1.4;
+}
+
+.input-ayuda.valido {
+    color: #16a34a;
+}
+
+.input-ayuda.invalido {
+    color: #dc2626;
+}
+
 @media (max-width: 640px) {
     .contenedor-principal {
         padding: 16px;

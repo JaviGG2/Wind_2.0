@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const likesCount = tema.likes || 0;
 
     const yaDioLike = tema.usuario_dio_like === true;
+    const comentariosCount = tema.comentarios_count || 0;
     tarjeta.innerHTML = `
         <div class="tema-imagen" style="background-image: url('${tema.imagen_portada || '/img/app.png'}');"></div>
         <div class="tema-contenido">
@@ -71,6 +72,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="tema-autor">Publicado: ${tema.fecha_publicacion ? new Date(tema.fecha_publicacion).toLocaleDateString() : 'Desconocida'}</span>
             </div>
             <div class="tema-footer">
+                <a href="/ver-tema?id=${tema.id}#comentarios" class="btn-comentario" onclick="event.stopPropagation()">
+                    <span class="material-symbols-outlined">chat_bubble</span>
+                    <span>${comentariosCount}</span>
+                </a>
                 <button class="btn-like${yaDioLike ? ' liked' : ''}" data-id="${tema.id}">
                     <span class="material-symbols-outlined like-icon">favorite</span>
                     <span class="like-count">${likesCount}</span>

@@ -93,11 +93,14 @@ exports.listarTemas = async (req, res) => {
         let result;
         let params;
 
+        const commentCountSubquery = ', (SELECT COUNT(*) FROM comentarios WHERE tema_id = t.id) AS comentarios_count';
+
         if (categoriaId && !Number.isNaN(categoriaId)) {
             params = usuarioId ? [usuarioId, categoriaId] : [0, categoriaId];
             result = await db.query(
                 `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes
-                    ${usuarioId ? likeSubquery : ', false AS usuario_dio_like'},
+                    ${usuarioId ? likeSubquery : ', false AS usuario_dio_like'}
+                    ${commentCountSubquery},
                     c.nombre AS categoria_nombre,
                     u.nombre AS creador_nombre
              FROM temas t
@@ -112,7 +115,8 @@ exports.listarTemas = async (req, res) => {
             params = usuarioId ? [usuarioId] : [0];
             result = await db.query(
                 `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes
-                    ${usuarioId ? likeSubquery : ', false AS usuario_dio_like'},
+                    ${usuarioId ? likeSubquery : ', false AS usuario_dio_like'}
+                    ${commentCountSubquery},
                     c.nombre AS categoria_nombre,
                     u.nombre AS creador_nombre
              FROM temas t
