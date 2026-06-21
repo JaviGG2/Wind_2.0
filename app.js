@@ -84,6 +84,7 @@ const relatoRoutes = require('./routes/relatoRoutes');
 const searchRoutes = require('./routes/searchRoutes');
 const historialRoutes = require('./routes/historialRoutes');
 const comentarioRoutes = require('./routes/comentarioRoutes');
+const moduloRoutes = require('./routes/moduloRoutes');
 
 
 // CORRECCIÓN CLAVE: Inyectamos todas las rutas de forma limpia en la raíz
@@ -96,6 +97,7 @@ app.use(relatoRoutes);
 app.use(searchRoutes);
 app.use(historialRoutes);
 app.use(comentarioRoutes);
+app.use(moduloRoutes);
 
 // IMPORTACIÓN DE FILTROS DE SEGURIDAD (MIDDLEWARES)
 const { verificarSesion, esEspecialista } = require('./middlewares/autenticacion');

@@ -390,6 +390,38 @@ body {
     transform: scale(1.02);
 }
 
+.juego-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+}
+.juego-card-footer .btn-jugar {
+  flex: 1;
+  margin-top: 0;
+}
+.jugado-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #16a34a;
+  background: #f0fdf4;
+  padding: 6px 12px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+.jugado-badge .material-symbols-outlined {
+  font-size: 1rem;
+}
+.juego-card.jugado {
+  border-color: rgba(22, 163, 74, 0.2);
+}
+.juego-card.jugado:hover {
+  border-color: rgba(22, 163, 74, 0.4);
+}
+
 /* ----- ESTADOS DE CARGA (SKELETON) ----- */
 .loading-skeleton {
     display: contents;
@@ -912,3 +944,355 @@ body {
         padding-left: 270px;
     }
 }
+
+/* ===== MÓDULOS ===== */
+.modulos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.modulo-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--borde-light);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  color: var(--texto);
+  transition: all var(--transition);
+}
+
+.modulo-card:hover {
+  border-color: var(--primario);
+  box-shadow: var(--sombra-md);
+  transform: translateY(-2px);
+}
+
+.modulo-card-icon .material-symbols-outlined {
+  font-size: 2rem;
+  color: var(--primario);
+}
+
+.modulo-card h3 {
+  margin: 0;
+  font-size: var(--font-lg);
+  font-weight: 700;
+}
+
+.modulo-card p {
+  margin: 0;
+  font-size: var(--font-sm);
+  color: var(--texto-sec);
+  line-height: 1.5;
+  flex: 1;
+}
+
+.modulo-card-footer {
+  font-size: var(--font-xs);
+  color: var(--texto-muted);
+}
+
+/* Header del módulo */
+.modulo-header-card {
+  background: var(--bg-card);
+  border: 1px solid var(--borde-light);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin-bottom: 24px;
+}
+
+.modulo-header-card h2 {
+  margin: 0 0 8px;
+  font-size: var(--font-2xl);
+  font-weight: 700;
+}
+
+.modulo-header-card p {
+  color: var(--texto-sec);
+  font-size: var(--font-sm);
+  margin: 0 0 16px;
+}
+
+.modulo-progress-bar {
+  height: 8px;
+  background: var(--borde-light);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.modulo-progress-fill {
+  height: 100%;
+  background: var(--primario);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.modulo-progress-text {
+  font-size: var(--font-xs);
+  color: var(--texto-muted);
+}
+
+/* Listado de niveles */
+.niveles-listado {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nivel-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--borde-light);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--texto);
+  transition: all var(--transition);
+}
+
+.nivel-card:hover:not(.nivel-bloqueado) {
+  border-color: var(--primario);
+  box-shadow: var(--sombra-sm);
+}
+
+.nivel-bloqueado {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--bg-surface);
+}
+
+.nivel-completado {
+  border-color: #16a34a;
+  background: #f0fdf4;
+}
+
+.nivel-disponible {
+  border-color: var(--borde);
+}
+
+.nivel-disponible:hover {
+  border-color: var(--primario);
+}
+
+.nivel-icono .material-symbols-outlined {
+  font-size: 1.8rem;
+  color: var(--texto-muted);
+}
+
+.nivel-completado .nivel-icono .material-symbols-outlined {
+  color: #16a34a;
+}
+
+.nivel-disponible .nivel-icono .material-symbols-outlined {
+  color: var(--primario);
+}
+
+.nivel-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.nivel-nombre {
+  font-weight: 700;
+  font-size: var(--font-sm);
+  margin-bottom: 2px;
+}
+
+.nivel-desc {
+  font-size: var(--font-xs);
+  color: var(--texto-sec);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nivel-estado {
+  flex-shrink: 0;
+}
+
+.nivel-puntos {
+  font-size: var(--font-xs);
+  font-weight: 700;
+  color: #16a34a;
+  background: #dcfce7;
+  padding: 2px 10px;
+  border-radius: 999px;
+}
+
+/* Admin */
+.modulo-admin-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--borde-light);
+  border-radius: var(--radius-md);
+  margin-bottom: 10px;
+}
+
+.modulo-admin-item strong {
+  font-size: var(--font-sm);
+}
+
+/* === GAME TYPE BADGE === */
+.juego-tipo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #555;
+  background: #f0f0f0;
+  padding: 2px 10px;
+  border-radius: 999px;
+}
+.juego-tipo-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #666;
+  background: var(--bg-surface);
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--borde-light);
+}
+.juego-tipo-label .material-symbols-outlined {
+  font-size: 1rem;
+}
+
+/* === MEMORY === */
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+.memory-carta {
+  aspect-ratio: 1;
+  background: var(--bg-surface);
+  border: 2px solid var(--borde-light);
+  border-radius: 12px;
+  cursor: pointer;
+  position: relative;
+  perspective: 600px;
+  transition: transform 0.3s;
+  font-size: 0;
+  padding: 0;
+  min-height: 70px;
+}
+.memory-carta:hover { border-color: var(--primario); transform: scale(1.03); }
+.memory-carta .memory-front,
+.memory-carta .memory-back {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border-radius: 10px;
+  backface-visibility: hidden;
+  transition: opacity 0.3s;
+}
+.memory-carta .memory-front {
+  background: linear-gradient(135deg, var(--primario), var(--primario-dark));
+  color: #fff;
+}
+.memory-carta .memory-back {
+  background: #e8f5e9;
+  color: #2e7d32;
+  opacity: 0;
+}
+.memory-carta.volteada .memory-front { opacity: 0; }
+.memory-carta.volteada .memory-back { opacity: 1; }
+.memory-carta.emparejada {
+  border-color: #28a745;
+  background: #e8f5e9;
+  pointer-events: none;
+}
+.memory-carta.emparejada .memory-back { opacity: 1; color: #1b5e20; font-weight: 800; }
+.memory-carta.emparejada .memory-front { opacity: 0; }
+
+/* === MATCH === */
+.match-caja {
+  display: flex;
+  gap: 20px;
+  margin-top: 16px;
+  justify-content: center;
+}
+.match-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 140px;
+}
+.match-btn {
+  padding: 12px 16px;
+  background: var(--bg-surface);
+  border: 2px solid var(--borde-light);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-align: center;
+  transition: all 0.2s;
+}
+.match-btn:hover { border-color: var(--primario); }
+.match-btn.seleccionado { border-color: var(--primario); background: var(--primario-bg); }
+.match-btn.conectado { border-color: #28a745; background: #e8f5e9; color: #1b5e20; pointer-events: none; }
+
+/* === SCRAMBLEE === */
+.scramblee-area {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  margin-top: 16px;
+}
+.scramblee-letras {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.scramblee-letra {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: var(--bg-surface);
+  border: 2px solid var(--borde-light);
+  border-radius: 10px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--primario);
+  animation: letraAparece 0.3s ease;
+}
+@keyframes letraAparece {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.scramblee-input {
+  width: 100%;
+  max-width: 320px;
+  padding: 14px 16px;
+  font-size: 1.2rem;
+  text-align: center;
+  text-transform: uppercase;
+  border: 2px solid var(--borde-light);
+  border-radius: 12px;
+  outline: none;
+  background: var(--bg-surface);
+  letter-spacing: 4px;
+}
+.scramblee-input:focus { border-color: var(--primario); }

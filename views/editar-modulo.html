@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestionar Módulo - Wind</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/estilos.css">
+  <link rel="stylesheet" href="/css/menu.css">
+  <link rel="stylesheet" href="/css/formularios-crear.css">
+  <style>
+    .tipo-selector { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+    .tipo-btn { padding:10px 18px; border:2px solid var(--borde-light); border-radius:12px; background:var(--fondo-card); cursor:pointer; font-size:0.9rem; transition:all .2s; display:flex; align-items:center; gap:6px; }
+    .tipo-btn:hover { border-color:var(--primario); background:var(--primario-bg); }
+    .tipo-btn.active { border-color:var(--primario); background:var(--primario); color:#fff; }
+    .campo-juego { display:none; }
+    .campo-juego.visible { display:block; }
+  </style>
+</head>
+<body>
+  <script src="/js/menu.js"></script>
+  <div class="app-layout">
+    <div id="menu-placeholder"></div>
+    <main class="contenido-principal">
+      <div class="crear-container">
+        <a href="/admin/modulos" class="enlace-secundario" style="display:inline-flex;align-items:center;gap:4px;margin-bottom:16px;">
+          <span class="material-symbols-outlined">arrow_back</span> Mis módulos
+        </a>
+        <div id="modulo-info"></div>
+
+        <div class="crear-card" style="margin-top:20px;">
+          <h3 style="margin:0 0 16px;">Agregar Nivel</h3>
+          <form id="form-agregar-nivel" novalidate>
+            <div class="grupo-campo">
+              <label for="nivel-nombre">Nombre del Nivel:</label>
+              <input type="text" id="nivel-nombre" required placeholder="Ej. Nivel 1: Fundación">
+            </div>
+            <div class="grupo-campo">
+              <label for="nivel-descripcion">Descripción:</label>
+              <textarea id="nivel-descripcion" rows="2" placeholder="Descripción del nivel..."></textarea>
+            </div>
+
+            <hr style="border:none;border-top:1px solid var(--borde-light);margin:16px 0;">
+
+            <h4 style="margin:0 0 12px;">Tipo de Juego</h4>
+            <div class="tipo-selector" id="tipo-selector">
+              <button type="button" class="tipo-btn active" data-tipo="Quiz">
+                <span class="material-symbols-outlined">quiz</span> Quiz
+              </button>
+              <button type="button" class="tipo-btn" data-tipo="Memory">
+                <span class="material-symbols-outlined">memory</span> Memory
+              </button>
+              <button type="button" class="tipo-btn" data-tipo="Match">
+                <span class="material-symbols-outlined">link</span> Match
+              </button>
+              <button type="button" class="tipo-btn" data-tipo="Scramblee">
+                <span class="material-symbols-outlined">abc</span> Scramblee
+              </button>
+            </div>
+
+            <input type="hidden" id="juego-tipo" value="Quiz">
+
+            <!-- CAMPOS QUIZ -->
+            <div class="campo-juego visible" data-tipo="Quiz">
+              <div class="grupo-campo">
+                <label for="juego-pregunta">Pregunta:</label>
+                <textarea id="juego-pregunta" rows="2" placeholder="Ej. ¿En qué año se fundó Coro?"></textarea>
+              </div>
+              <div class="grupo-campo">
+                <label for="juego-opcion_a">Opción A:</label>
+                <input type="text" id="juego-opcion_a" placeholder="Ej. 1527">
+              </div>
+              <div class="grupo-campo">
+                <label for="juego-opcion_b">Opción B:</label>
+                <input type="text" id="juego-opcion_b" placeholder="Ej. 1550">
+              </div>
+              <div class="grupo-campo">
+                <label for="juego-opcion_c">Opción C:</label>
+                <input type="text" id="juego-opcion_c" placeholder="Ej. 1600">
+              </div>
+              <div class="grupo-campo">
+                <label for="juego-correcta">Respuesta Correcta:</label>
+                <select id="juego-correcta">
+                  <option value="">Seleccionar...</option>
+                  <option value="A">A</option>
+                  <option value="B">B</option>
+                  <option value="C">C</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- CAMPOS MEMORY -->
+            <div class="campo-juego" data-tipo="Memory">
+              <div class="grupo-campo">
+                <label>Palabras para emparejar (4, 6, 8... pares):</label>
+                <div id="memory-palabras">
+                  <input type="text" class="memory-input" placeholder="Palabra 1">
+                  <input type="text" class="memory-input" placeholder="Palabra 2">
+                  <input type="text" class="memory-input" placeholder="Palabra 3">
+                  <input type="text" class="memory-input" placeholder="Palabra 4">
+                </div>
+                <button type="button" class="btn-outline" style="margin-top:8px;font-size:0.85rem;" onclick="agregarPalabraMemory()">+ Agregar palabra</button>
+              </div>
+            </div>
+
+            <!-- CAMPOS MATCH -->
+            <div class="campo-juego" data-tipo="Match">
+              <div class="grupo-campo">
+                <label>Pares concepto → respuesta:</label>
+                <div id="match-pares">
+                  <div class="match-fila">
+                    <input type="text" class="match-concepto" placeholder="Concepto">
+                    <input type="text" class="match-respuesta" placeholder="Respuesta">
+                  </div>
+                  <div class="match-fila">
+                    <input type="text" class="match-concepto" placeholder="Concepto">
+                    <input type="text" class="match-respuesta" placeholder="Respuesta">
+                  </div>
+                  <div class="match-fila">
+                    <input type="text" class="match-concepto" placeholder="Concepto">
+                    <input type="text" class="match-respuesta" placeholder="Respuesta">
+                  </div>
+                </div>
+                <button type="button" class="btn-outline" style="margin-top:8px;font-size:0.85rem;" onclick="agregarParMatch()">+ Agregar par</button>
+              </div>
+            </div>
+
+            <!-- CAMPOS SCRAMBLEE -->
+            <div class="campo-juego" data-tipo="Scramblee">
+              <div class="grupo-campo">
+                <label for="juego-pista">Pista / Pregunta:</label>
+                <textarea id="juego-pista" rows="2" placeholder="Ej. Capital del estado Falcón"></textarea>
+              </div>
+              <div class="grupo-campo">
+                <label for="juego-palabra">Palabra a adivinar:</label>
+                <input type="text" id="juego-palabra" placeholder="Ej. CORO">
+              </div>
+            </div>
+
+            <div class="grupo-campo">
+              <label for="juego-puntos">Puntos por acertar:</label>
+              <input type="number" id="juego-puntos" value="10" min="1" max="100" required>
+            </div>
+
+            <button type="submit" class="boton-enviar">Agregar Nivel y Juego</button>
+          </form>
+          <div id="nivel-mensaje" class="mensaje-oculto"></div>
+        </div>
+
+        <div id="niveles-listado-admin" style="margin-top:20px;"></div>
+      </div>
+    </main>
+  </div>
+  <script>
+    function agregarPalabraMemory() {
+      const container = document.getElementById('memory-palabras');
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'memory-input';
+      input.required = true;
+      input.placeholder = 'Palabra ' + (container.children.length + 1);
+      container.appendChild(input);
+    }
+    function agregarParMatch() {
+      const container = document.getElementById('match-pares');
+      const div = document.createElement('div');
+      div.className = 'match-fila';
+      div.innerHTML = '<input type="text" class="match-concepto" required placeholder="Concepto"><input type="text" class="match-respuesta" required placeholder="Respuesta">';
+      container.appendChild(div);
+    }
+  </script>
+  <script src="/js/editar-modulo.js"></script>
+</body>
+</html>

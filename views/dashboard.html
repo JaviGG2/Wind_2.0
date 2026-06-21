@@ -91,6 +91,7 @@
                     <div class="tabs-header">
                         <button class="tab-button active" onclick="switchAdminTab('crear-juego')">Crear Juego</button>
                         <button class="tab-button" onclick="switchAdminTab('crear-tema')">Crear Tema</button>
+                        <button class="tab-button" onclick="switchAdminTab('crear-modulo')">Crear Módulo</button>
                         <button class="tab-button" onclick="switchAdminTab('categorias')">Categorías</button>
                         <button class="tab-button" onclick="switchAdminTab('usuarios')">Usuarios</button>
                     </div>
@@ -103,6 +104,14 @@
                     <div id="admin-tab-crear-tema" class="tab-content" style="display:none; margin-top:16px;">
                         <p class="muted">Publica un nuevo tema histórico oficial.</p>
                         <a href="/subir-tema" class="boton-enviar" style="display:inline-flex;">Ir a Publicar Tema</a>
+                    </div>
+
+                    <div id="admin-tab-crear-modulo" class="tab-content" style="display:none; margin-top:16px;">
+                        <p class="muted">Agrupa varios juegos en niveles dentro de un módulo.</p>
+                        <a href="/admin/crear-modulo" class="boton-enviar" style="display:inline-flex;">Ir a Crear Módulo</a>
+                        <div style="margin-top:12px;">
+                            <a href="/admin/modulos" class="boton-secundario" style="display:inline-flex;">Mis Módulos</a>
+                        </div>
                     </div>
 
                     <div id="admin-tab-categorias" class="tab-content" style="display:none; margin-top:16px;">

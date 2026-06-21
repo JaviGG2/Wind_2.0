@@ -49,7 +49,14 @@
                             <span class="material-symbols-outlined">quiz</span>
                             <div>
                                 <strong id="total-juegos-count">—</strong>
-                                <small>Trivias disponibles</small>
+                                <small>Juegos disponibles</small>
+                            </div>
+                        </div>
+                        <div class="stat-bubble">
+                            <span class="material-symbols-outlined">stadia_controller</span>
+                            <div>
+                                <strong id="total-jugados-count">—</strong>
+                                <small>Jugados</small>
                             </div>
                         </div>
                         <div class="stat-bubble">
@@ -59,6 +66,13 @@
                                 <small>Mis puntos</small>
                             </div>
                         </div>
+                        <a href="/modulos" class="stat-bubble" style="text-decoration:none;color:inherit;">
+                            <span class="material-symbols-outlined">layers</span>
+                            <div>
+                                <strong>Módulos</strong>
+                                <small>Juegos por niveles</small>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </section>
@@ -102,6 +116,10 @@
                 </button>
                 <div class="juego-header">
                     <span class="juego-cat-label" id="juego-modal-cat">General</span>
+                    <span class="juego-tipo-label">
+                        <span class="material-symbols-outlined" id="juego-modal-tipo-icon">quiz</span>
+                        <span id="juego-modal-tipo">Quiz</span>
+                    </span>
                     <div class="juego-pts-label">
                         <span class="material-symbols-outlined">star</span>
                         <span id="juego-modal-pts">10</span> pts

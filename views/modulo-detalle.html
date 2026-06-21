@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo - Wind</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/estilos.css">
+  <link rel="stylesheet" href="/css/menu.css">
+  <link rel="stylesheet" href="/css/search.css">
+  <link rel="stylesheet" href="/css/juegos-page.css">
+  <style>
+    .modulo-detalle-hero {
+      background: linear-gradient(135deg, #fff5f0 0%, #fff 60%);
+      border-radius: 24px;
+      padding: 32px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .modulo-detalle-hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 180px; height: 180px;
+      background: radial-gradient(circle, rgba(255,69,0,0.06) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .modulo-detalle-hero h2 {
+      font-size: 1.6rem; margin: 0 0 6px;
+    }
+    .modulo-detalle-hero p {
+      color: #6b7280; margin: 0 0 20px; font-size: 0.95rem;
+    }
+    .modulo-progress-compact {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .modulo-progress-compact .bar {
+      flex: 1;
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .modulo-progress-compact .bar .fill {
+      height: 100%;
+      background: linear-gradient(90deg, #FF4500, #ff7300);
+      border-radius: 999px;
+      transition: width 0.6s ease;
+    }
+    .modulo-progress-compact .label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #6b7280;
+      white-space: nowrap;
+    }
+    .modulo-admin-link {
+      margin-top: 16px;
+    }
+    .niveles-listado {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .nivel-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 20px;
+      background: #fff;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 16px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.25s ease;
+      animation: cardFadeIn 400ms ease forwards;
+      opacity: 0;
+    }
+    .nivel-card:hover:not(.nivel-bloqueado) {
+      transform: translateX(4px);
+      border-color: rgba(255,69,0,0.3);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .nivel-icono {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: #f9fafb;
+    }
+    .nivel-icono .material-symbols-outlined { font-size: 1.4rem; }
+    .nivel-disponible .nivel-icono { background: #fff5f0; }
+    .nivel-disponible .nivel-icono .material-symbols-outlined { color: #FF4500; }
+    .nivel-completado { border-color: #16a34a; background: #f0fdf4; }
+    .nivel-completado .nivel-icono { background: #dcfce7; }
+    .nivel-completado .nivel-icono .material-symbols-outlined { color: #16a34a; }
+    .nivel-bloqueado { opacity: 0.5; cursor: default; }
+    .nivel-bloqueado .nivel-icono { background: #f3f4f6; }
+    .nivel-bloqueado .nivel-icono .material-symbols-outlined { color: #9ca3af; }
+    .nivel-info { flex: 1; min-width: 0; }
+    .nivel-nombre {
+      font-weight: 700; font-size: 0.95rem; margin-bottom: 2px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .nivel-desc {
+      font-size: 0.8rem; color: #6b7280; 
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .nivel-estado { flex-shrink: 0; }
+    .nivel-puntos {
+      font-size: 0.75rem; font-weight: 700;
+      color: #16a34a; background: #dcfce7;
+      padding: 4px 12px; border-radius: 999px;
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+  </style>
+</head>
+<body>
+  <script src="/js/menu.js"></script>
+  <div class="app-layout">
+    <div id="menu-placeholder"></div>
+    <main class="contenido-principal">
+      <div class="crear-container">
+        <a href="/modulos" class="enlace-secundario" style="display:inline-flex;align-items:center;gap:4px;margin-bottom:20px;">
+          <span class="material-symbols-outlined">arrow_back</span> Volver a módulos
+        </a>
+        <div id="modulo-detalle"></div>
+      </div>
+    </main>
+  </div>
+  <script src="/js/modulo-detalle.js"></script>
+</body>
+</html>

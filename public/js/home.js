@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const respuesta = await fetch('/api/temas',  {
             method: 'GET',
-        credentials: 'include', // <--- ¡ESTA ES LA LÍNEA MÁGICA! Obliga al navegador a llevar la cookie
+        credentials: 'include', // < Obliga al navegador a llevar la cookie
         headers: {
             'Content-Type': 'application/json'
         }

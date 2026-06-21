@@ -7,11 +7,16 @@ exports.crearJuego = async (req, res) => {
         return res.status(403).json({ mensaje: 'Acceso denegado: Rol insuficiente.' });
     }
 
-    const { categoria_id, pregunta, opcion_a, opcion_b, opcion_c, opcion_correcta, puntos_recompensa } = req.body;
+    const { categoria_id, pregunta, opcion_a, opcion_b, opcion_c, opcion_correcta, puntos_recompensa, tipo } = req.body;
     const categoriaValida = categoria_id ? parseInt(categoria_id, 10) : null;
+    const tipoJuego = ['Quiz', 'Memory', 'Match', 'Scramblee'].includes(tipo) ? tipo : 'Quiz';
 
-    if (!pregunta || !opcion_a || !opcion_b || !opcion_c || !opcion_correcta) {
-        return res.status(400).json({ mensaje: 'Todos los campos de la trivia son obligatorios.' });
+    if (tipoJuego === 'Quiz') {
+        if (!pregunta || !opcion_a || !opcion_b || !opcion_c || !opcion_correcta) {
+            return res.status(400).json({ mensaje: 'Todos los campos de la trivia son obligatorios.' });
+        }
+    } else if (!pregunta) {
+        return res.status(400).json({ mensaje: 'La pregunta/datos del juego son obligatorios.' });
     }
 
     try {
@@ -21,21 +26,21 @@ exports.crearJuego = async (req, res) => {
 
         if (categoriaValida && !Number.isNaN(categoriaValida)) {
             queryTexto = `
-                INSERT INTO juegos (categoria_id, pregunta, opcion_a, opcion_b, opcion_c, opcion_correcta, puntos_recompensa, usuario_id)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+                INSERT INTO juegos (categoria_id, pregunta, opcion_a, opcion_b, opcion_c, opcion_correcta, tipo, puntos_recompensa, usuario_id)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
             `;
             valores = [
-                categoriaValida, pregunta, opcion_a, opcion_b, opcion_c, opcion_correcta,
+                categoriaValida, pregunta || '', opcion_a || '', opcion_b || '', opcion_c || '', opcion_correcta || 'A', tipoJuego,
                 parseInt(puntos_recompensa, 10) || 10,
                 usuarioId
             ];
         } else {
             queryTexto = `
-                INSERT INTO juegos (pregunta, opcion_a, opcion_b, opcion_c, opcion_correcta, puntos_recompensa, usuario_id)
-                VALUES ($1, $2, $3, $4, $5, $6, $7)
+                INSERT INTO juegos (pregunta, opcion_a, opcion_b, opcion_c, opcion_correcta, tipo, puntos_recompensa, usuario_id)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
             `;
             valores = [
-                pregunta, opcion_a, opcion_b, opcion_c, opcion_correcta,
+                pregunta || '', opcion_a || '', opcion_b || '', opcion_c || '', opcion_correcta || 'A', tipoJuego,
                 parseInt(puntos_recompensa, 10) || 10,
                 usuarioId
             ];
@@ -58,7 +63,7 @@ exports.misJuegos = async (req, res) => {
 
     try {
         const queryTexto = `
-            SELECT j.id, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.puntos_recompensa, c.nombre AS categoria_nombre
+            SELECT j.id, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.puntos_recompensa, c.nombre AS categoria_nombre
             FROM juegos j
             LEFT JOIN categorias c ON j.categoria_id = c.id
             WHERE j.usuario_id = $1
@@ -72,28 +77,59 @@ exports.misJuegos = async (req, res) => {
     }
 };
 
-// 3. Listar juegos publicados (público)
+// 3. Obtener un juego por ID (incluye los de módulos)
+exports.obtenerJuego = async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    if (Number.isNaN(id)) return res.status(400).json({ mensaje: 'ID inválido.' });
+
+    try {
+        const result = await db.query(
+            `SELECT j.*, c.nombre AS categoria_nombre
+             FROM juegos j
+             LEFT JOIN categorias c ON j.categoria_id = c.id
+             WHERE j.id = $1`, [id]
+        );
+        if (result.rows.length === 0) return res.status(404).json({ mensaje: 'Juego no encontrado.' });
+        return res.json(result.rows[0]);
+    } catch (error) {
+        console.error('Error al obtener juego:', error.message);
+        return res.status(500).json({ mensaje: 'Error al cargar juego.' });
+    }
+};
+
+// 4. Listar juegos publicados (público)
 exports.listarPublicos = async (req, res) => {
     try {
         const categoriaId = req.query.categoria ? parseInt(req.query.categoria, 10) : null;
+        const usuarioId = req.session?.usuarioId || null;
         let queryTexto;
         let params = [];
 
+        const jugadoJoin = usuarioId
+            ? `LEFT JOIN historial_vistas hv ON hv.contenido_id = j.id AND hv.tipo_contenido = 'juego' AND hv.usuario_id = $${categoriaId ? 2 : 1}`
+            : '';
+        const jugadoSelect = usuarioId ? ', CASE WHEN hv.id IS NOT NULL THEN true ELSE false END AS jugado' : ', false AS jugado';
+        const exclusionWhere = `WHERE j.id NOT IN (SELECT id_juego FROM nivel WHERE id_juego IS NOT NULL)`;
+
         if (categoriaId && !Number.isNaN(categoriaId)) {
+            params = usuarioId ? [categoriaId, usuarioId] : [categoriaId];
             queryTexto = `
-                SELECT j.id, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.categoria_id, j.puntos_recompensa, c.nombre AS categoria_nombre
+                SELECT j.id, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, c.nombre AS categoria_nombre${jugadoSelect}
                 FROM juegos j
                 LEFT JOIN categorias c ON j.categoria_id = c.id
-                WHERE j.categoria_id = $1
+                ${jugadoJoin}
+                ${exclusionWhere} AND j.categoria_id = $1
                 ORDER BY j.id DESC
                 LIMIT 100
             `;
-            params = [categoriaId];
         } else {
+            params = usuarioId ? [usuarioId] : [];
             queryTexto = `
-                SELECT j.id, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.categoria_id, j.puntos_recompensa, c.nombre AS categoria_nombre
+                SELECT j.id, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, c.nombre AS categoria_nombre${jugadoSelect}
                 FROM juegos j
                 LEFT JOIN categorias c ON j.categoria_id = c.id
+                ${jugadoJoin}
+                ${exclusionWhere}
                 ORDER BY j.id DESC
                 LIMIT 100
             `;
@@ -124,7 +160,7 @@ exports.eliminarJuego = async (req, res) => {
     }
 };
 
-// 5. Responder trivia y guardar puntos
+// 5. Responder juego (todos los tipos)
 exports.responderJuego = async (req, res) => {
     if (!req.session.usuarioId) {
         return res.status(401).json({ mensaje: 'Debes iniciar sesión para jugar.' });
@@ -132,7 +168,7 @@ exports.responderJuego = async (req, res) => {
 
     const { juego_id, respuesta_usuario } = req.body;
 
-    if (!juego_id || !respuesta_usuario) {
+    if (!juego_id || respuesta_usuario === undefined || respuesta_usuario === null) {
         return res.status(400).json({ mensaje: 'Faltan datos de la respuesta.' });
     }
 
@@ -143,23 +179,30 @@ exports.responderJuego = async (req, res) => {
         }
 
         const juego = juegoRes.rows[0];
+        const tipo = juego.tipo || 'Quiz';
+        let esCorrecta = false;
 
-        const respuestaUpper = String(respuesta_usuario).trim().toUpperCase();
-        const correctaRaw = String(juego.opcion_correcta).trim();
-        const correctaUpper = correctaRaw.toUpperCase();
+        if (tipo === 'Quiz') {
+            const respuestaUpper = String(respuesta_usuario).trim().toUpperCase();
+            const correctaRaw = String(juego.opcion_correcta || juego.correcta || '').trim().toUpperCase();
+            esCorrecta = respuestaUpper === correctaRaw || respuestaUpper === (['A', 'B', 'C'].includes(correctaRaw) ? correctaRaw : '');
+        } else if (tipo === 'Memory') {
+            esCorrecta = true; // Memory se completa al encontrar todos los pares
+        } else if (tipo === 'Match') {
+            esCorrecta = true; // Match se completa al conectar todos los pares
+        } else if (tipo === 'Scramblee') {
+            const palabraCorrecta = (juego.opcion_a || '').trim().toUpperCase();
+            const respuesta = String(respuesta_usuario).trim().toUpperCase();
+            esCorrecta = respuesta === palabraCorrecta;
+        }
 
-        const letraCorrecta = ['A', 'B', 'C'].includes(correctaUpper) ? correctaUpper : null;
-
-        const resolverLetra = (texto) => {
-            const t = texto.toUpperCase();
-            if (t === (juego.opcion_a || '').trim().toUpperCase()) return 'A';
-            if (t === (juego.opcion_b || '').trim().toUpperCase()) return 'B';
-            if (t === (juego.opcion_c || '').trim().toUpperCase()) return 'C';
-            return null;
-        };
-
-        const targetUpper = letraCorrecta || resolverLetra(correctaRaw) || '';
-        const esCorrecta = ['A', 'B', 'C'].includes(respuestaUpper) && respuestaUpper === targetUpper;
+        // Marcar como jugado en historial (incluso si es incorrecto)
+        await db.query(
+            `INSERT INTO historial_vistas (usuario_id, tipo_contenido, contenido_id)
+             VALUES ($1, 'juego', $2)
+             ON CONFLICT (usuario_id, tipo_contenido, contenido_id) DO UPDATE SET fecha_vista = NOW()`,
+            [req.session.usuarioId, juego_id]
+        ).catch(() => {});
 
         if (!esCorrecta) {
             return res.json({
@@ -174,7 +217,7 @@ exports.responderJuego = async (req, res) => {
             return res.json({
                 correcto: false,
                 puntos_ganados: 0,
-                mensaje: 'Puntos inválidos en la trivia.'
+                mensaje: 'Puntos inválidos en el juego.'
             });
         }
 
@@ -186,7 +229,7 @@ exports.responderJuego = async (req, res) => {
             mensaje: `¡Correcto! Has ganado ${puntos} pts.`
         });
     } catch (error) {
-        console.error('Error al procesar la trivia:', error.message);
+        console.error('Error al procesar el juego:', error.message);
         return res.status(500).json({ mensaje: 'Error al procesar el juego.' });
     }
 };

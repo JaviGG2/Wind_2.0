@@ -209,6 +209,24 @@
     .zona-modulo {
         padding: 14px;
     }
+}
+
+/* Tabs deslizables en móvil */
+.tabs-header {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+}
+.tabs-header::-webkit-scrollbar { display: none; }
+.tabs-header .tab-button {
+    scroll-snap-align: start;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
     .perfil-cabecera {
         gap: 12px;
     }

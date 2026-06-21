@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulos de Juego - Wind</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/estilos.css">
+  <link rel="stylesheet" href="/css/menu.css">
+  <link rel="stylesheet" href="/css/search.css">
+  <link rel="stylesheet" href="/css/juegos-page.css">
+  <style>
+    .modulos-page-hero {
+      text-align: center;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, #fff5f0 0%, #fff 60%);
+      border-radius: 24px;
+      margin-bottom: 32px;
+    }
+    .modulos-page-hero .hero-icon {
+      width: 64px; height: 64px;
+      background: linear-gradient(135deg, #FF4500, #ff7300);
+      border-radius: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      box-shadow: 0 12px 28px rgba(255,69,0,0.25);
+    }
+    .modulos-page-hero .hero-icon .material-symbols-outlined {
+      color: #fff; font-size: 2rem;
+    }
+    .modulos-page-hero h1 {
+      font-size: 1.8rem; margin: 0 0 8px;
+    }
+    .modulos-page-hero p {
+      color: #6b7280; margin: 0; font-size: 1rem;
+    }
+    .modulos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .modulo-card {
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 20px;
+      padding: 0;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s ease;
+      animation: cardFadeIn 400ms ease forwards;
+      opacity: 0;
+    }
+    .modulo-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+      border-color: rgba(255,69,0,0.2);
+    }
+    .modulo-card-accent {
+      height: 4px;
+      background: linear-gradient(90deg, #FF4500, #ff7300);
+    }
+    .modulo-card-body {
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .modulo-card-icon {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, #fff5f0, #ffe8e0);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+    .modulo-card-icon .material-symbols-outlined {
+      color: #FF4500; font-size: 1.5rem;
+    }
+    .modulo-card h3 {
+      font-size: 1.1rem; font-weight: 700; margin: 0 0 6px;
+    }
+    .modulo-card p {
+      font-size: 0.85rem; color: #6b7280; margin: 0 0 auto; line-height: 1.5;
+    }
+    .modulo-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid #f3f4f6;
+      font-size: 0.8rem;
+      color: #9ca3af;
+    }
+    .modulo-card-footer .creador {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .modulo-card-footer .creador .material-symbols-outlined {
+      font-size: 1rem;
+    }
+    .modulo-card-footer .niveles-count {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 600;
+      color: #FF4500;
+    }
+  </style>
+</head>
+<body>
+  <script src="/js/menu.js"></script>
+  <div class="app-layout">
+    <div id="menu-placeholder"></div>
+    <main class="contenido-principal">
+      <div class="crear-container">
+        <div class="modulos-page-hero">
+          <div class="hero-icon"><span class="material-symbols-outlined">layers</span></div>
+          <h1>Módulos de Juego</h1>
+          <p>Completa niveles en orden y desbloquea nuevos desafíos patrimoniales.</p>
+        </div>
+        <div id="modulos-listado" class="modulos-grid"></div>
+        <div id="modulos-mensaje" class="mensaje-oculto"></div>
+      </div>
+    </main>
+  </div>
+  <script src="/js/modulos.js"></script>
+</body>
+</html>
