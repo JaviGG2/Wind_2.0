@@ -1,0 +1,121 @@
+.editor-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    padding: 8px;
+    border: 1.5px solid var(--borde);
+    border-bottom: none;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    background: var(--bg-surface);
+}
+
+.editor-toolbar button,
+.editor-toolbar select {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--texto);
+    cursor: pointer;
+    font-size: var(--font-sm);
+    transition: background 150ms;
+}
+
+.editor-toolbar button:hover {
+    background: rgba(0,0,0,0.06);
+}
+
+.editor-toolbar button:active {
+    background: rgba(0,0,0,0.1);
+}
+
+.editor-toolbar .separador {
+    width: 1px;
+    background: var(--borde);
+    margin: 0 4px;
+    align-self: stretch;
+}
+
+.editor-toolbar select {
+    padding: 4px 6px;
+    font-size: .8rem;
+    border: 1px solid var(--borde);
+    border-radius: 4px;
+    background: var(--bg-surface);
+    color: var(--texto);
+}
+
+.editor-toolbar .toolbar-btn-icon .material-symbols-outlined {
+    font-size: 1.2rem;
+    font-variation-settings: 'wght' 500;
+}
+
+.editor-contenido {
+    min-height: 200px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 16px;
+    border: 1.5px solid var(--borde);
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    background: var(--bg-surface);
+    color: var(--texto);
+    font-size: var(--font-sm);
+    line-height: 1.7;
+    outline: none;
+    transition: border-color var(--transition);
+}
+
+.editor-contenido:focus {
+    border-color: var(--primario);
+}
+
+.editor-contenido h2 {
+    font-size: 1.5rem;
+    margin: 16px 0 8px;
+    color: var(--texto);
+}
+
+.editor-contenido h3 {
+    font-size: 1.2rem;
+    margin: 12px 0 6px;
+    color: var(--texto);
+}
+
+.editor-contenido blockquote {
+    margin: 12px 0;
+    padding: 8px 16px;
+    border-left: 4px solid var(--primario);
+    background: var(--primario-light);
+    color: var(--texto-sec);
+    font-style: italic;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.editor-contenido ul,
+.editor-contenido ol {
+    margin: 8px 0;
+    padding-left: 24px;
+}
+
+.editor-contenido li {
+    margin-bottom: 4px;
+}
+
+.editor-contenido a {
+    color: var(--primario);
+    text-decoration: underline;
+}
+
+.editor-contenido img {
+    max-width: 100%;
+    border-radius: var(--radius-sm);
+    margin: 12px 0;
+}
+
+.editor-wrapper .grupo-campo label {
+    margin-bottom: 8px;
+    display: block;
+}

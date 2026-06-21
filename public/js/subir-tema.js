@@ -1,16 +1,22 @@
+inicializarEditor('contenido', 'editor-contenido');
+
 const formulario = document.getElementById('formulario-subir-tema');
 const bloqueMensaje = document.getElementById('mensaje-consola');
 
 formulario.addEventListener('submit', async (evento) => {
     evento.preventDefault();
 
-    // Creamos un contenedor FormData pasando el formulario HTML entero
+    const editor = document.getElementById('editor-contenido');
+    const contenido = editor.innerHTML.trim();
+    if (!contenido || contenido === '<br>' || contenido === '') {
+        mostrarMensaje('El contenido del artículo no puede estar vacío.', 'error');
+        return;
+    }
+
     const datosFormulario = new FormData();
-    
-    // Añadimos manualmente cada dato
     datosFormulario.append('categoria_id', document.getElementById('categoria_id').value);
     datosFormulario.append('titulo', document.getElementById('titulo').value);
-    datosFormulario.append('contenido', document.getElementById('contenido').value);
+    datosFormulario.append('contenido', contenido);
     
     // Capturamos el archivo binario de la imagen
     const inputImagen = document.getElementById('imagen_portada');

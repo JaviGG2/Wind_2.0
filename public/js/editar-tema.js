@@ -21,7 +21,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Rellenar el formulario
         document.getElementById('tema_id').value = tema.id;
         document.getElementById('titulo').value = tema.titulo;
-        document.getElementById('contenido').value = tema.contenido;
+        
+        // Poner contenido en el editor rico y luego inicializar
+        document.getElementById('editor-contenido').innerHTML = tema.contenido || '';
+        document.getElementById('contenido').value = tema.contenido || '';
+        inicializarEditor('contenido', 'editor-contenido');
         
         if (tema.categoria_id) {
             document.getElementById('categoria_id').value = tema.categoria_id;

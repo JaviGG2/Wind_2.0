@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const avatar = tema.creador_avatar || '/img/avatar.svg';
     const likesCount = tema.likes || 0;
 
+    const yaDioLike = tema.usuario_dio_like === true;
     tarjeta.innerHTML = `
         <div class="tema-imagen" style="background-image: url('${tema.imagen_portada || '/img/app.png'}');"></div>
         <div class="tema-contenido">
@@ -70,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="tema-autor">Publicado: ${tema.fecha_publicacion ? new Date(tema.fecha_publicacion).toLocaleDateString() : 'Desconocida'}</span>
             </div>
             <div class="tema-footer">
-                <button class="btn-like" data-id="${tema.id}">
+                <button class="btn-like${yaDioLike ? ' liked' : ''}" data-id="${tema.id}">
                     <span class="material-symbols-outlined like-icon">favorite</span>
                     <span class="like-count">${likesCount}</span>
                 </button>
@@ -84,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnLike = tarjeta.querySelector('.btn-like');
     btnLike.addEventListener('click', async (ev) => {
         ev.stopPropagation();
+        if (btnLike.classList.contains('liked')) return;
         try {
             const res = await fetch(`/api/temas/${tema.id}/like`, { method: 'POST', credentials: 'include' });
             if (res.ok) {
@@ -92,6 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnLike.classList.add('liked');
             } else if (res.status === 401) {
                 window.location.href = '/login.html';
+            } else if (res.status === 409) {
+                btnLike.classList.add('liked');
             }
         } catch (e) {
             console.error('Error al dar like:', e);

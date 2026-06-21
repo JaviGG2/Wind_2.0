@@ -88,31 +88,39 @@ exports.actualizarTema = async (req, res) => {
 exports.listarTemas = async (req, res) => {
     try {
         const categoriaId = req.query.categoria ? parseInt(req.query.categoria, 10) : null;
+        const usuarioId = req.session.usuarioId || null;
+        const likeSubquery = ', (SELECT true FROM temas_likes WHERE tema_id = t.id AND usuario_id = $1 LIMIT 1) AS usuario_dio_like';
         let result;
+        let params;
 
         if (categoriaId && !Number.isNaN(categoriaId)) {
+            params = usuarioId ? [usuarioId, categoriaId] : [0, categoriaId];
             result = await db.query(
-                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes,
+                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes
+                    ${usuarioId ? likeSubquery : ', false AS usuario_dio_like'},
                     c.nombre AS categoria_nombre,
                     u.nombre AS creador_nombre
              FROM temas t
              LEFT JOIN categorias c ON t.categoria_id = c.id
              LEFT JOIN usuarios u ON t.creador_id = u.id
-             WHERE t.categoria_id = $1
+             WHERE t.categoria_id = $${usuarioId ? 2 : 1}
              ORDER BY t.fecha_publicacion DESC
              LIMIT 50`,
-                [categoriaId]
+                params
             );
         } else {
+            params = usuarioId ? [usuarioId] : [0];
             result = await db.query(
-                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes,
+                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes
+                    ${usuarioId ? likeSubquery : ', false AS usuario_dio_like'},
                     c.nombre AS categoria_nombre,
                     u.nombre AS creador_nombre
              FROM temas t
              LEFT JOIN categorias c ON t.categoria_id = c.id
              LEFT JOIN usuarios u ON t.creador_id = u.id
              ORDER BY t.fecha_publicacion DESC
-             LIMIT 50`
+             LIMIT 50`,
+                params
             );
         }
         return res.json(result.rows);
@@ -131,11 +139,13 @@ exports.obtenerTemaPorId = async (req, res) => {
     const temaIdNum = parseInt(rawId, 10);
 
     try {
+        const usuarioId = req.session.usuarioId || null;
         let result;
 
         if (!Number.isNaN(temaIdNum)) {
             result = await db.query(
                 `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes,
+                        ${usuarioId ? '(SELECT true FROM temas_likes WHERE tema_id = t.id AND usuario_id = $2 LIMIT 1)' : 'false'} AS usuario_dio_like,
                         c.nombre AS categoria_nombre,
                         u.nombre AS creador_nombre
                  FROM temas t
@@ -143,7 +153,7 @@ exports.obtenerTemaPorId = async (req, res) => {
                  LEFT JOIN usuarios u ON t.creador_id = u.id
                  WHERE t.id = $1
                  LIMIT 1`,
-                [temaIdNum]
+                usuarioId ? [temaIdNum, usuarioId] : [temaIdNum]
             );
         }
 
@@ -151,6 +161,7 @@ exports.obtenerTemaPorId = async (req, res) => {
             console.log(`obtenerTemaPorId: intento alternativo por texto con '${rawId}'`);
             result = await db.query(
                 `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes,
+                        ${usuarioId ? '(SELECT true FROM temas_likes WHERE tema_id = t.id AND usuario_id = $2 LIMIT 1)' : 'false'} AS usuario_dio_like,
                         c.nombre AS categoria_nombre,
                         u.nombre AS creador_nombre
                  FROM temas t
@@ -158,7 +169,7 @@ exports.obtenerTemaPorId = async (req, res) => {
                  LEFT JOIN usuarios u ON t.creador_id = u.id
                  WHERE t.id::text = $1 OR t.slug = $1
                  LIMIT 1`,
-                [rawId]
+                usuarioId ? [rawId, usuarioId] : [rawId]
             );
         }
 
@@ -178,13 +189,21 @@ exports.obtenerTemaPorId = async (req, res) => {
 exports.likeTema = async (req, res) => {
     if (!req.session.usuarioId) return res.status(401).json({ mensaje: 'Debes iniciar sesión.' });
     const id = parseInt(req.params.id, 10);
+    const usuarioId = req.session.usuarioId;
     if (Number.isNaN(id)) return res.status(400).json({ mensaje: 'ID inválido.' });
     try {
-        const result = await db.query(
-            'UPDATE temas SET likes = COALESCE(likes, 0) + 1 WHERE id = $1 RETURNING likes',
-            [id]
-        );
-        if (result.rows.length === 0) return res.status(404).json({ mensaje: 'Tema no encontrado.' });
+        const result = await db.query(`
+            WITH insercion AS (
+                INSERT INTO temas_likes (tema_id, usuario_id)
+                VALUES ($1, $2)
+                ON CONFLICT DO NOTHING
+                RETURNING 1
+            )
+            UPDATE temas SET likes = COALESCE(likes, 0) + 1
+            WHERE id = $1 AND EXISTS (SELECT 1 FROM insercion)
+            RETURNING likes
+        `, [id, usuarioId]);
+        if (result.rows.length === 0) return res.status(409).json({ mensaje: 'Ya diste like a este tema.' });
         return res.json({ likes: result.rows[0].likes });
     } catch (error) {
         console.error('Error al dar like:', error.message);

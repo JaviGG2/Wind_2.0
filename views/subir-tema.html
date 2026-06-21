@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/css/search.css">
     <link rel="stylesheet" href="/css/formularios-crear.css">
     <link rel="stylesheet" href="/css/subir-tema.css">
+    <link rel="stylesheet" href="/css/editor-rico.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="manifest" href="/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -63,9 +64,35 @@
                             </div>
                         </div>
 
-                        <div class="grupo-campo">
+                        <div class="grupo-campo editor-wrapper">
                             <label for="contenido">Contenido del Artículo:</label>
-                            <textarea id="contenido" rows="8" required placeholder="Redacta la investigación histórica..."></textarea>
+                            <div class="editor-toolbar">
+                                <button type="button" class="toolbar-btn-icon" onclick="ejecutarComando('bold')" title="Negrita"><span class="material-symbols-outlined">format_bold</span></button>
+                                <button type="button" class="toolbar-btn-icon" onclick="ejecutarComando('italic')" title="Cursiva"><span class="material-symbols-outlined">format_italic</span></button>
+                                <button type="button" class="toolbar-btn-icon" onclick="ejecutarComando('underline')" title="Subrayado"><span class="material-symbols-outlined">format_underline</span></button>
+                                <span class="separador"></span>
+                                <select onchange="ejecutarComando('formatBlock', this.value); this.selectedIndex=0;" title="Encabezado">
+                                    <option value="" disabled selected>Estilo</option>
+                                    <option value="h2">Título</option>
+                                    <option value="h3">Subtítulo</option>
+                                    <option value="p">Párrafo</option>
+                                </select>
+                                <select onchange="ejecutarComando('fontSize', this.value); this.selectedIndex=0;" title="Tamaño de fuente">
+                                    <option value="" disabled selected>Tamaño</option>
+                                    <option value="1">Pequeño</option>
+                                    <option value="3">Normal</option>
+                                    <option value="5">Grande</option>
+                                </select>
+                                <span class="separador"></span>
+                                <button type="button" class="toolbar-btn-icon" onclick="ejecutarComando('insertUnorderedList')" title="Lista"><span class="material-symbols-outlined">format_list_bulleted</span></button>
+                                <button type="button" class="toolbar-btn-icon" onclick="ejecutarComando('insertOrderedList')" title="Lista numerada"><span class="material-symbols-outlined">format_list_numbered</span></button>
+                                <button type="button" class="toolbar-btn-icon" onclick="ejecutarComando('insertHorizontalRule')" title="Línea"><span class="material-symbols-outlined">horizontal_rule</span></button>
+                                <span class="separador"></span>
+                                <button type="button" class="toolbar-btn-icon" onclick="ejecutarComando('formatBlock', 'blockquote')" title="Cita"><span class="material-symbols-outlined">format_quote</span></button>
+                                <button type="button" class="toolbar-btn-icon" onclick="insertarEnlace()" title="Enlace"><span class="material-symbols-outlined">link</span></button>
+                            </div>
+                            <div id="editor-contenido" class="editor-contenido" contenteditable="true"></div>
+                            <textarea id="contenido" style="display:none;"></textarea>
                         </div>
 
                         <button type="submit" class="boton-enviar">Publicar Tema Oficial</button>
@@ -83,6 +110,7 @@
         </main>
     </div>
 
+    <script src="/js/editor-rico.js"></script>
     <script src="/js/subir-tema.js"></script>
     <script>
         const fileInput = document.getElementById('imagen_portada');
