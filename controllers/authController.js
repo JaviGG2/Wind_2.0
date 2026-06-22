@@ -10,24 +10,66 @@ const nodemailer = require('nodemailer');
 // CONFIGURACIÓN DE CORREO
 const CORREO_USER = (process.env.CORREO_EMISOR || '').trim();
 const CORREO_PASS = (process.env.CORREO_PASSWORD || '').replace(/\s+/g, '');
+const SENDGRID_KEY = (process.env.SENDGRID_API_KEY || '').trim();
+const https = require('https');
 
-function crearTransportador() {
-    if (process.env.SMTP_HOST) {
-        return nodemailer.createTransport({
-            host: process.env.SMTP_HOST,
-            port: parseInt(process.env.SMTP_PORT, 10) || 587,
-            secure: (process.env.SMTP_PORT || '587') === '465',
-            auth: {
-                user: process.env.SMTP_USER || CORREO_USER,
-                pass: process.env.SMTP_PASS || CORREO_PASS
-            }
+async function enviarCorreo(destino, asunto, html) {
+    // Opción 1: SendGrid (HTTP, nunca bloqueado en Railway)
+    if (SENDGRID_KEY) {
+        const data = JSON.stringify({
+            personalizations: [{ to: [{ email: destino }] }],
+            from: { email: CORREO_USER, name: 'Wind - Ciudad del Viento' },
+            subject: asunto,
+            content: [{ type: 'text/html', value: html }]
+        });
+        return new Promise((resolve, reject) => {
+            const req = https.request({
+                hostname: 'api.sendgrid.com',
+                path: '/v3/mail/send',
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${SENDGRID_KEY}`,
+                    'Content-Type': 'application/json',
+                    'Content-Length': Buffer.byteLength(data)
+                }
+            }, (res) => {
+                let body = '';
+                res.on('data', c => body += c);
+                res.on('end', () => {
+                    if (res.statusCode >= 200 && res.statusCode < 300) resolve();
+                    else reject(new Error(`SendGrid ${res.statusCode}: ${body}`));
+                });
+            });
+            req.on('error', reject);
+            req.write(data);
+            req.end();
         });
     }
-    // Gmail por defecto
-    return nodemailer.createTransport({
-        service: 'gmail',
-        auth: { user: CORREO_USER, pass: CORREO_PASS },
-        tls: { rejectUnauthorized: false }
+
+    // Opción 2: SMTP (Gmail u otro)
+    const transportador = nodemailer.createTransport(
+        process.env.SMTP_HOST
+            ? {
+                host: process.env.SMTP_HOST,
+                port: parseInt(process.env.SMTP_PORT, 10) || 587,
+                secure: (process.env.SMTP_PORT || '587') === '465',
+                auth: {
+                    user: process.env.SMTP_USER || CORREO_USER,
+                    pass: process.env.SMTP_PASS || CORREO_PASS
+                }
+            }
+            : {
+                service: 'gmail',
+                auth: { user: CORREO_USER, pass: CORREO_PASS },
+                tls: { rejectUnauthorized: false }
+            }
+    );
+    await transportador.sendMail({
+        from: `"Wind - Ciudad del Viento" <${CORREO_USER}>`,
+        to: destino,
+        replyTo: CORREO_USER,
+        subject: asunto,
+        html: html
     });
 }
 
@@ -67,64 +109,35 @@ exports.registro = async (req, res) => {
 
         await db.query(consultaSQL, valores);
 
-        // Configuración y diseño del correo electrónico
-        const opcionesCorreo = {
-            from: `"Wind - Ciudad del Viento" <${CORREO_USER}>`,
-            to: correo,
-            replyTo: CORREO_USER,
-            subject: 'Código de activación de cuenta - Wind',
-            text: `Hola ${nombre},\n\nGracias por registrarte en Wind. Tu código de activación es: ${codigoVerificacion}\n\nSi no solicitaste este registro, ignora este mensaje.`,
-            html: `
-                <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; border: 1px solid #eee; padding: 20px; border-radius: 8px;">
-                    <h2 style="color: #333; text-align: center;">¡Hola, ${nombre}!</h2>
-                    <p style="color: #666; line-height: 1.5;">Gracias por registrarte en <strong>Wind</strong>. Para completar la activación de tu cuenta, introduce el siguiente código de seguridad en la aplicación:</p>
-                    <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; text-align: center; margin: 20px 0;">
-                        <h1 style="color: #e67e22; letter-spacing: 5px; margin: 0; font-size: 32px;">${codigoVerificacion}</h1>
-                    </div>
-                    <p style="color: #999; font-size: 12px; text-align: center;">Si tú no solicitaste este registro, puedes ignorar este correo.</p>
+        // Envío del correo con el código
+        const asunto = 'Código de activación de cuenta - Wind';
+        const htmlCorreo = `
+            <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; border: 1px solid #eee; padding: 20px; border-radius: 8px;">
+                <h2 style="color: #333; text-align: center;">¡Hola, ${nombre}!</h2>
+                <p style="color: #666; line-height: 1.5;">Gracias por registrarte en <strong>Wind</strong>. Para completar la activación de tu cuenta, introduce el siguiente código de seguridad en la aplicación:</p>
+                <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; text-align: center; margin: 20px 0;">
+                    <h1 style="color: #e67e22; letter-spacing: 5px; margin: 0; font-size: 32px;">${codigoVerificacion}</h1>
                 </div>
-            `
-        };
+                <p style="color: #999; font-size: 12px; text-align: center;">Si tú no solicitaste este registro, puedes ignorar este correo.</p>
+            </div>
+        `;
 
-        // Intentamos enviar el correo (con reintento a otro puerto si falla)
         try {
-            const transportador = crearTransportador();
-            await transportador.sendMail(opcionesCorreo);
+            await enviarCorreo(correo, asunto, htmlCorreo);
             return res.status(201).json({ 
                 mensaje: 'Usuario registrado. Revisa tu bandeja de entrada.',
                 requiereVerificacion: true,
                 correo: correo
             });
         } catch (errorMail) {
-            console.warn('⚠️ Intento 1 falló:', errorMail?.message);
-            // Reintento con configuración alternativa (puerto 465 si veníamos de 587, o viceversa)
-            try {
-                const transportador2 = nodemailer.createTransport({
-                    host: 'smtp.gmail.com',
-                    port: 465,
-                    secure: true,
-                    auth: { user: CORREO_USER, pass: CORREO_PASS },
-                    tls: { rejectUnauthorized: false }
-                });
-                await transportador2.sendMail(opcionesCorreo);
-                return res.status(201).json({ 
-                    mensaje: 'Usuario registrado. Revisa tu bandeja de entrada.',
-                    requiereVerificacion: true,
-                    correo: correo 
-                });
-            } catch (errorMail2) {
-                console.warn('⚠️ Intento 2 también falló:', errorMail2?.message);
-                if (errorMail2?.code) console.warn('   Código:', errorMail2.code);
-                if (errorMail2?.response) console.warn('   Respuesta:', errorMail2.response);
-                console.log('   Código generado (bypass):', codigoVerificacion);
-
-                return res.status(201).json({
-                    mensaje: 'Registro exitoso (Modo Desarrollo Activo).',
-                    requiereVerificacion: true,
-                    correo: correo,
-                    codigoBypass: codigoVerificacion
-                });
-            }
+            console.warn('⚠️ Falló el envío del correo:', errorMail?.message);
+            console.log('   Código generado (bypass):', codigoVerificacion);
+            return res.status(201).json({
+                mensaje: 'Registro exitoso (Modo Desarrollo Activo).',
+                requiereVerificacion: true,
+                correo: correo,
+                codigoBypass: codigoVerificacion
+            });
         }
     } catch (error) {
         if (error.code === '23505') {
