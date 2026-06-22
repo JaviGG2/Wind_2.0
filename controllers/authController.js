@@ -19,7 +19,7 @@ async function enviarCorreo(destino, asunto, html) {
     if (sgMail) {
         await sgMail.send({
             to: destino,
-            from: { email: CORREO_USER, name: 'Wind - Ciudad del Viento' },
+            from: { email: CORREO_USER, name: 'Wind' },
             subject: asunto,
             html: html
         });
@@ -90,15 +90,21 @@ exports.registro = async (req, res) => {
         await db.query(consultaSQL, valores);
 
         // Envío del correo con el código
-        const asunto = 'Código de activación de cuenta - Wind';
+        const asunto = `${codigoVerificacion} es tu código de verificación en Wind`;
         const htmlCorreo = `
-            <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; border: 1px solid #eee; padding: 20px; border-radius: 8px;">
-                <h2 style="color: #333; text-align: center;">¡Hola, ${nombre}!</h2>
-                <p style="color: #666; line-height: 1.5;">Gracias por registrarte en <strong>Wind</strong>. Para completar la activación de tu cuenta, introduce el siguiente código de seguridad en la aplicación:</p>
-                <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; text-align: center; margin: 20px 0;">
-                    <h1 style="color: #e67e22; letter-spacing: 5px; margin: 0; font-size: 32px;">${codigoVerificacion}</h1>
+            <div style="font-family: Arial, sans-serif; max-width: 520px; margin: 0 auto; padding: 0;">
+                <div style="background: #FF4500; padding: 20px; text-align: center; border-radius: 12px 12px 0 0;">
+                    <h1 style="color: #fff; margin: 0; font-size: 24px;">Wind</h1>
                 </div>
-                <p style="color: #999; font-size: 12px; text-align: center;">Si tú no solicitaste este registro, puedes ignorar este correo.</p>
+                <div style="background: #fff; padding: 32px 24px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 12px 12px;">
+                    <h2 style="color: #111; margin: 0 0 12px;">Hola, ${nombre}</h2>
+                    <p style="color: #555; line-height: 1.6; margin: 0 0 20px;">Usa este código para activar tu cuenta en Wind. Es válido por 10 minutos.</p>
+                    <div style="background: #fff5f0; border: 2px dashed #FF4500; padding: 16px; text-align: center; border-radius: 12px; margin: 0 0 20px;">
+                        <span style="font-size: 36px; letter-spacing: 8px; font-weight: 800; color: #FF4500;">${codigoVerificacion}</span>
+                    </div>
+                    <hr style="border: none; border-top: 1px solid #f3f4f6; margin: 20px 0;">
+                    <p style="color: #9ca3af; font-size: 12px; margin: 0;">Si no pediste este código, ignorá este mensaje.</p>
+                </div>
             </div>
         `;
 
