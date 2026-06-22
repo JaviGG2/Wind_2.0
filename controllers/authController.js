@@ -11,39 +11,19 @@ const nodemailer = require('nodemailer');
 const CORREO_USER = (process.env.CORREO_EMISOR || '').trim();
 const CORREO_PASS = (process.env.CORREO_PASSWORD || '').replace(/\s+/g, '');
 const SENDGRID_KEY = (process.env.SENDGRID_API_KEY || '').trim();
-const https = require('https');
+const sgMail = SENDGRID_KEY ? require('@sendgrid/mail') : null;
+if (sgMail) sgMail.setApiKey(SENDGRID_KEY);
 
 async function enviarCorreo(destino, asunto, html) {
     // Opción 1: SendGrid (HTTP, nunca bloqueado en Railway)
-    if (SENDGRID_KEY) {
-        const data = JSON.stringify({
-            personalizations: [{ to: [{ email: destino }] }],
+    if (sgMail) {
+        await sgMail.send({
+            to: destino,
             from: { email: CORREO_USER, name: 'Wind - Ciudad del Viento' },
             subject: asunto,
-            content: [{ type: 'text/html', value: html }]
+            html: html
         });
-        return new Promise((resolve, reject) => {
-            const req = https.request({
-                hostname: 'api.sendgrid.com',
-                path: '/v3/mail/send',
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${SENDGRID_KEY}`,
-                    'Content-Type': 'application/json',
-                    'Content-Length': Buffer.byteLength(data)
-                }
-            }, (res) => {
-                let body = '';
-                res.on('data', c => body += c);
-                res.on('end', () => {
-                    if (res.statusCode >= 200 && res.statusCode < 300) resolve();
-                    else reject(new Error(`SendGrid ${res.statusCode}: ${body}`));
-                });
-            });
-            req.on('error', reject);
-            req.write(data);
-            req.end();
-        });
+        return;
     }
 
     // Opción 2: SMTP (Gmail u otro)
@@ -130,7 +110,10 @@ exports.registro = async (req, res) => {
                 correo: correo
             });
         } catch (errorMail) {
-            console.warn('⚠️ Falló el envío del correo:', errorMail?.message);
+            console.warn('⚠️ Falló el envío del correo');
+            if (errorMail?.response?.body) console.error('   SendGrid:', JSON.stringify(errorMail.response.body));
+            else if (errorMail?.message) console.error('   Error:', errorMail.message);
+            if (errorMail?.code) console.error('   Código:', errorMail.code);
             console.log('   Código generado (bypass):', codigoVerificacion);
             return res.status(201).json({
                 mensaje: 'Registro exitoso (Modo Desarrollo Activo).',

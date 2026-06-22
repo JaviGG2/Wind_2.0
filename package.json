@@ -3,6 +3,7 @@
     "@capacitor/cli": "^8.3.0",
     "@capacitor/core": "^8.3.0",
     "@imagekit/nodejs": "^7.8.0",
+    "@sendgrid/mail": "^8.1.6",
     "@supabase/supabase-js": "^2.105.1",
     "bcryptjs": "^3.0.3",
     "dotenv": "^17.4.2",
