@@ -7,20 +7,29 @@ const nodemailer = require('nodemailer');
 // Configuración del transporte de correo utilizando variables de entorno (.env)
 // controllers/authController.js
 
-// CONFIGURACIÓN AVANZADA Y SEGURA PARA GMAIL
-const transportador = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // true obliga a usar SSL en el puerto 465
-    auth: {
-        user: process.env.CORREO_EMISOR,
-        pass: process.env.CORREO_PASSWORD
-    },
-    tls: {
-        // Esto evita que Node.js bloquee el envío si estás en una red local con restricciones
-        rejectUnauthorized: false 
+// CONFIGURACIÓN DE CORREO
+const CORREO_USER = (process.env.CORREO_EMISOR || '').trim();
+const CORREO_PASS = (process.env.CORREO_PASSWORD || '').replace(/\s+/g, '');
+
+function crearTransportador() {
+    if (process.env.SMTP_HOST) {
+        return nodemailer.createTransport({
+            host: process.env.SMTP_HOST,
+            port: parseInt(process.env.SMTP_PORT, 10) || 587,
+            secure: (process.env.SMTP_PORT || '587') === '465',
+            auth: {
+                user: process.env.SMTP_USER || CORREO_USER,
+                pass: process.env.SMTP_PASS || CORREO_PASS
+            }
+        });
     }
-});
+    // Gmail por defecto
+    return nodemailer.createTransport({
+        service: 'gmail',
+        auth: { user: CORREO_USER, pass: CORREO_PASS },
+        tls: { rejectUnauthorized: false }
+    });
+}
 
 // 1. Registro de Usuarios con Envío de Código por Correo
 exports.registro = async (req, res) => {
@@ -60,9 +69,9 @@ exports.registro = async (req, res) => {
 
         // Configuración y diseño del correo electrónico
         const opcionesCorreo = {
-            from: `"Wind - Ciudad del Viento" <${process.env.CORREO_EMISOR}>`,
+            from: `"Wind - Ciudad del Viento" <${CORREO_USER}>`,
             to: correo,
-            replyTo: process.env.CORREO_EMISOR,
+            replyTo: CORREO_USER,
             subject: 'Código de activación de cuenta - Wind',
             text: `Hola ${nombre},\n\nGracias por registrarte en Wind. Tu código de activación es: ${codigoVerificacion}\n\nSi no solicitaste este registro, ignora este mensaje.`,
             html: `
@@ -77,31 +86,46 @@ exports.registro = async (req, res) => {
             `
         };
 
-        // Intentamos enviar el correo; si falla no bloqueamos el registro
+        // Intentamos enviar el correo (con reintento a otro puerto si falla)
         try {
+            const transportador = crearTransportador();
             await transportador.sendMail(opcionesCorreo);
-
-            // Si el correo sale con éxito, respondemos normal
             return res.status(201).json({ 
                 mensaje: 'Usuario registrado. Revisa tu bandeja de entrada.',
                 requiereVerificacion: true,
                 correo: correo
             });
-
         } catch (errorMail) {
-            // 🛡️ Escudo: atrapamos errores de envío (p. ej. Render bloqueando SMTP)
-            console.warn('⚠️ ALERTA: Falló el envío del correo, aplicando bypass.', errorMail && errorMail.message);
-            console.log('Código generado para el usuario:', codigoVerificacion);
+            console.warn('⚠️ Intento 1 falló:', errorMail?.message);
+            // Reintento con configuración alternativa (puerto 465 si veníamos de 587, o viceversa)
+            try {
+                const transportador2 = nodemailer.createTransport({
+                    host: 'smtp.gmail.com',
+                    port: 465,
+                    secure: true,
+                    auth: { user: CORREO_USER, pass: CORREO_PASS },
+                    tls: { rejectUnauthorized: false }
+                });
+                await transportador2.sendMail(opcionesCorreo);
+                return res.status(201).json({ 
+                    mensaje: 'Usuario registrado. Revisa tu bandeja de entrada.',
+                    requiereVerificacion: true,
+                    correo: correo 
+                });
+            } catch (errorMail2) {
+                console.warn('⚠️ Intento 2 también falló:', errorMail2?.message);
+                if (errorMail2?.code) console.warn('   Código:', errorMail2.code);
+                if (errorMail2?.response) console.warn('   Respuesta:', errorMail2.response);
+                console.log('   Código generado (bypass):', codigoVerificacion);
 
-            // Respondemos con éxito (201) y devolvemos el código para pruebas locales
-            return res.status(201).json({
-                mensaje: 'Registro exitoso (Modo Desarrollo Activo).',
-                requiereVerificacion: true,
-                correo: correo,
-                codigoBypass: codigoVerificacion
-            });
+                return res.status(201).json({
+                    mensaje: 'Registro exitoso (Modo Desarrollo Activo).',
+                    requiereVerificacion: true,
+                    correo: correo,
+                    codigoBypass: codigoVerificacion
+                });
+            }
         }
-
     } catch (error) {
         if (error.code === '23505') {
             return res.status(400).json({ mensaje: 'El correo electrónico o el nombre de usuario ya está registrado.' });

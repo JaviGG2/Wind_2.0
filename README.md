@@ -1,59 +1,223 @@
-# Wind_2.0
-Nueva versión
+# Wind 2.0 — Plataforma de Patrimonio Cultural
 
-Instrucciones:
+Plataforma web para la difusión del patrimonio cultural de Coro, Venezuela. Incluye gestión de contenido histórico (temas, relatos), juegos patrimoniales (trivias, memoria, asociación, palabras), sistema de módulos con niveles, gamificación (puntos), y perfiles de usuario.
 
-a/ PARA INICIAR EL PROYECTO:
-1. Abrir la terminal en la carpeta del proyecto.
-2. Ejecutar el comando:npm run dev (Primero tienen que instalar nodemon)
-3. Abrir el navegador en la dirección: http://localhost:3000
+---
 
-b/ PARA EDITAR EL MENU
-1. Esta en la carpeta js dentro de public, y para insectar el menu en el html deben colocar este script: <script src="/js/menu.js"></script>, y llamar el estilo del menu dentro del html con <link rel="stylesheet" href="/css/menu.css"> , con su otro estilo del html que estan trabajando (Traten de no poner el mismo nombre de las 
-clases)
+## Diagrama de Clases
 
-2. Para editar el estilo deben ir al archivo menu.css dentro de public, este es el estilo especifico del menu, como  ya dije, se deve crear otro css para la base como tal, ojo siguendo el  css home para que no se pierda el estilo de la base, y para que se vea bien en pc y movil deben usar las media queries que estan en el css home. Ojo igual pueden meter contenido dentro no hay problema solo asegurarse de que sea responsivo. 
+```mermaid
+classDiagram
+    class Usuario {
+        +int id
+        +string nombre
+        +string username
+        +string correo
+        +string contrasena
+        +string rol  "Natural | Especialista"
+        +int puntos
+        +string imagen_perfil
+        +string session_token
+        +bool cuenta_activa
+        +string codigo_verificacion
+        +login()
+        +registro()
+        +logout()
+    }
 
-como ya les dije, el home.html tiene dos estilos css
+    class Tema {
+        +int id
+        +string titulo
+        +string contenido
+        +int categoria_id
+        +int creador_id
+        +string imagen_portada
+        +datetime fecha_publicacion
+        +int likes
+        +string slug
+        +crear()
+        +actualizar()
+        +listar()
+        +darLike()
+    }
 
-<!--<link rel="stylesheet" href="/css/home.css">
-<link rel="stylesheet" href="/css/menu.css">-->
+    class Categoria {
+        +int id
+        +string nombre
+    }
 
-El primero es el estilo de la base, y el segundo es el estilo del menu. 
+    class Comentario {
+        +int id
+        +int usuario_id
+        +int tema_id
+        +string contenido
+        +datetime fecha_creacion
+        +listar()
+        +crear()
+        +eliminar()
+    }
 
-c/ PARA ESTABLCER PAGINAS
-1. deben "registrar" el archivo html en app.js, como en Python se registra una ruta con @app.route('/home'), y llamar al archivo 
+    class Juego {
+        +int id
+        +int categoria_id
+        +int usuario_id
+        +string pregunta
+        +string opcion_a
+        +string opcion_b
+        +string opcion_c
+        +string opcion_correcta
+        +string tipo  "Quiz | Memory | Match | Scramblee"
+        +int puntos_recompensa
+        +crear()
+        +responder()
+        +listar()
+    }
 
-app.get('/', (req, res) => {
-   
-    res.sendFile(path.join(__dirname, 'views', 'home.html'));
-});
+    class Modulo {
+        +int id
+        +int id_usuario
+        +string nombre
+        +string descripcion
+        +crear()
+        +listar()
+        +obtener()
+    }
 
-2. deben crear un archivo html en la carpeta views, y llamarlo en app.js
+    class Nivel {
+        +int id
+        +string nombre
+        +string descripcion
+        +int id_juego
+        +int id_modulo
+        +int orden
+        +string estado  "bloqueado | disponible | completado"
+        +agregar()
+        +eliminar()
+        +completar()
+    }
 
+    class ProgresoModulo {
+        +int id
+        +int usuario_id
+        +int modulo_id
+        +int nivel_id
+        +bool completado
+        +int puntos_obtenidos
+    }
 
-//Tienen libertad de diseñar siguiemto la idea, pueden agregar coasas en home, tarjetas etc.  Pero obvio sin afectar la posision y propiedades de los menos
+    class Relato {
+        +int id
+        +string titulo
+        +string contenido_relato
+        +int usuario_id
+        +string imagen_url
+        +datetime fecha_publicacion
+        +string categoria
+        +crear()
+        +listar()
+    }
 
-//falta los iconos de la barra de navegacion
-//falta mas estilo en la barra de navegacion
+    class HistorialVista {
+        +int id
+        +int usuario_id
+        +string tipo_contenido  "tema | juego"
+        +int contenido_id
+        +datetime fecha_vista
+    }
 
+    Usuario "1" --> "*" Tema : crea
+    Usuario "1" --> "*" Juego : crea
+    Usuario "1" --> "*" Comentario : escribe
+    Usuario "1" --> "*" Relato : publica
+    Usuario "1" --> "*" HistorialVista : genera
+    Usuario "1" --> "*" Modulo : crea
+    Usuario "1" --> "*" ProgresoModulo : tiene
+    Usuario "1" --> "0..1" TemasLike : da
 
-//  PARA LOS ICONOS
+    Tema "1" --> "*" Comentario : contiene
+    Tema "1" --> "*" TemasLike : recibe
+    Tema "*" --> "1" Categoria : pertenece
 
-Pagina: https://fonts.google.com/icons?icon.size=24&icon.color=%23e3e3e3
+    Juego "*" --> "1" Categoria : pertenece
+    Juego "1" --> "1" Nivel : asignado
+    Juego "1" --> "0..*" HistorialVista : registrado
 
-en el html deben poner: <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    Modulo "1" --> "*" Nivel : contiene
+    Modulo "1" --> "*" ProgresoModulo : seguimiento
 
-para obtener la libreria.
+    Nivel "1" --> "0..*" ProgresoModulo : progreso
+```
 
-para usar el icono solo deben ir a la pagina, buscar el icono, copiar el codigo que les da y pegarlo en el html, por ejemplo:
+---
 
-<!--<span class="material-symbols-outlined">
-    home
-</span>-->
+## Arquitectura
 
-//incluso lo pueden trabajar directamente en css 
+```
+app.js                    ← Punto de entrada
+├── config/
+│   ├── db.js             ← Pool de PostgreSQL
+│   └── imagekit.js       ← Cliente ImageKit CDN
+├── middlewares/
+│   ├── autenticacion.js  ← verificarSesion, esEspecialista
+│   └── subidaImagen.js   ← Multer + subirAImagekit()
+├── controllers/          ← Lógica de negocio
+│   ├── authController.js
+│   ├── temaController.js
+│   ├── juegoController.js
+│   ├── moduloController.js
+│   ├── comentarioController.js
+│   ├── relatosController.js
+│   ├── historialController.js
+│   └── searchController.js
+├── routes/               ← Definición de rutas HTTP
+│   ├── authRoutes.js
+│   ├── temaRoutes.js
+│   ├── juegoRoutes.js
+│   ├── moduloRoutes.js
+│   ├── comentarioRoutes.js
+│   ├── relatoRoutes.js
+│   ├── searchRoutes.js
+│   └── historialRoutes.js
+├── views/                ← Plantillas HTML (21 páginas)
+├── public/
+│   ├── css/
+│   ├── js/
+│   └── uploads/
+└── .env                  ← Variables de entorno
+```
 
-que es lo mas importatnte el class="material-symbols-outlined" y el nombre del icono que en este caso es home. y ustedes lo trabajan a su manera, para que se vea bien en pc y movil deben usar las media queries que estan en el css home.
+---
 
+## Inicio Rápido
 
+```bash
+npm install
+cp .env.example .env      # Configurar credenciales
+npm run dev               # http://localhost:3000
+```
+
+## Stack
+
+| Capa       | Tecnología               |
+|------------|--------------------------|
+| Backend    | Node.js + Express 5      |
+| Base datos | PostgreSQL (Neon.tech)   |
+| Frontend   | HTML + CSS + JS vanilla  |
+| Templates  | Nunjucks                 |
+| Sesiones   | express-session          |
+| CDN        | ImageKit                 |
+| Auth       | bcryptjs + sesión única  |
+
+## Tipos de Juego
+
+| Tipo       | Mecánica                            |
+|------------|-------------------------------------|
+| Quiz       | Pregunta con 3 opciones (A/B/C)     |
+| Memory     | Encontrar pares de cartas           |
+| Match      | Conectar concepto con su respuesta  |
+| Scramblee  | Ordenar letras para formar palabra  |
+
+## Roles
+
+- **Natural** — Usuario registrado, puede jugar, comentar, escribir relatos
+- **Especialista** — Puede crear temas, juegos, módulos y gestionar contenido
