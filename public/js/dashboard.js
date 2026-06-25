@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const bloqueMensaje = document.getElementById('mensaje-consola');
     const btnLogout = document.getElementById('btn-logout');
 
-    // 1. Consultar el perfil al cargar el Dashboard
     try {
         const res = await fetch('/auth/perfil', {
             method: 'GET',
@@ -27,7 +26,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         console.debug('[dashboard] perfil payload', usuario);
 
-        // Rellenar header: nombre, username y rol
         const nombreElem = document.getElementById('nombre-usuario');
         const usernameElem = document.getElementById('username');
         const rolElem = document.getElementById('rol-usuario');
@@ -42,7 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             mostrarMensaje('Perfil cargado pero falta el nombre en la sesión.', 'error');
             console.warn('[dashboard] perfil sin nombre:', usuario);
         }
-//
+
         bienvenida.innerHTML = `¡Hola, <strong>${usuario.nombre || 'Usuario'}</strong>! Bienvenido a la plataforma web de preservación digital.`;
 
         configurarVistasPorRol(usuario.rol);
@@ -77,7 +75,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // 4. Manejador para cerrar sesión de manera limpia
     btnLogout.addEventListener('click', async () => {
         const res = await fetch('/auth/logout', {
             method: 'POST',
@@ -86,7 +83,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (res.ok) window.location.replace('/login');
     });
 
-    // Función auxiliar para prender/apagar componentes de la interfaz
     function configurarVistasPorRol(rol) {
         const seccionContenidos = document.getElementById('seccion-contenidos');
         const seccionRelatos = document.getElementById('seccion-relatos');
@@ -121,11 +117,32 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
             cont.innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:8px;">' +
-                cats.map(c => `<span class="tag">${c.nombre}</span>`).join('') + '</div>';
+            cats.map(c => `
+                <span class="tag tag-con-borrar">
+                  ${c.nombre}
+                  <button class="tag-borrar" data-id="${c.id}" aria-label="Eliminar">
+                    <span class="material-symbols-outlined">close</span>
+                  </button>
+                </span>
+              `).join('') + '</div>';
         } catch (err) {
             cont.innerHTML = '<p class="muted center error">Error al cargar categorías.</p>';
         }
     }
+
+    document.getElementById('lista-categorias').addEventListener('click', async (e) => {
+        const btn = e.target.closest('.tag-borrar');
+        if (!btn) return;
+        const id = btn.dataset.id;
+        if (!confirm('¿Eliminar esta categoría? Los temas y juegos que la usan quedarán sin categoría.')) return;
+        try {
+            const res = await fetch(`/api/categorias/${id}`, { method: 'DELETE', credentials: 'include' });
+            if (!res.ok) throw new Error();
+            cargarCategorias();
+        } catch {
+            alert('Error al eliminar la categoría.');
+        }
+    });
 
     async function cargarUsuarios() {
         const cont = document.getElementById('lista-usuarios');
@@ -234,7 +251,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         setTimeout(() => { bloqueMensaje.style.display = 'none'; }, 4000);
     }
 
-    // Función para cargar los relatos del usuario activo
     async function cargarMisRelatos() {
         const contenedor = document.getElementById('lista-mis-relatos');
         if (!contenedor) return;
@@ -289,7 +305,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // Exponer las funciones globalmente
     window.cargarMisRelatos = cargarMisRelatos;
     window.cargarMisJuegosCreados = cargarMisJuegosCreados;
     window.cargarCategorias = cargarCategorias;

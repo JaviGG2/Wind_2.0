@@ -12,7 +12,6 @@
             <h2>Crear Nueva Trivia</h2>
             <p>Redacta preguntas oficiales para educar a los usuarios de Wind.</p>
             
-<!-- MINI FORMULARIO DE GÉNEROS -->
 <div class="grupo-campo">
     <label for="selector-genero">Género del Juego:</label>
     <select id="selector-genero" onchange="controlarFormulario()">
@@ -75,7 +74,6 @@
             </form>
             
             
-            <!-- FORMULARIO: MEMORY -->
 <form id="formulario-Memory" style="display: none;">
     <div class="grupo-campo">
         <label>Nombre del Juego:</label>
@@ -83,14 +81,11 @@
     </div>
 
     <div id="contenedor-parejas">
-        <!-- Pareja inicial -->
         <div class="bloque-pareja" data-id="1">
             <label>Pareja 1:</label>
             <input type="text" name="pareja_texto_1" required placeholder="Palabra o concepto">
         </div>
     </div>
-    
-    <!--Boton de Recompensa-->
     
     <div class="grupo-campo" style="margin-top: 15px;">
     <label for="puntos_memory">Puntos de Recompensa:</label>
@@ -102,7 +97,6 @@
 </form>
 
 
-<!-- FORMULARIO: MATCH (DINÁMICO CON PREGUNTA Y RESPUESTA) -->
 <form id="formulario-Match" style="display: none;">
     <div class="grupo-campo">
         <label>Nombre del Juego:</label>
@@ -110,15 +104,12 @@
     </div>
 
     <div id="contenedor-match">
-        <!-- Fila inicial -->
         <div class="bloque-match" data-id="1" style="margin-bottom: 10px;">
             <label>Fila 1:</label>
             <input type="text" name="match_pregunta_1" required placeholder="Pregunta o Concepto A" style="margin-bottom: 5px;">
             <input type="text" name="match_respuesta_1" required placeholder="Respuesta o Concepto B">
         </div>
     </div>
-    
-    <!--Boton de puntos-->
     
     <div class="grupo-campo" style="margin-top: 15px;">
     <label for="puntos_match">Puntos de Recompensa:</label>
@@ -130,7 +121,6 @@
 </form>
 
 
-<!-- FORMULARIO: SCRAMBLEE -->
 <form id="formulario-Scramblee" style="display: none;">
     <div class="grupo-campo">
         <label>Nombre del Juego:</label>
@@ -170,16 +160,13 @@
 let cMemory = 1, cMatch = 1;
 
 function controlarFormulario() {
-    //Guarda lo que eligió el usuario osea las opciones 
     var genero = document.getElementById("selector-genero").value;
     
-    // Ocultamos todos los formularios a las malas para limpiar la pantalla
     document.getElementById("formulario-quiz").style.display = "none";
     document.getElementById("formulario-Memory").style.display = "none";
     document.getElementById("formulario-Match").style.display = "none";
     document.getElementById("formulario-Scramblee").style.display = "none";
     
-    //Si el usuario elige quiz o cualquier otra opción, quita el miniformulario y lo muestra en pantalla el formulario correspondiente 
     if (["quiz", "Memory", "Match", "Scramblee"].includes(genero)) {
         document.getElementById("formulario-" + genero).style.display = "block";
     }
@@ -189,7 +176,6 @@ function agregarParejaMemory() {
     let cont = document.getElementById("contenedor-parejas");
     const boton = window.event.target;
         if (cont.children.length >= 10) {
-        // Buscamos el último input de texto que está dentro del contenedor
         const ultimoInput = cont.querySelector(".bloque-pareja:last-child input");
         if (ultimoInput) {
             ultimoInput.setCustomValidity("Límite alcanzado: Máximo 10 parejas.");
@@ -198,7 +184,6 @@ function agregarParejaMemory() {
         return;
     }
     
-    // Si no ha llegado al límite, limpiamos cualquier error viejo de los inputs
     cont.querySelectorAll(".bloque-pareja input").forEach(inp => inp.setCustomValidity(""));
 
         
@@ -207,7 +192,6 @@ function agregarParejaMemory() {
     cMemory = cMemory + 1;
     let n = cont.children.length + 1;
     
-    // Sumamos el nuevo HTML directo al contenedor de forma limpia
    let nuevoDiv = document.createElement("div");
    nuevoDiv.className = "bloque-pareja";
    nuevoDiv.innerHTML = `<label>Pareja ${n}:</label><input type="text" name="pareja_texto_${cMemory}" required placeholder="Concepto">`;
@@ -219,7 +203,6 @@ function agregarFilaMatch() {
         const boton = window.event.target;
         
         if (cont.children.length >= 10) {
-        // Buscamos el último input de la última fila creada
         const ultimoInput = cont.querySelector(".bloque-match:last-child input");
         if (ultimoInput) {
             ultimoInput.setCustomValidity("Límite alcanzado: Máximo 10 filas.");
@@ -228,14 +211,12 @@ function agregarFilaMatch() {
         return;
     }
     
-    // Si no ha llegado al límite, limpiamos cualquier error viejo de los inputs
     cont.querySelectorAll(".bloque-match input").forEach(inp => inp.setCustomValidity(""));
 
     
     cMatch = cMatch + 1;
     let n = cont.children.length + 1;
     
-    // Sumamos la nueva fila directa al contenedor de forma limpia
         let nuevoDiv = document.createElement("div");
     nuevoDiv.className = "bloque-match";
     nuevoDiv.style.marginBottom = "10px";

@@ -1,3 +1,5 @@
+
+
 .contenedor-principal {
     min-height: 100vh;
     display: flex;
@@ -119,7 +121,7 @@
 }
 
 .texto-secundario {
-    margin-top: 20px;
+    margin-top: 800px;
     text-align: center;
     font-size: var(--font-sm);
     color: var(--texto-sec);
@@ -174,6 +176,15 @@
 .btn-ojo .material-symbols-outlined {
     font-size: 1.3rem;
     font-variation-settings: 'wght' 300;
+}
+
+.logo-login {
+    display: block;
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .input-ayuda {

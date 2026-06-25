@@ -3,8 +3,6 @@ const router = express.Router();
 const path = require('path');
 const moduloController = require('../controllers/moduloController');
 const { verificarSesion } = require('../middlewares/autenticacion');
-
-// Páginas
 router.get('/modulos', verificarSesion, (req, res) => {
   res.render('modulos');
 });
@@ -27,8 +25,6 @@ router.get('/admin/editar-modulo', verificarSesion, (req, res) => {
   if (req.session.rol !== 'Especialista') return res.redirect('/login');
   res.render('editar-modulo');
 });
-
-// API
 router.get('/api/modulos', moduloController.listarModulos);
 router.get('/api/modulos/:id', moduloController.obtenerModulo);
 router.get('/admin/api/modulos', verificarSesion, moduloController.misModulos);

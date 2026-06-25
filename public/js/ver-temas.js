@@ -52,10 +52,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         bloqueCarga.style.display = 'none';
         bloqueContenido.style.display = 'block';
 
-        // Cargar comentarios
         cargarComentarios(temaId);
 
-        // Scroll a comentarios si el hash lo indica
         if (window.location.hash === '#comentarios') {
             setTimeout(() => {
                 const el = document.getElementById('seccion-comentarios');
@@ -67,8 +65,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error("Error en ver-tema.js:", error);
         bloqueCarga.innerHTML = `<p style="color: red;">Error al cargar el contenido: ${error.message}</p>`;
     }
-
-    // ---- COMENTARIOS ----
 
     const comentarioInput = document.getElementById('comentario-input');
     const comentarioEnviar = document.getElementById('comentario-enviar');

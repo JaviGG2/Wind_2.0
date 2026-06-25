@@ -1,7 +1,3 @@
-/* 
-   juegos-page.css — Página Principal de Juegos Interactivos
-   Paleta: #FF4500 (primario), #121212 (secundario)
-*/
 
 :root {
     --c-primario: #FF4500;
@@ -24,19 +20,17 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* ----- HERO JUEGOS OPTIMIZADO ----- */
 .juegos-hero {
     position: relative;
-    /* Cambiado a un degradado suave y luminoso que funde con el fondo de la app */
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); 
     padding: 60px 32px 80px; 
     margin: 0 0 40px 0;
     border-radius: 0 0 32px 32px; 
     overflow: hidden;
-    color: var(--c-texto); /* Texto oscuro para que contraste a la perfección */
+    color: var(--c-texto);
     display: flex;
     justify-content: center;
-    border-bottom: 1px solid var(--c-border); /* Una línea sutil para delimitar el final del hero */
+    border-bottom: 1px solid var(--c-border);
 }
 
 .hero-particles {
@@ -48,7 +42,7 @@ body {
 .particle {
     position: absolute;
     font-size: 2rem;
-    opacity: 0.05; /* Opacidad muy baja para que los iconos floten como marcas de agua tenues */
+    opacity: 0.05;
     animation: float 8s ease-in-out infinite;
 }
 
@@ -108,7 +102,7 @@ body {
     align-items: center;
     justify-content: center;
     margin-bottom: 24px;
-    box-shadow: 0 12px 28px rgba(255, 69, 0, 0.25); /* Sombra suavizada para fondo claro */
+    box-shadow: 0 12px 28px rgba(255, 69, 0, 0.25);
     transform: rotate(-8deg);
     transition: transform 0.3s ease;
 }
@@ -133,7 +127,7 @@ body {
 
 .hero-subtitle {
     font-size: 1.1rem;
-    color: var(--c-muted); /* Usa tu variable de texto secundario gris */
+    color: var(--c-muted);
     line-height: 1.6;
     margin: 0 0 36px 0;
 }
@@ -188,7 +182,6 @@ body {
     font-weight: 600;
 }
 
-/* ----- FILTROS OPTIMIZADOS ----- */
 .filtros-seccion {
     padding: 0 32px;
     margin-bottom: 40px; 
@@ -254,8 +247,6 @@ body {
     box-shadow: 0 8px 20px var(--c-primario-glow);
 }
 
-/* ----- GRID DE JUEGOS ----- */
-/* ----- GRID Y CONTENEDOR DE JUEGOS ----- */
 .juegos-grid-section {
     padding: 0 32px 80px;
 }
@@ -263,10 +254,9 @@ body {
 .juegos-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 32px; /* Incrementado de 24px a 32px para una separación más limpia entre tarjetas */
+    gap: 32px;
 }
 
-/* ----- TARJETA DE JUEGO (CONSOLIDADA Y DESAHOGADA) ----- */
 .juego-card {
     background: var(--c-card);
     border-radius: var(--radius-md);
@@ -296,7 +286,7 @@ body {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, var(--c-primario), #ff8c42); /* Degradado limpio */
+    background: linear-gradient(90deg, var(--c-primario), #ff8c42);
     opacity: 0;
     transition: opacity 200ms ease;
 }
@@ -311,12 +301,11 @@ body {
     opacity: 1;
 }
 
-/* ----- ELEMENTOS INTERNOS DE LA TARJETA ----- */
 .juego-card-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start; /* Alinea los elementos arriba para dar espacio si el texto se divide */
-    gap: 12px; /* Evita que la categoría y los puntos se peguen */
+    align-items: flex-start;
+    gap: 12px;
     margin-bottom: 24px;
     width: 100%;
 }
@@ -330,10 +319,9 @@ body {
     background: var(--c-primario-light);
     padding: 6px 12px;
     border-radius: 6px;
-    /* Las siguientes propiedades controlan que el texto largo no rompa feo */
     white-space: normal; 
     line-height: 1.3;
-    max-width: 70%; /* Le deja un 30% del espacio asegurado a la burbuja de puntos */
+    max-width: 70%;
 }
 
 .juego-pts {
@@ -346,7 +334,7 @@ body {
     padding: 6px 12px;
     border-radius: 6px;
     font-size: 0.85rem;
-    flex-shrink: 0; /* Impide que la burbuja de puntos se encoja o se deforme */
+    flex-shrink: 0;
 }
 
 .juego-pts .material-symbols-outlined {
@@ -354,11 +342,11 @@ body {
 }
 
 .juego-pregunta-texto {
-    font-size: 1.15rem; /* Un poco más grande para mejor legibilidad */
+    font-size: 1.15rem;
     font-weight: 700;
-    line-height: 1.6; /* Interlineado desahogado */
+    line-height: 1.6;
     color: var(--c-texto);
-    margin: 0 0 28px 0; /* Separación marcada antes del botón */
+    margin: 0 0 28px 0;
     flex: 1;
     display: -webkit-box;
     -webkit-line-clamp: 3;
@@ -366,14 +354,13 @@ body {
     overflow: hidden;
 }
 
-/* ----- BOTÓN DE ACCIÓN ----- */
 .btn-jugar {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
     width: 100%;
-    padding: 14px 20px; /* Área de clic más alta y cómoda */
+    padding: 14px 20px;
     background: var(--c-texto);
     color: #fff;
     border: none;
@@ -382,7 +369,7 @@ body {
     font-size: 1rem;
     cursor: pointer;
     transition: all 150ms ease;
-    margin-top: auto; /* Empuja el botón al fondo de la tarjeta de forma consistente */
+    margin-top: auto;
 }
 
 .juego-card:hover .btn-jugar {
@@ -422,14 +409,13 @@ body {
   border-color: rgba(22, 163, 74, 0.4);
 }
 
-/* ----- ESTADOS DE CARGA (SKELETON) ----- */
 .loading-skeleton {
     display: contents;
 }
 
 .skeleton-juego {
-    height: 260px; /* Ajustado para que coincida exactamente con la nueva min-height de la tarjeta */
-    background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%); /* Tonos grises más suaves */
+    height: 260px;
+    background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
     background-size: 200% 100%;
     animation: shimmer 1.4s infinite linear;
     border-radius: var(--radius-md);
@@ -462,12 +448,11 @@ body {
     margin: 0 0 20px;
 }
 
-/* ----- MODAL INTERACTIVO OPTIMIZADO ----- */
 .juego-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.4); /* Bajada la opacidad del fondo para un look traslúcido más limpio */
-    backdrop-filter: blur(12px); /* Incrementado el desenfoque para dar máxima prioridad al modal */
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     z-index: 12000;
     display: flex;
@@ -480,16 +465,16 @@ body {
 .juego-modal-card {
     background: #ffffff;
     width: 100%;
-    max-width: 560px; /* Ampliado de 520px a 560px para dar más desahogo horizontal */
+    max-width: 560px;
     border-radius: var(--radius-lg);
-    box-shadow: 0 32px 64px rgba(15, 23, 42, 0.15); /* Sombra más suave y moderna sin negros puros */
+    box-shadow: 0 32px 64px rgba(15, 23, 42, 0.15);
     position: relative;
     overflow: hidden;
     animation: slideUp 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .juego-estado {
-    padding: 40px; /* Padding uniforme en todos sus lados para simetría perfecta */
+    padding: 40px;
 }
 
 .juego-modal-card .modal-close {
@@ -557,28 +542,28 @@ body {
 }
 
 .juego-pregunta {
-    font-size: 1.4rem; /* Un punto más grande para dar impacto a la interrogante */
+    font-size: 1.4rem;
     font-weight: 800;
     color: var(--c-texto);
     line-height: 1.4;
-    margin: 0 0 32px 0; /* Mayor separación antes de listar las opciones */
+    margin: 0 0 32px 0;
 }
 
 .juego-opciones {
     display: flex;
     flex-direction: column;
-    gap: 14px; /* Mayor separación entre botones de respuesta */
+    gap: 14px;
 }
 
 .opcion-btn {
     display: flex;
     align-items: center;
-    gap: 18px; /* Más espacio entre el contenedor de la letra y el texto de la respuesta */
+    gap: 18px;
     width: 100%;
-    padding: 18px 22px; /* Botones más altos y cómodos */
+    padding: 18px 22px;
     background: #ffffff;
     border: 2px solid #e5e7eb;
-    border-radius: 16px; /* Bordes más circulares en sintonía con el modal */
+    border-radius: 16px;
     cursor: pointer;
     text-align: left;
     transition: all 200ms ease;
@@ -608,12 +593,11 @@ body {
     line-height: 1.4;
 }
 
-/* Efectos de interacción limpios */
 .opcion-btn:hover {
     background: var(--c-primario-light);
     border-color: var(--c-primario);
     box-shadow: 0 6px 20px rgba(255, 69, 0, 0.06);
-    transform: scale(1.01); /* Sustituido el desplazamiento por un escalado sutil hacia el frente */
+    transform: scale(1.01);
 }
 
 .opcion-btn:hover .opcion-letra {
@@ -622,9 +606,8 @@ body {
     background: var(--c-primario);
 }
 
-/* Estados al responder (Mantienen el mismo desahogo pero fijan el color estático) */
 .opcion-btn.correcta {
-    background: #f0fdf4; /* Un verde un pelo más suave y moderno */
+    background: #f0fdf4;
     border-color: #10b981;
     cursor: default;
     transform: none;
@@ -651,7 +634,6 @@ body {
     color: #ffffff;
 }
 
-/* --- VISTA DE RESULTADOS OPTIMIZADA --- */
 #juego-resultado {
     text-align: center;
     display: flex;
@@ -660,7 +642,7 @@ body {
 }
 
 .resultado-icon {
-    width: 96px; /* Incrementado para mayor impacto visual */
+    width: 96px;
     height: 96px;
     border-radius: 50%;
     margin: 12px auto 28px;
@@ -671,12 +653,12 @@ body {
 }
 
 .resultado-icon.success {
-    background: #d1fae5; /* Verde ligeramente más vivo para celebración */
+    background: #d1fae5;
     color: #065f46;
 }
 
 .resultado-icon.error {
-    background: #fee2e2; /* Rojo suave */
+    background: #fee2e2;
     color: #991b1b;
 }
 
@@ -697,7 +679,7 @@ body {
     color: var(--c-muted);
     margin: 0 0 28px 0;
     line-height: 1.6;
-    max-width: 400px; /* Evita líneas de texto demasiado largas */
+    max-width: 400px;
 }
 
 .resultado-puntos {
@@ -718,10 +700,9 @@ body {
     font-size: 1.5rem;
 }
 
-/* Contenedor de retroalimentación desahogado */
 .resultado-respuesta-correcta {
-    background: #f8fafc; /* Gris azulado muy limpio */
-    padding: 24px; /* Incrementado para que respire el texto explicativo */
+    background: #f8fafc;
+    padding: 24px;
     border-radius: 16px;
     margin-bottom: 32px;
     text-align: left;
@@ -760,7 +741,7 @@ body {
     justify-content: center;
     gap: 10px;
     width: 100%;
-    padding: 18px; /* Botón con mayor área de acción */
+    padding: 18px;
     border: none;
     border-radius: 14px;
     background: var(--c-primario);
@@ -793,7 +774,6 @@ body {
     color: var(--c-texto);
 }
 
-/* --- ANIMACIONES GENERALES --- */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -821,10 +801,9 @@ body {
     }
 }
 
-/* --- ADAPTABILIDAD (MEDIA QUERIES) ACTUALIZADA --- */
 @media (max-width: 768px) {
     .juegos-hero {
-        padding: 48px 24px 60px; /* Ajustado proporcionalmente al nuevo aire del hero */
+        padding: 48px 24px 60px;
         border-radius: 0 0 24px 24px;
         margin-bottom: 32px;
     }
@@ -874,11 +853,11 @@ body {
 
     .juegos-grid {
         grid-template-columns: 1fr;
-        gap: 24px; /* Mantiene un respiro sano en móviles */
+        gap: 24px;
     }
 
     .juego-card {
-        padding: 28px; /* Reducido sutilmente pero manteniendo el look holgado */
+        padding: 28px;
         min-height: 240px;
     }
 
@@ -892,7 +871,6 @@ body {
         font-size: 0.95rem;
     }
 
-    /* Comportamiento del Modal en Móviles (Tipo Bottom Sheet) */
     .juego-modal-overlay {
         align-items: flex-end;
         padding: 0;
@@ -934,7 +912,6 @@ body {
     }
 }
 
-/* Espaciado estructural para barras laterales activas en escritorio */
 @media (min-width: 769px) {
     .contenido-principal {
         margin-left: 270px;
@@ -945,7 +922,6 @@ body {
     }
 }
 
-/* ===== MÓDULOS ===== */
 .modulos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -995,7 +971,6 @@ body {
   color: var(--texto-muted);
 }
 
-/* Header del módulo */
 .modulo-header-card {
   background: var(--bg-card);
   border: 1px solid var(--borde-light);
@@ -1036,7 +1011,6 @@ body {
   color: var(--texto-muted);
 }
 
-/* Listado de niveles */
 .niveles-listado {
   display: flex;
   flex-direction: column;
@@ -1125,7 +1099,6 @@ body {
   border-radius: 999px;
 }
 
-/* Admin */
 .modulo-admin-item {
   display: flex;
   align-items: center;
@@ -1141,7 +1114,6 @@ body {
   font-size: var(--font-sm);
 }
 
-/* === GAME TYPE BADGE === */
 .juego-tipo-badge {
   display: inline-flex;
   align-items: center;
@@ -1169,7 +1141,6 @@ body {
   font-size: 1rem;
 }
 
-/* === MEMORY === */
 .memory-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
@@ -1222,7 +1193,6 @@ body {
 .memory-carta.emparejada .memory-back { opacity: 1; color: #1b5e20; font-weight: 800; }
 .memory-carta.emparejada .memory-front { opacity: 0; }
 
-/* === MATCH === */
 .match-caja {
   display: flex;
   gap: 20px;
@@ -1249,7 +1219,6 @@ body {
 .match-btn.seleccionado { border-color: var(--primario); background: var(--primario-bg); }
 .match-btn.conectado { border-color: #28a745; background: #e8f5e9; color: #1b5e20; pointer-events: none; }
 
-/* === SCRAMBLEE === */
 .scramblee-area {
   display: flex;
   flex-direction: column;

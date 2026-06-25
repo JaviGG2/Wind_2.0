@@ -3,15 +3,9 @@
         max-width: 800px;
         padding: 32px 40px;
         
-        /* 1. Centramos el bloque en el espacio que queda libre */
         margin: 40px auto; 
-        
-        /* 2. ¡La clave! Empujamos TODO el bloque hacia la derecha 
-              para que empiece justo donde termina el menú negro. */
         position: relative;
         left: 250px; 
-        
-        /* 3. Evitamos que el ancho total rompa la pantalla por culpa del desplazamiento */
         width: calc(100% - 50px); 
     }
 }
@@ -20,7 +14,6 @@
     .dashboard-root {
         max-width: 900px;
         padding: 32px 40px;
-        /* Usamos !important temporalmente para romper cualquier regla vieja que esté molestando */
         margin-left: 80px !important; 
         margin-right: auto !important;
     }
@@ -211,7 +204,6 @@
     }
 }
 
-/* Tabs deslizables en móvil */
 .tabs-header {
     display: flex;
     gap: 8px;
@@ -247,4 +239,32 @@
         text-align: center;
         justify-content: center;
     }
+}
+
+.tag-con-borrar {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.tag-borrar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.15s;
+}
+.tag-borrar:hover {
+    opacity: 1;
+    background: rgba(255,0,0,0.15);
+    color: #dc2626;
+}
+.tag-borrar .material-symbols-outlined {
+    font-size: 14px;
 }

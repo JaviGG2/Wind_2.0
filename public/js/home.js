@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentUser = null;
 
-    // Obtener perfil actual (si está autenticado) antes de cargar los temas
     async function fetchPerfil() {
         try {
             const perfilRes = await fetch('/auth/perfil', { credentials: 'include' });
@@ -24,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const respuesta = await fetch('/api/temas',  {
             method: 'GET',
-        credentials: 'include', // < Obliga al navegador a llevar la cookie
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json'
         }

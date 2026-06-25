@@ -20,7 +20,6 @@ async function cargarRelatos() {
 
             let imagenHTML = "";
             if (relato.imagen_url) {
-                // Genera la etiqueta de la imagen si existe en la base de datos de Neon
                 imagenHTML = `<img src="${relato.imagen_url}" alt="Imagen del relato" style="max-width: 100%; height: auto; border-radius: 8px; margin-top: 10px; display: block;">`;
             }
 
@@ -37,27 +36,20 @@ async function cargarRelatos() {
         console.error("Error al cargar los relatos:", error);
     }
 }
-// Llamar a la función automáticamente cuando cargue la página por primera vez
 cargarRelatos();
 
 // aqui es donde se escucha el evento de submit del formulario
-// =========================================================================
-// ESCUCHADOR PARA ENVIAR NUEVOS RELATOS (POST)
-// =========================================================================
 formulario.addEventListener("submit", async (evento) => {
-    evento.preventDefault(); // Detiene la recarga de la página
+    evento.preventDefault();
 
-    // 1. CAPTURAR los textos en el momento exacto en que se hace click en enviar
     const tituloInput = document.getElementById("titulo-relato").value;
     const contenidoInput = document.getElementById("contenido-relato").value;
 
-    // 2. ARMAR el objeto JSON con los valores reales
     const datosRelato = {
         titulo: tituloInput,
         contenido: contenidoInput
     };
 
-    // 3. ENVIAR los datos mediante la red
     try {
         const respuesta = await fetch("/api/relatos", {
             method: "POST",
@@ -71,8 +63,8 @@ formulario.addEventListener("submit", async (evento) => {
 
         if (respuesta.ok) {
             mensaje.textContent = "¡Relato enviado con éxito!";
-            formulario.reset(); // Limpia los cuadros de texto
-            cargarRelatos();    // Actualiza la lista para ver el nuevo relato abajo
+            formulario.reset();
+            cargarRelatos();
         } else {
             mensaje.textContent = resultado.error || "Error al enviar el relato";
         }

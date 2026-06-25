@@ -1,7 +1,5 @@
-// controllers/juegoController.js
 const db = require('../config/db');
 
-// 1. Insertar Nueva Trivia
 exports.crearJuego = async (req, res) => {
     if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
         return res.status(403).json({ mensaje: 'Acceso denegado: Rol insuficiente.' });
@@ -55,7 +53,6 @@ exports.crearJuego = async (req, res) => {
     }
 };
 
-// 2. Historial de juegos del Especialista
 exports.misJuegos = async (req, res) => {
     if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
         return res.status(403).json({ mensaje: 'Acceso denegado.' });
@@ -97,7 +94,6 @@ exports.obtenerJuego = async (req, res) => {
     }
 };
 
-// 4. Listar juegos publicados (público)
 exports.listarPublicos = async (req, res) => {
     try {
         const categoriaId = req.query.categoria ? parseInt(req.query.categoria, 10) : null;
@@ -142,7 +138,6 @@ exports.listarPublicos = async (req, res) => {
     }
 };
 
-// 4. Eliminar juego (sólo Especialista)
 exports.eliminarJuego = async (req, res) => {
     if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
         return res.status(403).json({ mensaje: 'Acceso denegado.' });
@@ -160,7 +155,6 @@ exports.eliminarJuego = async (req, res) => {
     }
 };
 
-// 5. Responder juego (todos los tipos)
 exports.responderJuego = async (req, res) => {
     if (!req.session.usuarioId) {
         return res.status(401).json({ mensaje: 'Debes iniciar sesión para jugar.' });
@@ -187,16 +181,15 @@ exports.responderJuego = async (req, res) => {
             const correctaRaw = String(juego.opcion_correcta || juego.correcta || '').trim().toUpperCase();
             esCorrecta = respuestaUpper === correctaRaw || respuestaUpper === (['A', 'B', 'C'].includes(correctaRaw) ? correctaRaw : '');
         } else if (tipo === 'Memory') {
-            esCorrecta = true; // Memory se completa al encontrar todos los pares
+            esCorrecta = true;
         } else if (tipo === 'Match') {
-            esCorrecta = true; // Match se completa al conectar todos los pares
+            esCorrecta = true;
         } else if (tipo === 'Scramblee') {
             const palabraCorrecta = (juego.opcion_a || '').trim().toUpperCase();
             const respuesta = String(respuesta_usuario).trim().toUpperCase();
             esCorrecta = respuesta === palabraCorrecta;
         }
 
-        // Marcar como jugado en historial (incluso si es incorrecto)
         await db.query(
             `INSERT INTO historial_vistas (usuario_id, tipo_contenido, contenido_id)
              VALUES ($1, 'juego', $2)

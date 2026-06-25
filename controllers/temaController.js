@@ -1,4 +1,3 @@
-// controllers/temaController.js
 const db = require('../config/db');
 const { subirAImagekit } = require('../middlewares/subidaImagen');
 
@@ -43,7 +42,6 @@ exports.subirTema = async (req, res) => {
 };
 
 exports.actualizarTema = async (req, res) => {
-    // 1. Verificación de seguridad
     if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
         return res.status(403).json({ mensaje: 'Acceso denegado: Se requieren permisos de Especialista.' });
     }
@@ -51,7 +49,6 @@ exports.actualizarTema = async (req, res) => {
     const { id } = req.params;
     const { categoria_id, titulo, contenido } = req.body;
     
-    // Validación básica en el servidor
     if (!titulo || !contenido) {
         return res.status(400).json({ mensaje: 'El título y el contenido son obligatorios.' });
     }
@@ -138,8 +135,6 @@ exports.obtenerTemaPorId = async (req, res) => {
     const rawId = req.params.id;
     console.log(`obtenerTemaPorId: petición recibida para id='${rawId}'`);
 
-    // Intentamos usar el valor tal cual: si es numérico lo tratamos como entero,
-    // si no, haremos una búsqueda flexible por texto (útil si usas slugs).
     const temaIdNum = parseInt(rawId, 10);
 
     try {
@@ -215,7 +210,6 @@ exports.likeTema = async (req, res) => {
     }
 };
 
-// 4. Historial de temas creados por el usuario (Especialista)
 exports.misTemas = async (req, res) => {
     if (!req.session.usuarioId) return res.status(401).json({ mensaje: 'No autorizado.' });
 

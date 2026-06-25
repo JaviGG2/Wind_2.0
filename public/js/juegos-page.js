@@ -1,5 +1,3 @@
-/* Juegos page logic */
-
 const urlParams = new URLSearchParams(window.location.search);
 const moduloId = urlParams.get('modulo');
 const nivelId = urlParams.get('nivel');
@@ -271,7 +269,6 @@ function mostrarModalJuego(juego) {
     modal.style.display = 'block';
 }
 
-// --- QUIZ ---
 async function responderTrivia(juego, letra, btnElegido) {
     const correcta = juego.opcion_correcta || juego.correcta;
     const respuesta = { juego_id: juego.id, respuesta_usuario: letra };
@@ -311,7 +308,6 @@ async function responderTrivia(juego, letra, btnElegido) {
     mostrarResultado(juego, esCorrecta, puntosGanados);
 }
 
-// --- MEMORY ---
 function voltearMemory(carta, juego) {
     if (carta.classList.contains('volteada') || carta.classList.contains('emparejada')) return;
     carta.classList.add('volteada');
@@ -340,7 +336,6 @@ function voltearMemory(carta, juego) {
     }
 }
 
-// --- MATCH ---
 function seleccionarMatch(btn, juego) {
     if (btn.classList.contains('conectado')) return;
     if (btn.dataset.tipo === 'concepto') {
@@ -361,7 +356,6 @@ function seleccionarMatch(btn, juego) {
     }
 }
 
-// --- SCRAMBLEE ---
 async function responderScramblee(juego) {
     const input = document.querySelector('.scramblee-input');
     if (!input) return;
@@ -392,7 +386,6 @@ async function responderScramblee(juego) {
     mostrarResultado(juego, esCorrecta, puntosGanados);
 }
 
-// --- COMPLETAR ---
 async function completarJuego(juego) {
     const respuesta = { juego_id: juego.id, respuesta_usuario: 'COMPLETADO' };
     let puntosGanados = 0;
@@ -418,7 +411,6 @@ async function completarJuego(juego) {
     mostrarResultado(juego, esCorrecta, puntosGanados);
 }
 
-// --- RESULTADO ---
 function mostrarResultado(juego, esCorrecta, puntosGanados) {
     $('#juego-playing').style.display = 'none';
     $('#juego-resultado').style.display = 'block';

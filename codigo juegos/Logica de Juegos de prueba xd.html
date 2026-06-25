@@ -7,10 +7,7 @@
     
     <link rel="stylesheet" href="css/estilos.css">
     <style>
-        /* Esta regla oculta los bloques al inicio para que la pantalla arranque limpia o almenos debería */
         .juego { display: none; margin-top: 15px; }
-        
-        /* Un botón verde para que el usuario compruebe sus respuestas */
         .comprobar { background: #28a745; color: white; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 15px; }
     </style>
 </head>
@@ -19,45 +16,28 @@
     <main class="contenedor-principal">
         <div class="tarjeta-registro">
             
-            <!-- Datos generales del juego (Título y Puntuación) -->
             <h2 id="mostrar-titulo-global">Cargando Nombre del Juego...</h2>
             <p>Puntos en disputa: <strong id="mostrar-puntos-global">0</strong> XP</p>
             <hr style="margin: 15px 0; border: 0; border-top: 1px solid #ccc;">
 
-            <!-- QUIZ -->
-            
             <div id="quiz" class="juego">
                 <div class="grupo">
                     <p id="mostrar-quiz-pregunta" style="font-weight: bold; font-size: 1.1rem;"></p>
                 </div>
-                <!-- El contenedor donde estaran las opciones A, B y C -->
                 <div id="contenedor-opciones-quiz"></div>
             </div>
 
-            <!-- MEMORY -->
-            
             <div id="Memory" class="juego">
                 <div class="grupo">
                     <p>Haz clic en las tarjetas para descubrir las parejas patrimoniales.</p>
                 </div>
-                <!-- El tablero vacío donde tendra entre 4 y 20 cartas -->
                 <div id="tablero"></div>
             </div>
-
-
-
-
-            <!-- MATCH -->
 
             <div id="Match" class="juego">
                 <div class="grupo">
                     <p>Asocia cada concepto de la izquierda con su respuesta de la derecha:</p>
                 </div>
-                
-  <!-- 
- Caja organizada con Flexbox en línea para soportar las dos columnas osea es el almacén.
- Aquí estaran las preguntas (izquierda) y respuestas (derecha) dinámicamente.
-    Js pintará con colores directamente en el style de cada botón. -->
                 
                 <div id="caja" style="display: flex; justify-content: space-between; gap: 20px; margin-top: 15px;">
                     <div id="columna-temas" style="width: 48%; display: flex; flex-direction: column; gap: 10px;"></div>
@@ -65,11 +45,6 @@
                 </div>
             </div>
 
-
-
-
-            <!-- SCRAMBLEE -->
-            
             <div id="Scramblee" class="juego">
                 <div class="grupo">
                     <p><strong>Pista:</strong> <span id="mostrar-scramble-pista"></span></p>
@@ -82,7 +57,6 @@
                 <button type="button" class="comprobar" onclick="evaluarScramble()">Validar Palabra</button>
             </div>
 
-            <!-- Enlace inferior para abandonar el juego -->
             <p style="margin-top: 20px; text-align: center; font-size: 0.9rem;">
                 <a href="dashboard.html" style="text-decoration: none; font-weight: bold; color: var(--primario);">← Volver al Panel</a>
             </p>
@@ -167,20 +141,17 @@ function renderizarMinijuego(genero, datos) {
     }
 }
 
-// Mecánica Quiz
 function validarQuiz(seleccion, correcta) {
     if (seleccion === correcta) alert("¡Correcto! Ganaste tus XP.");
     else alert("Incorrecto, intenta de nuevo.");
 }
 
-// Mecánica Scramblee
 function evaluarScramble() {
     const res = document.getElementById("respuesta-scramble-jugador").value.toUpperCase().trim();
     if (res === palabraCorrectaScramblee) alert("¡Palabra Correcta!");
     else alert("Incorrecto.");
 }
 
-// Mecánica Memory
 function voltearCarta(cartaInner) {
     if (cartaInner.classList.contains("volteada") || cartaInner.classList.contains("emparejada")) return;
     cartaInner.classList.add("volteada");
@@ -202,7 +173,6 @@ function voltearCarta(cartaInner) {
     }
 }
 
-// Mecánica Match (Diseño Activo por Estados)
 function seleccionarMatch(boton, tipo) {
     if (tipo === 'tema') {
         if (elementoTema) elementoTema.classList.remove("seleccionado");

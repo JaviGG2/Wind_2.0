@@ -28,7 +28,7 @@ formulario.addEventListener('submit', async (evento) => {
         const respuesta = await fetch('/admin/subir-tema', {
             method: 'POST',
             // NOTA: Cuando se usa FormData, NO se coloca 'Content-Type' en el header, el navegador lo configura solo automáticamente.
-            body: datosFormulario 
+            body: datosFormulario
         });
 
         const resultado = await respuesta.json();

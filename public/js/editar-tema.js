@@ -11,18 +11,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // 1. Cargar datos del tema
     try {
         const respuesta = await fetch(`/api/temas/${temaId}`);
         if (!respuesta.ok) throw new Error('No se pudo cargar el tema.');
         
         const tema = await respuesta.json();
         
-        // Rellenar el formulario
         document.getElementById('tema_id').value = tema.id;
         document.getElementById('titulo').value = tema.titulo;
         
-        // Poner contenido en el editor rico y luego inicializar
         document.getElementById('editor-contenido').innerHTML = tema.contenido || '';
         document.getElementById('contenido').value = tema.contenido || '';
         inicializarEditor('contenido', 'editor-contenido');
@@ -44,7 +41,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // 2. Manejar el envío del formulario
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         

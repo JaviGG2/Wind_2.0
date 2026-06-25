@@ -1,5 +1,3 @@
-/* Lógica de juegos independiente del dashboard */
-
 async function cargarMisJuegosCreados() {
     const contenedorLista = document.getElementById('lista-juegos-publicados');
     if (!contenedorLista) return;
@@ -73,7 +71,6 @@ async function cargarMisJuegosCreados() {
     }
 }
 
-/* ------------------ Juegos Publicados (público) ------------------ */
 async function cargarJuegosPublicados() {
     const contenedor = document.getElementById('lista-juegos-publicados');
     if (!contenedor) return;
@@ -93,7 +90,6 @@ async function cargarJuegosPublicados() {
         }
 
         contenedor.innerHTML = '';
-            // obtener perfil para determinar permisos
             let perfil = null;
             try {
                 const r = await fetch('/auth/perfil', { credentials: 'include' });
@@ -124,7 +120,6 @@ async function cargarJuegosPublicados() {
                 playBtn.className = 'boton-enviar';
                 playBtn.textContent = 'Jugar';
                 playBtn.addEventListener('click', () => {
-                    // redirige a la vista de juegos con query param
                     window.location.href = `/juegos?juego=${juego.id}`;
                 });
                 acciones.appendChild(playBtn);
@@ -167,12 +162,10 @@ async function cargarJuegosPublicados() {
     }
 }
 
-// Auto-inicializar carga de juegos del usuario en dashboard
 document.addEventListener('DOMContentLoaded', () => {
     cargarMisJuegosCreados();
 });
 
-/* ------------------ Temas Subidos (usuario) ------------------ */
 async function cargarMisTemas() {
     const cont = document.getElementById('lista-temas-subidos');
     if (!cont) return;

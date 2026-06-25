@@ -15,7 +15,6 @@ const pool = new Pool({
     }
 });
 
-// Probar conexión al iniciar
 pool.connect((err, client, release) => {
     if (err) {
         console.error('Error al conectar con la base de datos:', err.message);

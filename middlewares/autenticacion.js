@@ -8,8 +8,6 @@ exports.verificarSesion = async (req, res, next) => {
             : res.redirect('/login');
     }
 
-    // Verificar sesión única: si el token en sesión no coincide con el de BD,
-    // significa que el usuario inició sesión en otro lado
     if (req.session.session_token) {
         try {
             const result = await db.query(

@@ -1,7 +1,6 @@
 ﻿const formulario = document.getElementById('formulario-registro');
 const bloqueMensaje = document.getElementById('mensaje-consola');
 
-// Toggle visibilidad de contraseña
 document.querySelectorAll('.btn-ojo').forEach(btn => {
     btn.addEventListener('click', () => {
         const input = document.getElementById(btn.dataset.target);
@@ -71,7 +70,6 @@ function validarConfirmacion() {
 passInput.addEventListener('input', actualizarFeedbackPassword);
 passConfirm.addEventListener('input', validarConfirmacion);
 
-// 1. Escucha del Formulario de Registro Principal
 formulario.addEventListener('submit', async (evento) => {
     evento.preventDefault();
 

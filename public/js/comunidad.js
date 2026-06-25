@@ -1,5 +1,3 @@
-/* comunidad.js — Lógica de la página de Comunidad Wind 2.0 */
-
 let todosLosRelatos = [];
 let categoriaActiva = '';
 
@@ -16,7 +14,6 @@ async function cargarRelatos(categoria = '') {
 
     if (!grid) return;
 
-    // Mostrar skeleton
     grid.innerHTML = `
         <div class="loading-skeleton">
             ${[1,2,3,4,5,6].map(() => '<div class="skeleton-card"></div>').join('')}

@@ -1,7 +1,4 @@
-/* 
-   comunidad.css — Página de Comunidad Wind 2.0
-   Paleta: #FF4500 (primario), #121212 (secundario)
-    */
+
 
 :root {
     --c-primario: #FF4500;
@@ -26,7 +23,6 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* ----- HERO ----- */
 .comunidad-hero {
     position: relative;
     background: linear-gradient(135deg, #1a0a00 0%, #2d1200 50%, #0f0000 100%);
@@ -107,7 +103,6 @@ body {
 
 .btn-crear-relato.small { padding: 10px 16px; font-size: 0.87rem; }
 
-/* ----- FILTROS ----- */
 .filtros-seccion {
     padding: 0 24px;
     margin-bottom: 28px;
@@ -177,7 +172,6 @@ body {
     box-shadow: 0 4px 14px rgba(255, 69, 0, 0.28);
 }
 
-/* ----- GRID DE RELATOS ----- */
 .relatos-grid-section {
     padding: 0 24px 80px;
 }
@@ -188,7 +182,6 @@ body {
     gap: 20px;
 }
 
-/* ----- TARJETA RELATO ----- */
 .relato-card {
     background: var(--c-card);
     border-radius: var(--radius-md);
@@ -356,7 +349,6 @@ body {
     word-break: break-word;
 }
 
-/* ----- EMPTY STATE ----- */
 .relatos-empty {
     text-align: center;
     padding: 60px 20px;
@@ -370,7 +362,6 @@ body {
     margin-bottom: 14px;
 }
 
-/* ----- SKELETON LOADING ----- */
 .loading-skeleton {
     display: contents;
 }
@@ -388,7 +379,6 @@ body {
     100% { background-position: 200% 0; }
 }
 
-/* ----- MODAL ----- */
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -480,7 +470,6 @@ body {
     word-break: break-word;
 }
 
-/* ----- RESPONSIVE ----- */
 @media (max-width: 820px) {
     .comunidad-hero { padding: 36px 20px 36px; }
     .filtros-seccion, .relatos-grid-section { padding: 0 16px; }

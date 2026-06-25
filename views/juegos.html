@@ -34,7 +34,6 @@
 
         <main class="contenido-principal">
 
-            <!-- Hero -->
             <section class="juegos-hero">
 
                 <div class="hero-content">
@@ -77,7 +76,6 @@
                 </div>
             </section>
 
-            <!-- Filtros por Categoría -->
             <section class="filtros-seccion">
                 <div class="filtros-header">
                     <h2 class="filtros-titulo">Selecciona una Trivia</h2>
@@ -87,11 +85,9 @@
                     <button class="chip active" data-categoria="">
                         <span class="material-symbols-outlined">grid_view</span> Todos
                     </button>
-                    <!-- Los chips de categorías se inyectan dinámicamente -->
                 </div>
             </section>
 
-            <!-- Grid de Juegos -->
             <section class="juegos-grid-section">
                 <div id="juegos-disponibles" class="juegos-grid">
                     <div class="loading-skeleton">
@@ -105,11 +101,9 @@
         </main>
     </div>
 
-    <!-- Modal de Juego -->
     <div id="modal-juego" class="juego-modal-overlay" style="display:none;" role="dialog" aria-modal="true"
         aria-labelledby="modal-pregunta">
         <div class="juego-modal-card" id="juego-modal-card">
-            <!-- Estado: Jugando -->
             <div id="juego-playing" class="juego-estado">
                 <button class="modal-close" id="juego-close-btn" aria-label="Cerrar">
                     <span class="material-symbols-outlined">close</span>
@@ -128,11 +122,9 @@
                 <p class="juego-pregunta-label">Pregunta</p>
                 <h2 class="juego-pregunta" id="modal-pregunta">...</h2>
                 <div class="juego-opciones" id="juego-opciones">
-                    <!-- Opciones inyectadas por JS -->
                 </div>
             </div>
 
-            <!-- Estado: Resultado -->
             <div id="juego-resultado" class="juego-estado" style="display:none;">
                 <div class="resultado-icon" id="resultado-icon"></div>
                 <h2 class="resultado-titulo" id="resultado-titulo"></h2>

@@ -158,7 +158,6 @@ exports.completarNivel = async (req, res) => {
     const nivel = await db.query('SELECT id_juego FROM nivel WHERE id = $1 AND id_modulo = $2', [nivelId, moduloId]);
     if (nivel.rows.length === 0) return res.status(404).json({ mensaje: 'Nivel no encontrado.' });
 
-    // Marcar juego como jugado
     await db.query(
       `INSERT INTO historial_vistas (usuario_id, tipo_contenido, contenido_id)
        VALUES ($1, 'juego', $2)

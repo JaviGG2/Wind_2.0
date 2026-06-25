@@ -8,23 +8,19 @@ require('dotenv').config();
 
 const app = express();
 
-// Configuración para leer formularios HTML y JSON
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Configuración de Sesiones
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 3600000 } // 1 hora de sesión
+    cookie: { maxAge: 3600000 }
 }));
 
-// Servir archivos estáticos del frontend
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'views')));
 
-// Páginas HTML estáticas servidas manualmente
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'home.html'));
 });
@@ -45,9 +41,6 @@ app.get('/dashboard.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
 });
 
-// ==========================================
-// RUTA 1: Registro Único de Usuarios
-// ==========================================
 app.post('/auth/registro', async (req, res) => {
     const { nombre, username, correo, contrasena } = req.body;
     
@@ -58,13 +51,10 @@ app.post('/auth/registro', async (req, res) => {
     try {
         const hash = await bcrypt.hash(contrasena, 10);
         
-        // Creamos la consulta limpia
         const queryTexto = 'INSERT INTO usuarios (nombre, username, correo, contrasena, rol) VALUES ($1, $2, $3, $4, $5)';
         
-        // Creamos el arreglo asegurando que 'username' vaya estrictamente en la segunda posición ($2)
         const valores = [nombre, username, correo, hash, 'Natural'];
 
-        // Ejecutamos pasándole las variables ordenadas
         await db.query(queryTexto, valores);
         
         res.status(201).json({ mensaje: 'Registro exitoso. Ahora puedes iniciar sesión.' });
@@ -77,9 +67,6 @@ app.post('/auth/registro', async (req, res) => {
     }
 });
 
-// ==========================================
-// RUTA 2: Inicio de Sesión Único
-// ==========================================
 app.post('/auth/login', async (req, res) => {
     const { correo, contrasena } = req.body;
     if (!correo || !contrasena) {
@@ -94,7 +81,6 @@ app.post('/auth/login', async (req, res) => {
         const coincide = await bcrypt.compare(contrasena, usuario.contrasena);
 
         if (coincide) {
-            // Guardamos los datos clave en la sesión del servidor
             req.session.usuarioId = usuario.id;
             req.session.rol = usuario.rol;
             req.session.nombre = usuario.nombre;
@@ -108,11 +94,7 @@ app.post('/auth/login', async (req, res) => {
     }
 });
 
-// ==========================================
-// RUTA 3: Subida de Temas Históricos (Solo Especialistas usando Plantilla)
-// ==========================================
 app.post('/admin/subir-tema', async (req, res) => {
-    // Regla de Negocio: Validar si la sesión existe y tiene rol Especialista
     if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
         return res.status(403).send('Acceso denegado: Solo los Especialistas pueden subir contenido oficial.');
     }
@@ -129,9 +111,6 @@ app.post('/admin/subir-tema', async (req, res) => {
     }
 });
 
-// ==========================================
-// RUTA 4: Módulo de Juegos (Responder y ganar Puntos)
-// ==========================================
 app.post('/juegos/responder', async (req, res) => {
     if (!req.session.usuarioId) return res.status(401).send('Debes iniciar sesión para jugar.');
 
@@ -143,7 +122,6 @@ app.post('/juegos/responder', async (req, res) => {
         const juego = juegoRes.rows[0];
 
         if (respuesta_usuario === juego.opcion_correcta) {
-            // Sumar puntos al perfil del Usuario Natural
             await db.query('UPDATE usuarios SET puntos = puntos + $1 WHERE id = $2', [juego.puntos_recompensa, req.session.usuarioId]);
             res.json({ correcto: true, mensaje: `¡Correcto! Has ganado ${juego.puntos_recompensa} pts.` });
         } else {
@@ -154,10 +132,8 @@ app.post('/juegos/responder', async (req, res) => {
     }
 });
 
-// Registrar rutas de relatos para el servidor actual
 app.use(relatoRoutes);
 
-// Iniciar el servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor de Wind corriendo en el puerto ${PORT}`);

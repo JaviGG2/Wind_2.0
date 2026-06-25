@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.textContent = 'Publicando...';
         consola.textContent = '';
 
-        // Recolectar datos
         const titulo = document.getElementById('titulo').value;
         const contenido = document.getElementById('contenido').value;
         const imagen = document.getElementById('imagen').files[0];

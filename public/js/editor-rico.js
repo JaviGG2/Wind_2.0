@@ -4,12 +4,10 @@ function inicializarEditor(textareaId, editorId) {
 
     if (!textarea || !editor) return;
 
-    // Pasar contenido inicial del textarea al editor
     if (textarea.value) {
         editor.innerHTML = textarea.value;
     }
 
-    // Sincronizar editor → textarea antes del submit
     const form = textarea.closest('form');
     if (form) {
         form.addEventListener('submit', () => {
@@ -17,7 +15,6 @@ function inicializarEditor(textareaId, editorId) {
         });
     }
 
-    // Atajos de teclado
     editor.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.key === 'b') { e.preventDefault(); document.execCommand('bold'); }
         if (e.ctrlKey && e.key === 'i') { e.preventDefault(); document.execCommand('italic'); }

@@ -1,4 +1,3 @@
-/* Quitar el focus de los elementos, el cuadro azul */
 *:focus:not(:focus-visible) {
     outline: none;
 }
@@ -7,10 +6,6 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-/* DISEÑO */
-
-
-/*Barra de navegacion que esta en menu.js*/
 .barra-navegacion {
     background: #121212;
     display: flex;
@@ -60,17 +55,12 @@
     animation: fadeIn 0.2s ease-out forwards;
 }
 
-/* FIN DEL DISEÑO */
-
 .app-layout {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
-/* RESPONSIVE */
-
-/* Version Movil ---- Anyuil */
 @media (max-width: 768px) {
     .app-layout {
         display: block;
@@ -82,23 +72,23 @@
         left: 50%;
         transform: translateX(-50%);
         width: 85%;
-        padding: 12px 24px; /* side padding to avoid edge clipping */
+        padding: 12px 24px;
         border-radius: 20px;
-        justify-content: space-between; /* distribute items edge-safe */
+        justify-content: space-between;
         flex-direction: row;
         box-sizing: border-box;
-        overflow: visible; /* allow shadows / active states to render outside */
+        overflow: visible;
     }
 
     .nav-link {
-        flex: 0 1 auto; /* avoid uneven stretching */
+        flex: 0 1 auto;
         flex-direction: column;
         font-size: 0.8rem;
         gap: 5px;
-        padding: 10px 12px; /* slightly narrower to fit more items */
+        padding: 10px 12px;
         border-radius: 10px;
         min-width: 48px;
-        min-height: 48px; /* touch target */
+        min-height: 48px;
         align-items: center;
         box-sizing: border-box;
         white-space: nowrap;
@@ -122,20 +112,17 @@
         display: none;
     }
 
-    /* Clase para ocultar la barra al hacer scroll */
     .barra-navegacion.barra-oculta {
         transform: translate(-50%, calc(100% + 20px));
         opacity: 0;
         pointer-events: none;
     }
 
-    /* Mantener las etiquetas visibles, solo mejorar legibilidad en pantallas pequeñas */
     @media (max-width: 360px) {
         .barra-navegacion { padding: 10px; }
     }
 }
 
-/* Version PC ---- Armando */
 @media (min-width: 769px) {
     .app-layout {
         display: flex;

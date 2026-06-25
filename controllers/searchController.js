@@ -123,7 +123,7 @@ exports.consultarIA = async (req, res) => {
         return res.status(400).json({ mensaje: 'Consulta vacía.' });
     }
 
-    const apiKey = process.env.OPENROUTER_API_KEY || 'sk-or-v1-placeholder'; // Usar clave del env o placeholder
+    const apiKey = process.env.OPENROUTER_API_KEY || 'sk-or-v1-placeholder';
 
     try {
         const respuesta = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -131,7 +131,7 @@ exports.consultarIA = async (req, res) => {
             headers: {
                 'Authorization': `Bearer ${apiKey}`,
                 'Content-Type': 'application/json',
-                'HTTP-Referer': 'http://localhost:3000', // Requerido por OpenRouter
+                'HTTP-Referer': 'http://localhost:3000',
                 'X-Title': 'Wind - Ciudad del Viento'
             },
             body: JSON.stringify({

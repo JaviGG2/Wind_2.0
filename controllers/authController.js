@@ -1,13 +1,8 @@
-// controllers/authController.js
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
-const db = require('../config/db'); // Sube un nivel para buscar config
+const db = require('../config/db');
 const nodemailer = require('nodemailer');
 
-// Configuración del transporte de correo utilizando variables de entorno (.env)
-// controllers/authController.js
-
-// CONFIGURACIÓN DE CORREO
 const CORREO_USER = (process.env.CORREO_EMISOR || '').trim();
 const CORREO_PASS = (process.env.CORREO_PASSWORD || '').replace(/\s+/g, '');
 const SENDGRID_KEY = (process.env.SENDGRID_API_KEY || '').trim();
@@ -15,7 +10,6 @@ const sgMail = SENDGRID_KEY ? require('@sendgrid/mail') : null;
 if (sgMail) sgMail.setApiKey(SENDGRID_KEY);
 
 async function enviarCorreo(destino, asunto, html) {
-    // Opción 1: SendGrid (HTTP, nunca bloqueado en Railway)
     if (sgMail) {
         await sgMail.send({
             to: destino,
@@ -26,7 +20,6 @@ async function enviarCorreo(destino, asunto, html) {
         return;
     }
 
-    // Opción 2: SMTP (Gmail u otro)
     const transportador = nodemailer.createTransport(
         process.env.SMTP_HOST
             ? {
@@ -53,7 +46,6 @@ async function enviarCorreo(destino, asunto, html) {
     });
 }
 
-// 1. Registro de Usuarios con Envío de Código por Correo
 exports.registro = async (req, res) => {
     const { nombre, username, correo, contrasena } = req.body;
 
@@ -77,10 +69,8 @@ exports.registro = async (req, res) => {
     try {
         const contrasenaEncriptada = await bcrypt.hash(contrasena, 10);
         
-        // Generamos un código aleatorio de seguridad de 6 dígitos
         const codigoVerificacion = Math.floor(100000 + Math.random() * 900000).toString();
 
-        // Guardamos el usuario con cuenta_activa = FALSE y el código generado
         const consultaSQL = `
             INSERT INTO usuarios (nombre, username, correo, contrasena, rol, codigo_verificacion, cuenta_activa)
             VALUES ($1, $2, $3, $4, $5, $6, FALSE)
@@ -89,7 +79,6 @@ exports.registro = async (req, res) => {
 
         await db.query(consultaSQL, valores);
 
-        // Envío del correo con el código
         const asunto = `${codigoVerificacion} es tu código de verificación en Wind`;
         const htmlCorreo = `
             <div style="font-family: Arial, sans-serif; max-width: 520px; margin: 0 auto; padding: 0;">
@@ -137,7 +126,6 @@ exports.registro = async (req, res) => {
     }
 };
 
-// 2. NUEVO: Verificar Código de Activación enviado por el usuario
 exports.verificarCodigo = async (req, res) => {
     const { correo, codigo } = req.body;
 
@@ -154,12 +142,10 @@ exports.verificarCodigo = async (req, res) => {
 
         const usuario = resultadoBD.rows[0];
 
-        // Comparamos el código que ingresó con el guardado en Neon
         if (usuario.codigo_verificacion !== codigo.trim()) {
             return res.status(400).json({ mensaje: 'El código de verificación es incorrecto o expiró.' });
         }
 
-        // Activamos la cuenta y limpiamos la columna del código
         await db.query(
             'UPDATE usuarios SET cuenta_activa = TRUE, codigo_verificacion = NULL WHERE id = $1',
             [usuario.id]
@@ -175,7 +161,6 @@ exports.verificarCodigo = async (req, res) => {
     }
 };
 
-// 3. Inicio de Sesión (Modificado para bloquear cuentas inactivas)
 exports.login = async (req, res) => {
     const { correo, username, contrasena } = req.body;
     const identificador = correo || username;
@@ -202,7 +187,6 @@ exports.login = async (req, res) => {
         }
 
         
-        // CONTROL DE SEGURIDAD: Si la cuenta no está activa, no lo dejamos pasar
         if (!usuario.cuenta_activa) {
             return res.status(403).json({ 
                 mensaje: 'Tu cuenta está registrada pero aún no ha sido activada.',
@@ -237,9 +221,7 @@ exports.login = async (req, res) => {
     }
 };
 
-// 4. Obtener Perfil
 exports.perfil = async (req, res) => {
-    // Log para depuración: muestra la sesión en la consola del servidor
     console.debug('[authController.perfil] session:', req.session);
 
     if (!req.session.usuario && !req.session.usuarioId) {
@@ -289,7 +271,6 @@ exports.perfil = async (req, res) => {
     }
 };
 
-// 4b. Actualizar Foto de Perfil
 exports.actualizarFotoPerfil = async (req, res) => {
     if (!req.session.usuarioId) {
         return res.status(401).json({ mensaje: 'Debes iniciar sesión.' });
@@ -314,7 +295,6 @@ exports.actualizarFotoPerfil = async (req, res) => {
     }
 };
 
-// 6. Cerrar Sesión (Logout)
 exports.logout = (req, res) => {
     req.session.destroy((err) => {
         if (err) return res.status(500).json({ mensaje: 'No se pudo cerrar la sesión.' });

@@ -1,4 +1,3 @@
-// routes/authRoutes.js
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
@@ -11,8 +10,6 @@ router.get('/auth/perfil', authController.perfil);
 router.post('/auth/logout', authController.logout);
 router.post('/auth/verificar', authController.verificarCodigo);
 router.post('/auth/actualizar-foto', upload.single('foto_perfil'), authController.actualizarFotoPerfil);
-
-// Ruta pública: listar todas las categorías disponibles
 router.get('/api/categorias', async (req, res) => {
     try {
         const result = await db.query('SELECT id, nombre FROM categorias ORDER BY nombre ASC');
@@ -42,6 +39,27 @@ router.post('/api/categorias', async (req, res) => {
         return res.status(500).json({ mensaje: 'Error al crear la categoría.' });
     }
 });
+
+
+router.delete('/api/categorias/:id', async (req, res) => {
+    if (req.session.rol !== 'Especialista') {
+        return res.status(403).json({ mensaje: 'Acceso denegado.' });
+    }
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) return res.status(400).json({ mensaje: 'ID inválido.' });
+
+    try {
+        // Opcional: liberar las referencias antes de borrar
+        await db.query('UPDATE temas SET categoria_id = NULL WHERE categoria_id = $1', [id]);
+        await db.query('UPDATE juegos SET categoria_id = NULL WHERE categoria_id = $1', [id]);
+        
+        await db.query('DELETE FROM categorias WHERE id = $1', [id]);
+        return res.json({ mensaje: 'Categoría eliminada.' });
+    } catch (error) {
+        console.error('Error al eliminar categoría:', error);
+        return res.status(500).json({ mensaje: 'Error al eliminar la categoría.' });
+    }
+})
 
 router.get('/api/usuarios', async (req, res) => {
     if (req.session.rol !== 'Especialista') {

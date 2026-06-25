@@ -30,7 +30,6 @@ exports.crearRelato = async (req, res) => {
     }
 };
 
-// 2. Listar relatos publicados (público)
 exports.obtenerRelatos = async (req, res) => {
     try {
         let querySQL;
