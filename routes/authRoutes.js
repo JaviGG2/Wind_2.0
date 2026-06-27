@@ -10,6 +10,11 @@ router.get('/auth/perfil', authController.perfil);
 router.post('/auth/logout', authController.logout);
 router.post('/auth/verificar', authController.verificarCodigo);
 router.post('/auth/actualizar-foto', upload.single('foto_perfil'), authController.actualizarFotoPerfil);
+router.post('/auth/solicitar-recuperacion', authController.solicitarRecuperacion);
+router.post('/auth/restablecer-contrasena', authController.restablecerContrasena);
+router.post('/auth/actualizar-nombre', authController.actualizarNombre);
+router.post('/auth/actualizar-username', authController.actualizarUsername);
+router.post('/auth/cambiar-contrasena', authController.cambiarContrasena);
 router.get('/api/categorias', async (req, res) => {
     try {
         const result = await db.query('SELECT id, nombre FROM categorias ORDER BY nombre ASC');

@@ -129,7 +129,10 @@
 
 .mensaje-oculto {
     display: none;
+    text-align: center;
 }
+
+
 
 .mensaje-activo {
     display: block;
@@ -179,12 +182,21 @@
 }
 
 .logo-login {
-    display: block;
-    width: 72px;
-    height: 72px;
-    margin: 0 auto 12px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     object-fit: cover;
+    display: block;
+    margin: 0 auto 10px;
+}
+
+.cabecera-login {
+    text-align: center;
+    margin-bottom: 6px;
+}
+
+.cabecera-login h2 {
+    margin: 0;
 }
 
 .input-ayuda {

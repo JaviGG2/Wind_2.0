@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajustes de Perfil - Wind</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/estilos.css">
+    <link rel="stylesheet" href="/css/menu.css">
+    <link rel="stylesheet" href="/css/ajustes-perfil.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Wind">
+    <link rel="apple-touch-icon" href="/img/app.png">
+    <meta name="theme-color" content="#ff4500">
+</head>
+<body>
+    <script src="/js/menu.js"></script>
+    <div class="app-layout">
+        <div id="menu-placeholder"></div>
+        <main class="contenido-principal">
+            <div class="ajustes-root">
+                <div class="ajustes-header">
+                    <a href="/dashboard" class="btn-volver">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                    </a>
+                    <h2>Ajustes de Perfil</h2>
+                </div>
+
+                <div class="ajustes-seccion">
+                    <h4>Información General</h4>
+                    <div id="ajustes-info">
+                        <p><strong>Correo:</strong> <span id="info-correo"></span></p>
+                        <p><strong>Usuario:</strong> <span id="info-username"></span></p>
+                        <p><strong>Rol:</strong> <span id="info-rol"></span></p>
+                        <p><strong>Puntos:</strong> <span id="info-puntos"></span></p>
+                    </div>
+                </div>
+
+                <div class="ajustes-seccion">
+                    <h4>Cambiar Nombre de Usuario</h4>
+                    <div class="ajustes-form-row">
+                        <input type="text" id="input-nuevo-username" class="input" placeholder="Nuevo username (min. 3 caracteres)">
+                        <button id="btn-guardar-username" class="boton-enviar" style="width:auto;">Guardar</button>
+                    </div>
+                    <div id="mensaje-username" class="ajustes-mensaje"></div>
+                </div>
+
+                <div class="ajustes-seccion">
+                    <h4>Foto de Perfil</h4>
+                    <form id="form-foto-perfil">
+                        <input type="file" id="input-foto" accept="image/*" class="input" style="padding:8px;">
+                        <button type="submit" class="boton-enviar" style="width:auto;margin-top:8px;">Subir foto</button>
+                    </form>
+                    <div id="mensaje-foto" class="ajustes-mensaje"></div>
+                </div>
+
+                <div class="ajustes-seccion">
+                    <h4>Cambiar Contraseña</h4>
+                    <div class="ajustes-form-row">
+                        <input type="password" id="input-contrasena-actual" class="input" placeholder="Contraseña actual">
+                    </div>
+                    <div class="ajustes-form-row">
+                        <input type="password" id="input-nueva-contrasena" class="input" placeholder="Nueva contraseña (mín. 6 caracteres)">
+                    </div>
+                    <button id="btn-cambiar-contrasena" class="boton-enviar" style="width:auto;">Cambiar contraseña</button>
+                    <div id="mensaje-contrasena" class="ajustes-mensaje"></div>
+                </div>
+
+                <div id="mensaje-consola" class="mensaje-oculto"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/js/ajustes-perfil.js"></script>
+</body>
+</html>

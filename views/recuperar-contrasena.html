@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Contraseña - Wind</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/estilos.css">
+</head>
+<body>
+    <main class="contenedor-principal">
+        <div class="tarjeta-registro">
+            <h2>Recuperar Contraseña</h2>
+            <p>Ingresa tu correo y te enviaremos un enlace para restablecer tu contraseña.</p>
+
+            <form id="form-recuperar">
+                <div class="grupo-campo">
+                    <label for="correo">Correo electrónico:</label>
+                    <input type="email" id="correo" required placeholder="tu@correo.com">
+                </div>
+                <button type="submit" class="boton-enviar">Enviar enlace</button>
+            </form>
+
+            <div id="mensaje-consola" class="mensaje-oculto"></div>
+
+            <p class="texto-secundario" style="margin-top:16px;">
+                <a href="/login" class="enlace-secundario">Volver al inicio de sesión</a>
+            </p>
+        </div>
+    </main>
+
+    <script src="/js/recuperar-contrasena.js"></script>
+</body>
+</html>

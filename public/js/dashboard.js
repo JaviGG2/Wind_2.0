@@ -309,4 +309,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.cargarMisJuegosCreados = cargarMisJuegosCreados;
     window.cargarCategorias = cargarCategorias;
     window.cargarUsuarios = cargarUsuarios;
+
+
 });

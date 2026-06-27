@@ -7,13 +7,18 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/estilos.css">
+    <link rel="stylesheet" href="/css/info-popup.css">
 </head>
 <body>
     <main class="contenedor-principal">
         <div class="tarjeta-registro">
-            <img src="/img/icon-192.png" alt="Wind" class="logo-login">
-            <h2>Iniciar Sesión</h2>
+            <div class="cabecera-login">
+                <img src="/img/app.png" alt="Wind" class="logo-login">
+                <h2>Iniciar Sesión</h2>
+                
+            </div>
             <p>Ingresa tus credenciales para acceder a Wind.</p>
+
             
             <form id="formulario-login">
                 <div class="grupo-campo">
@@ -28,24 +33,29 @@
                             <span class="material-symbols-outlined">visibility_off</span>
                         </button>
                     </div>
-                </div>
-                <button type="submit" class="boton-enviar">Ingresar</button>
+                </div> 
+                
+                <button type="submit" class="boton-enviar">Ingresar</button> 
+                
+                <div id="mensaje-consola" class="mensaje-oculto"></div>
+
+                <p style="text-align:center;margin-top:12px;">
+                    <a href="/recuperar-contrasena" class="enlace-secundario" style="font-size:0.85rem;">¿Olvidaste tu contraseña?</a>
+                </p>
             </form>
 
             
 
-            <div id="mensaje-consola" class="mensaje-oculto"></div>
+            
             
             <p class="texto-secundario">
                 ¿No tienes cuenta? <a href="/registro" class="enlace-secundario">Regístrate aquí</a>
             </p>
         </div>
-
         
     </main>
 
     <script src="/js/login.js"></script>
+    <script type="module" src="/js/info-burbuja.js"></script>
 </body>
-
-
 </html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restablecer Contraseña - Wind</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/estilos.css">
+</head>
+<body>
+    <main class="contenedor-principal">
+        <div class="tarjeta-registro" id="tarjeta-restablecer">
+            <h2>Nueva Contraseña</h2>
+            <p>Escribe tu nueva contraseña.</p>
+
+            <form id="form-restablecer">
+                <div class="grupo-campo">
+                    <label for="contrasena">Nueva contraseña:</label>
+                    <input type="password" id="contrasena" required minlength="6" placeholder="Mínimo 6 caracteres">
+                </div>
+                <div class="grupo-campo">
+                    <label for="confirmar">Confirmar contraseña:</label>
+                    <input type="password" id="confirmar" required minlength="6" placeholder="Repite la contraseña">
+                </div>
+                <button type="submit" class="boton-enviar">Restablecer</button>
+            </form>
+
+            <div id="mensaje-consola" class="mensaje-oculto"></div>
+
+            <p class="texto-secundario" style="margin-top:16px;">
+                <a href="/login" class="enlace-secundario">Volver al inicio de sesión</a>
+            </p>
+        </div>
+    </main>
+
+    <script src="/js/restablecer-contrasena.js"></script>
+</body>
+</html>

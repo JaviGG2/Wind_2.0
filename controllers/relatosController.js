@@ -84,6 +84,28 @@ exports.obtenerRelatos = async (req, res) => {
     }
 };
 
+exports.obtenerRelato = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const querySQL = `
+            SELECT r.id, r.titulo, r.contenido_relato, r.fecha_publicacion,
+                   r.usuario_id, r.imagen_url,
+                   u.nombre AS autor_nombre
+            FROM relatos_community r
+            LEFT JOIN usuarios u ON r.usuario_id = u.id
+            WHERE r.id = $1
+        `;
+        const resultado = await db.query(querySQL, [id]);
+        if (resultado.rows.length === 0) {
+            return res.status(404).json({ error: 'Relato no encontrado' });
+        }
+        return res.json(resultado.rows[0]);
+    } catch (error) {
+        console.error('Error al obtener relato:', error);
+        return res.status(500).json({ error: 'Error al obtener el relato' });
+    }
+};
+
 exports.obtenerMisRelatos = async (req, res) => {
     try {
         const querySQL = `

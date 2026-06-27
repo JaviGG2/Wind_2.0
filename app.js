@@ -100,6 +100,10 @@ app.get('/relatos', verificarSesion, (req, res) => {
     res.render('relatos');
 });
 
+app.get('/ver-relato', verificarSesion, (req, res) => {
+    res.render('ver-relato');
+});
+
 app.get('/crear-relato', verificarSesion, (req, res) => {
     res.render('crear-relato');
 });
@@ -122,6 +126,9 @@ app.get('/juegos', verificarSesion, (req, res) => res.render('juegos'));
 app.get('/barra_navegacion', (req, res) => res.render('barra_navegacion'));
 app.get('/registro', (req, res) => res.render('Registro'));
 app.get('/login', (req, res) => res.render('login'));
+app.get('/ajustes-perfil', verificarSesion, (req, res) => res.render('ajustes-perfil'));
+app.get('/recuperar-contrasena', (req, res) => res.render('recuperar-contrasena'));
+app.get('/restablecer-contrasena', (req, res) => res.render('restablecer-contrasena'));
 app.get('/', (req, res) => res.render('login'));
 
 const db = require('./config/db');
@@ -145,5 +152,13 @@ app.listen(PORT, async () => {
         console.log('Tabla historial_vistas lista.');
     } catch (err) {
         console.error('Error creando tabla historial_vistas:', err.message);
+    }
+
+    try {
+        await db.query(`ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS reset_token VARCHAR(64)`);
+        await db.query(`ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS reset_token_expiracion TIMESTAMP`);
+        console.log('Columnas reset_token listas.');
+    } catch (err) {
+        console.error('Error agregando columnas reset_token:', err.message);
     }
 });

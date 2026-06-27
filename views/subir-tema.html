@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publicar Tema Histórico - Wind</title>
+    <link rel="stylesheet" href="/css/info-popup.css">
     <link rel="stylesheet" href="/css/base.css">
     <link class="sheet" rel="stylesheet" href="/css/estilos.css">
     <link rel="stylesheet" href="/css/menu.css">
@@ -28,6 +29,9 @@
                 <header class="crear-header">
                     <h1><span class="material-symbols-outlined">menu_book</span> Publicar Tema Histórico</h1>
                     <p class="muted">Registra crónicas, datos arquitectónicos o tradiciones oficiales de Coro.</p>
+                    <button type="button" data-info="crear-tema" class="btn-info-icono" aria-label="Información">
+                    <span class="help">¿Que son los Temas?</span>
+                </button>
                 </header>
 
                 <div class="crear-card">
@@ -112,6 +116,7 @@
 
     <script src="/js/editor-rico.js"></script>
     <script src="/js/subir-tema.js"></script>
+    <script type="module" src="/js/info-burbuja.js"></script>
     <script>
         const fileInput = document.getElementById('imagen_portada');
         const previewContainer = document.getElementById('preview-container');

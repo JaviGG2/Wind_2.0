@@ -268,3 +268,20 @@
 .tag-borrar .material-symbols-outlined {
     font-size: 14px;
 }
+
+.btn-icono-config {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--texto-sec);
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+.btn-icono-config:hover {
+    color: var(--primario);
+    background: var(--primario-light);
+}

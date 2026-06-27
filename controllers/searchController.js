@@ -66,7 +66,7 @@ exports.buscarContenido = async (req, res) => {
                 [term]
             ),
             db.query(
-                `SELECT id, titulo, contenido_relato AS contenido, imagen_url AS imagen, 'relato' AS tipo, '/relatos' AS url
+                `SELECT id, titulo, contenido_relato AS contenido, imagen_url AS imagen, 'relato' AS tipo, '/ver-relato?id=' || id AS url
                  FROM relatos_community
                  WHERE translate(lower(titulo), 'áéíóúÁÉÍÓÚñÑüÜ', 'aeiouaeiounnue') LIKE translate(lower($1), 'áéíóúÁÉÍÓÚñÑüÜ', 'aeiouaeiounnue')
                     OR translate(lower(contenido_relato), 'áéíóúÁÉÍÓÚñÑüÜ', 'aeiouaeiounnue') LIKE translate(lower($1), 'áéíóúÁÉÍÓÚñÑüÜ', 'aeiouaeiounnue')
