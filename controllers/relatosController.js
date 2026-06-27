@@ -1,5 +1,5 @@
 const db = require('../config/db');
-const { subirAImagekit } = require('../middlewares/subidaImagen');
+const { subirASupabase } = require('../middlewares/subidaImagen');
 
 exports.crearRelato = async (req, res) => {
     if (!req.session.usuarioId) {
@@ -13,7 +13,7 @@ exports.crearRelato = async (req, res) => {
     }
 
     try {
-        const imagenUrl = req.file ? await subirAImagekit(req.file, 'comunidad') : null;
+        const imagenUrl = req.file ? await subirASupabase(req.file, 'comunidad') : null;
 
         const querySQL = `
             INSERT INTO relatos_community (titulo, contenido_relato, usuario_id, imagen_url, fecha_publicacion)
@@ -103,6 +103,38 @@ exports.obtenerRelato = async (req, res) => {
     } catch (error) {
         console.error('Error al obtener relato:', error);
         return res.status(500).json({ error: 'Error al obtener el relato' });
+    }
+};
+
+exports.eliminarRelato = async (req, res) => {
+    if (!req.session.usuarioId) {
+        return res.status(401).json({ error: 'No autorizado. Inicie sesión.' });
+    }
+
+    const { id } = req.params;
+
+    try {
+        const result = await db.query(
+            'SELECT usuario_id FROM relatos_community WHERE id = $1',
+            [id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Relato no encontrado' });
+        }
+
+        const esPropietario = result.rows[0].usuario_id === req.session.usuarioId;
+        const esAdmin = req.session.rol === 'Especialista';
+
+        if (!esPropietario && !esAdmin) {
+            return res.status(403).json({ error: 'No tienes permiso para eliminar este relato' });
+        }
+
+        await db.query('DELETE FROM relatos_community WHERE id = $1', [id]);
+        res.json({ mensaje: 'Relato eliminado con éxito' });
+    } catch (error) {
+        console.error('Error al eliminar relato:', error);
+        res.status(500).json({ error: 'Error al eliminar el relato' });
     }
 };
 

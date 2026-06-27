@@ -1,7 +1,7 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const imagekit = require('../config/imagekit');
+const supabase = require('../config/supabase');
 
 const diskStorage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -26,22 +26,35 @@ const upload = multer({
     limits: { fileSize: 5 * 1024 * 1024 }
 });
 
-async function subirAImagekit(file, folder = '') {
+const BUCKET = 'wind-images';
+
+async function subirASupabase(file, folder = '') {
     if (!file) return null;
     try {
-        const imageFile = new File([file.buffer || fs.readFileSync(file.path)], file.originalname, { type: file.mimetype });
-        const result = await imagekit.files.upload({
-            file: imageFile,
-            fileName: `${Date.now()}-${file.originalname}`,
-            folder: folder ? `/wind/${folder}` : '/wind',
-            useUniqueFileName: true,
-        });
-        return result.url;
+        const fileBuffer = fs.readFileSync(file.path);
+        const filePath = folder
+            ? `${folder}/${Date.now()}-${file.originalname}`
+            : `${Date.now()}-${file.originalname}`;
+
+        const { error: uploadError } = await supabase.storage
+            .from(BUCKET)
+            .upload(filePath, fileBuffer, {
+                contentType: file.mimetype,
+                upsert: true
+            });
+
+        if (uploadError) {
+            console.error('Error subiendo a Supabase:', uploadError.message);
+            return `/uploads/${file.filename}`;
+        }
+
+        const { data } = supabase.storage.from(BUCKET).getPublicUrl(filePath);
+        return data.publicUrl;
     } catch (error) {
-        console.error('Error subiendo a ImageKit, usando almacenamiento local:', error.message);
+        console.error('Error en subirASupabase, usando almacenamiento local:', error.message);
         return `/uploads/${file.filename}`;
     }
 }
 
 module.exports = upload;
-module.exports.subirAImagekit = subirAImagekit;
+module.exports.subirASupabase = subirASupabase;

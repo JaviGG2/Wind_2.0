@@ -1,5 +1,5 @@
 const db = require('../config/db');
-const { subirAImagekit } = require('../middlewares/subidaImagen');
+const { subirASupabase } = require('../middlewares/subidaImagen');
 
 exports.subirTema = async (req, res) => {
     if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
@@ -13,7 +13,7 @@ exports.subirTema = async (req, res) => {
     }
 
     try {
-        const rutaImagen = req.file ? await subirAImagekit(req.file, 'temas') : null;
+        const rutaImagen = req.file ? await subirASupabase(req.file, 'temas') : null;
 
         const queryFinal = `
             INSERT INTO temas (titulo, contenido, categoria_id, creador_id, imagen_portada, fecha_publicacion) 
@@ -56,7 +56,7 @@ exports.actualizarTema = async (req, res) => {
     try {
         let queryFinal, parametros;
         if (req.file) {
-            const rutaImagen = await subirAImagekit(req.file, 'temas');
+            const rutaImagen = await subirASupabase(req.file, 'temas');
             queryFinal = `
                 UPDATE temas SET titulo = $1, contenido = $2, categoria_id = $3, imagen_portada = $4 
                 WHERE id = $5 AND creador_id = $6
@@ -207,6 +207,44 @@ exports.likeTema = async (req, res) => {
     } catch (error) {
         console.error('Error al dar like:', error.message);
         return res.status(500).json({ mensaje: 'Error al procesar el like.' });
+    }
+};
+
+exports.eliminarTema = async (req, res) => {
+    if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
+        return res.status(403).json({ mensaje: 'Acceso denegado.' });
+    }
+
+    const id = parseInt(req.params.id, 10);
+    if (Number.isNaN(id)) return res.status(400).json({ mensaje: 'Id inválido.' });
+
+    try {
+        const result = await db.query('SELECT imagen_portada FROM temas WHERE id = $1 AND creador_id = $2', [id, req.session.usuarioId]);
+        if (result.rows.length === 0) {
+            return res.status(404).json({ mensaje: 'Tema no encontrado o no tienes permiso.' });
+        }
+
+        const imagenUrl = result.rows[0].imagen_portada;
+
+        if (imagenUrl && imagenUrl.includes('supabase.co')) {
+            try {
+                const supabase = require('../config/supabase');
+                const bucket = 'wind-images';
+                const parts = imagenUrl.split(`/object/public/${bucket}/`);
+                if (parts.length === 2) {
+                    const filePath = decodeURIComponent(parts[1]);
+                    await supabase.storage.from(bucket).remove([filePath]);
+                }
+            } catch (err) {
+                console.error('Error eliminando imagen de Supabase:', err.message);
+            }
+        }
+
+        await db.query('DELETE FROM temas WHERE id = $1', [id]);
+        res.json({ mensaje: 'Tema eliminado con éxito.' });
+    } catch (err) {
+        console.error('Error al eliminar tema:', err);
+        res.status(500).json({ mensaje: 'Error al eliminar tema.' });
     }
 };
 

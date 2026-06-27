@@ -296,6 +296,30 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
                 acciones.appendChild(verBtn);
 
+                const delBtn = document.createElement('button');
+                delBtn.className = 'boton-secundario';
+                delBtn.textContent = 'Eliminar';
+                delBtn.style.color = '#dc2626';
+                delBtn.style.borderColor = '#fecaca';
+                delBtn.addEventListener('click', async () => {
+                    if (!confirm('¿Eliminar este relato?')) return;
+                    try {
+                        const res = await fetch(`/api/relatos/${relato.id}`, {
+                            method: 'DELETE',
+                            credentials: 'include'
+                        });
+                        if (res.ok) {
+                            cargarMisRelatos();
+                        } else {
+                            const err = await res.json();
+                            alert(err.error || 'Error al eliminar');
+                        }
+                    } catch {
+                        alert('Error de conexión');
+                    }
+                });
+                acciones.appendChild(delBtn);
+
                 item.appendChild(acciones);
                 contenedor.appendChild(item);
             });

@@ -12,5 +12,6 @@ router.get('/api/relatos', relatoController.obtenerRelatos);
 router.get('/api/relatos/:id', relatoController.obtenerRelato);
 router.post('/api/relatos', verificarSesion, upload.single('imagen'), relatoController.crearRelato);
 router.get('/api/mis-relatos', verificarSesion, relatoController.obtenerMisRelatos);
+router.delete('/api/relatos/:id', verificarSesion, relatoController.eliminarRelato);
 
 module.exports = router;

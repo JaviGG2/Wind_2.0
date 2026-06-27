@@ -283,8 +283,8 @@ exports.actualizarFotoPerfil = async (req, res) => {
     }
 
     try {
-        const { subirAImagekit } = require('../middlewares/subidaImagen');
-        const rutaImagen = await subirAImagekit(req.file, 'perfiles');
+        const { subirASupabase } = require('../middlewares/subidaImagen');
+        const rutaImagen = await subirASupabase(req.file, 'perfiles');
 
         await db.query(
             'UPDATE usuarios SET imagen_perfil = $1 WHERE id = $2',
