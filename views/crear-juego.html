@@ -9,10 +9,13 @@
     <link rel="stylesheet" href="/css/menu.css">
     <link rel="stylesheet" href="/css/search.css">
     <link rel="stylesheet" href="/css/formularios-crear.css">
+    <link rel="stylesheet" href="/css/info-popup.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
     <script src="/js/menu.js"></script>
+    <script src="/js/info.js"></script>
+    <script type="module" src="/js/info-burbuja.js"></script>
     <div class="app-layout">
         <div id="menu-placeholder"></div>
         <main class="contenido-principal">
@@ -21,6 +24,12 @@
                     <h1><span class="material-symbols-outlined" style="font-size: 2.2rem; vertical-align: middle;">extension</span> Diseñar Nuevo Juego</h1>
                     <p class="muted">Elige el tipo de juego y crea una experiencia patrimonial única.</p>
                 </header>
+
+                <div>
+                <button type="button" data-info="Diseñar Nivel / Minijuego" class="btn-info-icono" aria-label="Información">
+                <span class="help">¿Para qué sirve?</span>
+                </button>
+                </div>
 
                 <div class="crear-card">
                     <div class="grupo-campo">

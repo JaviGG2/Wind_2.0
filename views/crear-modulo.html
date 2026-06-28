@@ -9,9 +9,12 @@
   <link rel="stylesheet" href="/css/estilos.css">
   <link rel="stylesheet" href="/css/menu.css">
   <link rel="stylesheet" href="/css/formularios-crear.css">
+  <link rel="stylesheet" href="/css/info-popup.css">
 </head>
 <body>
   <script src="/js/menu.js"></script>
+  <script src="/js/info.js"></script>
+  <script type="module" src="/js/info-burbuja.js"></script>
   <div class="app-layout">
     <div id="menu-placeholder"></div>
     <main class="contenido-principal">
@@ -20,6 +23,13 @@
           <h1><span class="material-symbols-outlined">add_box</span> Crear Módulo de Juego</h1>
           <p class="muted">Agrupa varios juegos en niveles dentro de un módulo.</p>
         </header>
+
+        <div>
+        <button type="button" data-info="Crear Relato Oficial o Módulo" class="btn-info-icono" aria-label="Información">
+        <span class="help">¿Para qué sirve?</span>
+        </button>
+        </div>
+
         <div class="crear-card">
           <form id="form-crear-modulo">
             <div class="grupo-campo">

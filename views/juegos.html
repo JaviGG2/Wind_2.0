@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="/css/search.css">
     <link rel="stylesheet" href="/css/juegos-page.css">
     <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="/css/info-popup.css">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Wind">
@@ -27,6 +28,8 @@
 <body>
     <script src="/js/menu.js"></script>
     <script src="/js/search.js"></script>
+    <script src="/js/info.js"></script>
+    <script type="module" src="/js/info-burbuja.js"></script>
 
     <div class="app-layout">
         <div id="buscar-placeholder"></div>
@@ -75,6 +78,15 @@
                     </div>
                 </div>
             </section>
+
+            <div>
+                <button type="button" data-info="Jugar(Arcade)" class="btn-info-icono" aria-label="Información">
+                <span class="help">¿Qué es este apartado?</span>
+                </button>
+                <button type="button" data-info="Jugar (Arcade)" class="btn-info-icono" aria-label="Información">
+                <span class="help">¿Cómo gano puntos?</span>
+                </button>
+            </div>
 
             <section class="filtros-seccion">
                 <div class="filtros-header">
