@@ -1218,6 +1218,7 @@ body {
 .match-btn:hover { border-color: var(--primario); }
 .match-btn.seleccionado { border-color: var(--primario); background: var(--primario-bg); }
 .match-btn.conectado { border-color: #28a745; background: #e8f5e9; color: #1b5e20; pointer-events: none; }
+.match-btn.incorrecto { border-color: #dc3545; background: #ffe8e8; color: #dc3545; }
 
 .scramblee-area {
   display: flex;
