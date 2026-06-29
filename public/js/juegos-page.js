@@ -212,7 +212,7 @@ function mostrarModalJuego(juego) {
         $('#juego-opciones').style.display = '';
     } else if (tipo === 'Match') {
         const conceptos = (juego.pregunta || '').split(',').map(p => p.trim()).filter(Boolean);
-        const respuestas = (juego.opcion_a || '').split(',').map(r => r.trim()).filter(Boolean).sort(() => Math.random() - 0.5);
+        const respuestas = (juego.opcion_a || '').split(',').map((r, i) => ({ texto: r.trim(), idx: i })).filter(r => r.texto).sort(() => Math.random() - 0.5);
         state.matchTotal = conceptos.length;
         $('#modal-pregunta').textContent = 'Conecta cada concepto con su respuesta';
         const caja = document.createElement('div');
@@ -221,20 +221,21 @@ function mostrarModalJuego(juego) {
         colTemas.className = 'match-col';
         const colResps = document.createElement('div');
         colResps.className = 'match-col';
-        conceptos.forEach(c => {
+        conceptos.forEach((c, i) => {
             const btn = document.createElement('button');
             btn.className = 'match-btn';
             btn.textContent = c;
             btn.dataset.tipo = 'concepto';
+            btn.dataset.pos = i;
             btn.addEventListener('click', () => seleccionarMatch(btn, juego));
             colTemas.appendChild(btn);
         });
         respuestas.forEach(r => {
             const btn = document.createElement('button');
             btn.className = 'match-btn';
-            btn.textContent = r;
+            btn.textContent = r.texto;
             btn.dataset.tipo = 'respuesta';
-            btn.dataset.valor = r;
+            btn.dataset.idx = r.idx;
             btn.addEventListener('click', () => seleccionarMatch(btn, juego));
             colResps.appendChild(btn);
         });
@@ -286,7 +287,7 @@ async function responderTrivia(juego, letra, btnElegido) {
 
         const data = await r.json();
         esCorrecta = data.correcto === true;
-        puntosGanados = (data.puntos_ganados || 0) || (esCorrecta ? (juego.puntos_recompensa || 10) : 0);
+        puntosGanados = data.puntos_ganados ?? (esCorrecta ? (juego.puntos_recompensa || 10) : 0);
         if (esCorrecta && Number.isFinite(puntosGanados)) {
             state.puntosUsuario += puntosGanados;
         }
@@ -343,15 +344,24 @@ function seleccionarMatch(btn, juego) {
         state.matchConcepto = btn;
         btn.classList.add('seleccionado');
     } else if (btn.dataset.tipo === 'respuesta' && state.matchConcepto) {
-        btn.classList.add('seleccionado');
-        state.matchConcepto.classList.remove('seleccionado');
-        state.matchConcepto.classList.add('conectado');
-        btn.classList.remove('seleccionado');
-        btn.classList.add('conectado');
-        state.matchConectados++;
-        state.matchConcepto = null;
-        if (state.matchConectados >= state.matchTotal) {
-            completarJuego(juego);
+        const conceptoBtn = state.matchConcepto;
+        if (conceptoBtn.dataset.pos === btn.dataset.idx) {
+            conceptoBtn.classList.remove('seleccionado');
+            conceptoBtn.classList.add('conectado');
+            btn.classList.add('conectado');
+            state.matchConectados++;
+            state.matchConcepto = null;
+            if (state.matchConectados >= state.matchTotal) {
+                completarJuego(juego);
+            }
+        } else {
+            btn.classList.add('incorrecto');
+            conceptoBtn.classList.add('incorrecto');
+            setTimeout(() => {
+                btn.classList.remove('incorrecto', 'seleccionado');
+                conceptoBtn.classList.remove('incorrecto', 'seleccionado');
+                state.matchConcepto = null;
+            }, 500);
         }
     }
 }
@@ -375,7 +385,7 @@ async function responderScramblee(juego) {
         });
         const data = await r.json();
         esCorrecta = data.correcto === true;
-        puntosGanados = (data.puntos_ganados || 0) || (esCorrecta ? (juego.puntos_recompensa || 10) : 0);
+        puntosGanados = data.puntos_ganados ?? (esCorrecta ? (juego.puntos_recompensa || 10) : 0);
         if (esCorrecta && Number.isFinite(puntosGanados)) {
             state.puntosUsuario += puntosGanados;
         }
@@ -400,7 +410,7 @@ async function completarJuego(juego) {
         });
         const data = await r.json();
         esCorrecta = data.correcto === true;
-        puntosGanados = (data.puntos_ganados || 0) || (juego.puntos_recompensa || 10);
+        puntosGanados = data.puntos_ganados ?? (juego.puntos_recompensa || 10);
         if (esCorrecta && Number.isFinite(puntosGanados)) {
             state.puntosUsuario += puntosGanados;
         }

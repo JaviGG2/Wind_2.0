@@ -190,18 +190,29 @@ exports.responderJuego = async (req, res) => {
             esCorrecta = respuesta === palabraCorrecta;
         }
 
-        await db.query(
-            `INSERT INTO historial_vistas (usuario_id, tipo_contenido, contenido_id)
-             VALUES ($1, 'juego', $2)
-             ON CONFLICT (usuario_id, tipo_contenido, contenido_id) DO UPDATE SET fecha_vista = NOW()`,
-            [req.session.usuarioId, juego_id]
-        ).catch(() => {});
-
         if (!esCorrecta) {
             return res.json({
                 correcto: false,
                 puntos_ganados: 0,
                 mensaje: 'Respuesta incorrecta. ¡Sigue intentando!'
+            });
+        }
+
+        const yaCompletado = await db.query(
+            'SELECT id FROM historial_vistas WHERE usuario_id = $1 AND tipo_contenido = $2 AND contenido_id = $3',
+            [req.session.usuarioId, 'juego', juego_id]
+        );
+
+        if (yaCompletado.rows.length > 0) {
+            await db.query(
+                `UPDATE historial_vistas SET fecha_vista = NOW()
+                 WHERE usuario_id = $1 AND tipo_contenido = $2 AND contenido_id = $3`,
+                [req.session.usuarioId, 'juego', juego_id]
+            );
+            return res.json({
+                correcto: true,
+                puntos_ganados: 0,
+                mensaje: 'Ya completaste este juego anteriormente.'
             });
         }
 
@@ -215,6 +226,11 @@ exports.responderJuego = async (req, res) => {
         }
 
         await db.query('UPDATE usuarios SET puntos = puntos + $1 WHERE id = $2', [puntos, req.session.usuarioId]);
+
+        await db.query(
+            'INSERT INTO historial_vistas (usuario_id, tipo_contenido, contenido_id) VALUES ($1, $2, $3)',
+            [req.session.usuarioId, 'juego', juego_id]
+        ).catch(() => {});
 
         return res.json({
             correcto: true,

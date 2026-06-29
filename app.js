@@ -74,6 +74,7 @@ const searchRoutes = require('./routes/searchRoutes');
 const historialRoutes = require('./routes/historialRoutes');
 const comentarioRoutes = require('./routes/comentarioRoutes');
 const moduloRoutes = require('./routes/moduloRoutes');
+const traduccionController = require('./controllers/traduccionController');
 
 
 app.use(authRoutes);
@@ -85,6 +86,7 @@ app.use(searchRoutes);
 app.use(historialRoutes);
 app.use(comentarioRoutes);
 app.use(moduloRoutes);
+app.post('/api/traducir', traduccionController.traducir);
 
 const { verificarSesion, esEspecialista } = require('./middlewares/autenticacion');
 
@@ -130,6 +132,16 @@ app.get('/ajustes-perfil', verificarSesion, (req, res) => res.render('ajustes-pe
 app.get('/recuperar-contrasena', (req, res) => res.render('recuperar-contrasena'));
 app.get('/restablecer-contrasena', (req, res) => res.render('restablecer-contrasena'));
 app.get('/', (req, res) => res.render('login'));
+
+app.get('/ping', async (req, res) => {
+    try {
+        const supabase = require('./config/supabase');
+        await supabase.storage.listBuckets();
+        res.status(200).send('OK');
+    } catch (err) {
+        res.status(500).send('ERROR');
+    }
+});
 
 const db = require('./config/db');
 const PORT = process.env.PORT || 3000;

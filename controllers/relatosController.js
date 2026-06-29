@@ -1,5 +1,6 @@
 const db = require('../config/db');
 const { subirASupabase } = require('../middlewares/subidaImagen');
+const { contieneMalasPalabras } = require('../utils/filter');
 
 exports.crearRelato = async (req, res) => {
     if (!req.session.usuarioId) {
@@ -10,6 +11,10 @@ exports.crearRelato = async (req, res) => {
 
     if (!titulo || !contenido) {
         return res.status(400).json({ error: 'Título y contenido son requeridos' });
+    }
+
+    if (contieneMalasPalabras(titulo, contenido)) {
+        return res.status(400).json({ error: 'Por favor, revisa tu texto y evita lenguaje ofensivo.' });
     }
 
     try {

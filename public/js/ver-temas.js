@@ -52,6 +52,45 @@ document.addEventListener('DOMContentLoaded', async () => {
         bloqueCarga.style.display = 'none';
         bloqueContenido.style.display = 'block';
 
+        const originalTitulo = tema.titulo || '';
+        const originalContenido = tema.contenido || '';
+
+        const btnTraducir = document.getElementById('btn-traducir');
+        const btnOriginal = document.getElementById('btn-original');
+        const selectorIdioma = document.getElementById('idioma-select');
+        const spanTraduciendo = document.getElementById('traduciendo');
+
+        btnTraducir.addEventListener('click', async () => {
+            const idioma = selectorIdioma.value;
+            btnTraducir.disabled = true;
+            spanTraduciendo.style.display = '';
+
+            try {
+                const res = await fetch('/api/traducir', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ textos: [originalTitulo, originalContenido], idioma })
+                });
+                const data = await res.json();
+                if (data.traducciones) {
+                    document.getElementById('txt-titulo').textContent = data.traducciones[0] || originalTitulo;
+                    document.getElementById('txt-cuerpo').innerHTML = data.traducciones[1] || originalContenido;
+                    btnOriginal.style.display = 'inline-block';
+                }
+            } catch (err) {
+                console.error('Error al traducir:', err);
+            } finally {
+                btnTraducir.disabled = false;
+                spanTraduciendo.style.display = 'none';
+            }
+        });
+
+        btnOriginal.addEventListener('click', () => {
+            document.getElementById('txt-titulo').textContent = originalTitulo;
+            document.getElementById('txt-cuerpo').innerHTML = originalContenido;
+            btnOriginal.style.display = 'none';
+        });
+
         cargarComentarios(temaId);
 
         if (window.location.hash === '#comentarios') {

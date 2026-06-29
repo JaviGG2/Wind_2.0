@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const db = require('../config/db');
 const nodemailer = require('nodemailer');
+const { contieneMalasPalabras } = require('../utils/filter');
 
 const CORREO_USER = (process.env.CORREO_EMISOR || '').trim();
 const CORREO_PASS = (process.env.CORREO_PASSWORD || '').replace(/\s+/g, '');
@@ -64,6 +65,10 @@ exports.registro = async (req, res) => {
     }
     if (!/[^a-zA-Z0-9\s]/.test(contrasena)) {
         return res.status(400).json({ mensaje: 'La contraseña debe contener al menos un carácter especial.' });
+    }
+
+    if (contieneMalasPalabras(nombre, username)) {
+        return res.status(400).json({ mensaje: 'Por favor, revisa tu texto y evita lenguaje ofensivo.' });
     }
 
     try {
@@ -386,6 +391,9 @@ exports.actualizarNombre = async (req, res) => {
     if (!nombre || !nombre.trim()) {
         return res.status(400).json({ mensaje: 'El nombre es obligatorio.' });
     }
+    if (contieneMalasPalabras(nombre)) {
+        return res.status(400).json({ mensaje: 'Por favor, revisa tu texto y evita lenguaje ofensivo.' });
+    }
     try {
         await db.query('UPDATE usuarios SET nombre = $1 WHERE id = $2', [nombre.trim(), req.session.usuarioId]);
         req.session.nombre = nombre.trim();
@@ -403,6 +411,9 @@ exports.actualizarUsername = async (req, res) => {
         return res.status(400).json({ mensaje: 'El nombre de usuario es obligatorio.' });
     }
     const usernameLimpio = username.trim().toLowerCase();
+    if (contieneMalasPalabras(usernameLimpio)) {
+        return res.status(400).json({ mensaje: 'Por favor, revisa tu texto y evita lenguaje ofensivo.' });
+    }
     if (usernameLimpio.length < 3) {
         return res.status(400).json({ mensaje: 'El nombre de usuario debe tener al menos 3 caracteres.' });
     }

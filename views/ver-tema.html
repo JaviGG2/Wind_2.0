@@ -23,21 +23,34 @@
 <body>
     <script src="/js/menu.js"></script>
     <main class="pantalla-tema">
-        <a href="/home" class="btn-retroceder" aria-label="Volver al inicio">
-            <span class="material-symbols-outlined back-icon">arrow_back</span>
-            <span class="back-text">Volver al Inicio</span>
-        </a>
+        <div class="barra-superior">
+            <a href="/home" class="btn-retroceder" aria-label="Volver al inicio">
+                <span class="material-symbols-outlined back-icon">arrow_back</span>
+                <span class="back-text"></span>
+            </a>
+            <div class="traductor-toolbar" id="traductor-toolbar">
+                <select id="idioma-select" class="traductor-select">
+                    <option value="en">Inglés</option>
+                    <option value="fr">Francés</option>
+                    <option value="pt">Portugués</option>
+                    <option value="it">Italiano</option>
+                    <option value="de">Alemán</option>
+                </select>
+                <button type="button" id="btn-traducir" class="btn-traducir">Traducir</button>
+                <button type="button" id="btn-original" class="btn-original" style="display:none">Original</button>
+                <span id="traduciendo" class="traduciendo" style="display:none">Traduciendo...</span>
+            </div>
+        </div>
 
         <div id="bloque-carga" class="cargando-contenedor">
             <p>Cargando el contenido patrimonial...</p>
         </div>
 
         <article id="bloque-contenido" class="articulo-patrimonial" style="display: none;">
-            <span id="txt-categoria" class="categoria-tag"></span> 
-            <a id="comentarios-link" href="#seccion-comentarios" class="comentarios-link">Ir a Comentarios</a>
+            <span id="txt-categoria" class="categoria-tag"></span>
             <h1 id="txt-titulo"></h1>
             <p id="txt-meta" class="autor-fecha"></p>
-            
+
             <div id="img-portada" class="imagen-principal"></div>
 
             <div id="txt-cuerpo" class="cuerpo-contenido"></div>

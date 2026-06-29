@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const { contieneMalasPalabras } = require('../utils/filter');
 
 exports.listarComentarios = async (req, res) => {
     const temaId = parseInt(req.params.temaId, 10);
@@ -26,6 +27,7 @@ exports.crearComentario = async (req, res) => {
     const { contenido } = req.body;
     if (Number.isNaN(temaId)) return res.status(400).json({ mensaje: 'ID inválido.' });
     if (!contenido || !contenido.trim()) return res.status(400).json({ mensaje: 'El comentario no puede estar vacío.' });
+    if (contieneMalasPalabras(contenido)) return res.status(400).json({ mensaje: 'Por favor, revisa tu texto y evita lenguaje ofensivo.' });
     try {
         const result = await db.query(
             `INSERT INTO comentarios (usuario_id, tema_id, contenido)

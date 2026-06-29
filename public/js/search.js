@@ -133,7 +133,7 @@ function observeSearchShell() {
 function getSearchWidgetHTML() {
     return `
         <div class="wind-search-shell">
-            <h2 class="wind-search-title">Wind</h2>
+            
             <div class="wind-search-capsule" id="wind-search-capsule">
                 <form class="wind-search-form" id="search-form">
                     <div class="wind-search-input-row">

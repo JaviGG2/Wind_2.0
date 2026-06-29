@@ -3,6 +3,7 @@ const barraHTML = `
   <!-- Importar Material Symbols -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
   <nav class="barra-navegacion">
+    <div class="logo-menu"><img src="/img/app.png" alt="Wind"></div>
     <a href="/home" class="nav-link"><span class="material-symbols-outlined">home</span><span>Descubrir</span></a>
     <a href="/comunidad" class="nav-link"><span class="material-symbols-outlined">Explore</span><span>Comunidad</span></a>
     <a href="/juegos" class="nav-link"><span class="material-symbols-outlined">Play_circle</span><span>Jugar</span></a>

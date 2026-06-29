@@ -9,6 +9,7 @@
     "ejs": "^5.0.1",
     "express": "^5.2.1",
     "express-session": "^1.19.0",
+    "is-bad-word": "^2.0.0",
     "multer": "^2.1.1",
     "nodemailer": "^8.0.10",
     "nunjucks": "^3.2.4",
@@ -19,8 +20,7 @@
   "description": "Nueva versión",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
+    "keepalive": "node scripts/keepalive.js"
   },
   "repository": {
     "type": "git",

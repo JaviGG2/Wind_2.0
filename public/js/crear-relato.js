@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.disabled = true;
         submitBtn.textContent = 'Publicando...';
         consola.textContent = '';
+        consola.style.display = 'block';
 
         const titulo = document.getElementById('titulo').value;
         const contenido = document.getElementById('contenido').value;

@@ -1,5 +1,6 @@
 const db = require('../config/db');
 const { subirASupabase } = require('../middlewares/subidaImagen');
+const { contieneMalasPalabras } = require('../utils/filter');
 
 exports.subirTema = async (req, res) => {
     if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
@@ -10,6 +11,10 @@ exports.subirTema = async (req, res) => {
 
     if (!titulo || !contenido) {
         return res.status(400).json({ mensaje: 'El título y el contenido son obligatorios.' });
+    }
+
+    if (contieneMalasPalabras(titulo, contenido)) {
+        return res.status(400).json({ mensaje: 'Por favor, revisa tu texto y evita lenguaje ofensivo.' });
     }
 
     try {
@@ -51,6 +56,10 @@ exports.actualizarTema = async (req, res) => {
     
     if (!titulo || !contenido) {
         return res.status(400).json({ mensaje: 'El título y el contenido son obligatorios.' });
+    }
+
+    if (contieneMalasPalabras(titulo, contenido)) {
+        return res.status(400).json({ mensaje: 'Por favor, revisa tu texto y evita lenguaje ofensivo.' });
     }
 
     try {
