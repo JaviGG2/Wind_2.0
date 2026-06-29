@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="/css/info-popup.css">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Wind">
@@ -21,6 +22,8 @@
 <body>
 
     <script src="/js/menu.js"></script>
+    <script src="/js/info.js"></script>
+    <script type="module" src="/js/info-burbuja.js"></script>
     <div class="app-layout">
         <div id="menu-placeholder"></div>
         <main class="contenido-principal">
@@ -44,6 +47,12 @@
                 </div>
                 <p id="bienvenida-usuario" class="bienvenida-text">Bienvenido a tu panel personal.</p>
             </header>
+
+            <div>
+                <button type="button" data-info="Perfil(Natural)" class="btn-info-icono" aria-label="Información">
+                <span class="help">¿Qué encuentro aquí?</span>
+                </button>
+            </div>
 
             <section id="seccion-relatos" class="zona-modulo">
                 <h3>Mis Relatos</h3>
@@ -87,6 +96,9 @@
 
             <section id="seccion-admin" class="zona-modulo" style="display:none;">
                 <h3 id="titulo-admin">Admin</h3>
+                <button type="button" data-info="Perfil(Especialista)" class="btn-info-icono" aria-label="Información">
+                <span class="help">¿Qué encuentro aquí?</span>
+                </button>
                 <p class="muted">Panel de administración para gestión de contenido y usuarios.</p>
 
                 <div class="tabs-container" style="margin-top:16px;">

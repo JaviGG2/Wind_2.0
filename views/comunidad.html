@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/css/search.css">
     <link rel="stylesheet" href="/css/comunidad.css">
     <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="/css/info-popup.css">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Wind">
@@ -22,6 +23,8 @@
 <body>
     <script src="/js/menu.js"></script>
     <script src="/js/search.js"></script>
+    <script src="/js/info.js"></script>
+    <script type="module" src="/js/info-burbuja.js"></script>
 
     <div class="app-layout">
         <div id="buscar-placeholder"></div>
@@ -41,6 +44,15 @@
                     </a>
                 </div>
             </section>
+
+                <div>
+                <button type="button" data-info="Comunidad" class="btn-info-icono" aria-label="Información">
+                <span class="help">¿Qué es este apartado?</span>
+                </button>
+                <button type="button" data-info="Relatos" class="btn-info-icono" aria-label="Información">
+                <span class="help">¿Cómo publico mi historia?</span>
+                </button>
+                </div>
 
             <section class="filtros-seccion">
                 <div class="filtros-header">

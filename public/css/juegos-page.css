@@ -197,6 +197,7 @@ body {
 .filtros-titulo {
     font-size: 1.35rem; 
     font-weight: 700;
+    color: black;
     letter-spacing: -0.01em;
     margin: 0;
 }
