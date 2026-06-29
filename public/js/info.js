@@ -48,9 +48,13 @@ export const baseDeConocimiento = {
         titulo: "¿Para qué sirve?",
         contenido: "<p>Para configurar las preguntas, respuestas y retos que darán forma a los nuevos módulos de la zona Arcade(Jugar).</p>"
     },
-    "Crear Relato Oficial o Módulo": {
+    "Crear Modulos": {
         titulo: "¿Para qué sirve?",
-        contenido: "<p>Para registrar contenido estructurado o documentos de apoyo histórico avalados por la cronología institucional de la ciudad.</p>"
+        contenido: "<p>Crea un nivel único para agrupar y almacenar los minijuegos didácticos.</p>"
+    },
+    "Crear Relatos": {
+        titulo: "¿Para qué sirve?",
+        contenido: "<p>Publica tu experiencia personal en un monumento usando texto y una foto opcional.</p>"
     }
 
 };
