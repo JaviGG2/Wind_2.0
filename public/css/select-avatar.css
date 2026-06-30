@@ -75,15 +75,21 @@
 
 .selavatar-tabs {
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
     margin-bottom: 20px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
 }
 
-.selavatar-tabs::-webkit-scrollbar {
-    display: none;
+@media (max-width: 600px) {
+    .selavatar-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    .selavatar-tabs::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 .selavatar-tab {
