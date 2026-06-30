@@ -34,7 +34,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (nombreElem) nombreElem.textContent = usuario.nombre || 'Sin nombre';
         if (usernameElem) usernameElem.textContent = usuario.username ? `${usuario.username}` : '';
         if (rolElem) rolElem.textContent = usuario.rol || '';
-        if (avatarElem && usuario.imagen_perfil) avatarElem.src = usuario.imagen_perfil;
+        if (avatarElem && usuario.imagen_perfil) {
+            avatarElem.src = usuario.imagen_perfil;
+        }
 
         if (!usuario.nombre) {
             mostrarMensaje('Perfil cargado pero falta el nombre en la sesión.', 'error');
@@ -42,6 +44,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         bienvenida.innerHTML = `¡Hola, <strong>${usuario.nombre || 'Usuario'}</strong>! Bienvenido a la plataforma web de preservación digital.`;
+
+        cargarNivel();
 
         configurarVistasPorRol(usuario.rol);
         if (typeof cargarMisRelatos === 'function') cargarMisRelatos();
@@ -84,23 +88,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     function configurarVistasPorRol(rol) {
-        const seccionContenidos = document.getElementById('seccion-contenidos');
-        const seccionRelatos = document.getElementById('seccion-relatos');
-        const seccionAdmin = document.getElementById('seccion-admin');
-        const tituloContenidos = document.getElementById('titulo-contenidos');
-
-        if (seccionContenidos) seccionContenidos.style.display = 'block';
-        if (seccionRelatos) seccionRelatos.style.display = 'block';
+        const accordionAdmin = document.getElementById('accordion-admin');
 
         if (rol === 'Especialista') {
-            if (tituloContenidos) tituloContenidos.textContent = 'Mis Contenidos';
-            if (seccionAdmin) seccionAdmin.style.display = 'block';
+            if (accordionAdmin) accordionAdmin.style.display = '';
             if (typeof cargarMisTemas === 'function') cargarMisTemas();
             if (typeof cargarMisJuegosCreados === 'function') cargarMisJuegosCreados();
             cargarCategorias();
         } else {
-            if (tituloContenidos) tituloContenidos.textContent = 'Historial de Vistas';
-            if (seccionAdmin) seccionAdmin.style.display = 'none';
+            if (accordionAdmin) accordionAdmin.style.display = 'none';
             cargarHistorial();
         }
     }
@@ -333,6 +329,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.cargarMisJuegosCreados = cargarMisJuegosCreados;
     window.cargarCategorias = cargarCategorias;
     window.cargarUsuarios = cargarUsuarios;
-
-
 });
+
+async function cargarNivel() {
+    try {
+        const res = await fetch('/api/usuario/nivel');
+        if (!res.ok) return;
+        const data = await res.json();
+        document.getElementById('nivel-badge').textContent = `Nv ${data.nivel}`;
+        document.getElementById('nivel-titulo').textContent = data.titulo;
+        document.getElementById('nivel-progreso-bar').style.width = `${data.progreso}%`;
+        document.getElementById('nivel-puntos-actual').textContent = data.puntos;
+        document.getElementById('nivel-puntos-siguiente').textContent = data.puntosSiguiente;
+    } catch {}
+}

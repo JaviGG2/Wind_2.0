@@ -158,6 +158,8 @@ exports.completarNivel = async (req, res) => {
     const nivel = await db.query('SELECT id_juego FROM nivel WHERE id = $1 AND id_modulo = $2', [nivelId, moduloId]);
     if (nivel.rows.length === 0) return res.status(404).json({ mensaje: 'Nivel no encontrado.' });
 
+    console.log(`[completarNivel] usuario=${req.session.usuarioId}, moduloId=${moduloId}, nivelId=${nivelId}, id_juego=${nivel.rows[0].id_juego}`);
+
     await db.query(
       `INSERT INTO historial_vistas (usuario_id, tipo_contenido, contenido_id)
        VALUES ($1, 'juego', $2)
@@ -174,8 +176,11 @@ exports.completarNivel = async (req, res) => {
     );
 
     if (existente.rows.length > 0) {
+      console.log(`[completarNivel] YA COMPLETADO: usuario=${req.session.usuarioId}, nivel=${nivelId}`);
       return res.json({ mensaje: 'Ya completaste este nivel.', puntos_obtenidos: existente.rows[0].puntos_obtenidos });
     }
+
+    console.log(`[completarNivel] dando ${puntos} pts por nivel ${nivelId}`);
 
     await db.query(
       'INSERT INTO progreso_modulo (usuario_id, modulo_id, nivel_id, completado, puntos_obtenidos) VALUES ($1,$2,$3,true,$4)',
@@ -183,6 +188,8 @@ exports.completarNivel = async (req, res) => {
     );
 
     await db.query('UPDATE usuarios SET puntos = COALESCE(puntos,0) + $1 WHERE id = $2', [puntos, req.session.usuarioId]);
+
+    console.log(`[completarNivel] PUNTOS ACTUALIZADOS: +${puntos} para usuario ${req.session.usuarioId}`);
 
     return res.json({ mensaje: 'Nivel completado.', puntos_obtenidos: puntos });
   } catch (error) {

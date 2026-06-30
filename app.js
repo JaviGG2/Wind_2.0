@@ -74,21 +74,32 @@ const searchRoutes = require('./routes/searchRoutes');
 const historialRoutes = require('./routes/historialRoutes');
 const comentarioRoutes = require('./routes/comentarioRoutes');
 const moduloRoutes = require('./routes/moduloRoutes');
+const notificacionRoutes = require('./routes/notificacionRoutes');
 const traduccionController = require('./controllers/traduccionController');
+const { verificarSesion, esEspecialista } = require('./middlewares/autenticacion');
+const { calcularNivel } = require('./utils/niveles');
 
+app.get('/api/usuario/nivel', verificarSesion, async (req, res) => {
+    try {
+        const result = await db.query('SELECT puntos FROM usuarios WHERE id = $1', [req.session.usuarioId]);
+        const puntos = result.rows[0]?.puntos || 0;
+        res.json(calcularNivel(puntos));
+    } catch (error) {
+        console.error('Error al obtener nivel:', error);
+        res.status(500).json({ mensaje: 'Error al cargar nivel.' });
+    }
+});
 
 app.use(authRoutes);
 app.use(juegoRoutes);
 app.use(temaRoutes);
-app.use(juegoRoutes);
 app.use(relatoRoutes);
 app.use(searchRoutes);
 app.use(historialRoutes);
 app.use(comentarioRoutes);
 app.use(moduloRoutes);
+app.use(notificacionRoutes);
 app.post('/api/traducir', traduccionController.traducir);
-
-const { verificarSesion, esEspecialista } = require('./middlewares/autenticacion');
 
 app.get('/home', verificarSesion, (req, res) => {
     res.render('home');
@@ -118,6 +129,10 @@ app.get('/editar-tema', verificarSesion, esEspecialista, (req, res) => {
     res.render('editar-tema');
 });
 
+app.get('/notificaciones', verificarSesion, (req, res) => {
+    res.render('notificaciones');
+});
+
 app.get('/ver-tema', verificarSesion, (req, res) => {
     res.render('ver-tema');
 });
@@ -129,6 +144,7 @@ app.get('/barra_navegacion', (req, res) => res.render('barra_navegacion'));
 app.get('/registro', (req, res) => res.render('Registro'));
 app.get('/login', (req, res) => res.render('login'));
 app.get('/ajustes-perfil', verificarSesion, (req, res) => res.render('ajustes-perfil'));
+app.get('/select-avatar', verificarSesion, (req, res) => res.render('select-avatar'));
 app.get('/recuperar-contrasena', (req, res) => res.render('recuperar-contrasena'));
 app.get('/restablecer-contrasena', (req, res) => res.render('restablecer-contrasena'));
 app.get('/', (req, res) => res.render('login'));
@@ -172,5 +188,14 @@ app.listen(PORT, async () => {
         console.log('Columnas reset_token listas.');
     } catch (err) {
         console.error('Error agregando columnas reset_token:', err.message);
+    }
+
+    try {
+        await db.query(`ALTER TABLE usuarios ALTER COLUMN imagen_perfil TYPE TEXT USING imagen_perfil::TEXT`);
+        console.log('Columna imagen_perfil migrada a TEXT.');
+    } catch (err) {
+        if (err.code !== '42703') {
+            console.error('Error migrando imagen_perfil:', err.message);
+        }
     }
 });

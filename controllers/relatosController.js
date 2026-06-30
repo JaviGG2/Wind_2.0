@@ -46,7 +46,8 @@ exports.obtenerRelatos = async (req, res) => {
             querySQL = `
                 SELECT r.id, r.titulo, r.contenido_relato, r.fecha_publicacion,
                        r.usuario_id, r.imagen_url,
-                       u.nombre AS autor_nombre
+                       u.nombre AS autor_nombre,
+                       u.imagen_perfil AS autor_avatar
                 FROM relatos_community r
                 LEFT JOIN usuarios u ON r.usuario_id = u.id
                 WHERE r.categoria = $1
@@ -58,7 +59,8 @@ exports.obtenerRelatos = async (req, res) => {
             querySQL = `
                 SELECT r.id, r.titulo, r.contenido_relato, r.fecha_publicacion,
                        r.usuario_id, r.imagen_url,
-                       u.nombre AS autor_nombre
+                       u.nombre AS autor_nombre,
+                       u.imagen_perfil AS autor_avatar
                 FROM relatos_community r
                 LEFT JOIN usuarios u ON r.usuario_id = u.id
                 ORDER BY r.fecha_publicacion DESC

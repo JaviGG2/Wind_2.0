@@ -318,6 +318,25 @@ select.input {
     color: var(--primario);
 }
 
+/* --- Botón volver atrás (icono simple) --- */
+.btn-volver {
+    display: flex;
+    align-items: center;
+    color: #888;
+    text-decoration: none;
+    padding: 6px;
+    border-radius: 50%;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+.btn-volver:hover {
+    color: #ff4500;
+    background: rgba(255, 69, 0, 0.1);
+}
+
 @media (max-width: 640px) {
     :root {
         --spacing-lg: 16px;

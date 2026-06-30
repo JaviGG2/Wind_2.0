@@ -133,7 +133,6 @@ function observeSearchShell() {
 function getSearchWidgetHTML() {
     return `
         <div class="wind-search-shell">
-            
             <div class="wind-search-capsule" id="wind-search-capsule">
                 <form class="wind-search-form" id="search-form">
                     <div class="wind-search-input-row">
@@ -170,6 +169,20 @@ function getSearchWidgetHTML() {
                         <div class="search-instruction">
                             <p>Escribe al menos 2 caracteres para buscar.</p>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="wind-search-categorias">
+                <button type="button" class="cat-chip active" data-cat="todo">Todo</button>
+                <div class="cat-select-wrapper">
+                    <button type="button" class="cat-select-trigger" id="cat-select-trigger">
+                        <span class="cat-select-value" id="cat-select-value">Categoría</span>
+                        <svg class="cat-select-arrow" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M11 5H5l3 3.5z"/>
+                        </svg>
+                    </button>
+                    <div class="cat-select-popup" id="cat-select-popup">
+                        <div class="cat-select-list" id="cat-select-list"></div>
                     </div>
                 </div>
             </div>
@@ -307,6 +320,20 @@ function crearBuscador() {
         });
     });
 
+    document.querySelectorAll('.cat-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+        });
+    });
+
+    const catSelect = document.getElementById('cat-select');
+    if (catSelect) {
+        catSelect.addEventListener('change', () => {
+            document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+        });
+    }
+
     document.addEventListener('click', (event) => {
         if (!capsule || !capsule.classList.contains('wind-search-capsule--expanded')) return;
         if (capsule.contains(event.target)) return;
@@ -316,11 +343,66 @@ function crearBuscador() {
     });
 }
 
+async function cargarCategoriasToolbar() {
+    const list = document.getElementById('cat-select-list');
+    const trigger = document.getElementById('cat-select-trigger');
+    const valueEl = document.getElementById('cat-select-value');
+    const popup = document.getElementById('cat-select-popup');
+    if (!list) return;
+    try {
+        const res = await fetch('/api/categorias');
+        if (!res.ok) return;
+        const cats = await res.json();
+
+        function cerrarSelect(e) {
+            if (!popup?.contains(e.target) && e.target !== trigger) {
+                popup.classList.remove('open');
+                document.removeEventListener('click', cerrarSelect);
+            }
+        }
+
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = popup.classList.toggle('open');
+            if (isOpen) {
+                setTimeout(() => document.addEventListener('click', cerrarSelect), 0);
+            } else {
+                document.removeEventListener('click', cerrarSelect);
+            }
+        });
+
+        cats.forEach(c => {
+            const item = document.createElement('button');
+            item.type = 'button';
+            item.className = 'cat-select-item';
+            item.dataset.value = c.id;
+            item.innerHTML = `
+                <span class="cat-select-check">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m2.5 8.5 4 4 7-9"/>
+                    </svg>
+                </span>
+                <span class="cat-select-item-text">${c.nombre}</span>
+            `;
+            item.addEventListener('click', () => {
+                valueEl.textContent = c.nombre;
+                popup.classList.remove('open');
+                document.removeEventListener('click', cerrarSelect);
+                document.querySelectorAll('.cat-chip').forEach(ch => ch.classList.remove('active'));
+                document.querySelectorAll('.cat-select-item').forEach(i => i.classList.remove('selected'));
+                item.classList.add('selected');
+            });
+            list.appendChild(item);
+        });
+    } catch {}
+}
+
 function insertarBuscador() {
     const root = document.getElementById('buscar-placeholder');
     if (root) {
         root.innerHTML = getSearchWidgetHTML();
         crearBuscador();
+        cargarCategoriasToolbar();
         observeSearchShell();
     }
 }
@@ -330,5 +412,6 @@ window.addEventListener('DOMContentLoaded', () => {
         insertarBuscador();
     } else if (document.getElementById('search-form')) {
         crearBuscador();
+        cargarCategoriasToolbar();
     }
 });

@@ -47,6 +47,8 @@ function insertarBarra() {
   }
 
   iniciarScrollMenu();
+  actualizarBadge();
+  setInterval(actualizarBadge, 30000);
 }
 
 window.addEventListener('pageshow', (event) => {
@@ -76,6 +78,25 @@ function iniciarScrollMenu() {
 
     lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
   }, { passive: true });
+}
+
+async function actualizarBadge() {
+  const badge = document.getElementById('notif-badge');
+  if (!badge) return;
+  try {
+    const res = await fetch('/api/notificaciones/no-leidas', { credentials: 'include' });
+    if (!res.ok) return;
+    const data = await res.json();
+    const total = data.total || 0;
+    if (total > 0) {
+      badge.textContent = total > 99 ? '99+' : total;
+      badge.style.display = 'flex';
+    } else {
+      badge.style.display = 'none';
+    }
+  } catch (err) {
+    /* silent */
+  }
 }
 
 if (document.readyState === 'loading') {

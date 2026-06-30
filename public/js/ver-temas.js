@@ -130,7 +130,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         comentariosLista.innerHTML = comentarios.map(c => `
             <div class="comentario-item" data-id="${c.id}">
                 <div class="comentario-avatar">
-                    <span class="material-symbols-outlined">person</span>
+                    ${c.usuario_avatar
+                        ? `<img src="${c.usuario_avatar}" alt="" class="comentario-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display=''">
+                           <span class="material-symbols-outlined" style="display:none;">person</span>`
+                        : `<span class="material-symbols-outlined">person</span>`
+                    }
                 </div>
                 <div class="comentario-cuerpo">
                     <div class="comentario-encabezado">

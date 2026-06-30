@@ -15,6 +15,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Wind">
     <link rel="apple-touch-icon" href="/img/app.png">
+    <link rel="stylesheet" href="/css/animaciones.css">
     <meta name="theme-color" content="#ff4500">
 </head>
 <body>
@@ -22,6 +23,11 @@
     <div class="app-layout">
         <div id="menu-placeholder"></div>
         <main class="contenido-principal">
+            <div style="margin-bottom:8px;">
+                <a href="javascript:void(0)" class="btn-volver" onclick="history.back()" aria-label="Volver">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </a>
+            </div>
             <div class="album-root">
                 <header class="album-header">
                     <h1><span class="material-symbols-outlined" style="vertical-align:middle;">photo_library</span> Mi Álbum de Recuerdos</h1>

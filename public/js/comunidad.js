@@ -147,12 +147,14 @@ function abrirModal(relato) {
 
     overlay.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+    document.body.classList.add('modal-open');
 }
 
 function cerrarModal() {
     const overlay = document.getElementById('modal-relato');
     if (overlay) overlay.style.display = 'none';
     document.body.style.overflow = '';
+    document.body.classList.remove('modal-open');
 }
 
 function inicializarModal() {

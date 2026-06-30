@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/css/subir-tema.css">
     <link rel="stylesheet" href="/css/editor-rico.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="/css/animaciones.css">
     <link rel="manifest" href="/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -25,6 +26,11 @@
     <div class="app-layout">
         <div id="menu-placeholder"></div>
         <main class="contenido-principal">
+            <div style="margin-bottom:8px;">
+                <a href="javascript:void(0)" class="btn-volver" onclick="history.back()">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </a>
+            </div>
             <div class="crear-container">
                 <header class="crear-header">
                     <h1><span class="material-symbols-outlined">menu_book</span> Publicar Tema Histórico</h1>
@@ -104,11 +110,6 @@
 
                     <div id="mensaje-consola" class="mensaje-oculto"></div>
 
-                    <p class="enlace-volver">
-                        <a href="/dashboard" class="enlace-secundario">
-                            <span class="material-symbols-outlined">arrow_back</span> Volver al Panel
-                        </a>
-                    </p>
                 </div>
             </div>
         </main>

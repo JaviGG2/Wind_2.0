@@ -16,137 +16,159 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Wind">
     <link rel="apple-touch-icon" href="/img/app.png">
+    <link rel="stylesheet" href="/css/animaciones.css">
     <meta name="theme-color" content="#ff4500">
 
 </head>
 <body>
 
     <script src="/js/menu.js"></script>
-    <script src="/js/info.js"></script>
     <script type="module" src="/js/info-burbuja.js"></script>
     <div class="app-layout">
         <div id="menu-placeholder"></div>
         <main class="contenido-principal">
-        <div class="dashboard-root">
+        <div class="dashboard-root anim-fade-down">
             <header class="dashboard-header">
-                <div class="perfil-cabecera">
-                    <img id="perfil-avatar" src="/img/avatar.svg" alt="avatar" class="perfil-avatar">
-                    <div class="perfil-info">
-                        <div class="perfil-meta">
-                            <h2 id="nombre-usuario">Panel de Control</h2>
-                            <div id="username" class="muted username">&nbsp;</div>
+                <div class="dashboard-header-top">
+                    <div class="perfil-cabecera">
+                        <img id="perfil-avatar" src="/img/avatar.svg" alt="avatar" class="perfil-avatar">
+                        <div class="perfil-info">
+                            <div class="perfil-meta">
+                                <h2 id="nombre-usuario">Panel de Control</h2>
+                                <div id="username" class="muted username">&nbsp;</div>
+                            </div>
+                            <div id="rol-usuario" class="rol-usuario">Cargando perfil...</div>
                         </div>
-                        <div id="rol-usuario" class="rol-usuario">Cargando perfil...</div>
                     </div>
                     <div class="perfil-acciones">
                         <a href="/ajustes-perfil" class="btn-icono-config" aria-label="Configuración">
                             <span class="material-symbols-outlined">settings</span>
                         </a>
-                        <button id="btn-logout" class="boton-secundario">Cerrar Sesión</button>
+                        <button id="btn-logout" class="btn-icono-config" aria-label="Cerrar sesión">
+                            <span class="material-symbols-outlined">logout</span>
+                        </button>
                     </div>
                 </div>
                 <p id="bienvenida-usuario" class="bienvenida-text">Bienvenido a tu panel personal.</p>
+                <div class="nivel-bar" id="nivel-bar">
+                    <div class="nivel-header">
+                        <span class="nivel-badge" id="nivel-badge">Nv 1</span>
+                        <span class="nivel-titulo" id="nivel-titulo">Novato</span>
+                    </div>
+                    <div class="nivel-progreso">
+                        <div class="nivel-progreso-bar" id="nivel-progreso-bar"></div>
+                    </div>
+                    <div class="nivel-puntos">
+                        <span><span id="nivel-puntos-actual">0</span> pts</span>
+                        <span>Próximo nivel: <span id="nivel-puntos-siguiente">100</span> pts</span>
+                    </div>
+                </div>
             </header>
 
-            <div>
-                <button type="button" data-info="Perfil(Natural)" class="btn-info-icono" aria-label="Información">
-                <span class="help">¿Qué encuentro aquí?</span>
+            <div class="accordion">
+              <div class="accordion-item">
+                <button class="accordion-trigger" aria-expanded="false">
+                  <span class="accordion-title">Mis Relatos</span>
+                  <span class="accordion-icon material-symbols-outlined">add</span>
                 </button>
-            </div>
+                <div class="accordion-panel">
+                  <section id="seccion-relatos" class="zona-modulo" style="border:none;padding:0;margin:0;">
+                    <p class="muted">Aquí puedes gestionar tus relatos publicados y crear nuevos.</p>
+                    <div class="acciones-row">
+                      <a href="/crear-relato" class="boton-enviar">Crear Nuevo Relato</a>
+                    </div>
+                    <div id="lista-mis-relatos" class="lista-temas" style="margin-top:12px;">
+                      <p class="muted center">Cargando tus relatos...</p>
+                    </div>
+                  </section>
+                </div>
+              </div>
 
-            <section id="seccion-relatos" class="zona-modulo">
-                <h3>Mis Relatos</h3>
-                <p class="muted">Aquí puedes gestionar tus relatos publicados y crear nuevos.</p>
-                <div class="acciones-row">
-                    <a href="/crear-relato" class="boton-enviar">Crear Nuevo Relato</a>
-                </div>
-                <div id="lista-mis-relatos" class="lista-temas" style="min-height: 100px; margin-top:12px;">
-                    <p class="muted center">Cargando tus relatos...</p>
-                </div>
-            </section>
-            <section id="seccion-contenidos" class="zona-modulo">
-                <h3 id="titulo-contenidos">Mis Contenidos</h3>
-                <p class="muted">Explora y administra tus temas y juegos desde un solo lugar.</p>
-                
-                <div class="tabs-container">
-                    <div class="tabs-header">
+              <div class="accordion-item">
+                <button class="accordion-trigger" aria-expanded="false">
+                  <span class="accordion-title">Mis Contenidos</span>
+                  <span class="accordion-icon material-symbols-outlined">add</span>
+                </button>
+                <div class="accordion-panel">
+                  <section id="seccion-contenidos" class="zona-modulo" style="border:none;padding:0;margin:0;">
+                    <p class="muted">Explora y administra tus temas y juegos desde un solo lugar.</p>
+                    <div class="tabs-container">
+                      <div class="tabs-header">
                         <button class="tab-button active" onclick="switchTab('juegos')">Juegos</button>
                         <button class="tab-button" onclick="switchTab('temas')">Temas</button>
-                    </div>
-                    
-                    <div id="tab-juegos" class="tab-content active">
+                      </div>
+                      <div id="tab-juegos" class="tab-content active">
                         <div class="juego-panel" style="margin-top: 15px;">
-                            <h4>Juegos Publicados</h4>
-                            <p class="muted">Estos juegos ya están disponibles para la comunidad.</p>
-                            <div id="lista-juegos-publicados" class="lista-juegos">
-                                <p class="muted center">Cargando juegos publicados...</p>
-                            </div>
+                          <h4>Juegos Publicados</h4>
+                          <p class="muted">Estos juegos ya están disponibles para la comunidad.</p>
+                          <div id="lista-juegos-publicados" class="lista-juegos">
+                            <p class="muted center">Cargando juegos publicados...</p>
+                          </div>
                         </div>
-                    </div>
-
-                    <div id="tab-temas" class="tab-content" style="display: none;">
+                      </div>
+                      <div id="tab-temas" class="tab-content" style="display: none;">
                         <h4>Temas Subidos</h4>
                         <p class="muted">Tus temas históricos publicados en la plataforma.</p>
-                        <div id="lista-temas-subidos" class="lista-temas" style="min-height: 140px; margin-top:12px;">
-                            <p class="muted center">Cargando temas subidos...</p>
+                        <div id="lista-temas-subidos" class="lista-temas" style="margin-top:12px;">
+                          <p class="muted center">Cargando temas subidos...</p>
                         </div>
+                      </div>
                     </div>
+                  </section>
                 </div>
-            </section>
+              </div>
 
-            <section id="seccion-admin" class="zona-modulo" style="display:none;">
-                <h3 id="titulo-admin">Admin</h3>
-                <button type="button" data-info="Perfil(Especialista)" class="btn-info-icono" aria-label="Información">
-                <span class="help">¿Qué encuentro aquí?</span>
+              <div class="accordion-item" id="accordion-admin" style="display:none;">
+                <button class="accordion-trigger" aria-expanded="false">
+                  <span class="accordion-title">Herramientas</span>
+                  <span class="accordion-icon material-symbols-outlined">add</span>
                 </button>
-                <p class="muted">Panel de administración para gestión de contenido y usuarios.</p>
-
-                <div class="tabs-container" style="margin-top:16px;">
-                    <div class="tabs-header">
+                <div class="accordion-panel">
+                  <section id="seccion-admin" class="zona-modulo" style="border:none;padding:0;margin:0;">
+                    <p class="muted">Panel de administración para gestión de contenido y usuarios.</p>
+                    <div class="tabs-container" style="margin-top:16px;">
+                      <div class="tabs-header">
                         <button class="tab-button active" onclick="switchAdminTab('crear-juego')">Crear Juego</button>
                         <button class="tab-button" onclick="switchAdminTab('crear-tema')">Crear Tema</button>
                         <button class="tab-button" onclick="switchAdminTab('crear-modulo')">Crear Módulo</button>
                         <button class="tab-button" onclick="switchAdminTab('categorias')">Categorías</button>
-                       <!-- <button class="tab-button" onclick="switchAdminTab('usuarios')">Usuarios</button> -->
-                    </div>
-
-                    <div id="admin-tab-crear-juego" class="tab-content active" style="margin-top:16px;">
+                      </div>
+                      <div id="admin-tab-crear-juego" class="tab-content active" style="margin-top:16px;">
                         <p class="muted">Diseña una nueva trivia patrimonial.</p>
                         <a href="/crear-juego" class="boton-enviar" style="display:inline-flex;">Ir a Crear Juego</a>
-                    </div>
-
-                    <div id="admin-tab-crear-tema" class="tab-content" style="display:none; margin-top:16px;">
+                      </div>
+                      <div id="admin-tab-crear-tema" class="tab-content" style="display:none; margin-top:16px;">
                         <p class="muted">Publica un nuevo tema histórico oficial.</p>
                         <a href="/subir-tema" class="boton-enviar" style="display:inline-flex;">Ir a Publicar Tema</a>
-                    </div>
-
-                    <div id="admin-tab-crear-modulo" class="tab-content" style="display:none; margin-top:16px;">
+                      </div>
+                      <div id="admin-tab-crear-modulo" class="tab-content" style="display:none; margin-top:16px;">
                         <p class="muted">Agrupa varios juegos en niveles dentro de un módulo.</p>
                         <a href="/admin/crear-modulo" class="boton-enviar" style="display:inline-flex;">Ir a Crear Módulo</a>
                         <div style="margin-top:12px;">
-                            <a href="/admin/modulos" class="boton-secundario" style="display:inline-flex;">Mis Módulos</a>
+                          <a href="/admin/modulos" class="boton-secundario" style="display:inline-flex;">Mis Módulos</a>
                         </div>
-                    </div>
-
-                    <div id="admin-tab-categorias" class="tab-content" style="display:none; margin-top:16px;">
+                      </div>
+                      <div id="admin-tab-categorias" class="tab-content" style="display:none; margin-top:16px;">
                         <p class="muted">Gestiona las categorías para temas y relatos.</p>
                         <div style="display:flex; gap:10px; margin-bottom:16px;">
-                            <input type="text" id="input-nueva-categoria" class="input" placeholder="Nombre de la categoría" style="flex:1;">
-                            <button id="btn-agregar-categoria" class="boton-enviar" style="width:auto; padding:12px 20px;">Agregar</button>
+                          <input type="text" id="input-nueva-categoria" class="input" placeholder="Nombre de la categoría" style="flex:1;">
+                          <button id="btn-agregar-categoria" class="boton-enviar" style="width:auto; padding:12px 20px;">Agregar</button>
                         </div>
                         <div id="lista-categorias" class="lista-temas">
-                            <p class="muted center">Cargando categorías...</p>
+                          <p class="muted center">Cargando categorías...</p>
                         </div>
-                    </div>
-
-                    <div id="admin-tab-usuarios" class="tab-content" style="display:none; margin-top:16px;">
+                      </div>
+                      <div id="admin-tab-usuarios" class="tab-content" style="display:none; margin-top:16px;">
                         <p class="muted">Listado de todos los usuarios registrados.</p>
                         <div id="lista-usuarios" class="lista-temas">
-                            <p class="muted center">Cargando usuarios...</p>
+                          <p class="muted center">Cargando usuarios...</p>
                         </div>
+                      </div>
                     </div>
+                  </section>
                 </div>
-            </section>
+              </div>
+            </div>
 
             <div id="mensaje-consola" class="mensaje-oculto"></div>
         </div>
@@ -185,6 +207,25 @@
             if (tabId === 'categorias' && typeof cargarCategorias === 'function') cargarCategorias();
             if (tabId === 'usuarios' && typeof cargarUsuarios === 'function') cargarUsuarios();
         }
+
+        document.querySelectorAll('.accordion-trigger').forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                const item = trigger.closest('.accordion-item');
+                const isOpen = item.classList.contains('is-open');
+                const panel = item.querySelector('.accordion-panel');
+                if (isOpen) {
+                    panel.style.maxHeight = panel.scrollHeight + 'px';
+                    requestAnimationFrame(() => {
+                        item.classList.remove('is-open');
+                        panel.style.maxHeight = '0';
+                    });
+                } else {
+                    item.classList.add('is-open');
+                    panel.style.removeProperty('max-height');
+                }
+                trigger.setAttribute('aria-expanded', !isOpen);
+            });
+        });
     </script>
 </body>
 </html>

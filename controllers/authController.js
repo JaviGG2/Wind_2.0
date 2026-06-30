@@ -4,6 +4,29 @@ const db = require('../config/db');
 const nodemailer = require('nodemailer');
 const { contieneMalasPalabras } = require('../utils/filter');
 
+const ESTILOS_AVATAR = ['avataaars', 'adventurer', 'shapes', 'lorelei'];
+
+let _createAvatar, _estilos = {};
+async function initDicebear() {
+    if (_createAvatar) return;
+    const core = await import('@dicebear/core');
+    _createAvatar = core.createAvatar;
+    const mods = await Promise.all([
+        import('@dicebear/avataaars'),
+        import('@dicebear/adventurer'),
+        import('@dicebear/shapes'),
+        import('@dicebear/lorelei')
+    ]);
+    ESTILOS_AVATAR.forEach((nombre, i) => _estilos[nombre] = mods[i]);
+}
+
+async function generarAvatarSVG(seed, estilo = 'avataaars') {
+    if (!ESTILOS_AVATAR.includes(estilo)) estilo = 'avataaars';
+    await initDicebear();
+    const avatarSvg = _createAvatar(_estilos[estilo], { seed });
+    return `data:image/svg+xml;base64,${Buffer.from(avatarSvg.toString()).toString('base64')}`;
+}
+
 const CORREO_USER = (process.env.CORREO_EMISOR || '').trim();
 const CORREO_PASS = (process.env.CORREO_PASSWORD || '').replace(/\s+/g, '');
 const SENDGRID_KEY = (process.env.SENDGRID_API_KEY || '').trim();
@@ -76,11 +99,12 @@ exports.registro = async (req, res) => {
         
         const codigoVerificacion = Math.floor(100000 + Math.random() * 900000).toString();
 
+        const avatarUri = await generarAvatarSVG(username);
         const consultaSQL = `
-            INSERT INTO usuarios (nombre, username, correo, contrasena, rol, codigo_verificacion, cuenta_activa)
-            VALUES ($1, $2, $3, $4, $5, $6, FALSE)
+            INSERT INTO usuarios (nombre, username, correo, contrasena, rol, codigo_verificacion, cuenta_activa, imagen_perfil)
+            VALUES ($1, $2, $3, $4, $5, $6, FALSE, $7)
         `;
-        const valores = [nombre, username, correo, contrasenaEncriptada, 'Natural', codigoVerificacion];
+        const valores = [nombre, username, correo, contrasenaEncriptada, 'Natural', codigoVerificacion, avatarUri];
 
         await db.query(consultaSQL, valores);
 
@@ -255,6 +279,13 @@ exports.perfil = async (req, res) => {
         }
         extra = result.rows[0] || {};
 
+        if (!extra.imagen_perfil) {
+            const username = req.session.usuario?.username || req.session.nombre || `user-${usuarioId}`;
+            const avatarUri = await generarAvatarSVG(username);
+            await db.query('UPDATE usuarios SET imagen_perfil = $1 WHERE id = $2', [avatarUri, usuarioId]);
+            extra.imagen_perfil = avatarUri;
+        }
+
         return res.json({
             id: usuarioId,
             nombre: req.session.usuario?.nombre || req.session.nombre,
@@ -299,6 +330,65 @@ exports.actualizarFotoPerfil = async (req, res) => {
     } catch (error) {
         console.error('Error al actualizar foto de perfil:', error);
         return res.status(500).json({ mensaje: 'Error al guardar la foto de perfil.' });
+    }
+};
+
+exports.generarAvatar = async (req, res) => {
+    if (!req.session.usuarioId) {
+        return res.status(401).json({ mensaje: 'Debes iniciar sesión.' });
+    }
+    try {
+        const estilo = req.body?.estilo || 'avataaars';
+        const seed = `${req.session.usuario?.username || 'user'}-${Date.now()}`;
+        const dataUri = await generarAvatarSVG(seed, estilo);
+
+        await db.query(
+            'UPDATE usuarios SET imagen_perfil = $1 WHERE id = $2',
+            [dataUri, req.session.usuarioId]
+        );
+        return res.json({ mensaje: 'Avatar generado.', imagen_perfil: dataUri });
+    } catch (error) {
+        console.error('Error al generar avatar:', error);
+        return res.status(500).json({ mensaje: 'Error al generar el avatar.' });
+    }
+};
+
+exports.generarPreviews = async (req, res) => {
+    const estilo = req.query.estilo || 'avataaars';
+    const count = Math.min(parseInt(req.query.count) || 12, 24);
+    try {
+        const previews = await Promise.all(
+            Array.from({ length: count }, async (_, i) => {
+                const seed = `preview-${Date.now()}-${i}-${Math.random().toString(36).slice(2, 6)}`;
+                const dataUri = await generarAvatarSVG(seed, estilo);
+                return { seed, dataUri, estilo };
+            })
+        );
+        return res.json({ previews, estilo });
+    } catch (error) {
+        console.error('Error al generar previews:', error);
+        return res.status(500).json({ mensaje: 'Error al generar previews.' });
+    }
+};
+
+exports.seleccionarAvatar = async (req, res) => {
+    if (!req.session.usuarioId) {
+        return res.status(401).json({ mensaje: 'Debes iniciar sesión.' });
+    }
+    const { seed, estilo } = req.body;
+    if (!seed || !estilo) {
+        return res.status(400).json({ mensaje: 'Faltan seed o estilo.' });
+    }
+    try {
+        const dataUri = await generarAvatarSVG(seed, estilo);
+        await db.query(
+            'UPDATE usuarios SET imagen_perfil = $1 WHERE id = $2',
+            [dataUri, req.session.usuarioId]
+        );
+        return res.json({ mensaje: 'Avatar actualizado.', imagen_perfil: dataUri });
+    } catch (error) {
+        console.error('Error al seleccionar avatar:', error);
+        return res.status(500).json({ mensaje: 'Error al seleccionar avatar.' });
     }
 };
 

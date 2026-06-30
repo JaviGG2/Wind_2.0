@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notificaciones — Wind</title>
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/menu.css">
+  <link rel="stylesheet" href="/css/animaciones.css">
+  <link rel="stylesheet" href="/css/notificaciones.css">
+  <link rel="icon" href="/img/favicon.ico">
+</head>
+<body>
+  <div id="menu-placeholder"></div>
+
+  <main class="notif-container anim-fade-in">
+    <div class="notif-header">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <a href="javascript:void(0)" class="btn-volver" onclick="history.back()" aria-label="Volver">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </a>
+        <h1>Notificaciones</h1>
+      </div>
+      <button id="btn-leer-todas" class="notif-btn-secondary">Marcar todas como leídas</button>
+    </div>
+    <div id="notif-list" class="notif-list">
+      <p class="notif-loading">Cargando...</p>
+    </div>
+  </main>
+
+  <script src="/js/menu.js"></script>
+  <script src="/js/notificaciones.js"></script>
+</body>
+</html>

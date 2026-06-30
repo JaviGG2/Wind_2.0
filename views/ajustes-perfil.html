@@ -14,13 +14,14 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Wind">
     <link rel="apple-touch-icon" href="/img/app.png">
+    <link rel="stylesheet" href="/css/animaciones.css">
     <meta name="theme-color" content="#ff4500">
 </head>
 <body>
     <script src="/js/menu.js"></script>
     <div class="app-layout">
         <div id="menu-placeholder"></div>
-        <main class="contenido-principal">
+        <main class="contenido-principal anim-fade-in">
             <div class="ajustes-root">
                 <div class="ajustes-header">
                     <a href="/dashboard" class="btn-volver">
@@ -36,6 +37,7 @@
                         <p><strong>Usuario:</strong> <span id="info-username"></span></p>
                         <p><strong>Rol:</strong> <span id="info-rol"></span></p>
                         <p><strong>Puntos:</strong> <span id="info-puntos"></span></p>
+                        <p><strong>Nivel:</strong> <span id="info-nivel"></span></p>
                     </div>
                 </div>
 
@@ -50,10 +52,21 @@
 
                 <div class="ajustes-seccion">
                     <h4>Foto de Perfil</h4>
-                    <form id="form-foto-perfil">
-                        <input type="file" id="input-foto" accept="image/*" class="input" style="padding:8px;">
-                        <button type="submit" class="boton-enviar" style="width:auto;margin-top:8px;">Subir foto</button>
-                    </form>
+                    <div class="avatar-section">
+                        <div class="avatar-preview-wrap">
+                            <img id="avatar-preview" src="/img/avatar.svg" alt="avatar" class="avatar-preview-img">
+                        </div>
+                        <div class="avatar-actions">
+                            <a href="/select-avatar" class="boton-enviar" style="display:inline-flex;align-items:center;gap:6px;width:auto;">
+                                <span class="material-symbols-outlined" style="font-size:18px;">palette</span>
+                                Elegir avatar
+                            </a>
+                            <form id="form-foto-perfil" style="margin-top:8px;">
+                                <input type="file" id="input-foto" accept="image/*" class="input" style="padding:8px;font-size:var(--font-xs);">
+                                <button type="submit" class="boton-secundario" style="width:auto;margin-top:6px;">Subir foto propia</button>
+                            </form>
+                        </div>
+                    </div>
                     <div id="mensaje-foto" class="ajustes-mensaje"></div>
                 </div>
 

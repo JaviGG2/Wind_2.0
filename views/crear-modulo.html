@@ -10,14 +10,19 @@
   <link rel="stylesheet" href="/css/menu.css">
   <link rel="stylesheet" href="/css/formularios-crear.css">
   <link rel="stylesheet" href="/css/info-popup.css">
+  <link rel="stylesheet" href="/css/animaciones.css">
 </head>
 <body>
   <script src="/js/menu.js"></script>
-  <script src="/js/info.js"></script>
   <script type="module" src="/js/info-burbuja.js"></script>
   <div class="app-layout">
     <div id="menu-placeholder"></div>
     <main class="contenido-principal">
+      <div style="margin-bottom:8px;">
+        <a href="javascript:void(0)" class="btn-volver" onclick="history.back()">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </a>
+      </div>
       <div class="crear-container">
         <header class="crear-header">
           <h1><span class="material-symbols-outlined">add_box</span> Crear Módulo de Juego</h1>
@@ -43,11 +48,6 @@
             <button type="submit" class="boton-enviar">Crear Módulo</button>
           </form>
           <div id="mensaje-consola" class="mensaje-oculto"></div>
-          <p class="enlace-volver">
-            <a href="/admin/modulos" class="enlace-secundario">
-              <span class="material-symbols-outlined">arrow_back</span> Mis módulos
-            </a>
-          </p>
         </div>
       </div>
     </main>

@@ -15,6 +15,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('info-rol').textContent = usuario.rol || '-';
     document.getElementById('info-puntos').textContent = usuario.puntos ?? 0;
 
+    const avatarPreview = document.getElementById('avatar-preview');
+    if (usuario.imagen_perfil) avatarPreview.src = usuario.imagen_perfil;
+
+    cargarNivelPerfil();
+
     document.getElementById('btn-guardar-username')?.addEventListener('click', async () => {
         const input = document.getElementById('input-nuevo-username');
         const username = input.value.trim().toLowerCase();
@@ -108,3 +113,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 });
+
+async function cargarNivelPerfil() {
+    try {
+        const res = await fetch('/api/usuario/nivel');
+        if (!res.ok) return;
+        const data = await res.json();
+        document.getElementById('info-nivel').textContent = `Nv ${data.nivel} — ${data.titulo} (${data.puntos} pts)`;
+    } catch {}
+}

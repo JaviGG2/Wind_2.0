@@ -108,7 +108,8 @@ exports.listarTemas = async (req, res) => {
                     ${usuarioId ? likeSubquery : ', false AS usuario_dio_like'}
                     ${commentCountSubquery},
                     c.nombre AS categoria_nombre,
-                    u.nombre AS creador_nombre
+                    u.nombre AS creador_nombre,
+                    u.imagen_perfil AS creador_avatar
              FROM temas t
              LEFT JOIN categorias c ON t.categoria_id = c.id
              LEFT JOIN usuarios u ON t.creador_id = u.id
@@ -124,7 +125,8 @@ exports.listarTemas = async (req, res) => {
                     ${usuarioId ? likeSubquery : ', false AS usuario_dio_like'}
                     ${commentCountSubquery},
                     c.nombre AS categoria_nombre,
-                    u.nombre AS creador_nombre
+                    u.nombre AS creador_nombre,
+                    u.imagen_perfil AS creador_avatar
              FROM temas t
              LEFT JOIN categorias c ON t.categoria_id = c.id
              LEFT JOIN usuarios u ON t.creador_id = u.id

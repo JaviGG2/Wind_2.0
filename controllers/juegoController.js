@@ -176,6 +176,8 @@ exports.responderJuego = async (req, res) => {
         const tipo = juego.tipo || 'Quiz';
         let esCorrecta = false;
 
+        console.log(`[responderJuego] usuario=${req.session.usuarioId}, juego_id=${juego_id}, tipo=${tipo}, puntos_recompensa=${juego.puntos_recompensa}`);
+
         if (tipo === 'Quiz') {
             const respuestaUpper = String(respuesta_usuario).trim().toUpperCase();
             const correctaRaw = String(juego.opcion_correcta || juego.correcta || '').trim().toUpperCase();
@@ -204,11 +206,7 @@ exports.responderJuego = async (req, res) => {
         );
 
         if (yaCompletado.rows.length > 0) {
-            await db.query(
-                `UPDATE historial_vistas SET fecha_vista = NOW()
-                 WHERE usuario_id = $1 AND tipo_contenido = $2 AND contenido_id = $3`,
-                [req.session.usuarioId, 'juego', juego_id]
-            );
+            console.log(`[responderJuego] YA COMPLETADO: usuario=${req.session.usuarioId}, juego=${juego_id}`);
             return res.json({
                 correcto: true,
                 puntos_ganados: 0,
@@ -217,6 +215,7 @@ exports.responderJuego = async (req, res) => {
         }
 
         const puntos = Number(juego.puntos_recompensa) || 10;
+        console.log(`[responderJuego] puntos_a_añadir=${puntos}, isFinite=${Number.isFinite(puntos)}`);
         if (!Number.isFinite(puntos)) {
             return res.json({
                 correcto: false,
@@ -225,7 +224,8 @@ exports.responderJuego = async (req, res) => {
             });
         }
 
-        await db.query('UPDATE usuarios SET puntos = puntos + $1 WHERE id = $2', [puntos, req.session.usuarioId]);
+        await db.query('UPDATE usuarios SET puntos = COALESCE(puntos,0) + $1 WHERE id = $2', [puntos, req.session.usuarioId]);
+        console.log(`[responderJuego] PUNTOS ACTUALIZADOS en BD: +${puntos} para usuario ${req.session.usuarioId}`);
 
         await db.query(
             'INSERT INTO historial_vistas (usuario_id, tipo_contenido, contenido_id) VALUES ($1, $2, $3)',

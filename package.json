@@ -2,6 +2,11 @@
   "dependencies": {
     "@capacitor/cli": "^8.3.0",
     "@capacitor/core": "^8.3.0",
+    "@dicebear/adventurer": "^9.4.2",
+    "@dicebear/avataaars": "^9.4.2",
+    "@dicebear/core": "^9.4.2",
+    "@dicebear/lorelei": "^9.4.2",
+    "@dicebear/shapes": "^9.4.2",
     "@sendgrid/mail": "^8.1.6",
     "@supabase/supabase-js": "^2.108.2",
     "bcryptjs": "^3.0.3",

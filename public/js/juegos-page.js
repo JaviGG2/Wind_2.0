@@ -268,6 +268,7 @@ function mostrarModalJuego(juego) {
     $('#juego-resultado').style.display = 'none';
     $('#resultado-correcta-wrap').style.display = 'none';
     modal.style.display = 'block';
+    document.body.classList.add('modal-open');
 }
 
 async function responderTrivia(juego, letra, btnElegido) {
@@ -483,6 +484,7 @@ function siguienteTrivia() {
 function cerrarModal() {
     const modal = $('#modal-juego');
     if (modal) modal.style.display = 'none';
+    document.body.classList.remove('modal-open');
 }
 
 document.addEventListener('DOMContentLoaded', () => {

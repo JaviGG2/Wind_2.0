@@ -915,11 +915,11 @@ body {
 
 @media (min-width: 769px) {
     .contenido-principal {
-        margin-left: 270px;
+        margin-left: 280px;
     }
 
     .juego-modal-overlay {
-        padding-left: 270px;
+        padding-left: 280px;
     }
 }
 
