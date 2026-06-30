@@ -3,10 +3,12 @@ require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') }
 
 // ===== EDIT AQUI TU NOTIFICACION =====
 const NOTIFICACION = {
-  titulo: 'Wind',
-  mensaje: 'Los',
-  enlace: '/home'
+  titulo: 'Wind Update',
+  mensaje: 'Se agragaron muchos mas estilos de Avatares. Se mejoro el Diseño en varios apartados',
+  enlace: '/select-avatar'
 };
+//node scripts/enviar-notificacion.js
+
 // ===== NO TOCAR DEBAJO =====
 
 (async () => {

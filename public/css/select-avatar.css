@@ -18,13 +18,17 @@
 }
 
 .selavatar-back {
-    display: flex;
+    display: inline-flex;
     align-items: center;
+    gap: 4px;
     color: var(--texto-sec);
     text-decoration: none;
-    padding: 6px;
-    border-radius: 50%;
+    padding: 6px 12px;
+    border-radius: 8px;
     transition: all var(--transition);
+    font-size: 0.85rem;
+    font-weight: 500;
+    width: auto;
 }
 
 .selavatar-back:hover {
@@ -50,13 +54,23 @@
     font-weight: 500;
 }
 
-.selavatar-current-img {
+.selavatar-current-img-wrap {
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    object-fit: cover;
     border: 3px solid var(--primario-light);
-    background: var(--bg-surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: background-color 0.2s;
+}
+
+.selavatar-current-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
 }
 
 .selavatar-tabs {
@@ -211,6 +225,89 @@
 
 .selavatar-msg.error {
     color: #dc2626;
+}
+
+.selavatar-color-section {
+    margin-bottom: 24px;
+    padding: 16px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--borde);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--sombra-sm);
+}
+
+.selavatar-color-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 12px;
+    color: var(--texto);
+}
+
+.selavatar-color-title .material-symbols-outlined {
+    font-size: 1.2rem;
+    color: var(--primario);
+}
+
+.selavatar-color-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.selavatar-color-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--borde);
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 0;
+    outline: none;
+}
+
+.selavatar-color-swatch:hover {
+    transform: scale(1.15);
+    border-color: var(--texto-sec);
+}
+
+.selavatar-color-swatch.active {
+    border-color: var(--primario);
+    box-shadow: 0 0 0 2px var(--primario-glow);
+    transform: scale(1.1);
+}
+
+.selavatar-color-custom {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.selavatar-color-custom label {
+    font-size: 0.82rem;
+    color: var(--texto-sec);
+}
+
+#selavatar-color-picker {
+    width: 36px;
+    height: 36px;
+    border: 2px solid var(--borde);
+    border-radius: 50%;
+    padding: 2px;
+    cursor: pointer;
+    background: none;
+}
+
+#selavatar-color-picker::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+#selavatar-color-picker::-webkit-color-swatch {
+    border: none;
+    border-radius: 50%;
 }
 
 @media (max-width: 480px) {

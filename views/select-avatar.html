@@ -26,13 +26,28 @@
                 <div class="selavatar-header">
                     <a href="/ajustes-perfil" class="selavatar-back">
                         <span class="material-symbols-outlined">arrow_back</span>
+                        Atrás
                     </a>
                     <h2>Elige tu Avatar</h2>
                 </div>
 
-                <div class="selavatar-current">
+                <div class="selavatar-current" id="selavatar-current-wrap">
                     <div class="selavatar-current-label">Avatar actual</div>
-                    <img id="selavatar-current-img" src="/img/avatar.svg" alt="avatar actual" class="selavatar-current-img">
+                    <div class="selavatar-current-img-wrap" id="selavatar-current-wrap-img">
+                        <img id="selavatar-current-img" src="/img/avatar.svg" alt="avatar actual" class="selavatar-current-img">
+                    </div>
+                </div>
+
+                <div class="selavatar-color-section">
+                    <h3 class="selavatar-color-title">
+                        <span class="material-symbols-outlined">format_paint</span>
+                        Color de fondo
+                    </h3>
+                    <div class="selavatar-color-options" id="selavatar-color-options"></div>
+                    <div class="selavatar-color-custom">
+                        <label for="selavatar-color-picker">Personalizado</label>
+                        <input type="color" id="selavatar-color-picker" value="#e8e8e8">
+                    </div>
                 </div>
 
                 <div class="selavatar-tabs" id="selavatar-tabs"></div>

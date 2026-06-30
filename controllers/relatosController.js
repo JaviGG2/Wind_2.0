@@ -1,6 +1,7 @@
 const db = require('../config/db');
 const { subirASupabase } = require('../middlewares/subidaImagen');
 const { contieneMalasPalabras } = require('../utils/filter');
+const notificacion = require('./notificacionController');
 
 exports.crearRelato = async (req, res) => {
     if (!req.session.usuarioId) {
@@ -27,7 +28,13 @@ exports.crearRelato = async (req, res) => {
         
         const values = [titulo, contenido, req.session.usuarioId, imagenUrl];
         const resultado = await db.query(querySQL, values);
-
+        const relatoId = resultado.rows[0].id;
+        notificacion.crear({
+            creadorId: req.session.usuarioId,
+            titulo: 'Nuevo relato comunitario',
+            mensaje: `"${titulo}" ha sido compartido por la comunidad.`,
+            enlace: `/relatos-community`
+        });
         res.status(201).json({ message: 'Relato creado con éxito', relato: resultado.rows[0] });
     } catch (error) {
         console.error('Error al insertar en Neon:', error);
@@ -46,8 +53,9 @@ exports.obtenerRelatos = async (req, res) => {
             querySQL = `
                 SELECT r.id, r.titulo, r.contenido_relato, r.fecha_publicacion,
                        r.usuario_id, r.imagen_url,
-                       u.nombre AS autor_nombre,
-                       u.imagen_perfil AS autor_avatar
+                     u.nombre AS autor_nombre,
+                        u.imagen_perfil AS autor_avatar,
+                        u.avatar_fondo AS autor_avatar_fondo
                 FROM relatos_community r
                 LEFT JOIN usuarios u ON r.usuario_id = u.id
                 WHERE r.categoria = $1
@@ -59,8 +67,9 @@ exports.obtenerRelatos = async (req, res) => {
             querySQL = `
                 SELECT r.id, r.titulo, r.contenido_relato, r.fecha_publicacion,
                        r.usuario_id, r.imagen_url,
-                       u.nombre AS autor_nombre,
-                       u.imagen_perfil AS autor_avatar
+                     u.nombre AS autor_nombre,
+                        u.imagen_perfil AS autor_avatar,
+                        u.avatar_fondo AS autor_avatar_fondo
                 FROM relatos_community r
                 LEFT JOIN usuarios u ON r.usuario_id = u.id
                 ORDER BY r.fecha_publicacion DESC

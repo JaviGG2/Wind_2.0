@@ -31,7 +31,7 @@
             <header class="dashboard-header">
                 <div class="dashboard-header-top">
                     <div class="perfil-cabecera">
-                        <img id="perfil-avatar" src="/img/avatar.svg" alt="avatar" class="perfil-avatar">
+                        <img id="perfil-avatar" src="/img/avatar.svg" alt="avatar" class="perfil-avatar" >
                         <div class="perfil-info">
                             <div class="perfil-meta">
                                 <h2 id="nombre-usuario">Panel de Control</h2>
@@ -41,6 +41,21 @@
                         </div>
                     </div>
                     <div class="perfil-acciones">
+                        <div class="notif-bell-wrapper">
+                            <button id="btn-notif-bell" class="btn-icono-config" aria-label="Notificaciones">
+                                <span class="material-symbols-outlined">notifications</span>
+                                <span id="notif-badge" class="notif-badge" style="display:none;">0</span>
+                            </button>
+                            <div id="notif-dropdown" class="notif-dropdown" style="display:none;">
+                                <div class="notif-dropdown-header">
+                                    <span>Notificaciones</span>
+                                    <a href="/notificaciones" class="notif-dropdown-ver-todas">Ver todas</a>
+                                </div>
+                                <div id="notif-dropdown-lista" class="notif-dropdown-lista">
+                                    <p class="notif-dropdown-loading">Cargando...</p>
+                                </div>
+                            </div>
+                        </div>
                         <a href="/ajustes-perfil" class="btn-icono-config" aria-label="Configuración">
                             <span class="material-symbols-outlined">settings</span>
                         </a>
@@ -64,6 +79,13 @@
                     </div>
                 </div>
             </header>
+
+            <div style="margin:24px 0 12px;text-align:center;">
+              <a href="/recomendaciones" class="boton-enviar" style="display:inline-flex;align-items:center;gap:8px;padding:12px 28px;">
+                <span class="material-symbols-outlined" style="font-size:1.3rem;">Stars_2</span>
+                Recomendaciones
+              </a>
+            </div>
 
             <div class="accordion">
               <div class="accordion-item">

@@ -1,5 +1,6 @@
 const db = require('../config/db');
 const { contieneMalasPalabras } = require('../utils/filter');
+const notificacion = require('./notificacionController');
 
 exports.listarComentarios = async (req, res) => {
     const temaId = parseInt(req.params.temaId, 10);
@@ -7,7 +8,7 @@ exports.listarComentarios = async (req, res) => {
     try {
         const result = await db.query(
             `SELECT c.id, c.contenido, c.fecha_creacion, c.usuario_id,
-                    u.nombre AS usuario_nombre, u.imagen_perfil AS usuario_avatar
+                    u.nombre AS usuario_nombre, u.imagen_perfil AS usuario_avatar, u.avatar_fondo AS usuario_avatar_fondo
              FROM comentarios c
              JOIN usuarios u ON c.usuario_id = u.id
              WHERE c.tema_id = $1
@@ -38,6 +39,12 @@ exports.crearComentario = async (req, res) => {
         const comentario = result.rows[0];
         comentario.usuario_nombre = req.session.nombre || 'Anónimo';
         comentario.usuario_avatar = null;
+        notificacion.crear({
+            creadorId: req.session.usuarioId,
+            titulo: 'Nuevo comentario',
+            mensaje: `${req.session.nombre || 'Alguien'} comentó en un tema.`,
+            enlace: `/paginaTema.html?id=${temaId}`
+        });
         return res.status(201).json(comentario);
     } catch (error) {
         console.error('Error al crear comentario:', error.message);

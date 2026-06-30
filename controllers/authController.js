@@ -4,7 +4,7 @@ const db = require('../config/db');
 const nodemailer = require('nodemailer');
 const { contieneMalasPalabras } = require('../utils/filter');
 
-const ESTILOS_AVATAR = ['avataaars', 'adventurer', 'shapes', 'lorelei'];
+const ESTILOS_AVATAR = ['avataaars', 'adventurer', 'shapes', 'lorelei', 'bottts', 'identicon', 'open-peeps', 'pixel-art', 'fun-emoji'];
 
 let _createAvatar, _estilos = {};
 async function initDicebear() {
@@ -15,7 +15,12 @@ async function initDicebear() {
         import('@dicebear/avataaars'),
         import('@dicebear/adventurer'),
         import('@dicebear/shapes'),
-        import('@dicebear/lorelei')
+        import('@dicebear/lorelei'),
+        import('@dicebear/bottts'),
+        import('@dicebear/identicon'),
+        import('@dicebear/open-peeps'),
+        import('@dicebear/pixel-art'),
+        import('@dicebear/fun-emoji')
     ]);
     ESTILOS_AVATAR.forEach((nombre, i) => _estilos[nombre] = mods[i]);
 }
@@ -264,7 +269,7 @@ exports.perfil = async (req, res) => {
         let result;
         try {
             result = await db.query(
-                'SELECT correo, puntos, imagen_perfil FROM usuarios WHERE id = $1',
+                'SELECT correo, puntos, imagen_perfil, avatar_fondo FROM usuarios WHERE id = $1',
                 [usuarioId]
             );
         } catch (error) {
@@ -293,7 +298,8 @@ exports.perfil = async (req, res) => {
             correo: extra.correo || null,
             rol: req.session.usuario?.rol || req.session.rol,
             puntos: extra.puntos || 0,
-            imagen_perfil: extra.imagen_perfil || null
+            imagen_perfil: extra.imagen_perfil || null,
+            avatar_fondo: extra.avatar_fondo || '#e8e8e8'
         });
     } catch (error) {
         console.error('Error al obtener perfil extendido:', error);
@@ -341,12 +347,13 @@ exports.generarAvatar = async (req, res) => {
         const estilo = req.body?.estilo || 'avataaars';
         const seed = `${req.session.usuario?.username || 'user'}-${Date.now()}`;
         const dataUri = await generarAvatarSVG(seed, estilo);
+        const color = req.body?.color_fondo || '#e8e8e8';
 
         await db.query(
-            'UPDATE usuarios SET imagen_perfil = $1 WHERE id = $2',
-            [dataUri, req.session.usuarioId]
+            'UPDATE usuarios SET imagen_perfil = $1, avatar_fondo = $2 WHERE id = $3',
+            [dataUri, color, req.session.usuarioId]
         );
-        return res.json({ mensaje: 'Avatar generado.', imagen_perfil: dataUri });
+        return res.json({ mensaje: 'Avatar generado.', imagen_perfil: dataUri, avatar_fondo: color });
     } catch (error) {
         console.error('Error al generar avatar:', error);
         return res.status(500).json({ mensaje: 'Error al generar el avatar.' });
@@ -375,20 +382,41 @@ exports.seleccionarAvatar = async (req, res) => {
     if (!req.session.usuarioId) {
         return res.status(401).json({ mensaje: 'Debes iniciar sesión.' });
     }
-    const { seed, estilo } = req.body;
+    const { seed, estilo, color_fondo } = req.body;
     if (!seed || !estilo) {
         return res.status(400).json({ mensaje: 'Faltan seed o estilo.' });
     }
     try {
         const dataUri = await generarAvatarSVG(seed, estilo);
+        const color = color_fondo || '#e8e8e8';
         await db.query(
-            'UPDATE usuarios SET imagen_perfil = $1 WHERE id = $2',
-            [dataUri, req.session.usuarioId]
+            'UPDATE usuarios SET imagen_perfil = $1, avatar_fondo = $2 WHERE id = $3',
+            [dataUri, color, req.session.usuarioId]
         );
-        return res.json({ mensaje: 'Avatar actualizado.', imagen_perfil: dataUri });
+        return res.json({ mensaje: 'Avatar actualizado.', imagen_perfil: dataUri, avatar_fondo: color });
     } catch (error) {
         console.error('Error al seleccionar avatar:', error);
         return res.status(500).json({ mensaje: 'Error al seleccionar avatar.' });
+    }
+};
+
+exports.cambiarColorAvatar = async (req, res) => {
+    if (!req.session.usuarioId) {
+        return res.status(401).json({ mensaje: 'Debes iniciar sesión.' });
+    }
+    const { color_fondo } = req.body;
+    if (!color_fondo || !/^#[0-9a-fA-F]{6}$/.test(color_fondo)) {
+        return res.status(400).json({ mensaje: 'Color inválido. Usa formato hex #RRGGBB.' });
+    }
+    try {
+        await db.query(
+            'UPDATE usuarios SET avatar_fondo = $1 WHERE id = $2',
+            [color_fondo, req.session.usuarioId]
+        );
+        return res.json({ mensaje: 'Color de fondo actualizado.', avatar_fondo: color_fondo });
+    } catch (error) {
+        console.error('Error al cambiar color de avatar:', error);
+        return res.status(500).json({ mensaje: 'Error al actualizar el color.' });
     }
 };
 

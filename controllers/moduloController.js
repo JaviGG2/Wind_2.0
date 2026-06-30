@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const notificacion = require('./notificacionController');
 
 exports.listarModulos = async (req, res) => {
   try {
@@ -86,7 +87,14 @@ exports.crearModulo = async (req, res) => {
       'INSERT INTO modulo_juegos (id_usuario, nombre, descripcion) VALUES ($1, $2, $3) RETURNING id',
       [req.session.usuarioId, nombre.trim(), descripcion || '']
     );
-    return res.status(201).json({ mensaje: 'Módulo creado.', id: result.rows[0].id });
+    const moduloId = result.rows[0].id;
+    notificacion.crear({
+      creadorId: req.session.usuarioId,
+      titulo: 'Nuevo módulo de juegos',
+      mensaje: `"${nombre.trim()}" está disponible.`,
+      enlace: `/modulos/${moduloId}`
+    });
+    return res.status(201).json({ mensaje: 'Módulo creado.', id: moduloId });
   } catch (error) {
     console.error('Error al crear módulo:', error.message);
     return res.status(500).json({ mensaje: 'Error al crear módulo.' });
@@ -121,6 +129,12 @@ exports.agregarNivel = async (req, res) => {
       'INSERT INTO nivel (nombre, descripcion, id_juego, id_modulo, orden) VALUES ($1,$2,$3,$4,$5) RETURNING id',
       [nombre.trim(), descripcion || '', juegoId, moduloId, sigOrden]
     );
+    notificacion.crear({
+      creadorId: req.session.usuarioId,
+      titulo: 'Nuevo nivel agregado',
+      mensaje: `Se agregó "${nombre.trim()}" a un módulo.`,
+      enlace: `/modulos/${moduloId}`
+    });
     return res.status(201).json({ mensaje: 'Nivel y juego creados.' });
   } catch (error) {
     console.error('Error al agregar nivel:', error.message);

@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const notificacion = require('./notificacionController');
 
 exports.crearJuego = async (req, res) => {
     if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
@@ -45,6 +46,12 @@ exports.crearJuego = async (req, res) => {
         }
 
         await db.query(queryTexto, valores);
+        notificacion.crear({
+            creadorId: req.session.usuarioId,
+            titulo: 'Nueva trivia patrimonial',
+            mensaje: `"${(pregunta || '').substring(0, 80)}" ha sido agregada.`,
+            enlace: `/juegos`
+        });
         return res.status(201).json({ mensaje: '¡Nueva trivia patrimonial publicada con éxito!' });
 
     } catch (error) {

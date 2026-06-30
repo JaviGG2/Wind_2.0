@@ -8,6 +8,14 @@
     outline: none;
 }
 
+html, body {
+    touch-action: pan-x pan-y;
+}
+
+button, a, input, select, textarea {
+    touch-action: manipulation;
+}
+
 html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
@@ -320,16 +328,20 @@ select.input {
 
 /* --- Botón volver atrás (icono simple) --- */
 .btn-volver {
-    display: flex;
+    display: inline-flex;
     align-items: center;
+    gap: 4px;
     color: #888;
     text-decoration: none;
-    padding: 6px;
-    border-radius: 50%;
+    padding: 6px 12px;
+    border-radius: 8px;
     transition: all 0.2s;
     cursor: pointer;
     border: none;
     background: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    width: auto;
 }
 
 .btn-volver:hover {

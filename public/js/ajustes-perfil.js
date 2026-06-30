@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const avatarPreview = document.getElementById('avatar-preview');
     if (usuario.imagen_perfil) avatarPreview.src = usuario.imagen_perfil;
+    avatarPreview.style.backgroundColor = usuario.avatar_fondo || '#e8e8e8';
 
     cargarNivelPerfil();
 

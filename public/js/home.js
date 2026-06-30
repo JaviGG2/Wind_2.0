@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     tarjeta.className = 'tarjeta-tema';
     tarjeta.style.cursor = 'pointer';
     const avatar = tema.creador_avatar || '/img/avatar.svg';
+    const avatarFondo = tema.creador_avatar_fondo || '#e8e8e8';
     const likesCount = tema.likes || 0;
 
     const yaDioLike = tema.usuario_dio_like === true;
@@ -60,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="tema-imagen" style="background-image: url('${tema.imagen_portada || '/img/app.png'}');"></div>
         <div class="tema-contenido">
             <div class="creator-row">
-                <img class="creator-avatar" src="${avatar}" alt="avatar" />
+                <img class="creator-avatar" src="${avatar}" alt="avatar" style="background:${avatarFondo};" />
                 <div class="creator-name">${tema.creador_nombre || 'Anónimo'}</div>
             </div>
 

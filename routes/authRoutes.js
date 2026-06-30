@@ -13,6 +13,7 @@ router.post('/auth/actualizar-foto', upload.single('foto_perfil'), authControlle
 router.post('/api/avatar/generar', authController.generarAvatar);
 router.get('/api/avatar/previews', authController.generarPreviews);
 router.post('/api/avatar/select', authController.seleccionarAvatar);
+router.post('/api/avatar/color', authController.cambiarColorAvatar);
 router.post('/auth/solicitar-recuperacion', authController.solicitarRecuperacion);
 router.post('/auth/restablecer-contrasena', authController.restablecerContrasena);
 router.post('/auth/actualizar-nombre', authController.actualizarNombre);

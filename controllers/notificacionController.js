@@ -1,5 +1,22 @@
 const db = require('../config/db');
 
+exports.crear = async ({ creadorId, titulo, mensaje, enlace }) => {
+    try {
+        const usuarios = await db.query(
+            'SELECT id FROM usuarios WHERE id != $1 AND cuenta_activa = true',
+            [creadorId]
+        );
+        if (usuarios.rows.length === 0) return;
+
+        const values = usuarios.rows.map(u =>
+            `(${u.id}, '${titulo.replace(/'/g, "''")}', '${mensaje.replace(/'/g, "''")}', '${enlace.replace(/'/g, "''")}', NOW())`
+        ).join(',');
+        await db.query(`INSERT INTO notificaciones (usuario_id, titulo, mensaje, enlace, fecha_creacion) VALUES ${values}`);
+    } catch (error) {
+        console.error('Error creando notificación:', error.message);
+    }
+};
+
 exports.listar = async (req, res) => {
   try {
     const result = await db.query(
@@ -38,6 +55,19 @@ exports.marcarLeida = async (req, res) => {
   } catch (error) {
     console.error('Error al marcar notificación:', error.message);
     res.status(500).json({ mensaje: 'Error al marcar notificación.' });
+  }
+};
+
+exports.vaciar = async (req, res) => {
+  try {
+    await db.query(
+      'DELETE FROM notificaciones WHERE usuario_id = $1',
+      [req.session.usuarioId]
+    );
+    res.json({ mensaje: 'Notificaciones eliminadas.' });
+  } catch (error) {
+    console.error('Error al vaciar notificaciones:', error.message);
+    res.status(500).json({ mensaje: 'Error al vaciar notificaciones.' });
   }
 };
 

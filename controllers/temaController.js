@@ -1,6 +1,7 @@
 const db = require('../config/db');
 const { subirASupabase } = require('../middlewares/subidaImagen');
 const { contieneMalasPalabras } = require('../utils/filter');
+const notificacion = require('./notificacionController');
 
 exports.subirTema = async (req, res) => {
     if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
@@ -33,7 +34,14 @@ exports.subirTema = async (req, res) => {
             rutaImagen
         ];
 
-        await db.query(queryFinal, parametros);
+        const temaRes = await db.query(queryFinal + ' RETURNING id', parametros);
+        const temaId = temaRes.rows[0].id;
+        notificacion.crear({
+            creadorId: req.session.usuarioId,
+            titulo: 'Nuevo tema histórico',
+            mensaje: `"${titulo}" ha sido publicado.`,
+            enlace: `/paginaTema.html?id=${temaId}`
+        });
         return res.status(201).json({ mensaje: '¡Tema histórico publicado con éxito!' });
 
     } catch (error) {
@@ -109,7 +117,8 @@ exports.listarTemas = async (req, res) => {
                     ${commentCountSubquery},
                     c.nombre AS categoria_nombre,
                     u.nombre AS creador_nombre,
-                    u.imagen_perfil AS creador_avatar
+                    u.imagen_perfil AS creador_avatar,
+                    u.avatar_fondo AS creador_avatar_fondo
              FROM temas t
              LEFT JOIN categorias c ON t.categoria_id = c.id
              LEFT JOIN usuarios u ON t.creador_id = u.id
@@ -126,7 +135,8 @@ exports.listarTemas = async (req, res) => {
                     ${commentCountSubquery},
                     c.nombre AS categoria_nombre,
                     u.nombre AS creador_nombre,
-                    u.imagen_perfil AS creador_avatar
+                    u.imagen_perfil AS creador_avatar,
+                    u.avatar_fondo AS creador_avatar_fondo
              FROM temas t
              LEFT JOIN categorias c ON t.categoria_id = c.id
              LEFT JOIN usuarios u ON t.creador_id = u.id
@@ -157,7 +167,9 @@ exports.obtenerTemaPorId = async (req, res) => {
                 `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes,
                         ${usuarioId ? '(SELECT true FROM temas_likes WHERE tema_id = t.id AND usuario_id = $2 LIMIT 1)' : 'false'} AS usuario_dio_like,
                         c.nombre AS categoria_nombre,
-                        u.nombre AS creador_nombre
+                        u.nombre AS creador_nombre,
+                    u.imagen_perfil AS creador_avatar,
+                    u.avatar_fondo AS creador_avatar_fondo
                  FROM temas t
                  LEFT JOIN categorias c ON t.categoria_id = c.id
                  LEFT JOIN usuarios u ON t.creador_id = u.id
@@ -173,7 +185,9 @@ exports.obtenerTemaPorId = async (req, res) => {
                 `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes,
                         ${usuarioId ? '(SELECT true FROM temas_likes WHERE tema_id = t.id AND usuario_id = $2 LIMIT 1)' : 'false'} AS usuario_dio_like,
                         c.nombre AS categoria_nombre,
-                        u.nombre AS creador_nombre
+                        u.nombre AS creador_nombre,
+                        u.imagen_perfil AS creador_avatar,
+                        u.avatar_fondo AS creador_avatar_fondo
                  FROM temas t
                  LEFT JOIN categorias c ON t.categoria_id = c.id
                  LEFT JOIN usuarios u ON t.creador_id = u.id

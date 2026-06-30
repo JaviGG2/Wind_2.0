@@ -1,8 +1,18 @@
-const ESTILOS = ['avataaars', 'adventurer', 'shapes', 'lorelei'];
-const NOMBRES_ESTILOS = { avataaars: 'Avataaars', adventurer: 'Aventurero', shapes: 'Formas', lorelei: 'Lorelei' };
+const ESTILOS = ['avataaars', 'adventurer', 'shapes', 'lorelei', 'bottts', 'identicon', 'open-peeps', 'pixel-art', 'fun-emoji'];
+const NOMBRES_ESTILOS = {
+  avataaars: 'Avataaars', adventurer: 'Aventurero', shapes: 'Formas', lorelei: 'Lorelei',
+  bottts: 'Robots', identicon: 'Identicon', 'open-peeps': 'Peeps', 'pixel-art': 'Pixel', 'fun-emoji': 'Emoji'
+};
+
+const COLORES_PREDEFINIDOS = [
+  '#e8e8e8', '#ffcdd2', '#f8bbd0', '#e1bee7',
+  '#bbdefb', '#b3e5fc', '#b2ebf2', '#b2dfdb',
+  '#c8e6c9', '#dcedc8', '#fff9c4', '#ffe0b2'
+];
 
 let currentStyle = 'avataaars';
 let currentPreviews = [];
+let currentColor = '#e8e8e8';
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -11,6 +21,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const user = await res.json();
         const img = document.getElementById('selavatar-current-img');
         if (user.imagen_perfil) img.src = user.imagen_perfil;
+        if (user.avatar_fondo) {
+            currentColor = user.avatar_fondo;
+            applyColor(currentColor);
+        }
     } catch {
         window.location.href = '/login';
         return;
@@ -26,10 +40,73 @@ document.addEventListener('DOMContentLoaded', async () => {
         tabsContainer.appendChild(btn);
     });
 
-    await loadPreviews();
+    renderColorOptions();
 
+    document.getElementById('selavatar-color-picker').addEventListener('input', (e) => {
+        selectColor(e.target.value);
+    });
+
+    await loadPreviews();
     document.getElementById('selavatar-more').addEventListener('click', loadPreviews);
 });
+
+function renderColorOptions() {
+    const container = document.getElementById('selavatar-color-options');
+    container.innerHTML = '';
+    COLORES_PREDEFINIDOS.forEach(hex => {
+        const btn = document.createElement('button');
+        btn.className = 'selavatar-color-swatch' + (hex === currentColor ? ' active' : '');
+        btn.style.backgroundColor = hex;
+        btn.dataset.color = hex;
+        btn.addEventListener('click', () => selectColor(hex));
+        container.appendChild(btn);
+    });
+}
+
+function selectColor(hex) {
+    currentColor = hex;
+    document.querySelectorAll('.selavatar-color-swatch').forEach(el => {
+        el.classList.toggle('active', el.dataset.color === hex);
+    });
+    document.getElementById('selavatar-color-picker').value = hex;
+    applyColor(hex);
+    saveColor(hex);
+}
+
+function applyColor(hex) {
+    const wrap = document.getElementById('selavatar-current-wrap-img');
+    if (wrap) {
+        wrap.style.backgroundColor = hex;
+        const img = wrap.querySelector('img');
+        if (img) img.style.backgroundColor = hex;
+    }
+    document.querySelectorAll('.selavatar-item').forEach(el => {
+        el.style.backgroundColor = hex;
+    });
+}
+
+async function saveColor(hex) {
+    try {
+        const res = await fetch('/api/avatar/color', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ color_fondo: hex })
+        });
+        if (res.ok) {
+            const label = document.querySelector('.selavatar-color-title');
+            label.textContent = '✓ Color de fondo guardado';
+            setTimeout(() => {
+                label.innerHTML = '<span class="material-symbols-outlined">format_paint</span> Color de fondo';
+            }, 1500);
+        } else {
+            const err = await res.json().catch(() => ({}));
+            console.error('Error guardando color:', err.mensaje || res.status);
+        }
+    } catch (e) {
+        console.error('Error guardando color:', e);
+    }
+}
 
 async function switchStyle(estilo) {
     currentStyle = estilo;
@@ -84,6 +161,7 @@ function renderGrid(previews) {
         item.className = 'selavatar-item';
         item.dataset.seed = p.seed;
         item.dataset.estilo = p.estilo;
+        item.style.backgroundColor = currentColor;
 
         const img = document.createElement('img');
         img.src = p.dataUri;
@@ -105,11 +183,15 @@ async function selectAvatar(seed, estilo, element) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
-            body: JSON.stringify({ seed, estilo })
+            body: JSON.stringify({ seed, estilo, color_fondo: currentColor })
         });
         const data = await res.json();
         if (res.ok) {
             document.getElementById('selavatar-current-img').src = data.imagen_perfil;
+            if (data.avatar_fondo) {
+                currentColor = data.avatar_fondo;
+                applyColor(currentColor);
+            }
         } else {
             console.error('Error al seleccionar avatar:', data.mensaje);
         }

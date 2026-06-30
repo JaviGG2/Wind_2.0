@@ -127,9 +127,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             comentariosLista.innerHTML = '<p class="comentarios-vacio">Sin comentarios. Sé el primero en comentar.</p>';
             return;
         }
-        comentariosLista.innerHTML = comentarios.map(c => `
+        comentariosLista.innerHTML = comentarios.map(c => {
+            const avatarFondo = c.usuario_avatar_fondo || '#e8e8e8';
+            return `
             <div class="comentario-item" data-id="${c.id}">
-                <div class="comentario-avatar">
+                <div class="comentario-avatar" style="background-color:${avatarFondo};">
                     ${c.usuario_avatar
                         ? `<img src="${c.usuario_avatar}" alt="" class="comentario-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display=''">
                            <span class="material-symbols-outlined" style="display:none;">person</span>`
@@ -143,8 +145,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                     <div class="comentario-texto">${escapeHtml(c.contenido)}</div>
                 </div>
-            </div>
-        `).join('');
+            </div>`;
+        }).join('');
     }
 
     comentarioEnviar.addEventListener('click', async () => {

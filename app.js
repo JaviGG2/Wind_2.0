@@ -75,6 +75,7 @@ const historialRoutes = require('./routes/historialRoutes');
 const comentarioRoutes = require('./routes/comentarioRoutes');
 const moduloRoutes = require('./routes/moduloRoutes');
 const notificacionRoutes = require('./routes/notificacionRoutes');
+const recomendacionRoutes = require('./routes/recomendacionRoutes');
 const traduccionController = require('./controllers/traduccionController');
 const { verificarSesion, esEspecialista } = require('./middlewares/autenticacion');
 const { calcularNivel } = require('./utils/niveles');
@@ -99,6 +100,7 @@ app.use(historialRoutes);
 app.use(comentarioRoutes);
 app.use(moduloRoutes);
 app.use(notificacionRoutes);
+app.use(recomendacionRoutes);
 app.post('/api/traducir', traduccionController.traducir);
 
 app.get('/home', verificarSesion, (req, res) => {
@@ -137,6 +139,7 @@ app.get('/ver-tema', verificarSesion, (req, res) => {
     res.render('ver-tema');
 });
 
+app.get('/recomendaciones', verificarSesion, (req, res) => res.render('recomendaciones'));
 app.get('/comunidad', (req, res) => res.render('comunidad'));
 app.get('/historias', (req, res) => res.render('historias'));
 app.get('/juegos', verificarSesion, (req, res) => res.render('juegos'));
@@ -197,5 +200,20 @@ app.listen(PORT, async () => {
         if (err.code !== '42703') {
             console.error('Error migrando imagen_perfil:', err.message);
         }
+    }
+
+    try {
+        await db.query(`ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS avatar_fondo VARCHAR(7) DEFAULT '#e8e8e8'`);
+        console.log('Columna avatar_fondo lista.');
+    } catch (err) {
+        console.error('Error agregando avatar_fondo:', err.message);
+    }
+
+    try {
+        const recomendador = require('./utils/recomendador');
+        await recomendador.entrenar();
+        console.log('Recomendador entrenado al iniciar.');
+    } catch (err) {
+        console.error('Error entrenando recomendador al iniciar:', err.message);
     }
 });

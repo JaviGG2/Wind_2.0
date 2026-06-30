@@ -77,8 +77,9 @@ function crearCardRelato(relato, index) {
 
     const autor = relato.autor_nombre || 'Anónimo';
     const inicial = autor.charAt(0).toUpperCase();
+    const avatarFondo = relato.autor_avatar_fondo || '#e8e8e8';
     const avatarHtml = relato.autor_avatar
-        ? `<div class="relato-avatar"><img src="${relato.autor_avatar}" alt="${autor}" onerror="this.parentElement.textContent='${inicial}'"></div>`
+        ? `<div class="relato-avatar" style="background:${avatarFondo};"><img src="${relato.autor_avatar}" alt="${autor}" onerror="this.parentElement.textContent='${inicial}'"></div>`
         : `<div class="relato-avatar">${inicial}</div>`;
 
     const categoria = relato.categoria || 'General';
