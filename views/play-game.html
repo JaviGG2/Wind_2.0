@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jugar — Wind</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/menu.css">
+    <link rel="stylesheet" href="/css/animaciones.css">
+    <link rel="stylesheet" href="/css/play-game.css">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Wind">
+    <link rel="apple-touch-icon" href="/img/app.png">
+    <meta name="theme-color" content="#ff4500">
+</head>
+<body>
+    <div class="app-layout">
+        <div id="menu-placeholder"></div>
+
+        <main class="contenido-principal anim-fade-down">
+            <div class="play-root">
+
+                <div class="play-topbar">
+                    <a href="/juegos" class="btn-volver">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                        Volver a Juegos
+                    </a>
+                    <div id="play-puntos" class="play-puntos-label">
+                        <span class="material-symbols-outlined">star</span>
+                        <span id="play-puntos-num">0</span> pts
+                    </div>
+                </div>
+
+                <div id="bloque-carga" class="cargando-contenedor">
+                    <div class="spinner"></div>
+                    <p>Cargando juego...</p>
+                </div>
+
+                <div id="play-contenido" style="display:none;">
+                    <div class="play-card">
+                        <div class="play-header">
+                            <span class="play-cat" id="play-cat">General</span>
+                            <span class="play-tipo" id="play-tipo">
+                                <span class="material-symbols-outlined" id="play-tipo-icon">quiz</span>
+                                <span id="play-tipo-label">Quiz</span>
+                            </span>
+                            <span class="play-pts">
+                                <span class="material-symbols-outlined">star</span>
+                                <span id="play-pts-val">10</span> pts
+                            </span>
+                        </div>
+                        <h2 class="play-titulo" id="play-titulo"></h2>
+
+                        <div id="play-playing">
+                            <p class="play-pregunta-label">Pregunta</p>
+                            <h2 class="play-pregunta" id="play-pregunta">...</h2>
+                            <div class="play-opciones" id="play-opciones"></div>
+                        </div>
+
+                        <div id="play-resultado" class="play-resultado" style="display:none;">
+                            <div class="resultado-icon" id="resultado-icon"></div>
+                            <h2 class="resultado-titulo" id="resultado-titulo"></h2>
+                            <p class="resultado-mensaje" id="resultado-mensaje"></p>
+                            <div class="resultado-puntos" id="resultado-puntos" style="display:none;">
+                                <span class="material-symbols-outlined">star</span>
+                                <span id="resultado-pts-num">0</span> puntos ganados
+                            </div>
+                            <div class="resultado-correcta" id="resultado-correcta-wrap" style="display:none;">
+                                <p>La respuesta correcta era:</p>
+                                <strong id="resultado-correcta-texto"></strong>
+                            </div>
+                            <div class="resultado-acciones">
+                                <button class="btn-volver-juegos" onclick="window.location.href='/juegos'">
+                                    <span class="material-symbols-outlined">arrow_back</span>
+                                    Volver a Juegos
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="/js/menu.js"></script>
+    <script src="/js/play-game.js"></script>
+</body>
+</html>

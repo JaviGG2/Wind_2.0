@@ -6,7 +6,7 @@ exports.crearJuego = async (req, res) => {
         return res.status(403).json({ mensaje: 'Acceso denegado: Rol insuficiente.' });
     }
 
-    const { categoria_id, pregunta, opcion_a, opcion_b, opcion_c, opcion_correcta, puntos_recompensa, tipo } = req.body;
+    const { categoria_id, titulo, pregunta, opcion_a, opcion_b, opcion_c, opcion_correcta, puntos_recompensa, tipo } = req.body;
     const categoriaValida = categoria_id ? parseInt(categoria_id, 10) : null;
     const tipoJuego = ['Quiz', 'Memory', 'Match', 'Scramblee'].includes(tipo) ? tipo : 'Quiz';
 
@@ -25,21 +25,21 @@ exports.crearJuego = async (req, res) => {
 
         if (categoriaValida && !Number.isNaN(categoriaValida)) {
             queryTexto = `
-                INSERT INTO juegos (categoria_id, pregunta, opcion_a, opcion_b, opcion_c, opcion_correcta, tipo, puntos_recompensa, usuario_id)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+                INSERT INTO juegos (categoria_id, titulo, pregunta, opcion_a, opcion_b, opcion_c, opcion_correcta, tipo, puntos_recompensa, usuario_id)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
             `;
             valores = [
-                categoriaValida, pregunta || '', opcion_a || '', opcion_b || '', opcion_c || '', opcion_correcta || 'A', tipoJuego,
+                categoriaValida, (titulo || '').trim(), pregunta || '', opcion_a || '', opcion_b || '', opcion_c || '', opcion_correcta || 'A', tipoJuego,
                 parseInt(puntos_recompensa, 10) || 10,
                 usuarioId
             ];
         } else {
             queryTexto = `
-                INSERT INTO juegos (pregunta, opcion_a, opcion_b, opcion_c, opcion_correcta, tipo, puntos_recompensa, usuario_id)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+                INSERT INTO juegos (titulo, pregunta, opcion_a, opcion_b, opcion_c, opcion_correcta, tipo, puntos_recompensa, usuario_id)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
             `;
             valores = [
-                pregunta || '', opcion_a || '', opcion_b || '', opcion_c || '', opcion_correcta || 'A', tipoJuego,
+                (titulo || '').trim(), pregunta || '', opcion_a || '', opcion_b || '', opcion_c || '', opcion_correcta || 'A', tipoJuego,
                 parseInt(puntos_recompensa, 10) || 10,
                 usuarioId
             ];
@@ -49,7 +49,7 @@ exports.crearJuego = async (req, res) => {
         notificacion.crear({
             creadorId: req.session.usuarioId,
             titulo: 'Nueva trivia patrimonial',
-            mensaje: `"${(pregunta || '').substring(0, 80)}" ha sido agregada.`,
+            mensaje: `"${(titulo || pregunta || '').substring(0, 80)}" ha sido agregado.`,
             enlace: `/juegos`
         });
         return res.status(201).json({ mensaje: '¡Nueva trivia patrimonial publicada con éxito!' });
@@ -67,7 +67,7 @@ exports.misJuegos = async (req, res) => {
 
     try {
         const queryTexto = `
-            SELECT j.id, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.puntos_recompensa, c.nombre AS categoria_nombre
+            SELECT j.id, j.titulo, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.puntos_recompensa, c.nombre AS categoria_nombre
             FROM juegos j
             LEFT JOIN categorias c ON j.categoria_id = c.id
             WHERE j.usuario_id = $1
@@ -117,7 +117,7 @@ exports.listarPublicos = async (req, res) => {
         if (categoriaId && !Number.isNaN(categoriaId)) {
             params = usuarioId ? [categoriaId, usuarioId] : [categoriaId];
             queryTexto = `
-                SELECT j.id, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, c.nombre AS categoria_nombre${jugadoSelect}
+                SELECT j.id, j.titulo, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, c.nombre AS categoria_nombre${jugadoSelect}
                 FROM juegos j
                 LEFT JOIN categorias c ON j.categoria_id = c.id
                 ${jugadoJoin}
@@ -128,7 +128,7 @@ exports.listarPublicos = async (req, res) => {
         } else {
             params = usuarioId ? [usuarioId] : [];
             queryTexto = `
-                SELECT j.id, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, c.nombre AS categoria_nombre${jugadoSelect}
+                SELECT j.id, j.titulo, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, c.nombre AS categoria_nombre${jugadoSelect}
                 FROM juegos j
                 LEFT JOIN categorias c ON j.categoria_id = c.id
                 ${jugadoJoin}

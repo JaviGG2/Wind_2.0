@@ -110,52 +110,7 @@
         </main>
     </div>
 
-    <div id="modal-juego" class="juego-modal-overlay" style="display:none;" role="dialog" aria-modal="true"
-        aria-labelledby="modal-pregunta">
-        <div class="juego-modal-card" id="juego-modal-card">
-            <div id="juego-playing" class="juego-estado">
-                <button class="modal-close" id="juego-close-btn" aria-label="Cerrar">
-                    <span class="material-symbols-outlined">close</span>
-                </button>
-                <div class="juego-header">
-                    <span class="juego-cat-label" id="juego-modal-cat">General</span>
-                    <span class="juego-tipo-label">
-                        <span class="material-symbols-outlined" id="juego-modal-tipo-icon">quiz</span>
-                        <span id="juego-modal-tipo">Quiz</span>
-                    </span>
-                    <div class="juego-pts-label">
-                        <span class="material-symbols-outlined">star</span>
-                        <span id="juego-modal-pts">10</span> pts
-                    </div>
-                </div>
-                <p class="juego-pregunta-label">Pregunta</p>
-                <h2 class="juego-pregunta" id="modal-pregunta">...</h2>
-                <div class="juego-opciones" id="juego-opciones">
-                </div>
-            </div>
-
-            <div id="juego-resultado" class="juego-estado" style="display:none;">
-                <div class="resultado-icon" id="resultado-icon"></div>
-                <h2 class="resultado-titulo" id="resultado-titulo"></h2>
-                <p class="resultado-mensaje" id="resultado-mensaje"></p>
-                <div class="resultado-puntos" id="resultado-puntos" style="display:none;">
-                    <span class="material-symbols-outlined">star</span>
-                    <span id="resultado-pts-num">0</span> puntos ganados
-                </div>
-                <div class="resultado-respuesta-correcta" id="resultado-correcta-wrap" style="display:none;">
-                    <p>La respuesta correcta era:</p>
-                    <strong id="resultado-correcta-texto"></strong>
-                </div>
-                <div class="resultado-acciones">
-                    <button class="btn-siguiente" id="btn-siguiente-juego">
-                        <span class="material-symbols-outlined">arrow_forward</span>
-                        Siguiente trivia
-                    </button>
-                    <button class="btn-cerrar-juego" id="btn-cerrar-resultado">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
     <script src="/js/juegos-page.js"></script>
 </body>

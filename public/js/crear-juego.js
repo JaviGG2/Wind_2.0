@@ -14,6 +14,7 @@ formularioQuiz?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const body = {
     ...datosBase(),
+    titulo: document.getElementById('quiz-nombre').value,
     pregunta: document.getElementById('pregunta').value,
     opcion_a: document.getElementById('opcion_a').value,
     opcion_b: document.getElementById('opcion_b').value,
@@ -30,6 +31,7 @@ formularioMemory?.addEventListener('submit', async (e) => {
   if (palabras.length < 2) { mostrarMensaje('Agrega al menos 2 palabras.', 'error'); return; }
   const body = {
     ...datosBase(),
+    titulo: document.getElementById('memory-nombre').value,
     pregunta: palabras.join(','),
     opcion_a: '', opcion_b: '', opcion_c: '',
     opcion_correcta: 'A',
@@ -51,6 +53,7 @@ formularioMatch?.addEventListener('submit', async (e) => {
   if (conceptos.length < 2) { mostrarMensaje('Agrega al menos 2 pares.', 'error'); return; }
   const body = {
     ...datosBase(),
+    titulo: document.getElementById('match-nombre').value,
     pregunta: conceptos.join(','),
     opcion_a: respuestas.join(','),
     opcion_b: '', opcion_c: '',
@@ -64,6 +67,7 @@ formularioScramblee?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const body = {
     ...datosBase(),
+    titulo: document.getElementById('scramble-nombre').value,
     pregunta: document.getElementById('scramble-pista').value,
     opcion_a: document.getElementById('scramble-palabra').value,
     opcion_b: '', opcion_c: '',

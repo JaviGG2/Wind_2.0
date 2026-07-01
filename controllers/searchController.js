@@ -75,9 +75,9 @@ exports.buscarContenido = async (req, res) => {
                 [term]
             ),
             db.query(
-                `SELECT id, pregunta AS titulo, pregunta AS contenido, NULL AS imagen, 'juego' AS tipo, '/juegos?juego=' || id AS url
+                `SELECT id, titulo, titulo AS contenido, NULL AS imagen, 'juego' AS tipo, '/play-game?id=' || id AS url
                  FROM juegos
-                 WHERE translate(lower(pregunta), 'áéíóúÁÉÍÓÚñÑüÜ', 'aeiouaeiounnue') LIKE translate(lower($1), 'áéíóúÁÉÍÓÚñÑüÜ', 'aeiouaeiounnue')
+                 WHERE translate(lower(titulo), 'áéíóúÁÉÍÓÚñÑüÜ', 'aeiouaeiounnue') LIKE translate(lower($1), 'áéíóúÁÉÍÓÚñÑüÜ', 'aeiouaeiounnue')
                  ORDER BY id DESC
                  LIMIT 25`,
                 [term]
@@ -93,7 +93,7 @@ exports.buscarContenido = async (req, res) => {
             const [allTemas, allRelatos, allJuegos] = await Promise.all([
                 db.query(`SELECT id, titulo, contenido, imagen_portada AS imagen, 'tema' AS tipo, '/ver-tema?id=' || id AS url FROM temas ORDER BY fecha_publicacion DESC LIMIT 200`),
                 db.query(`SELECT id, titulo, contenido_relato AS contenido, imagen_url AS imagen, 'relato' AS tipo, '/ver-relato?id=' || id AS url FROM relatos_community ORDER BY fecha_publicacion DESC LIMIT 200`),
-                db.query(`SELECT id, pregunta AS titulo, pregunta AS contenido, NULL AS imagen, 'juego' AS tipo, '/juegos?juego=' || id AS url FROM juegos ORDER BY id DESC LIMIT 200`)
+                db.query(`SELECT id, titulo, titulo AS contenido, NULL AS imagen, 'juego' AS tipo, '/play-game?id=' || id AS url FROM juegos ORDER BY id DESC LIMIT 200`)
             ]);
 
             temas = allTemas.rows.filter((row) => isFallbackMatch(row.titulo, normalizedQuery) || isFallbackMatch(row.contenido, normalizedQuery));
@@ -107,7 +107,7 @@ exports.buscarContenido = async (req, res) => {
             : `No se encontraron coincidencias exactas en Wind para "${query}". Aquí están los resultados más cercanos.`;
 
         const textoPotente = total > 0
-            ? `Wind ha interpretado tu búsqueda "${query}" y encontró contenido relevante. ${temas.length ? `Temas destacados: ${temas.slice(0, 2).map((t) => t.titulo).join(', ')}.` : ''} ${relatos.length ? `Relatos cercanos: ${relatos.slice(0, 2).map((r) => r.titulo).join(', ')}.` : ''} ${juegos.length ? `Preguntas relacionadas: ${juegos.slice(0, 2).map((j) => j.titulo).join(', ')}.` : ''}`.trim()
+            ? `Wind ha interpretado tu búsqueda "${query}" y encontró contenido relevante. ${temas.length ? `Temas destacados: ${temas.slice(0, 2).map((t) => t.titulo).join(', ')}.` : ''} ${relatos.length ? `Relatos cercanos: ${relatos.slice(0, 2).map((r) => r.titulo).join(', ')}.` : ''} ${juegos.length ? `Juegos: ${juegos.slice(0, 2).map((j) => j.titulo).join(', ')}.` : ''}`.trim()
             : `Wind intentó entender tu palabra incluso si la escribiste con error tipográfico o sin tilde. Aquí hay contenido similar para revisar.`;
 
         return res.json({ temas, relatos, juegos, resumen, textoPotente });

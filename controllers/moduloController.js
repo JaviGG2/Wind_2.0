@@ -117,9 +117,9 @@ exports.agregarNivel = async (req, res) => {
 
   try {
     const juegoRes = await db.query(
-      `INSERT INTO juegos (usuario_id, pregunta, opcion_a, opcion_b, opcion_c, opcion_correcta, tipo, puntos_recompensa)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING id`,
-      [req.session.usuarioId, (pregunta || '').trim(), (opcion_a || '').trim(), (opcion_b || '').trim(), (opcion_c || '').trim(), (correcta || 'A').trim(), tipo, parseInt(puntos, 10) || 10]
+      `INSERT INTO juegos (usuario_id, titulo, pregunta, opcion_a, opcion_b, opcion_c, opcion_correcta, tipo, puntos_recompensa)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING id`,
+      [req.session.usuarioId, (nombre || '').trim(), (pregunta || '').trim(), (opcion_a || '').trim(), (opcion_b || '').trim(), (opcion_c || '').trim(), (correcta || 'A').trim(), tipo, parseInt(puntos, 10) || 10]
     );
     const juegoId = juegoRes.rows[0].id;
 

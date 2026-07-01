@@ -76,6 +76,7 @@ const comentarioRoutes = require('./routes/comentarioRoutes');
 const moduloRoutes = require('./routes/moduloRoutes');
 const notificacionRoutes = require('./routes/notificacionRoutes');
 const recomendacionRoutes = require('./routes/recomendacionRoutes');
+const feedbackRoutes = require('./routes/feedbackRoutes');
 const traduccionController = require('./controllers/traduccionController');
 const { verificarSesion, esEspecialista } = require('./middlewares/autenticacion');
 const { calcularNivel } = require('./utils/niveles');
@@ -101,6 +102,7 @@ app.use(comentarioRoutes);
 app.use(moduloRoutes);
 app.use(notificacionRoutes);
 app.use(recomendacionRoutes);
+app.use(feedbackRoutes);
 app.post('/api/traducir', traduccionController.traducir);
 
 app.get('/home', verificarSesion, (req, res) => {
@@ -143,6 +145,7 @@ app.get('/recomendaciones', verificarSesion, (req, res) => res.render('recomenda
 app.get('/comunidad', (req, res) => res.render('comunidad'));
 app.get('/historias', (req, res) => res.render('historias'));
 app.get('/juegos', verificarSesion, (req, res) => res.render('juegos'));
+app.get('/play-game', verificarSesion, (req, res) => res.render('play-game'));
 app.get('/barra_navegacion', (req, res) => res.render('barra_navegacion'));
 app.get('/registro', (req, res) => res.render('Registro'));
 app.get('/login', (req, res) => res.render('login'));
@@ -207,6 +210,22 @@ app.listen(PORT, async () => {
         console.log('Columna avatar_fondo lista.');
     } catch (err) {
         console.error('Error agregando avatar_fondo:', err.message);
+    }
+
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS feedback (
+                id SERIAL PRIMARY KEY,
+                usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+                mensaje TEXT NOT NULL,
+                pagina VARCHAR(500) DEFAULT '',
+                leido BOOLEAN DEFAULT false,
+                fecha_creacion TIMESTAMP DEFAULT NOW()
+            )
+        `);
+        console.log('Tabla feedback lista.');
+    } catch (err) {
+        console.error('Error creando tabla feedback:', err.message);
     }
 
     try {
