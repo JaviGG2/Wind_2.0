@@ -3,7 +3,13 @@ const barraHTML = `
   <!-- Importar Material Symbols -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
   <nav class="barra-navegacion">
-    <div class="logo-menu"><img src="/img/app.png" alt="Wind"></div>
+    <div class="logo-menu">
+      <img src="/img/app.png" alt="Wind">
+      <button id="btn-notif-barra" class="notif-barra-btn" aria-label="Notificaciones">
+        <span class="material-symbols-outlined">notifications</span>
+        <span id="notif-badge" class="notif-badge" style="display:none;">0</span>
+      </button>
+    </div>
     <a href="/home" class="nav-link"><span class="material-symbols-outlined">explore</span><span>Descubrir</span></a>
     <a href="/comunidad" class="nav-link"><span class="material-symbols-outlined">Groups_2</span><span>Comunidad</span></a>
     <a href="/juegos" class="nav-link"><span class="material-symbols-outlined">Play_circle</span><span>Jugar</span></a>
@@ -68,6 +74,13 @@ function insertarBarra() {
       } catch (error) {
         console.error('Error al cerrar sesión:', error);
       }
+    });
+  }
+
+  const notifBtn = document.getElementById('btn-notif-barra');
+  if (notifBtn) {
+    notifBtn.addEventListener('click', () => {
+      window.location.href = '/notificaciones';
     });
   }
 
@@ -137,7 +150,7 @@ function initFeedback() {
     '/home': 'Descubrir', '/comunidad': 'Comunidad', '/juegos': 'Juegos',
     '/dashboard': 'Perfil', '/relatos': 'Relatos', '/ver-relato': 'Relato',
     '/ver-tema': 'Tema', '/notificaciones': 'Notificaciones',
-    '/recomendaciones': 'Recomendaciones', '/play-game': 'Juego',
+    '/recomendaciones': 'Recomendaciones', '/ser-rol': 'Ser Especialista', '/play-game': 'Juego',
     '/modulos': 'Módulos', '/crear-relato': 'Crear Relato',
     '/subir-tema': 'Subir Tema', '/ajustes-perfil': 'Ajustes'
   };
@@ -190,9 +203,17 @@ function initFeedback() {
   }
 }
 
+function cargarTraductor() {
+  if (document.querySelector('script[src="/js/traductor.js"]')) return;
+  const s = document.createElement('script');
+  s.src = '/js/traductor.js';
+  document.body.appendChild(s);
+}
+
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => { insertarBarra(); initFeedback(); });
+  document.addEventListener('DOMContentLoaded', () => { insertarBarra(); initFeedback(); cargarTraductor(); });
 } else {
   insertarBarra();
   initFeedback();
+  cargarTraductor();
 }

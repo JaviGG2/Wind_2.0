@@ -142,10 +142,12 @@ app.get('/ver-tema', verificarSesion, (req, res) => {
 });
 
 app.get('/recomendaciones', verificarSesion, (req, res) => res.render('recomendaciones'));
+app.get('/ser-rol', verificarSesion, (req, res) => res.render('ser-rol'));
 app.get('/comunidad', (req, res) => res.render('comunidad'));
 app.get('/historias', (req, res) => res.render('historias'));
 app.get('/juegos', verificarSesion, (req, res) => res.render('juegos'));
 app.get('/play-game', verificarSesion, (req, res) => res.render('play-game'));
+app.get('/ranking-game', verificarSesion, (req, res) => res.render('ranking-game'));
 app.get('/barra_navegacion', (req, res) => res.render('barra_navegacion'));
 app.get('/registro', (req, res) => res.render('Registro'));
 app.get('/login', (req, res) => res.render('login'));

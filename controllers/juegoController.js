@@ -145,6 +145,22 @@ exports.listarPublicos = async (req, res) => {
     }
 };
 
+exports.rankingGlobal = async (req, res) => {
+    try {
+        const result = await db.query(
+            `SELECT id, nombre, username, puntos, imagen_perfil, avatar_fondo
+             FROM usuarios
+             WHERE puntos > 0
+             ORDER BY puntos DESC
+             LIMIT 100`
+        );
+        return res.json(result.rows);
+    } catch (error) {
+        console.error('Error al obtener ranking:', error.message);
+        return res.status(500).json({ mensaje: 'Error al cargar ranking.' });
+    }
+};
+
 exports.eliminarJuego = async (req, res) => {
     if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
         return res.status(403).json({ mensaje: 'Acceso denegado.' });

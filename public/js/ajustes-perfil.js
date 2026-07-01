@@ -21,6 +21,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     cargarNivelPerfil();
 
+    const selectorIdioma = document.getElementById('selector-idioma');
+    const idiomaGuardado = localStorage.getItem('wind_idioma') || '';
+    if (selectorIdioma) {
+        selectorIdioma.value = idiomaGuardado;
+        document.getElementById('btn-guardar-idioma')?.addEventListener('click', () => {
+            const lang = selectorIdioma.value;
+            localStorage.setItem('wind_idioma', lang);
+            const msj = document.getElementById('mensaje-idioma');
+            if (lang) {
+                msj.textContent = 'Idioma aplicado. Recarga la página para ver la traducción.';
+                msj.className = 'ajustes-mensaje exito';
+            } else {
+                msj.textContent = 'Idioma restaurado a español. Recarga para aplicar.';
+                msj.className = 'ajustes-mensaje exito';
+            }
+        });
+    }
+
     document.getElementById('btn-guardar-username')?.addEventListener('click', async () => {
         const input = document.getElementById('input-nuevo-username');
         const username = input.value.trim().toLowerCase();

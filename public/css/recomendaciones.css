@@ -10,35 +10,44 @@
 }
 
 .recom-header-icon {
-  width: 64px; height: 64px;
-  background: linear-gradient(135deg, #ff4500, #ff7300);
-  border-radius: 18px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 14px;
-  box-shadow: 0 8px 24px rgba(255,69,0,0.25);
-}
-
-.recom-header-icon {
   position: relative;
-  width: auto;
-  height: auto;
-  background: none;
-  box-shadow: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  display: inline-block;
+  margin-bottom: 14px;
+ 
+  overflow: visible; 
 }
-
 .recom-logo {
-  height: 48px;
-  width: auto;
+  display: block;
+  position: relative;
+  z-index: 1;
+  width: 90px;
+  height: 90px;
 }
 
-.beta-badge {
-  height: 22px;
-  width: auto;
+.recom-glow {
+  position: absolute;
+  width: 100px !important;
+  height: 100px !important;
+  
+ 
+  max-width: none !important;
+  max-height: none !important;
+  
+  
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  
+  animation: recom-spin 6s linear infinite;
+  pointer-events: none;
+  object-fit: contain;
+  z-index: 2; 
+}
+
+@keyframes recom-spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 .recom-header h1 {
@@ -172,6 +181,17 @@
 #btn-entrenar:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+@media (min-width: 769px) {
+  .contenido-principal {
+    margin-left: 280px;
+    padding: 30px 40px;
+    width: calc(100% - 280px);
+  }
+  .recomendaciones-root {
+    padding: 24px 0;
+  }
 }
 
 @media (max-width: 600px) {

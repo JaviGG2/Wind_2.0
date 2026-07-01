@@ -302,6 +302,28 @@ h1 {
   color: var(--texto-muted);
 }
 
+.btn-denunciar {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 14px;
+  margin-left: auto;
+  border: 1.5px solid #dc2626;
+  border-radius: 999px;
+  background: transparent;
+  color: #dc2626;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: default;
+  transition: background 0.15s;
+}
+.btn-denunciar .material-symbols-outlined {
+  font-size: 1.1rem;
+}
+.btn-denunciar:hover {
+  background: rgba(220, 38, 38, 0.06);
+}
+
 @media (max-width: 600px) {
   .barra-superior { padding: 8px 10px; }
   .imagen-principal { height: 220px; }

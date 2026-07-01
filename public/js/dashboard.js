@@ -35,9 +35,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (usernameElem) usernameElem.textContent = usuario.username ? `${usuario.username}` : '';
         if (rolElem) {
             const rol = usuario.rol || '';
-            rolElem.innerHTML = usuario.rol === 'Especialista'
+            const esEspecialista = usuario.rol === 'Especialista';
+            rolElem.innerHTML = esEspecialista
                 ? `${rol} <span class="badge-especialista anim-fade-in"  data-info="Perfil(Especialista)"><img src="/img/Rol.png" alt="Especialista" class="anim-rotate anim-fade-in"></span>`
                 : rol;
+            const ascenderWrap = document.getElementById('btn-ascender-wrap');
+            if (ascenderWrap) {
+                ascenderWrap.style.display = esEspecialista ? 'none' : '';
+            }
         }
         if (avatarElem) {
             if (usuario.imagen_perfil) avatarElem.src = usuario.imagen_perfil;

@@ -19,6 +19,7 @@ router.post('/auth/restablecer-contrasena', authController.restablecerContrasena
 router.post('/auth/actualizar-nombre', authController.actualizarNombre);
 router.post('/auth/actualizar-username', authController.actualizarUsername);
 router.post('/auth/cambiar-contrasena', authController.cambiarContrasena);
+router.post('/auth/solicitar-ascenso', upload.single('foto'), authController.solicitarAscenso);
 router.get('/api/categorias', async (req, res) => {
     try {
         const result = await db.query('SELECT id, nombre FROM categorias ORDER BY nombre ASC');

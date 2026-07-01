@@ -1,0 +1,273 @@
+.ser-hero {
+    text-align: center;
+    padding: 48px 24px 32px;
+}
+.ser-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 0 0 4px rgba(255,69,0,0.12);
+}
+.ser-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 0 0 8px;
+}
+.ser-subtitle {
+    color: rgba(255,255,255,0.55);
+    font-size: 1rem;
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.ser-benefits {
+    padding: 0 0 32px;
+}
+.ser-benefits-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 24px;
+    text-align: center;
+}
+.ser-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
+    gap: 16px;
+}
+.ser-card {
+    background: #161616;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 16px;
+    padding: 24px;
+    transition: border-color 0.2s, transform 0.2s;
+}
+.ser-card:hover {
+    border-color: rgba(255,255,255,0.12);
+    transform: translateY(-2px);
+}
+.ser-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+}
+.ser-card-icon .material-symbols-outlined {
+    font-size: 26px;
+}
+.ser-card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 6px;
+}
+.ser-card-desc {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.ser-form-section {
+    padding-bottom: 48px;
+}
+.ser-form-card {
+    background: #161616;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px;
+    padding: 36px 32px 28px;
+    max-width: 580px;
+    margin: 0 auto;
+}
+.ser-form-header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+.ser-form-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    margin-bottom: 12px;
+}
+.ser-form-header h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 6px;
+}
+.ser-form-header p {
+    color: rgba(255,255,255,0.45);
+    font-size: 0.88rem;
+    margin: 0;
+}
+.ser-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+.ser-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+.ser-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.ser-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.65);
+}
+.ser-required {
+    color: #ef4444;
+}
+.ser-input {
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: #1e1e1e;
+    color: #fff;
+    font-size: 0.9rem;
+    font-family: inherit;
+    transition: border-color 0.15s;
+}
+.ser-input:focus {
+    outline: none;
+    border-color: #ff4500;
+}
+.ser-input-readonly {
+    color: rgba(255,255,255,0.45);
+    cursor: default;
+}
+.ser-textarea {
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: #1e1e1e;
+    color: #fff;
+    font-size: 0.9rem;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 100px;
+    transition: border-color 0.15s;
+}
+.ser-textarea:focus {
+    outline: none;
+    border-color: #ff4500;
+}
+.ser-textarea::placeholder {
+    color: rgba(255,255,255,0.25);
+}
+.ser-file-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: 1px dashed rgba(255,255,255,0.15);
+    background: #1e1e1e;
+    color: rgba(255,255,255,0.55);
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    width: fit-content;
+}
+.ser-file-label:hover {
+    border-color: #ff4500;
+    background: #222;
+    color: #fff;
+}
+.ser-file-label .material-symbols-outlined {
+    font-size: 20px;
+}
+.ser-file-input {
+    display: none;
+}
+.ser-file-preview {
+    position: relative;
+    display: inline-block;
+    margin-top: 10px;
+}
+.ser-file-preview img {
+    max-height: 140px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+.ser-file-remove {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0,0,0,0.65);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ser-file-remove .material-symbols-outlined {
+    font-size: 16px;
+}
+.ser-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 32px;
+    background: #ff4500;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    width: 100%;
+}
+.ser-cta-btn:hover {
+    background: #e63e00;
+    transform: scale(1.01);
+}
+.ser-cta-btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+    transform: none;
+}
+.ser-rol-msg {
+    font-size: 0.88rem;
+    min-height: 1.2em;
+    text-align: center;
+}
+.ser-rol-msg.success { color: #10b981; }
+.ser-rol-msg.error { color: #ef4444; }
+.ser-back-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: rgba(255,255,255,0.3);
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: color 0.15s;
+}
+.ser-back-link:hover {
+    color: rgba(255,255,255,0.6);
+}
+
+@media (max-width: 768px) {
+    .ser-title { font-size: 1.5rem; }
+    .ser-grid { grid-template-columns: 1fr; }
+    .ser-hero { padding: 32px 16px 24px; }
+    .ser-form-card { padding: 24px 18px; }
+    .ser-form-row { grid-template-columns: 1fr; }
+}

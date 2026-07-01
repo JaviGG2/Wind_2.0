@@ -552,6 +552,60 @@ exports.actualizarUsername = async (req, res) => {
     }
 };
 
+exports.solicitarAscenso = async (req, res) => {
+    if (!req.session.usuarioId) {
+        return res.status(401).json({ mensaje: 'Debes iniciar sesión.' });
+    }
+    if (req.session.rol === 'Especialista') {
+        return res.status(400).json({ mensaje: 'Ya eres Especialista.' });
+    }
+    try {
+        const userRes = await db.query(
+            'SELECT nombre, username, correo, puntos FROM usuarios WHERE id = $1',
+            [req.session.usuarioId]
+        );
+        const user = userRes.rows[0];
+        if (!user) {
+            return res.status(404).json({ mensaje: 'Usuario no encontrado.' });
+        }
+
+        const mensaje = req.body.mensaje || '';
+        let fotoUrl = '';
+
+        if (req.file) {
+            const { subirASupabase } = require('../middlewares/subidaImagen');
+            fotoUrl = await subirASupabase(req.file, 'solicitudes') || '';
+        }
+
+        const equipo = process.env.CORREO_EMISOR || 'corotour55@gmail.com';
+        const asunto = 'Nueva solicitud de Especialista';
+        const html = `
+            <h2 style="color:#ff4500;">Nueva solicitud de ascenso a Especialista</h2>
+            <table style="width:100%;border-collapse:collapse;font-family:sans-serif;">
+                <tr><td style="padding:8px 12px;background:#f5f5f5;"><strong>Nombre</strong></td><td style="padding:8px 12px;">${user.nombre || '—'}</td></tr>
+                <tr><td style="padding:8px 12px;background:#f5f5f5;"><strong>Usuario</strong></td><td style="padding:8px 12px;">${user.username || '—'}</td></tr>
+                <tr><td style="padding:8px 12px;background:#f5f5f5;"><strong>Correo</strong></td><td style="padding:8px 12px;">${user.correo || '—'}</td></tr>
+                <tr><td style="padding:8px 12px;background:#f5f5f5;"><strong>Puntos</strong></td><td style="padding:8px 12px;">${user.puntos || 0}</td></tr>
+                <tr><td style="padding:8px 12px;background:#f5f5f5;"><strong>ID</strong></td><td style="padding:8px 12px;">${req.session.usuarioId}</td></tr>
+            </table>
+            <h3 style="margin-top:24px;">Mensaje del solicitante</h3>
+            <blockquote style="background:#f9f9f9;padding:16px;border-left:4px solid #ff4500;margin:0;font-style:italic;">${mensaje.replace(/\n/g, '<br>') || '(sin mensaje)'}</blockquote>
+            ${fotoUrl ? `<h3 style="margin-top:24px;">Foto de soporte</h3><p><a href="${fotoUrl}" target="_blank">Ver imagen</a> | <img src="${fotoUrl}" alt="" style="max-width:400px;border-radius:8px;display:block;margin-top:8px;"></p>` : ''}
+            <hr style="margin-top:28px;">
+            <p style="color:#666;">Para aprobarlo, actualiza su rol a <strong>Especialista</strong> en la base de datos.</p>
+        `;
+
+        await enviarCorreo(equipo, asunto, html);
+
+        return res.json({
+            mensaje: 'Solicitud enviada. El equipo de desarrollo revisará tu perfil y te contactará pronto.'
+        });
+    } catch (error) {
+        console.error('Error al solicitar ascenso:', error);
+        return res.status(500).json({ mensaje: 'Error al enviar la solicitud. Intenta de nuevo.' });
+    }
+};
+
 exports.cambiarContrasena = async (req, res) => {
     const { contrasenaActual, nuevaContrasena } = req.body;
     if (!contrasenaActual || !nuevaContrasena) {

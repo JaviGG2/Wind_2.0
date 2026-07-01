@@ -161,53 +161,98 @@
         height: calc(100vh - 20px);
         position: fixed;
         top: 10px;
-        left: 0;
-        padding: 24px 20px;
-        gap: 12px;
+        left: 10px;
+        padding: 28px 16px;
+        gap: 6px;
         box-sizing: border-box;
-        margin-left: 5px;
-        margin-top: 0px;
-        border-radius: 15px;
-        margin-bottom: 10px;
+        border-radius: 18px;
+        background: #161616;
+        border: 1px solid rgba(255,255,255,0.04);
     }
 
     .logo-menu {
         display: flex;
-        justify-content: flex-start;
-        padding: 4px 0 8px;
-        margin-bottom: 2px;
+        justify-content: space-between;
+        align-items: center;
+        padding: 2px 4px 16px;
+        margin-bottom: 4px;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
     }
 
     .logo-menu img {
-        width: 42px;
-        height: 42px;
-        border-radius: 15px;
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
         object-fit: contain;
+    }
+
+    .notif-barra-btn {
+        background: none;
+        border: none;
+        color: rgba(255,255,255,0.55);
+        cursor: pointer;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        transition: background 0.2s, color 0.2s;
+    }
+    .notif-barra-btn:hover {
+        background: rgba(255,255,255,0.06);
+        color: #fff;
+    }
+    .notif-barra-btn .material-symbols-outlined {
+        font-size: 24px;
+    }
+    .notif-barra-btn .notif-badge {
+        top: -2px;
+        right: -2px;
+        font-size: 0.5rem;
+        min-width: 14px;
+        height: 14px;
     }
 
     .nav-link {
         flex-direction: row;
-        font-size: 1.1rem;
-        padding: 12px 15px;
-        border-radius: 8px;
+        font-size: 0.95rem;
+        padding: 11px 14px;
+        border-radius: 10px;
         justify-content: flex-start;
-        gap: 10px;
-        background-color: #121212;
+        gap: 12px;
+        background: transparent;
+        font-weight: 500;
+        position: relative;
     }
 
     .nav-link:hover {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 0.06);
+        opacity: 0.9;
+    }
+
+    .nav-link.active { 
+        background: #ff4500;
+        opacity: 1;
+        font-weight: 600;
+    }
+    .nav-link.active:hover {
+        background: #e63e00;
+    }
+
+    .nav-link .material-symbols-outlined {
+        font-size: 24px;
     }
 
     .logout-link {
         margin-top: auto;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        padding-top: 10px;
+        margin-bottom: 4px;
+    }
+    .logout-link:hover {
+        background: rgba(255,255,255,0.04);
     }
 
-    .nav-link.active { 
-        animation: fadeIn 0.18s ease-out forwards;
-    }
-
-    .nav-link .material-symbols-outlined {
-        font-size: 28px;
-    }
 }

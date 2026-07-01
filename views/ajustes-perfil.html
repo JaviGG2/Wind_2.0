@@ -71,6 +71,26 @@
                 </div>
 
                 <div class="ajustes-seccion">
+                    <h4>Traducir página</h4>
+                    <p class="muted" style="margin-bottom:10px;">Selecciona un idioma para traducir todo el contenido automáticamente.</p>
+                    <div class="ajustes-form-row">
+                        <select id="selector-idioma" class="input" style="flex:1;">
+                            <option value="">Español (original)</option>
+                            <option value="en">English</option>
+                            <option value="fr">Français</option>
+                            <option value="pt">Português</option>
+                            <option value="it">Italiano</option>
+                            <option value="de">Deutsch</option>
+                            <option value="nl">Nederlands</option>
+                            <option value="ja">日本語</option>
+                            <option value="zh">中文</option>
+                        </select>
+                        <button id="btn-guardar-idioma" class="boton-enviar" style="width:auto;">Aplicar</button>
+                    </div>
+                    <div id="mensaje-idioma" class="ajustes-mensaje"></div>
+                </div>
+
+                <div class="ajustes-seccion">
                     <h4>Cambiar Contraseña</h4>
                     <div class="ajustes-form-row">
                         <input type="password" id="input-contrasena-actual" class="input" placeholder="Contraseña actual">
