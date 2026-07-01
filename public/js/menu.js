@@ -10,7 +10,7 @@ const barraHTML = `
     <a href="/dashboard" class="nav-link"><span class="material-symbols-outlined">person</span><span>Perfil</span></a>
     <a href="#" id="menu-logout" class="nav-link logout-link"><span class="material-symbols-outlined">logout</span><span>Cerrar Sesión</span></a>
   </nav>
-  <style>#fab-feedback,#feedback-overlay{display:none!important}</style>
+  <style>.fab-feedback,.feedback-modal-overlay{display:none!important}</style>
   <link rel="stylesheet" href="/css/feedback.css">
   <button class="fab-feedback" id="fab-feedback" aria-label="Enviar feedback">
     <span class="material-symbols-outlined">feedback</span>
