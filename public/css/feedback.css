@@ -37,7 +37,7 @@
     padding: 20px;
 }
 .feedback-modal-overlay.open {
-    display: flex;
+    display: flex !important;
 }
 .feedback-modal {
     background: #fff;
@@ -146,7 +146,8 @@
 .feedback-msg.error { color: #dc3545; display: block; }
 
 @media (max-width: 480px) {
-    .fab-feedback {
+.fab-feedback {
+    display: flex !important;
         bottom: 80px;
         right: 16px;
         width: 50px;
