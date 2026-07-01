@@ -55,7 +55,8 @@ exports.obtenerRelatos = async (req, res) => {
                        r.usuario_id, r.imagen_url,
                      u.nombre AS autor_nombre,
                         u.imagen_perfil AS autor_avatar,
-                        u.avatar_fondo AS autor_avatar_fondo
+                        u.avatar_fondo AS autor_avatar_fondo,
+                        u.rol AS autor_rol
                 FROM relatos_community r
                 LEFT JOIN usuarios u ON r.usuario_id = u.id
                 WHERE r.categoria = $1
@@ -69,7 +70,8 @@ exports.obtenerRelatos = async (req, res) => {
                        r.usuario_id, r.imagen_url,
                      u.nombre AS autor_nombre,
                         u.imagen_perfil AS autor_avatar,
-                        u.avatar_fondo AS autor_avatar_fondo
+                        u.avatar_fondo AS autor_avatar_fondo,
+                        u.rol AS autor_rol
                 FROM relatos_community r
                 LEFT JOIN usuarios u ON r.usuario_id = u.id
                 ORDER BY r.fecha_publicacion DESC
@@ -106,7 +108,10 @@ exports.obtenerRelato = async (req, res) => {
         const querySQL = `
             SELECT r.id, r.titulo, r.contenido_relato, r.fecha_publicacion,
                    r.usuario_id, r.imagen_url,
-                   u.nombre AS autor_nombre
+                   u.nombre AS autor_nombre,
+                   u.imagen_perfil AS autor_avatar,
+                   u.avatar_fondo AS autor_avatar_fondo,
+                   u.rol AS autor_rol
             FROM relatos_community r
             LEFT JOIN usuarios u ON r.usuario_id = u.id
             WHERE r.id = $1

@@ -118,7 +118,8 @@ exports.listarTemas = async (req, res) => {
                     c.nombre AS categoria_nombre,
                     u.nombre AS creador_nombre,
                     u.imagen_perfil AS creador_avatar,
-                    u.avatar_fondo AS creador_avatar_fondo
+                    u.avatar_fondo AS creador_avatar_fondo,
+                    u.rol AS creador_rol
              FROM temas t
              LEFT JOIN categorias c ON t.categoria_id = c.id
              LEFT JOIN usuarios u ON t.creador_id = u.id
@@ -136,7 +137,8 @@ exports.listarTemas = async (req, res) => {
                     c.nombre AS categoria_nombre,
                     u.nombre AS creador_nombre,
                     u.imagen_perfil AS creador_avatar,
-                    u.avatar_fondo AS creador_avatar_fondo
+                    u.avatar_fondo AS creador_avatar_fondo,
+                    u.rol AS creador_rol
              FROM temas t
              LEFT JOIN categorias c ON t.categoria_id = c.id
              LEFT JOIN usuarios u ON t.creador_id = u.id
@@ -169,7 +171,8 @@ exports.obtenerTemaPorId = async (req, res) => {
                         c.nombre AS categoria_nombre,
                         u.nombre AS creador_nombre,
                     u.imagen_perfil AS creador_avatar,
-                    u.avatar_fondo AS creador_avatar_fondo
+                    u.avatar_fondo AS creador_avatar_fondo,
+                    u.rol AS creador_rol
                  FROM temas t
                  LEFT JOIN categorias c ON t.categoria_id = c.id
                  LEFT JOIN usuarios u ON t.creador_id = u.id
@@ -187,7 +190,8 @@ exports.obtenerTemaPorId = async (req, res) => {
                         c.nombre AS categoria_nombre,
                         u.nombre AS creador_nombre,
                         u.imagen_perfil AS creador_avatar,
-                        u.avatar_fondo AS creador_avatar_fondo
+                        u.avatar_fondo AS creador_avatar_fondo,
+                        u.rol AS creador_rol
                  FROM temas t
                  LEFT JOIN categorias c ON t.categoria_id = c.id
                  LEFT JOIN usuarios u ON t.creador_id = u.id

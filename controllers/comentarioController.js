@@ -8,7 +8,7 @@ exports.listarComentarios = async (req, res) => {
     try {
         const result = await db.query(
             `SELECT c.id, c.contenido, c.fecha_creacion, c.usuario_id,
-                    u.nombre AS usuario_nombre, u.imagen_perfil AS usuario_avatar, u.avatar_fondo AS usuario_avatar_fondo
+                    u.nombre AS usuario_nombre, u.imagen_perfil AS usuario_avatar, u.avatar_fondo AS usuario_avatar_fondo, u.rol AS usuario_rol
              FROM comentarios c
              JOIN usuarios u ON c.usuario_id = u.id
              WHERE c.tema_id = $1

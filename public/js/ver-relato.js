@@ -1,34 +1,61 @@
 const params = new URLSearchParams(window.location.search);
 const relatoId = params.get('id');
 
+const bloqueCarga = document.getElementById('bloque-carga');
+const bloqueContenido = document.getElementById('bloque-contenido');
+const txtTitulo = document.getElementById('txt-titulo');
+const txtCuerpo = document.getElementById('txt-cuerpo');
+const imgPortada = document.getElementById('img-portada');
+const autorAvatar = document.getElementById('autor-avatar');
+const autorNombre = document.getElementById('autor-nombre');
+const autorFecha = document.getElementById('autor-fecha');
+
 if (!relatoId) {
-    document.getElementById('relato-container').innerHTML = '<p>No se especificó un relato.</p>';
+    if (bloqueCarga) bloqueCarga.innerHTML = '<p>No se especificó un relato.</p>';
 } else {
-    fetch(`/api/relatos/${relatoId}`)
+    fetch(`/api/relatos/${relatoId}`, { credentials: 'include' })
         .then(r => {
             if (!r.ok) throw new Error('Relato no encontrado');
             return r.json();
         })
         .then(relato => {
-            const container = document.getElementById('relato-container');
-            let imagenHTML = '';
-            if (relato.imagen_url) {
-                imagenHTML = `<img src="${relato.imagen_url}" alt="${relato.titulo}" style="max-width:100%;height:auto;border-radius:8px;margin-top:16px;display:block;">`;
+            if (bloqueCarga) bloqueCarga.style.display = 'none';
+            if (bloqueContenido) bloqueContenido.style.display = 'block';
+
+            const fecha = relato.fecha_publicacion
+                ? new Date(relato.fecha_publicacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
+                : '';
+
+            const autor = relato.autor_nombre || 'Anónimo';
+            const inicial = autor.charAt(0).toUpperCase();
+            const avatarFondo = relato.autor_avatar_fondo || '#e8e8e8';
+            const esEspecialista = relato.autor_rol === 'Especialista';
+            const badgeHtml = esEspecialista ? '<span class="badge-especialista"><img src="/img/Rol.png" alt="Especialista"></span>' : '';
+
+            if (autorAvatar) {
+                if (relato.autor_avatar) {
+                    autorAvatar.innerHTML = `<img src="${relato.autor_avatar}" alt="${autor}" onerror="this.outerHTML='${inicial}'" style="background:${avatarFondo};">`;
+                } else {
+                    autorAvatar.textContent = inicial;
+                }
             }
-            container.innerHTML = `
-                <article>
-                    <h1>${relato.titulo}</h1>
-                    <p style="color:#666;font-size:0.9em;">
-                        Por ${relato.autor_nombre || 'Anónimo'} —
-                        ${new Date(relato.fecha_publicacion).toLocaleDateString()}
-                    </p>
-                    <p>${relato.contenido_relato}</p>
-                    ${imagenHTML}
-                </article>
-            `;
+
+            if (autorNombre) autorNombre.innerHTML = `${autor} ${badgeHtml}`;
+            if (autorFecha) autorFecha.textContent = fecha;
+
+            if (txtTitulo) txtTitulo.textContent = relato.titulo || 'Sin título';
+
+            if (imgPortada && relato.imagen_url) {
+                imgPortada.style.backgroundImage = `url(${JSON.stringify(relato.imagen_url)})`;
+            } else if (imgPortada) {
+                imgPortada.style.display = 'none';
+            }
+
+            if (txtCuerpo) txtCuerpo.textContent = relato.contenido_relato || '';
         })
         .catch(err => {
-            document.getElementById('relato-container').innerHTML =
-                `<p style="color:red;">Error: ${err.message}</p>`;
+            if (bloqueCarga) {
+                bloqueCarga.innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
+            }
         });
 }

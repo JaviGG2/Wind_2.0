@@ -69,7 +69,7 @@ function crearPopupRelato(relato) {
                 <span class="material-symbols-outlined">close</span>
             </button>
             <h2>${relato.titulo}</h2>
-            <p class="popup-meta">${relato.autor_nombre || 'Anónimo'} — ${new Date(relato.fecha_publicacion).toLocaleDateString()}</p>
+            <p class="popup-meta">${relato.autor_nombre || 'Anónimo'}${relato.autor_rol === 'Especialista' ? '<span class="badge-especialista"><img src="/img/Rol.png" alt="Especialista"></span>' : ''} — ${new Date(relato.fecha_publicacion).toLocaleDateString()}</p>
             <p>${relato.contenido_relato}</p>
             ${relato.imagen_url ? `<img src="${relato.imagen_url}" alt="${relato.titulo}">` : ''}
         </div>

@@ -46,9 +46,6 @@ async function cargarDatosJuegos() {
             $('#mis-puntos-count').textContent = state.puntosUsuario;
         }
 
-        const categorias = [...new Set(juegosCache.map(j => j.categoria_nombre).filter(Boolean))];
-        renderFiltros(categorias);
-
         if (state.filtro) {
             aplicarFiltro(state.filtro);
         } else {
@@ -58,29 +55,6 @@ async function cargarDatosJuegos() {
         if (statusEl) statusEl.textContent = 'Error al cargar';
         console.error('[juegos-page] Error cargando datos:', err);
     }
-}
-
-function renderFiltros(categorias) {
-    const contenedor = $('#filtros-juegos');
-    if (!contenedor) return;
-
-    categorias.forEach(cat => {
-        const chip = document.createElement('button');
-        chip.className = 'chip';
-        chip.dataset.categoria = cat;
-        chip.innerHTML = `<span class="material-symbols-outlined">category</span> ${cat}`;
-        contenedor.appendChild(chip);
-    });
-
-    contenedor.querySelectorAll('button').forEach(btn => {
-        btn.addEventListener('click', () => {
-            contenedor.querySelectorAll('button').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            const categoria = btn.dataset.categoria;
-            state.filtro = categoria;
-            aplicarFiltro(categoria);
-        });
-    });
 }
 
 function aplicarFiltro(categoria) {
@@ -504,4 +478,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     $('#juego-close-btn')?.addEventListener('click', cerrarModal);
     $('#btn-siguiente-juego')?.addEventListener('click', siguienteTrivia);
+
+    window.addEventListener('category-change', (e) => {
+        state.filtro = e.detail.categoria_nombre;
+        aplicarFiltro(e.detail.categoria_nombre);
+    });
 });

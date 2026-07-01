@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/css/ver-tema.css">
     <link rel="stylesheet" href="/css/menu.css">
     <link rel="stylesheet" href="/css/animaciones.css">
+    <link rel="stylesheet" href="/css/info-popup.css">
     <link rel="manifest" href="/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -39,8 +40,8 @@
                     <option value="de">Alemán</option>
                 </select>
                 <button type="button" id="btn-traducir" class="btn-traducir">Traducir</button>
-                <button type="button" id="btn-original" class="btn-original" style="display:none">Original</button>
-                <span id="traduciendo" class="traduciendo" style="display:none">Traduciendo...</span>
+                <button type="button" id="btn-original" class="btn-original anim-fade-in" style="display:none">Original</button>
+                <span id="traduciendo" class="traduciendo anim-fade-in" style="display:none">Traduciendo...</span>
             </div>
         </div>
 
@@ -72,5 +73,6 @@
     </main>
 
     <script src="/js/ver-temas.js"></script>
+    <script type="module" src="/js/info-burbuja.js"></script>
 </body>
 </html>

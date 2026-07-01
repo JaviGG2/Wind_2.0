@@ -349,6 +349,27 @@ select.input {
     background: rgba(255, 69, 0, 0.1);
 }
 
+.avatar-con-badge {
+    position: relative;
+    display: inline-flex;
+}
+
+.badge-especialista {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    margin-left: 4px;
+    cursor: pointer;
+}
+
+.badge-especialista img {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 @media (max-width: 640px) {
     :root {
         --spacing-lg: 16px;

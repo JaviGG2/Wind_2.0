@@ -27,7 +27,7 @@
     <div class="app-layout">
         <div id="menu-placeholder"></div>
         <main class="contenido-principal">
-        <div class="dashboard-root anim-fade-down">
+        <div class="dashboard-root">
             <header class="dashboard-header">
                 <div class="dashboard-header-top">
                     <div class="perfil-cabecera">
@@ -37,16 +37,16 @@
                                 <h2 id="nombre-usuario">Panel de Control</h2>
                                 <div id="username" class="muted username">&nbsp;</div>
                             </div>
-                            <div id="rol-usuario" class="rol-usuario">Cargando perfil...</div>
+                            <div id="rol-usuario" class="rol-usuario ">Cargando perfil...</div>
                         </div>
                     </div>
                     <div class="perfil-acciones">
                         <div class="notif-bell-wrapper">
                             <button id="btn-notif-bell" class="btn-icono-config" aria-label="Notificaciones">
-                                <span class="material-symbols-outlined">notifications</span>
+                                <span class="material-symbols-outlined anim-fade-down">notifications</span>
                                 <span id="notif-badge" class="notif-badge" style="display:none;">0</span>
                             </button>
-                            <div id="notif-dropdown" class="notif-dropdown" style="display:none;">
+                            <div id="notif-dropdown" class="notif-dropdown " style="display:none;">
                                 <div class="notif-dropdown-header">
                                     <span>Notificaciones</span>
                                     <a href="/notificaciones" class="notif-dropdown-ver-todas">Ver todas</a>
@@ -57,10 +57,10 @@
                             </div>
                         </div>
                         <a href="/ajustes-perfil" class="btn-icono-config" aria-label="Configuración">
-                            <span class="material-symbols-outlined">settings</span>
+                            <span class="material-symbols-outlined anim-fade-down">settings</span>
                         </a>
                         <button id="btn-logout" class="btn-icono-config" aria-label="Cerrar sesión">
-                            <span class="material-symbols-outlined">logout</span>
+                            <span class="material-symbols-outlined anim-fade-down">logout</span>
                         </button>
                     </div>
                 </div>

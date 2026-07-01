@@ -17,11 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!temasContainer || !mensajeCarga) return;
 
-    async function cargarTemas() {
+    async function cargarTemas(categoriaId) {
         mensajeCarga.textContent = 'Cargando temas históricos...';
+        temasContainer.innerHTML = '';
 
         try {
-            const respuesta = await fetch('/api/temas',  {
+            const url = categoriaId ? `/api/temas?categoria=${categoriaId}` : '/api/temas';
+            const respuesta = await fetch(url, {
             method: 'GET',
         credentials: 'include',
         headers: {
@@ -53,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     tarjeta.style.cursor = 'pointer';
     const avatar = tema.creador_avatar || '/img/avatar.svg';
     const avatarFondo = tema.creador_avatar_fondo || '#e8e8e8';
+    const esEspecialista = tema.creador_rol === 'Especialista';
     const likesCount = tema.likes || 0;
 
     const yaDioLike = tema.usuario_dio_like === true;
@@ -62,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="tema-contenido">
             <div class="creator-row">
                 <img class="creator-avatar" src="${avatar}" alt="avatar" style="background:${avatarFondo};" />
-                <div class="creator-name">${tema.creador_nombre || 'Anónimo'}</div>
+                <div class="creator-name">${tema.creador_nombre || 'Anónimo'}${esEspecialista ? '<span class="badge-especialista"><img src="/img/Rol.png" alt="Especialista"></span>' : ''}</div>
             </div>
 
             <h3 class="tema-titulo">${tema.titulo || 'Tema sin título'}</h3>
@@ -122,7 +125,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return limpio.length > 160 ? `${limpio.slice(0, 160).trim()}...` : limpio;
     }
 
-    // Iniciamos: primero perfil, luego temas
+    window.addEventListener('category-change', (e) => {
+        cargarTemas(e.detail.categoria_id);
+    });
+
     (async () => {
         await fetchPerfil();
         await cargarTemas();

@@ -215,6 +215,92 @@
     color: #dc2626;
 }
 
+.login-split {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f5f6f8 0%, #e8eaef 100%);
+}
+
+.login-panel-bienvenida {
+    display: none;
+}
+
+.login-panel-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 26px 18px;
+}
+
+@media (min-width: 900px) {
+    .login-split {
+        background: #fff;
+    }
+
+    .login-panel-bienvenida {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        padding: 40px;
+        background: linear-gradient(135deg, #f3cdbf 30%);
+        color: #ff4500;
+        text-align: center;
+    }
+
+    .login-panel-bienvenida .logo-icono {
+        font-size: 4rem;
+        margin-bottom: 16px;
+        color: #ff4500;
+        font-variation-settings: 'FILL' 1;
+    }
+
+    .login-panel-bienvenida h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 0 0 12px;
+        color: #ff4500;
+    }
+
+    .login-panel-bienvenida p {
+        font-size: 1rem;
+        line-height: 1.5;
+        opacity: 0.9;
+        max-width: 360px;
+        margin: 0 auto 24px;
+    }
+
+    .login-panel-bienvenida .marcas-agua {
+        display: flex;
+        gap: 20px;
+        opacity: 0.3;
+    }
+
+    .login-panel-bienvenida .marcas-agua span {
+        font-size: 2.4rem;
+        font-variation-settings: 'FILL' 1;
+    }
+
+    .login-panel-form {
+        width: 440px;
+        min-width: 440px;
+        padding: 32px;
+    }
+
+    .login-panel-form .tarjeta-registro {
+        padding: 0;
+    }
+
+    .login-panel-form .logo-login {
+        display: none;
+    }
+}
+
 @media (max-width: 640px) {
     .contenedor-principal {
         padding: 16px;

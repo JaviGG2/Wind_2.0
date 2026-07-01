@@ -11,49 +11,55 @@
     <link rel="stylesheet" href="/css/animaciones.css">
 </head>
 <body>
-    <main class="contenedor-principal anim-fade-down ">
-        <div class="tarjeta-registro">
-            <div class="cabecera-login">
-                <img src="/img/app.png" alt="Wind" class="logo-login">
-                <h2>Iniciar Sesión</h2>
-                
+    <main class="login-split anim-fade-down">
+        <div class="login-panel-bienvenida anim-slide-up">
+            <img src="/img/logo2.png" alt="Wind" style="width:100px;height:auto;margin-bottom:20px;">
+            <h1>Wind</h1>
+            <p>Explora, aprende y preserva el patrimonio cultural de Coro. Descubre historias, tradiciones y secretos de nuestra tierra.</p>
+            <div class="marcas-agua">
+                <span class="material-symbols-outlined">explore</span>
+                <span class="material-symbols-outlined">auto_stories</span>
+                <span class="material-symbols-outlined">Groups_2</span>
             </div>
-            <p>Ingresa tus credenciales para acceder a Wind.</p>
-
-            
-            <form id="formulario-login">
-                <div class="grupo-campo">
-                    <label for="correo">Correo electrónico:</label>
-                    <input type="email" id="correo" required placeholder="tu@correo.com">
-                </div>
-                <div class="grupo-campo">
-                    <label for="contrasena">Contraseña:</label>
-                    <div class="campo-con-ojo">
-                        <input type="password" id="contrasena" required placeholder="Tu contraseña">
-                        <button type="button" class="btn-ojo" data-target="contrasena" tabindex="-1">
-                            <span class="material-symbols-outlined">visibility_off</span>
-                        </button>
-                    </div>
-                </div> 
-                
-                <button type="submit" class="boton-enviar">Ingresar</button> 
-                
-                <div id="mensaje-consola" class="mensaje-oculto"></div>
-
-                <p style="text-align:center;margin-top:12px;">
-                    <a href="/recuperar-contrasena" class="enlace-secundario" style="font-size:0.85rem;">¿Olvidaste tu contraseña?</a>
-                </p>
-            </form>
-
-            
-
-            
-            
-            <p class="texto-secundario">
-                ¿No tienes cuenta? <a href="/registro" class="enlace-secundario">Regístrate aquí</a>
-            </p>
         </div>
-        
+
+        <div class="login-panel-form">
+            <div class="tarjeta-registro" style="box-shadow:none;border:none;width:100%;">
+                <div class="cabecera-login">
+                    <img src="/img/app.png" alt="Wind" class="logo-login">
+                    <h2>Iniciar Sesión</h2>
+                </div>
+                <p>Ingresa tus credenciales para acceder a Wind.</p>
+
+                <form id="formulario-login">
+                    <div class="grupo-campo">
+                        <label for="correo">Correo electrónico:</label>
+                        <input type="email" id="correo" required placeholder="tu@correo.com">
+                    </div>
+                    <div class="grupo-campo">
+                        <label for="contrasena">Contraseña:</label>
+                        <div class="campo-con-ojo">
+                            <input type="password" id="contrasena" required placeholder="Tu contraseña">
+                            <button type="button" class="btn-ojo" data-target="contrasena" tabindex="-1">
+                                <span class="material-symbols-outlined">visibility_off</span>
+                            </button>
+                        </div>
+                    </div> 
+                    
+                    <button type="submit" class="boton-enviar">Ingresar</button> 
+                    
+                    <div id="mensaje-consola" class="mensaje-oculto"></div>
+
+                    <p style="text-align:center;margin-top:12px;">
+                        <a href="/recuperar-contrasena" class="enlace-secundario" style="font-size:0.85rem;">¿Olvidaste tu contraseña?</a>
+                    </p>
+                </form>
+
+                <p class="texto-secundario">
+                    ¿No tienes cuenta? <a href="/registro" class="enlace-secundario">Regístrate aquí</a>
+                </p>
+            </div>
+        </div>
     </main>
 
     <script src="/js/login.js"></script>

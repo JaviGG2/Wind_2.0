@@ -92,7 +92,7 @@ exports.buscarContenido = async (req, res) => {
         if (total === 0) {
             const [allTemas, allRelatos, allJuegos] = await Promise.all([
                 db.query(`SELECT id, titulo, contenido, imagen_portada AS imagen, 'tema' AS tipo, '/ver-tema?id=' || id AS url FROM temas ORDER BY fecha_publicacion DESC LIMIT 200`),
-                db.query(`SELECT id, titulo, contenido_relato AS contenido, imagen_url AS imagen, 'relato' AS tipo, '/relatos' AS url FROM relatos_community ORDER BY fecha_publicacion DESC LIMIT 200`),
+                db.query(`SELECT id, titulo, contenido_relato AS contenido, imagen_url AS imagen, 'relato' AS tipo, '/ver-relato?id=' || id AS url FROM relatos_community ORDER BY fecha_publicacion DESC LIMIT 200`),
                 db.query(`SELECT id, pregunta AS titulo, pregunta AS contenido, NULL AS imagen, 'juego' AS tipo, '/juegos?juego=' || id AS url FROM juegos ORDER BY id DESC LIMIT 200`)
             ]);
 

@@ -76,7 +76,7 @@
 }
 
 .anim-rotate {
-  animation: animRotate 2s linear infinite;
+  animation: animRotate 2s;
 }
 
 .anim-gradient {
@@ -262,8 +262,8 @@
 }
 
 @keyframes animRotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from { transform: rotate(160deg); opacity: 0; }
+  to { transform: rotate(360deg); opacity: 1}
 }
 
 @keyframes animGradient {
@@ -293,3 +293,5 @@
   60% { transform: rotate(-4deg); }
   80% { transform: rotate(4deg); }
 }
+
+

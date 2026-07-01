@@ -20,9 +20,25 @@
   box-shadow: 0 8px 24px rgba(255,69,0,0.25);
 }
 
-.recom-header-icon .material-symbols-outlined {
-  color: #fff;
-  font-size: 2rem;
+.recom-header-icon {
+  position: relative;
+  width: auto;
+  height: auto;
+  background: none;
+  box-shadow: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.recom-logo {
+  height: 48px;
+  width: auto;
+}
+
+.beta-badge {
+  height: 22px;
+  width: auto;
 }
 
 .recom-header h1 {

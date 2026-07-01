@@ -1,10 +1,10 @@
 let todosLosRelatos = [];
-let categoriaActiva = '';
 
 document.addEventListener('DOMContentLoaded', () => {
     cargarRelatos();
-    inicializarFiltros();
-    inicializarModal();
+    window.addEventListener('category-change', (e) => {
+        cargarRelatos(e.detail.categoria_nombre);
+    });
 });
 
 async function cargarRelatos(categoria = '') {
@@ -78,6 +78,8 @@ function crearCardRelato(relato, index) {
     const autor = relato.autor_nombre || 'Anónimo';
     const inicial = autor.charAt(0).toUpperCase();
     const avatarFondo = relato.autor_avatar_fondo || '#e8e8e8';
+    const esEspecialista = relato.autor_rol === 'Especialista';
+    const badgeHtml = esEspecialista ? '<span class="badge-especialista"><img src="/img/Rol.png" alt="Especialista"></span>' : '';
     const avatarHtml = relato.autor_avatar
         ? `<div class="relato-avatar" style="background:${avatarFondo};"><img src="${relato.autor_avatar}" alt="${autor}" onerror="this.parentElement.textContent='${inicial}'"></div>`
         : `<div class="relato-avatar">${inicial}</div>`;
@@ -96,7 +98,7 @@ function crearCardRelato(relato, index) {
             <div class="relato-autor-row">
                 ${avatarHtml}
                 <div class="relato-autor-info">
-                    <div class="relato-autor-nombre">${sanitizar(autor)}</div>
+                    <div class="relato-autor-nombre">${sanitizar(autor)}${badgeHtml}</div>
                     <div class="relato-fecha">${fecha}</div>
                 </div>
             </div>
@@ -112,79 +114,12 @@ function crearCardRelato(relato, index) {
 
     card.querySelector('.relato-leer-mas').addEventListener('click', (e) => {
         e.stopPropagation();
-        abrirModal(relato);
+        window.location.href = `/ver-relato?id=${relato.id}`;
     });
 
-    card.addEventListener('click', () => abrirModal(relato));
+    card.addEventListener('click', () => window.location.href = `/ver-relato?id=${relato.id}`);
 
     return card;
-}
-
-function abrirModal(relato) {
-    const overlay = document.getElementById('modal-relato');
-    const titulo = document.getElementById('modal-titulo');
-    const categoria = document.getElementById('modal-categoria');
-    const meta = document.getElementById('modal-meta');
-    const cuerpo = document.getElementById('modal-cuerpo');
-
-    if (!overlay) return;
-
-    const autor = relato.autor_nombre || 'Anónimo';
-    const fecha = relato.fecha_publicacion
-        ? new Date(relato.fecha_publicacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
-        : '';
-
-    titulo.textContent = relato.titulo || 'Sin título';
-    categoria.textContent = relato.categoria || 'General';
-    const imgModal = relato.imagen_url
-        ? `<div class="modal-imagen"><img src="${relato.imagen_url}" alt="${sanitizar(relato.titulo)}"></div>`
-        : '';
-    meta.innerHTML = `
-        <span class="material-symbols-outlined" style="font-size:1rem;">person</span> ${sanitizar(autor)}
-        &nbsp;·&nbsp;
-        <span class="material-symbols-outlined" style="font-size:1rem;">calendar_month</span> ${fecha}
-    `;
-    cuerpo.innerHTML = imgModal + `<div class="modal-contenido-texto">${sanitizar(relato.contenido_relato || '')}</div>`;
-
-    overlay.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-    document.body.classList.add('modal-open');
-}
-
-function cerrarModal() {
-    const overlay = document.getElementById('modal-relato');
-    if (overlay) overlay.style.display = 'none';
-    document.body.style.overflow = '';
-    document.body.classList.remove('modal-open');
-}
-
-function inicializarModal() {
-    const closeBtn = document.getElementById('modal-close-btn');
-    const overlay = document.getElementById('modal-relato');
-
-    if (closeBtn) closeBtn.addEventListener('click', cerrarModal);
-    if (overlay) {
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) cerrarModal();
-        });
-    }
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') cerrarModal();
-    });
-}
-
-function inicializarFiltros() {
-    const chips = document.querySelectorAll('.chip');
-    chips.forEach(chip => {
-        chip.addEventListener('click', () => {
-            chips.forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
-            const cat = chip.dataset.categoria || '';
-            categoriaActiva = cat;
-            cargarRelatos(cat);
-        });
-    });
 }
 
 function sanitizar(str) {

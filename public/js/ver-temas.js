@@ -129,18 +129,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         comentariosLista.innerHTML = comentarios.map(c => {
             const avatarFondo = c.usuario_avatar_fondo || '#e8e8e8';
+            const esEspecialista = c.usuario_rol === 'Especialista';
+            const avatarInner = c.usuario_avatar
+                ? `<img src="${c.usuario_avatar}" alt="" class="comentario-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display=''">
+                   <span class="material-symbols-outlined" style="display:none;">person</span>`
+                : `<span class="material-symbols-outlined">person</span>`;
             return `
             <div class="comentario-item" data-id="${c.id}">
-                <div class="comentario-avatar" style="background-color:${avatarFondo};">
-                    ${c.usuario_avatar
-                        ? `<img src="${c.usuario_avatar}" alt="" class="comentario-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display=''">
-                           <span class="material-symbols-outlined" style="display:none;">person</span>`
-                        : `<span class="material-symbols-outlined">person</span>`
-                    }
-                </div>
+                <div class="comentario-avatar" style="background-color:${avatarFondo};">${avatarInner}</div>
                 <div class="comentario-cuerpo">
                     <div class="comentario-encabezado">
-                        <span class="comentario-autor">${c.usuario_nombre || 'Anónimo'}</span>
+                        <span class="comentario-autor">${c.usuario_nombre || 'Anónimo'}${esEspecialista ? '<span class="badge-especialista"><img src="/img/Rol.png" alt="Especialista"></span>' : ''}</span>
                         <span class="comentario-fecha">${formatDate(c.fecha_creacion)}</span>
                     </div>
                     <div class="comentario-texto">${escapeHtml(c.contenido)}</div>

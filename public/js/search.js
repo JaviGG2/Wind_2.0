@@ -324,6 +324,7 @@ function crearBuscador() {
         chip.addEventListener('click', () => {
             document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
             chip.classList.add('active');
+            window.dispatchEvent(new CustomEvent('category-change', { detail: { categoria_id: '', categoria_nombre: '' } }));
         });
     });
 
@@ -391,6 +392,7 @@ async function cargarCategoriasToolbar() {
                 document.querySelectorAll('.cat-chip').forEach(ch => ch.classList.remove('active'));
                 document.querySelectorAll('.cat-select-item').forEach(i => i.classList.remove('selected'));
                 item.classList.add('selected');
+                window.dispatchEvent(new CustomEvent('category-change', { detail: { categoria_id: c.id, categoria_nombre: c.nombre } }));
             });
             list.appendChild(item);
         });

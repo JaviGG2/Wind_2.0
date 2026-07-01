@@ -33,10 +33,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (nombreElem) nombreElem.textContent = usuario.nombre || 'Sin nombre';
         if (usernameElem) usernameElem.textContent = usuario.username ? `${usuario.username}` : '';
-        if (rolElem) rolElem.textContent = usuario.rol || '';
+        if (rolElem) {
+            const rol = usuario.rol || '';
+            rolElem.innerHTML = usuario.rol === 'Especialista'
+                ? `${rol} <span class="badge-especialista anim-fade-in"  data-info="Perfil(Especialista)"><img src="/img/Rol.png" alt="Especialista" class="anim-rotate anim-fade-in"></span>`
+                : rol;
+        }
         if (avatarElem) {
             if (usuario.imagen_perfil) avatarElem.src = usuario.imagen_perfil;
             avatarElem.style.backgroundColor = usuario.avatar_fondo || '#e8e8e8';
+            avatarElem.style.cursor = 'pointer';
+            avatarElem.addEventListener('click', () => {
+                window.location.href = '/select-avatar';
+            });
         }
 
         if (!usuario.nombre) {

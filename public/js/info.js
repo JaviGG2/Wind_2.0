@@ -41,8 +41,8 @@ export const baseDeConocimiento = {
         contenido: "<p>Tu espacio personal para editar datos de tu cuenta, revisar el historial reciente de juegos completados o temas leídos, y gestionar tus relatos publicados.</p>"
     },
     "Perfil(Especialista)": {
-        titulo: "¿Qué encuentro aquí? ",
-        contenido: "<p>Tu centro de control de autor. Este panel te habilita el acceso exclusivo a los formularios de creación para construir la aplicación.</p>"
+        titulo: "Eres Especialista! ",
+        contenido: "<p>Tu centro de control de autor. Este panel te habilita el acceso exclusivo a las herramientas de creacion de contenido.</p>"
     },
     "Diseñar Nivel / Minijuego": {
         titulo: "¿Para qué sirve?",
