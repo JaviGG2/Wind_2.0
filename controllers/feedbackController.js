@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const db = require('../config/db');
-const notificacion = require('./notificacionController');
 
 const ARCHIVO = path.join(__dirname, '..', 'feedback', 'feedback.json');
 
@@ -43,13 +42,6 @@ exports.enviarFeedback = async (req, res) => {
         };
         lista.push(entry);
         guardarFeedback(lista);
-
-        notificacion.crear({
-            creadorId: req.session.usuarioId,
-            titulo: 'Nuevo feedback recibido',
-            mensaje: `${mensaje.trim().substring(0, 100)}...`,
-            enlace: '/api/feedback'
-        });
 
         res.status(201).json({ mensaje: 'Feedback enviado. ¡Gracias!' });
     } catch (err) {

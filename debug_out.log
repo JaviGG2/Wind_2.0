@@ -1,0 +1,18 @@
+◇ injected env (9) from .env // tip: ⌘ suppress logs { quiet: true }
+◇ injected env (0) from .env // tip: ⌘ override existing { override: true }
+◇ injected env (0) from .env // tip: ⌘ override existing { override: true }
+◇ injected env (0) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+◇ injected env (0) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+◇ injected env (0) from .env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+◇ injected env (0) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+El servidor de Wind se encuentra activo.
+Registro: http://localhost:3000/registro
+Login: http://localhost:3000/login
+Base de datos conectada correctamente
+Tabla historial_vistas lista.
+Columnas reset_token listas.
+Columna imagen_perfil migrada a TEXT.
+Columna avatar_fondo lista.
+Tabla feedback lista.
+[Recomendador] 1 temas, 2 relatos
+Recomendador entrenado al iniciar.
