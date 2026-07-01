@@ -27,24 +27,25 @@ app.use(session({
     }
 }));
 
+const UN_YEAR = 365 * 24 * 60 * 60 * 1000;
 app.use('/css', express.static(path.join(__dirname, 'public', 'css'), {
-    maxAge: 0,
+    maxAge: UN_YEAR,
     setHeaders: (res, filePath) => {
         if (filePath.endsWith('.css')) {
-            res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+            res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
         }
     }
 }));
 app.use('/js', express.static(path.join(__dirname, 'public', 'js'), {
-    maxAge: 0,
+    maxAge: UN_YEAR,
     setHeaders: (res, filePath) => {
         if (filePath.endsWith('.js')) {
-            res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+            res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
         }
     }
 }));
 app.use('/img', express.static(path.join(__dirname, 'public', 'img'), { maxAge: '7d' }));
-app.use('/fonts', express.static(path.join(__dirname, 'public', 'fonts'), { maxAge: '7d' }));
+app.use('/fonts', express.static(path.join(__dirname, 'public', 'fonts'), { maxAge: '30d' }));
 app.use('/manifest.json', express.static(path.join(__dirname, 'public', 'manifest.json'), { maxAge: '1h' }));
 app.use('/sw.js', express.static(path.join(__dirname, 'public', 'sw.js'), { maxAge: '1h' }));
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: '7d' }));
@@ -157,6 +158,215 @@ app.get('/recuperar-contrasena', (req, res) => res.render('recuperar-contrasena'
 app.get('/restablecer-contrasena', (req, res) => res.render('restablecer-contrasena'));
 app.get('/', (req, res) => res.render('login'));
 
+// --- Panel de control 0505 (read-only, admin/Wind2.0) ---
+function verificar0505(req, res, next) {
+    if (req.session && req.session.admin0505) return next();
+    res.status(401).json({ mensaje: 'No autorizado.' });
+}
+
+app.get('/0505', (req, res) => {
+    if (req.session && req.session.admin0505) {
+        return res.render('control');
+    }
+    res.render('control');
+});
+
+app.post('/0505/auth', (req, res) => {
+    const { usuario, contrasena } = req.body;
+    if (usuario === 'admin' && contrasena === 'Wind2.0') {
+        req.session.admin0505 = true;
+        return res.json({ mensaje: 'ok' });
+    }
+    res.status(401).json({ mensaje: 'Credenciales incorrectas.' });
+});
+
+app.post('/0505/logout', (req, res) => {
+    delete req.session.admin0505;
+    res.json({ mensaje: 'ok' });
+});
+
+app.get('/0505/api/usuarios', verificar0505, async (req, res) => {
+    try {
+        const r = await db.query('SELECT id, nombre, username, correo, rol, puntos, cuenta_activa FROM usuarios ORDER BY id ASC');
+        res.json(r.rows);
+    } catch (e) { res.status(500).json([]); }
+});
+
+app.get('/0505/api/categorias', verificar0505, async (req, res) => {
+    try {
+        const r = await db.query('SELECT id, nombre FROM categorias ORDER BY nombre ASC');
+        res.json(r.rows);
+    } catch (e) { res.status(500).json([]); }
+});
+
+app.get('/0505/api/juegos', verificar0505, async (req, res) => {
+    try {
+        const r = await db.query(`
+            SELECT j.id, j.titulo, j.pregunta, j.tipo, j.puntos_recompensa, c.nombre AS categoria_nombre
+            FROM juegos j LEFT JOIN categorias c ON j.categoria_id = c.id
+            ORDER BY j.id DESC LIMIT 100`);
+        res.json(r.rows);
+    } catch (e) { res.status(500).json([]); }
+});
+
+app.get('/0505/api/temas', verificar0505, async (req, res) => {
+    try {
+        const r = await db.query(`
+            SELECT t.id, t.titulo, t.likes, c.nombre AS categoria_nombre,
+                   u.nombre AS creador_nombre, u.username AS creador_username
+            FROM temas t
+            LEFT JOIN categorias c ON t.categoria_id = c.id
+            LEFT JOIN usuarios u ON t.creador_id = u.id
+            ORDER BY t.id DESC LIMIT 50`);
+        res.json(r.rows);
+    } catch (e) { res.status(500).json([]); }
+});
+
+app.get('/0505/api/relatos', verificar0505, async (req, res) => {
+    try {
+        const r = await db.query(`
+            SELECT r.id, r.titulo, r.fecha_publicacion, u.nombre AS autor_nombre, u.username AS autor_username
+            FROM relatos_community r LEFT JOIN usuarios u ON r.usuario_id = u.id
+            ORDER BY r.id DESC LIMIT 100`);
+        res.json(r.rows);
+    } catch (e) { res.status(500).json([]); }
+});
+
+app.get('/0505/api/modulos', verificar0505, async (req, res) => {
+    try {
+        const r = await db.query(`
+            SELECT m.id, m.nombre, m.descripcion, u.nombre AS creador_nombre
+            FROM modulo_juegos m LEFT JOIN usuarios u ON m.id_usuario = u.id
+            ORDER BY m.id DESC`);
+        res.json(r.rows);
+    } catch (e) { res.status(500).json([]); }
+});
+
+app.get('/0505/api/feedback', verificar0505, async (req, res) => {
+    try {
+        const r = await db.query(`
+            SELECT f.id, f.mensaje, f.pagina, f.fecha_creacion, u.nombre AS usuario_nombre, u.username AS usuario_username
+            FROM feedback f LEFT JOIN usuarios u ON f.usuario_id = u.id
+            ORDER BY f.id DESC`);
+        res.json(r.rows);
+    } catch (e) { res.status(500).json([]); }
+});
+
+// --- Acciones CRUD 0505 ---
+
+// Usuarios
+app.put('/0505/api/usuarios/:id', verificar0505, async (req, res) => {
+    try {
+        const { nombre, username, rol } = req.body;
+        const id = parseInt(req.params.id, 10);
+        await db.query(
+            'UPDATE usuarios SET nombre = COALESCE($1, nombre), username = COALESCE($2, username), rol = COALESCE($3, rol) WHERE id = $4',
+            [nombre || null, username || null, rol || null, id]
+        );
+        res.json({ mensaje: 'Usuario actualizado.' });
+    } catch (e) { res.status(500).json({ mensaje: 'Error al actualizar.' }); }
+});
+
+app.delete('/0505/api/usuarios/:id', verificar0505, async (req, res) => {
+    try {
+        const id = parseInt(req.params.id, 10);
+        await db.query('DELETE FROM notificaciones WHERE usuario_id = $1', [id]);
+        await db.query('DELETE FROM historial_vistas WHERE usuario_id = $1', [id]);
+        await db.query('DELETE FROM progreso_modulo WHERE usuario_id = $1', [id]);
+        await db.query('DELETE FROM comentarios WHERE usuario_id = $1', [id]);
+        await db.query('DELETE FROM relatos WHERE usuario_id = $1', [id]);
+        await db.query('DELETE FROM temas WHERE usuario_id = $1', [id]);
+        await db.query('DELETE FROM juegos WHERE usuario_id = $1', [id]);
+        await db.query('DELETE FROM feedback WHERE usuario_id = $1', [id]);
+        await db.query('DELETE FROM usuarios WHERE id = $1', [id]);
+        res.json({ mensaje: 'Usuario eliminado.' });
+    } catch (e) { res.status(500).json({ mensaje: 'Error al eliminar.' }); }
+});
+
+app.post('/0505/api/usuarios/:id/advertir', verificar0505, async (req, res) => {
+    try {
+        const id = parseInt(req.params.id, 10);
+        const { titulo, mensaje } = req.body;
+        if (!titulo || !mensaje) return res.status(400).json({ mensaje: 'Faltan campos.' });
+        const r = await db.query('SELECT id FROM usuarios WHERE id = $1', [id]);
+        if (r.rows.length === 0) return res.status(404).json({ mensaje: 'Usuario no encontrado.' });
+        const notificacion = require('./controllers/notificacionController');
+        await notificacion.crear({
+            creadorId: id, titulo, mensaje, enlace: '/0505'
+        });
+        res.json({ mensaje: 'Advertencia enviada.' });
+    } catch (e) { res.status(500).json({ mensaje: 'Error al enviar.' }); }
+});
+
+// Categorias
+app.post('/0505/api/categorias', verificar0505, async (req, res) => {
+    try {
+        const { nombre } = req.body;
+        if (!nombre || !nombre.trim()) return res.status(400).json({ mensaje: 'Nombre requerido.' });
+        const r = await db.query('INSERT INTO categorias (nombre) VALUES ($1) RETURNING id, nombre', [nombre.trim()]);
+        res.status(201).json(r.rows[0]);
+    } catch (e) { res.status(500).json({ mensaje: 'Error al crear.' }); }
+});
+
+app.put('/0505/api/categorias/:id', verificar0505, async (req, res) => {
+    try {
+        const id = parseInt(req.params.id, 10);
+        const { nombre } = req.body;
+        await db.query('UPDATE categorias SET nombre = $1 WHERE id = $2', [nombre, id]);
+        res.json({ mensaje: 'Categoría actualizada.' });
+    } catch (e) { res.status(500).json({ mensaje: 'Error al actualizar.' }); }
+});
+
+app.delete('/0505/api/categorias/:id', verificar0505, async (req, res) => {
+    try {
+        const id = parseInt(req.params.id, 10);
+        await db.query('UPDATE temas SET categoria_id = NULL WHERE categoria_id = $1', [id]);
+        await db.query('UPDATE juegos SET categoria_id = NULL WHERE categoria_id = $1', [id]);
+        await db.query('DELETE FROM categorias WHERE id = $1', [id]);
+        res.json({ mensaje: 'Categoría eliminada.' });
+    } catch (e) { res.status(500).json({ mensaje: 'Error al eliminar.' }); }
+});
+
+// Temas
+app.delete('/0505/api/temas/:id', verificar0505, async (req, res) => {
+    try {
+        const id = parseInt(req.params.id, 10);
+        await db.query('DELETE FROM historial_vistas WHERE contenido_id = $1 AND tipo_contenido = $2', [id, 'tema']);
+        await db.query('DELETE FROM comentarios WHERE tema_id = $1', [id]);
+        await db.query('DELETE FROM temas WHERE id = $1', [id]);
+        res.json({ mensaje: 'Tema eliminado.' });
+    } catch (e) { res.status(500).json({ mensaje: 'Error al eliminar.' }); }
+});
+
+// Juegos
+app.delete('/0505/api/juegos/:id', verificar0505, async (req, res) => {
+    try {
+        const id = parseInt(req.params.id, 10);
+        await db.query('UPDATE nivel SET id_juego = NULL WHERE id_juego = $1', [id]);
+        await db.query('DELETE FROM historial_vistas WHERE contenido_id = $1 AND tipo_contenido = $2', [id, 'juego']);
+        await db.query('DELETE FROM juegos WHERE id = $1', [id]);
+        res.json({ mensaje: 'Juego eliminado.' });
+    } catch (e) { res.status(500).json({ mensaje: 'Error al eliminar.' }); }
+});
+
+// Relatos
+app.delete('/0505/api/relatos/:id', verificar0505, async (req, res) => {
+    try {
+        const id = parseInt(req.params.id, 10);
+        await db.query('DELETE FROM relatos_community WHERE id = $1', [id]);
+        res.json({ mensaje: 'Relato eliminado.' });
+    } catch (e) { res.status(500).json({ mensaje: 'Error al eliminar.' }); }
+});
+
+// Feedback
+app.delete('/0505/api/feedback/:id', verificar0505, async (req, res) => {
+    try {
+        const id = parseInt(req.params.id, 10);
+        await db.query('DELETE FROM feedback WHERE id = $1', [id]);
+        res.json({ mensaje: 'Feedback eliminado.' });
+    } catch (e) { res.status(500).json({ mensaje: 'Error al eliminar.' }); }
+});
+
 app.get('/ping', async (req, res) => {
     try {
         const supabase = require('./config/supabase');
@@ -229,6 +439,28 @@ app.listen(PORT, async () => {
     } catch (err) {
         console.error('Error creando tabla feedback:', err.message);
     }
+
+    // Crear índices para rendimiento
+    const indices = [
+        'CREATE INDEX IF NOT EXISTS idx_historial_usuario_tipo ON historial_vistas(usuario_id, tipo_contenido, fecha_vista DESC)',
+        'CREATE INDEX IF NOT EXISTS idx_temas_categoria ON temas(categoria_id)',
+        'CREATE INDEX IF NOT EXISTS idx_temas_creador_fecha ON temas(creador_id, fecha_publicacion DESC)',
+        'CREATE INDEX IF NOT EXISTS idx_juegos_categoria ON juegos(categoria_id)',
+        'CREATE INDEX IF NOT EXISTS idx_relatos_usuario_fecha ON relatos_community(usuario_id, fecha_publicacion DESC)',
+        'CREATE INDEX IF NOT EXISTS idx_notificaciones_usuario_leida ON notificaciones(usuario_id, leida)',
+        'CREATE INDEX IF NOT EXISTS idx_usuarios_puntos ON usuarios(puntos DESC)',
+        'CREATE INDEX IF NOT EXISTS idx_nivel_modulo ON nivel(id_modulo)',
+        'CREATE INDEX IF NOT EXISTS idx_nivel_juego ON nivel(id_juego)',
+        'CREATE INDEX IF NOT EXISTS idx_modulos_usuario ON modulo_juegos(id_usuario)'
+    ];
+    for (const sql of indices) {
+        try {
+            await db.query(sql);
+        } catch (err) {
+            console.warn('Índice no creado (posiblemente no existe la tabla aún):', err.message);
+        }
+    }
+    console.log('Índices verificados/creados.');
 
     try {
         const recomendador = require('./utils/recomendador');

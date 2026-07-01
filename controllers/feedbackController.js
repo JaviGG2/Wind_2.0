@@ -1,20 +1,20 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
 const db = require('../config/db');
 
 const ARCHIVO = path.join(__dirname, '..', 'feedback', 'feedback.json');
 
-function leerFeedback() {
+async function leerFeedback() {
     try {
-        const data = fs.readFileSync(ARCHIVO, 'utf-8');
+        const data = await fs.readFile(ARCHIVO, 'utf-8');
         return JSON.parse(data);
     } catch {
         return [];
     }
 }
 
-function guardarFeedback(lista) {
-    fs.writeFileSync(ARCHIVO, JSON.stringify(lista, null, 2), 'utf-8');
+async function guardarFeedback(lista) {
+    await fs.writeFile(ARCHIVO, JSON.stringify(lista, null, 2), 'utf-8');
 }
 
 exports.enviarFeedback = async (req, res) => {
@@ -29,7 +29,7 @@ exports.enviarFeedback = async (req, res) => {
         );
         const userData = usuario.rows[0] || { nombre: 'Desconocido', username: 'unknown' };
 
-        const lista = leerFeedback();
+        const lista = await leerFeedback();
         const entry = {
             id: lista.length > 0 ? lista[lista.length - 1].id + 1 : 1,
             usuario_id: req.session.usuarioId,
@@ -41,7 +41,7 @@ exports.enviarFeedback = async (req, res) => {
             fecha_creacion: new Date().toISOString()
         };
         lista.push(entry);
-        guardarFeedback(lista);
+        await guardarFeedback(lista);
 
         res.status(201).json({ mensaje: 'Feedback enviado. ¡Gracias!' });
     } catch (err) {
@@ -52,7 +52,7 @@ exports.enviarFeedback = async (req, res) => {
 
 exports.listarFeedback = async (req, res) => {
     try {
-        const lista = leerFeedback();
+        const lista = await leerFeedback();
         res.json(lista.reverse());
     } catch (err) {
         console.error('Error al listar feedback:', err.message);
@@ -64,11 +64,11 @@ exports.eliminarFeedback = async (req, res) => {
     const id = parseInt(req.params.id, 10);
     if (Number.isNaN(id)) return res.status(400).json({ mensaje: 'ID inválido.' });
     try {
-        let lista = leerFeedback();
+        let lista = await leerFeedback();
         const antes = lista.length;
         lista = lista.filter(f => f.id !== id);
         if (lista.length === antes) return res.status(404).json({ mensaje: 'Feedback no encontrado.' });
-        guardarFeedback(lista);
+        await guardarFeedback(lista);
         res.json({ mensaje: 'Feedback eliminado.' });
     } catch (err) {
         console.error('Error al eliminar feedback:', err.message);

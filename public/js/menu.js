@@ -86,7 +86,12 @@ function insertarBarra() {
 
   iniciarScrollMenu();
   actualizarBadge();
-  setInterval(actualizarBadge, 30000);
+  setInterval(() => {
+    if (!document.hidden) actualizarBadge();
+  }, 30000);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) actualizarBadge();
+  });
 }
 
 window.addEventListener('pageshow', (event) => {
@@ -150,7 +155,7 @@ function initFeedback() {
     '/home': 'Descubrir', '/comunidad': 'Comunidad', '/juegos': 'Juegos',
     '/dashboard': 'Perfil', '/relatos': 'Relatos', '/ver-relato': 'Relato',
     '/ver-tema': 'Tema', '/notificaciones': 'Notificaciones',
-    '/recomendaciones': 'Recomendaciones', '/ser-rol': 'Ser Especialista', '/play-game': 'Juego',
+    '/recomendaciones': 'Recomendaciones', '/ser-rol': 'Ser Especialista', '/play-game': 'Juego', '/0505': 'Panel de Control',
     '/modulos': 'Módulos', '/crear-relato': 'Crear Relato',
     '/subir-tema': 'Subir Tema', '/ajustes-perfil': 'Ajustes'
   };

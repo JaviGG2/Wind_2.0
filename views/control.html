@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Control — Wind</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="/css/control.css">
+</head>
+<body>
+
+  <div id="login-overlay" class="login-overlay">
+    <div class="login-card">
+      <img src="/img/app.png" alt="Wind" class="login-icon">
+      <h1>Acceso restringido</h1>
+      <p class="login-desc">Introduce las credenciales de administrador para acceder al panel de control.</p>
+      <form id="login-form" class="login-form">
+        <div class="login-field">
+          <label>Usuario</label>
+          <input type="text" id="login-user" class="login-input" placeholder="admin" autocomplete="off">
+        </div>
+        <div class="login-field">
+          <label>Contraseña</label>
+          <input type="password" id="login-pass" class="login-input" placeholder="••••••" autocomplete="off">
+        </div>
+        <button type="submit" class="login-btn">Ingresar</button>
+        <div id="login-error" class="login-error"></div>
+      </form>
+    </div>
+  </div>
+
+  <div id="panel-root" class="panel-root" style="display:none;">
+
+    <header class="panel-header">
+      <div class="panel-header-left">
+        <img src="/img/app.png" alt="Wind" class="panel-logo">
+        <h1>Panel de Control</h1>
+      </div>
+      <div class="panel-header-right">
+        <span class="panel-badge">Visualizador</span>
+        <button id="btn-logout" class="panel-logout">
+          <span class="material-symbols-outlined">logout</span>
+          Salir
+        </button>
+      </div>
+    </header>
+
+    <div class="panel-body">
+
+      <aside class="panel-sidebar">
+        <nav class="panel-nav">
+          <button class="panel-nav-item active" data-tab="resumen">
+            <span class="material-symbols-outlined">dashboard</span>
+            Resumen
+          </button>
+          <button class="panel-nav-item" data-tab="usuarios">
+            <span class="material-symbols-outlined">group</span>
+            Usuarios
+          </button>
+          <button class="panel-nav-item" data-tab="temas">
+            <span class="material-symbols-outlined">article</span>
+            Temas
+          </button>
+          <button class="panel-nav-item" data-tab="juegos">
+            <span class="material-symbols-outlined">sports_esports</span>
+            Juegos
+          </button>
+          <button class="panel-nav-item" data-tab="relatos">
+            <span class="material-symbols-outlined">book</span>
+            Relatos
+          </button>
+          <button class="panel-nav-item" data-tab="modulos">
+            <span class="material-symbols-outlined">layers</span>
+            Módulos
+          </button>
+          <button class="panel-nav-item" data-tab="categorias">
+            <span class="material-symbols-outlined">category</span>
+            Categorías
+          </button>
+          <button class="panel-nav-item" data-tab="feedback">
+            <span class="material-symbols-outlined">feedback</span>
+            Feedback
+          </button>
+        </nav>
+      </aside>
+
+      <main class="panel-content" id="panel-content">
+        <div class="panel-loading">Cargando panel de control...</div>
+      </main>
+
+    </div>
+  </div>
+
+  <script src="/js/control.js"></script>
+</body>
+</html>
