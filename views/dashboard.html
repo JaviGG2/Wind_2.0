@@ -154,6 +154,7 @@
                         <button class="tab-button" onclick="switchAdminTab('crear-tema')">Crear Tema</button>
                         <button class="tab-button" onclick="switchAdminTab('crear-modulo')">Crear Módulo</button>
                         <button class="tab-button" onclick="switchAdminTab('categorias')">Categorías</button>
+                        <button class="tab-button" onclick="switchAdminTab('feedback')">Feedback</button>
                       </div>
                       <div id="admin-tab-crear-juego" class="tab-content active" style="margin-top:16px;">
                         <p class="muted">Diseña una nueva trivia patrimonial.</p>
@@ -184,6 +185,12 @@
                         <p class="muted">Listado de todos los usuarios registrados.</p>
                         <div id="lista-usuarios" class="lista-temas">
                           <p class="muted center">Cargando usuarios...</p>
+                        </div>
+                      </div>
+                      <div id="admin-tab-feedback" class="tab-content" style="display:none; margin-top:16px;">
+                        <p class="muted">Mensajes de feedback enviados por los usuarios.</p>
+                        <div id="lista-feedback" class="lista-temas">
+                          <p class="muted center">Cargando feedback...</p>
                         </div>
                       </div>
                     </div>
@@ -228,6 +235,7 @@
             }
             if (tabId === 'categorias' && typeof cargarCategorias === 'function') cargarCategorias();
             if (tabId === 'usuarios' && typeof cargarUsuarios === 'function') cargarUsuarios();
+            if (tabId === 'feedback' && typeof cargarFeedback === 'function') cargarFeedback();
         }
 
         document.querySelectorAll('.accordion-trigger').forEach(trigger => {

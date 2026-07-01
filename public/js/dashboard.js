@@ -178,6 +178,53 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    async function cargarFeedback() {
+        const cont = document.getElementById('lista-feedback');
+        if (!cont) return;
+        cont.innerHTML = '<p class="muted center">Cargando feedback...</p>';
+        try {
+            const res = await fetch('/api/feedback', { credentials: 'include' });
+            if (!res.ok) throw new Error('Error');
+            const lista = await res.json();
+            if (lista.length === 0) {
+                cont.innerHTML = '<p class="muted center">No hay feedback todavía.</p>';
+                return;
+            }
+            cont.innerHTML = '';
+            lista.forEach(f => {
+                const item = document.createElement('div');
+                item.className = 'lista-item-card';
+                const fecha = f.fecha_creacion ? new Date(f.fecha_creacion).toLocaleString() : '';
+                item.innerHTML = `
+                    <div class="lista-item-info">
+                        <h5>${f.usuario_nombre} <small style="color:var(--texto-muted)">(@${f.usuario_username})</small></h5>
+                        <p style="margin:6px 0 4px;font-size:0.9rem;">${f.mensaje}</p>
+                        <small class="muted">${f.pagina || ''} · ${fecha}</small>
+                    </div>
+                    <div class="lista-item-acciones">
+                        <button class="btn-eliminar-feedback" data-id="${f.id}" style="background:none;border:none;color:#dc2626;cursor:pointer;padding:8px;" title="Eliminar">
+                            <span class="material-symbols-outlined">delete</span>
+                        </button>
+                    </div>
+                `;
+                const btn = item.querySelector('.btn-eliminar-feedback');
+                btn.addEventListener('click', async () => {
+                    if (!confirm('¿Eliminar este feedback?')) return;
+                    try {
+                        const r = await fetch(`/api/feedback/${f.id}`, { method: 'DELETE', credentials: 'include' });
+                        if (r.ok) {
+                            item.remove();
+                            if (cont.children.length === 0) cont.innerHTML = '<p class="muted center">No hay feedback todavía.</p>';
+                        }
+                    } catch {}
+                });
+                cont.appendChild(item);
+            });
+        } catch (err) {
+            cont.innerHTML = '<p class="muted center error">Error al cargar feedback.</p>';
+        }
+    }
+
     async function cargarHistorial() {
         try {
             const res = await fetch('/api/historial', { credentials: 'include' });
@@ -339,6 +386,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.cargarMisJuegosCreados = cargarMisJuegosCreados;
     window.cargarCategorias = cargarCategorias;
     window.cargarUsuarios = cargarUsuarios;
+    window.cargarFeedback = cargarFeedback;
 
     /* --- Notificaciones bell --- */
     const bellBtn = document.getElementById('btn-notif-bell');

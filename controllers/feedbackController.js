@@ -59,3 +59,19 @@ exports.listarFeedback = async (req, res) => {
         res.status(500).json({ mensaje: 'Error al cargar feedback.' });
     }
 };
+
+exports.eliminarFeedback = async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    if (Number.isNaN(id)) return res.status(400).json({ mensaje: 'ID inválido.' });
+    try {
+        let lista = leerFeedback();
+        const antes = lista.length;
+        lista = lista.filter(f => f.id !== id);
+        if (lista.length === antes) return res.status(404).json({ mensaje: 'Feedback no encontrado.' });
+        guardarFeedback(lista);
+        res.json({ mensaje: 'Feedback eliminado.' });
+    } catch (err) {
+        console.error('Error al eliminar feedback:', err.message);
+        res.status(500).json({ mensaje: 'Error al eliminar feedback.' });
+    }
+};
