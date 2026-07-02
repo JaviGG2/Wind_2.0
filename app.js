@@ -27,35 +27,15 @@ app.use(session({
     }
 }));
 
-const UN_YEAR = 365 * 24 * 60 * 60 * 1000;
-app.use('/css', express.static(path.join(__dirname, 'public', 'css'), {
-    maxAge: UN_YEAR,
-    setHeaders: (res, filePath) => {
-        if (filePath.endsWith('.css')) {
-            res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-        }
-    }
-}));
-app.use('/js', express.static(path.join(__dirname, 'public', 'js'), {
-    maxAge: 0,
-    setHeaders: (res, filePath) => {
-        if (filePath.endsWith('.js')) {
-            res.setHeader('Cache-Control', 'no-cache, must-revalidate');
-        }
-    }
-}));
-app.use('/img', express.static(path.join(__dirname, 'public', 'img'), { maxAge: '7d' }));
-app.use('/fonts', express.static(path.join(__dirname, 'public', 'fonts'), { maxAge: '30d' }));
-app.use('/manifest.json', express.static(path.join(__dirname, 'public', 'manifest.json'), { maxAge: '1h' }));
-app.use('/sw.js', express.static(path.join(__dirname, 'public', 'sw.js'), { maxAge: '1h' }));
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: '7d' }));
-
-app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads'), {
-    maxAge: '30d',
-    setHeaders: (res) => {
-        res.setHeader('Cache-Control', 'public, max-age=2592000, immutable');
-    }
-}));
+const noCache = { maxAge: 0, setHeaders: (res) => { res.setHeader('Cache-Control', 'no-store'); } };
+app.use('/css', express.static(path.join(__dirname, 'public', 'css'), noCache));
+app.use('/js', express.static(path.join(__dirname, 'public', 'js'), noCache));
+app.use('/img', express.static(path.join(__dirname, 'public', 'img'), noCache));
+app.use('/fonts', express.static(path.join(__dirname, 'public', 'fonts'), noCache));
+app.use('/manifest.json', express.static(path.join(__dirname, 'public', 'manifest.json'), noCache));
+app.use('/sw.js', express.static(path.join(__dirname, 'public', 'sw.js'), noCache));
+app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads'), noCache));
+app.use(express.static(path.join(__dirname, 'public'), noCache));
 
 app.use((req, res, next) => {
     const staticExts = ['.js', '.css', '.png', '.jpg', '.jpeg', '.svg', '.webp', '.ico', '.json'];

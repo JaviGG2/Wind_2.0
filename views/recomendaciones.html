@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
+<head><style>body{background:#f5f6f8}</style>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recomendaciones — Wind</title>
@@ -37,7 +37,10 @@
             <h1>Recomendaciones</h1>
             <p class="muted">Contenido sugerido especialmente para ti, basado en tus visitas y en la similitud de los textos.</p>
           </div>
+          <input type="text" id="recom-buscar" placeholder="Buscar recomendaciones..." class="input-buscar">
           </header>
+        
+         
 
         <section id="recom-personalizadas" class="recom-seccion">
           <h2>
@@ -47,9 +50,13 @@
           <div id="recom-listado" class="recom-grid">
             <p class="muted center">Cargando recomendaciones...</p>
           </div>
+
+          <button id="btn-entrenar" class="boton-enviar" style="margin-top:12px;">
+            <span class="material-symbols-outlined">refresh</span> Re-entrenar
+          </button>
         </section>
 
-        <section id="recom-estado" class="recom-seccion">
+        <section id="recom-estado" class="recom-seccion2">
           <h2>
             <span class="material-symbols-outlined">monitoring</span>
             Estado del motor

@@ -1,12 +1,1 @@
-[
-  {
-    "id": 1,
-    "usuario_id": 1,
-    "usuario_nombre": "Javier Garcia",
-    "usuario_username": "javierg",
-    "mensaje": "Solo prueba",
-    "pagina": "http://192.168.3.195:3000/dashboard",
-    "leido": false,
-    "fecha_creacion": "2026-07-01T02:58:35.455Z"
-  }
-]
+[]

@@ -28,13 +28,20 @@
 
 .temas-listado {
     display: grid;
+    grid-template-columns: 1fr;
     gap: 18px;
     margin-top: 20px;
 }
 
+@media (min-width: 821px) {
+    .temas-listado {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 .tarjeta-tema {
     display: grid;
-    grid-template-columns: 220px 1fr;
+    grid-template-columns: 140px 1fr;
     gap: 0;
     background: var(--bg-card);
     border-radius: var(--radius-lg);
@@ -50,14 +57,14 @@
 }
 
 .tema-imagen {
-    min-height: 180px;
+    min-height: 130px;
     height: 100%;
     background-size: cover;
     background-position: center;
 }
 
 .tema-contenido {
-    padding: 20px 24px;
+    padding: 14px 18px;
     display: flex;
     flex-direction: column;
 }
@@ -201,7 +208,7 @@
         grid-template-columns: 1fr;
     }
     .tema-imagen {
-        min-height: 200px;
+        min-height: 160px;
     }
 }
 

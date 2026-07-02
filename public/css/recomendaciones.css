@@ -2,14 +2,17 @@
   max-width: 860px;
   margin: 0 auto;
   padding: 24px 20px;
+  
 }
-
 .perfil-info {
     margin: 0;
     font-size: var(--font-2xl);
     font-weight: 700;
     color: var(--primario);
+
 }
+
+
 
 
 
@@ -207,3 +210,28 @@
   .recomendaciones-root { padding: 16px 12px; }
   .recom-grid { grid-template-columns: 1fr; }
 }
+
+
+.recom-seccion2{
+  display: none;
+}
+
+.input-buscar {
+  
+  display:flex;
+  width: 100%;
+  padding: 15px 8px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radius-md);
+  font-size: var(--font-sm);
+  margin-top: 10px;
+  margin-bottom: 20px;
+
+  transition: all 0.25s ease;
+}
+
+.input-buscar:focus {
+  outline: none;
+  border-color: var(--primario)
+}
+

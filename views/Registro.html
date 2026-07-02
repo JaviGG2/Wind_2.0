@@ -1,6 +1,6 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
-<head>
+<head><style>body{background:#f5f6f8}</style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro Wind Patrimonio</title>
@@ -17,15 +17,15 @@
     <main class="contenedor-principal">
         <div class="tarjeta-registro">
             <h2>Crear Cuenta en Wind</h2>
-            <p>Ãšnete a nuestra comunidad para descubrir y preservar la historia.</p>
+            <p>Únete a nuestra comunidad para descubrir y preservar la historia.</p>
             
             <form id="formulario-registro">
                 <div class="grupo-campo">
                     <label for="nombre">Nombre Completo:</label>
-                    <input type="text" id="nombre" required placeholder="Ej. Juan PÃ©rez">
+                    <input type="text" id="nombre" required placeholder="Ej. Juan Pérez">
                 </div>
                 <div class="grupo-campo">
-                    <label for="correo">Correo ElectrÃ³nico:</label>
+                    <label for="correo">Correo Electrónico:</label>
                     <input type="email" id="correo" required placeholder="ejemplo@correo.com">
                 </div>
                 <div class="grupo-campo">
@@ -33,19 +33,19 @@
                     <input type="text" id="username" required placeholder="Ej. juan_coro">
                 </div>
                 <div class="grupo-campo">
-                    <label for="contrasena">ContraseÃ±a:</label>
+                    <label for="contrasena">Contraseña:</label>
                     <div class="campo-con-ojo">
-                        <input type="password" id="contrasena" required placeholder="MÃ­nimo 6 caracteres">
+                        <input type="password" id="contrasena" required placeholder="Mínimo 6 caracteres">
                         <button type="button" class="btn-ojo" data-target="contrasena" tabindex="-1">
                             <span class="material-symbols-outlined">visibility_off</span>
                         </button>
                     </div>
-                    <small class="input-ayuda" id="password-requisitos">Debe tener al menos 6 caracteres, 1 mayÃºscula, 1 nÃºmero y 1 carÃ¡cter especial</small>
+                    <small class="input-ayuda" id="password-requisitos">Debe tener al menos 6 caracteres, 1 mayúscula, 1 número y 1 carácter especial</small>
                 </div>
                 <div class="grupo-campo">
-                    <label for="contrasena-confirmar">Confirmar ContraseÃ±a:</label>
+                    <label for="contrasena-confirmar">Confirmar Contraseña:</label>
                     <div class="campo-con-ojo">
-                        <input type="password" id="contrasena-confirmar" required placeholder="Repite la contraseÃ±a">
+                        <input type="password" id="contrasena-confirmar" required placeholder="Repite la contraseña">
                         <button type="button" class="btn-ojo" data-target="contrasena-confirmar" tabindex="-1">
                             <span class="material-symbols-outlined">visibility_off</span>
                         </button>
@@ -57,13 +57,13 @@
 
             <div id="seccion-codigo">
     <h2>Verifica tu Cuenta</h2>
-    <p>Ingresa el cÃ³digo de 6 dÃ­gitos que enviamos a tu correo electrÃ³nico.</p>
+    <p>Ingresa el código de 6 dígitos que enviamos a tu correo electrónico.</p>
     
     <form id="form-verificar">
         <input type="hidden" id="verificar-correo">
         
         <div class="grupo-campo">
-            <label for="codigo-input">CÃ³digo de Seguridad:</label>
+            <label for="codigo-input">Código de Seguridad:</label>
             <input type="text" id="codigo-input" maxlength="6" placeholder="000000" required>
         </div>
         
@@ -74,7 +74,7 @@
 </div>
 
             <div id="mensaje-consola" class="mensaje-oculto"></div>
-            <a href="/login" class="boton-secundario">Volver a iniciar sesiÃ³n</a>
+            <a href="/login" class="boton-secundario">Volver a iniciar sesión</a>
         </div>
     </main>
 
