@@ -577,6 +577,12 @@ exports.solicitarAscenso = async (req, res) => {
             fotoUrl = await subirASupabase(req.file, 'solicitudes') || '';
         }
 
+        await db.query(`
+            INSERT INTO solicitudes_especialista (usuario_id, nombre, username, correo, mensaje, foto_url)
+            VALUES ($1, $2, $3, $4, $5, $6)`,
+            [req.session.usuarioId, user.nombre, user.username, user.correo, mensaje, fotoUrl]
+        );
+
         const equipo = process.env.CORREO_EMISOR || 'corotour55@gmail.com';
         const asunto = 'Nueva solicitud de Especialista';
         const html = `
@@ -592,7 +598,7 @@ exports.solicitarAscenso = async (req, res) => {
             <blockquote style="background:#f9f9f9;padding:16px;border-left:4px solid #ff4500;margin:0;font-style:italic;">${mensaje.replace(/\n/g, '<br>') || '(sin mensaje)'}</blockquote>
             ${fotoUrl ? `<h3 style="margin-top:24px;">Foto de soporte</h3><p><a href="${fotoUrl}" target="_blank">Ver imagen</a> | <img src="${fotoUrl}" alt="" style="max-width:400px;border-radius:8px;display:block;margin-top:8px;"></p>` : ''}
             <hr style="margin-top:28px;">
-            <p style="color:#666;">Para aprobarlo, actualiza su rol a <strong>Especialista</strong> en la base de datos.</p>
+            <p style="color:#666;">Puedes gestionar esta solicitud desde el panel de administración.</p>
         `;
 
         await enviarCorreo(equipo, asunto, html);

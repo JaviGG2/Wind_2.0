@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jugar — Wind</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/menu.css">
     <link rel="stylesheet" href="/css/animaciones.css">
@@ -73,6 +76,10 @@
                                 <strong id="resultado-correcta-texto"></strong>
                             </div>
                             <div class="resultado-acciones">
+                                <button class="btn-siguiente-nivel" id="btn-siguiente-nivel" style="display:none;">
+                                    <span class="material-symbols-outlined">arrow_forward</span>
+                                    Siguiente nivel
+                                </button>
                                 <button class="btn-volver-juegos" onclick="window.location.href='/juegos'">
                                     <span class="material-symbols-outlined">arrow_back</span>
                                     Volver a Juegos

@@ -37,16 +37,17 @@ $('#btn-logout').addEventListener('click', async () => {
 async function iniciarPanel() {
   $('#panel-content').innerHTML = '<div class="panel-loading">Cargando datos...</div>';
   try {
-    const [usuarios, categorias, juegos, temas, relatos, modulos, feedback] = await Promise.all([
+    const [usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes] = await Promise.all([
       fetch('/0505/api/usuarios').then(r => r.ok ? r.json() : []),
       fetch('/0505/api/categorias').then(r => r.ok ? r.json() : []),
       fetch('/0505/api/juegos').then(r => r.ok ? r.json() : []),
       fetch('/0505/api/temas').then(r => r.ok ? r.json() : []),
       fetch('/0505/api/relatos').then(r => r.ok ? r.json() : []),
       fetch('/0505/api/modulos').then(r => r.ok ? r.json() : []),
-      fetch('/0505/api/feedback').then(r => r.ok ? r.json() : [])
+      fetch('/0505/api/feedback').then(r => r.ok ? r.json() : []),
+      fetch('/0505/api/solicitudes').then(r => r.ok ? r.json() : [])
     ]);
-    cache = { usuarios, categorias, juegos, temas, relatos, modulos, feedback };
+    cache = { usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes };
     mostrarResumen();
     configurarNavegacion();
   } catch { $('#panel-content').innerHTML = '<div class="panel-loading" style="color:#ef4444;">Error al cargar datos.</div>'; }
@@ -58,16 +59,17 @@ function programarRecarga() {
     const active = $('.panel-nav-item.active');
     const tab = active ? active.dataset.tab : 'resumen';
     try {
-      const [usuarios, categorias, juegos, temas, relatos, modulos, feedback] = await Promise.all([
+      const [usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes] = await Promise.all([
         fetch('/0505/api/usuarios').then(r => r.ok ? r.json() : []),
         fetch('/0505/api/categorias').then(r => r.ok ? r.json() : []),
         fetch('/0505/api/juegos').then(r => r.ok ? r.json() : []),
         fetch('/0505/api/temas').then(r => r.ok ? r.json() : []),
         fetch('/0505/api/relatos').then(r => r.ok ? r.json() : []),
         fetch('/0505/api/modulos').then(r => r.ok ? r.json() : []),
-        fetch('/0505/api/feedback').then(r => r.ok ? r.json() : [])
+        fetch('/0505/api/feedback').then(r => r.ok ? r.json() : []),
+        fetch('/0505/api/solicitudes').then(r => r.ok ? r.json() : [])
       ]);
-      cache = { usuarios, categorias, juegos, temas, relatos, modulos, feedback };
+      cache = { usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes };
       if (tab === 'resumen') mostrarResumen();
       else if (tab === 'usuarios') mostrarUsuarios();
       else if (tab === 'temas') mostrarTemas();
@@ -75,6 +77,7 @@ function programarRecarga() {
       else if (tab === 'relatos') mostrarRelatos();
       else if (tab === 'modulos') mostrarModulos();
       else if (tab === 'categorias') mostrarCategorias();
+      else if (tab === 'solicitudes') mostrarSolicitudes();
       else if (tab === 'feedback') mostrarFeedback();
     } catch {}
   }, 100);
@@ -93,6 +96,7 @@ function configurarNavegacion() {
       else if (tab === 'relatos') mostrarRelatos();
       else if (tab === 'modulos') mostrarModulos();
       else if (tab === 'categorias') mostrarCategorias();
+      else if (tab === 'solicitudes') mostrarSolicitudes();
       else if (tab === 'feedback') mostrarFeedback();
     });
   });
@@ -285,11 +289,13 @@ function mostrarCategorias() {
       ${list.length === 0 ? '<div class="ctrl-empty">Sin datos.</div>' : `
       <div class="ctrl-card" style="overflow-x:auto;">
         <table class="ctrl-table">
-          <thead><tr><th>ID</th><th>Nombre</th><th style="width:80px;">Acción</th></tr></thead>
+          <thead><tr><th>ID</th><th>Nombre</th><th>Temas</th><th>Juegos</th><th style="width:80px;">Acción</th></tr></thead>
           <tbody>${list.map(c => `
             <tr>
               <td>${c.id}</td>
               <td>${esc(c.nombre)}</td>
+              <td><span class="ctrl-badge temas">${c.conteo_temas || 0}</span></td>
+              <td><span class="ctrl-badge juegos">${c.conteo_juegos || 0}</span></td>
               <td><div class="ctrl-actions">
                 <button class="ctrl-btn edit" onclick='editarCategoria(${c.id},"${escAttr(c.nombre)}")' title="Editar"><span class="material-symbols-outlined">edit</span></button>
                 <button class="ctrl-btn delete" onclick="eliminar('/0505/api/categorias/${c.id}','categoría #${c.id}')" title="Eliminar"><span class="material-symbols-outlined">delete</span></button>
@@ -448,6 +454,59 @@ function mostrarModulos() {
         </table>
       </div>`}
     </div>`;
+}
+
+// --- Solicitudes ---
+async function mostrarSolicitudes() {
+  const list = cache.solicitudes || [];
+  const pendientes = list.filter(s => s.estado === 'pendiente').length;
+  $('#panel-content').innerHTML = `
+    <div class="panel-tab">
+      <h2><span class="material-symbols-outlined">person_add</span>Solicitudes de Especialista <span class="ctrl-badge solicitudes">${pendientes} pendientes</span></h2>
+      ${list.length === 0 ? '<div class="ctrl-empty">Sin solicitudes.</div>' : `
+      <div class="ctrl-card" style="overflow-x:auto;">
+        <table class="ctrl-table">
+          <thead><tr><th>ID</th><th>Usuario</th><th>Nombre</th><th>Correo</th><th>Mensaje</th><th>Foto</th><th>Estado</th><th>Fecha</th><th style="width:100px;">Acción</th></tr></thead>
+          <tbody>${list.map(s => `
+            <tr>
+              <td>${s.id}</td>
+              <td>${esc(s.username)}</td>
+              <td>${esc(s.nombre)}</td>
+              <td>${esc(s.correo)}</td>
+              <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(s.mensaje || '—')}</td>
+              <td>${s.foto_url ? `<a href="${escAttr(s.foto_url)}" target="_blank" title="Ver foto"><span class="material-symbols-outlined" style="font-size:18px;color:#64b5f6;">image</span></a>` : '—'}</td>
+              <td><span class="ctrl-estado ${s.estado}">${s.estado}</span></td>
+              <td style="font-size:0.75rem;">${s.fecha_creacion ? new Date(s.fecha_creacion).toLocaleDateString() : '—'}</td>
+              <td><div class="ctrl-actions">
+                ${s.estado === 'pendiente' ? `
+                  <button class="ctrl-btn approve" onclick="aprobarSolicitud(${s.id})" title="Aprobar"><span class="material-symbols-outlined">check</span></button>
+                  <button class="ctrl-btn reject" onclick="rechazarSolicitud(${s.id})" title="Rechazar"><span class="material-symbols-outlined">close</span></button>
+                ` : '—'}
+              </div></td>
+            </tr>`).join('')}</tbody>
+        </table>
+      </div>`}
+    </div>`;
+}
+
+async function aprobarSolicitud(id) {
+  if (!await confirmar('¿Aprobar esta solicitud? El usuario se convertirá en Especialista.')) return;
+  try {
+    const r = await apiCall('PUT', `/0505/api/solicitudes/${id}/aprobar`);
+    const d = await r.json();
+    if (r.ok) { notificar(d.mensaje || 'Aprobada.', 'success'); programarRecarga(); }
+    else { notificar(d.mensaje || 'Error.', 'error'); }
+  } catch { notificar('Error de conexión.', 'error'); }
+}
+
+async function rechazarSolicitud(id) {
+  if (!await confirmar('¿Rechazar esta solicitud?')) return;
+  try {
+    const r = await apiCall('PUT', `/0505/api/solicitudes/${id}/rechazar`);
+    const d = await r.json();
+    if (r.ok) { notificar(d.mensaje || 'Rechazada.', 'success'); programarRecarga(); }
+    else { notificar(d.mensaje || 'Error.', 'error'); }
+  } catch { notificar('Error de conexión.', 'error'); }
 }
 
 // --- Feedback ---

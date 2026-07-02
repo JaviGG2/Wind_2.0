@@ -1,5 +1,5 @@
 const urlParams = new URLSearchParams(window.location.search);
-const juegoIdUrl = urlParams.get('juego');
+const juegoIdUrl = urlParams.get('id') || urlParams.get('juego');
 if (juegoIdUrl) {
     const moduloId = urlParams.get('modulo');
     const nivelId = urlParams.get('nivel');

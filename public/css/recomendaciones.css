@@ -4,6 +4,15 @@
   padding: 24px 20px;
 }
 
+.perfil-info {
+    margin: 0;
+    font-size: var(--font-2xl);
+    font-weight: 700;
+    color: var(--primario);
+}
+
+
+
 .recom-header {
   text-align: center;
   margin-bottom: 36px;

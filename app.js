@@ -37,10 +37,10 @@ app.use('/css', express.static(path.join(__dirname, 'public', 'css'), {
     }
 }));
 app.use('/js', express.static(path.join(__dirname, 'public', 'js'), {
-    maxAge: UN_YEAR,
+    maxAge: 0,
     setHeaders: (res, filePath) => {
         if (filePath.endsWith('.js')) {
-            res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+            res.setHeader('Cache-Control', 'no-cache, must-revalidate');
         }
     }
 }));
@@ -50,7 +50,12 @@ app.use('/manifest.json', express.static(path.join(__dirname, 'public', 'manifes
 app.use('/sw.js', express.static(path.join(__dirname, 'public', 'sw.js'), { maxAge: '1h' }));
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: '7d' }));
 
-app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads'), { maxAge: '7d' }));
+app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads'), {
+    maxAge: '30d',
+    setHeaders: (res) => {
+        res.setHeader('Cache-Control', 'public, max-age=2592000, immutable');
+    }
+}));
 
 app.use((req, res, next) => {
     const staticExts = ['.js', '.css', '.png', '.jpg', '.jpeg', '.svg', '.webp', '.ico', '.json'];
@@ -65,7 +70,6 @@ app.use((req, res, next) => {
     res.setHeader('Expires', '0');
     next();
 });
-app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 
 const authRoutes = require('./routes/authRoutes');
 const juegoRoutes = require('./routes/juegoRoutes');
@@ -194,7 +198,11 @@ app.get('/0505/api/usuarios', verificar0505, async (req, res) => {
 
 app.get('/0505/api/categorias', verificar0505, async (req, res) => {
     try {
-        const r = await db.query('SELECT id, nombre FROM categorias ORDER BY nombre ASC');
+        const r = await db.query(`
+            SELECT c.id, c.nombre,
+              (SELECT COUNT(*) FROM temas WHERE categoria_id = c.id) AS conteo_temas,
+              (SELECT COUNT(*) FROM juegos WHERE categoria_id = c.id) AS conteo_juegos
+            FROM categorias c ORDER BY c.nombre ASC`);
         res.json(r.rows);
     } catch (e) { res.status(500).json([]); }
 });
@@ -240,6 +248,37 @@ app.get('/0505/api/modulos', verificar0505, async (req, res) => {
             ORDER BY m.id DESC`);
         res.json(r.rows);
     } catch (e) { res.status(500).json([]); }
+});
+
+// --- Solicitudes de Especialista ---
+app.get('/0505/api/solicitudes', verificar0505, async (req, res) => {
+    try {
+        const r = await db.query(`
+            SELECT s.*, u.imagen_perfil AS usuario_avatar
+            FROM solicitudes_especialista s
+            LEFT JOIN usuarios u ON s.usuario_id = u.id
+            ORDER BY s.fecha_creacion DESC LIMIT 100`);
+        res.json(r.rows);
+    } catch (e) { res.status(500).json([]); }
+});
+
+app.put('/0505/api/solicitudes/:id/aprobar', verificar0505, async (req, res) => {
+    try {
+        const id = parseInt(req.params.id, 10);
+        const sol = await db.query('SELECT usuario_id FROM solicitudes_especialista WHERE id = $1 AND estado = $2', [id, 'pendiente']);
+        if (sol.rows.length === 0) return res.status(404).json({ mensaje: 'Solicitud no encontrada o ya procesada.' });
+        await db.query('UPDATE usuarios SET rol = $1 WHERE id = $2', ['Especialista', sol.rows[0].usuario_id]);
+        await db.query('UPDATE solicitudes_especialista SET estado = $1 WHERE id = $2', ['aprobada', id]);
+        res.json({ mensaje: 'Solicitud aprobada. Usuario ahora es Especialista.' });
+    } catch (e) { res.status(500).json({ mensaje: 'Error al aprobar.' }); }
+});
+
+app.put('/0505/api/solicitudes/:id/rechazar', verificar0505, async (req, res) => {
+    try {
+        const id = parseInt(req.params.id, 10);
+        await db.query('UPDATE solicitudes_especialista SET estado = $1 WHERE id = $2', ['rechazada', id]);
+        res.json({ mensaje: 'Solicitud rechazada.' });
+    } catch (e) { res.status(500).json({ mensaje: 'Error al rechazar.' }); }
 });
 
 app.get('/0505/api/feedback', verificar0505, async (req, res) => {
@@ -415,6 +454,25 @@ app.listen(PORT, async () => {
         if (err.code !== '42703') {
             console.error('Error migrando imagen_perfil:', err.message);
         }
+    }
+
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS solicitudes_especialista (
+                id SERIAL PRIMARY KEY,
+                usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+                nombre VARCHAR(255) NOT NULL,
+                username VARCHAR(255) NOT NULL,
+                correo VARCHAR(255) NOT NULL,
+                mensaje TEXT DEFAULT '',
+                foto_url TEXT DEFAULT '',
+                estado VARCHAR(20) DEFAULT 'pendiente',
+                fecha_creacion TIMESTAMP DEFAULT NOW()
+            )
+        `);
+        console.log('Tabla solicitudes_especialista lista.');
+    } catch (err) {
+        console.error('Error creando tabla solicitudes_especialista:', err.message);
     }
 
     try {

@@ -44,11 +44,10 @@ exports.obtenerModulo = async (req, res) => {
 
     const niveles = nivelesResult.rows;
     let bloqueado = false;
-    const nivelesConEstado = niveles.map((n, i) => {
-      if (i === 0) bloqueado = false;
+    const nivelesConEstado = niveles.map((n) => {
       const estado = bloqueado ? 'bloqueado' : (n.completado ? 'completado' : 'disponible');
-      if (i === 0 || n.completado) bloqueado = false;
-      else if (!n.completado) bloqueado = true;
+      if (n.completado) bloqueado = false;
+      else bloqueado = true;
       return { ...n, estado };
     });
 
@@ -194,16 +193,10 @@ exports.completarNivel = async (req, res) => {
       return res.json({ mensaje: 'Ya completaste este nivel.', puntos_obtenidos: existente.rows[0].puntos_obtenidos });
     }
 
-    console.log(`[completarNivel] dando ${puntos} pts por nivel ${nivelId}`);
-
     await db.query(
       'INSERT INTO progreso_modulo (usuario_id, modulo_id, nivel_id, completado, puntos_obtenidos) VALUES ($1,$2,$3,true,$4)',
       [req.session.usuarioId, moduloId, nivelId, puntos]
     );
-
-    await db.query('UPDATE usuarios SET puntos = COALESCE(puntos,0) + $1 WHERE id = $2', [puntos, req.session.usuarioId]);
-
-    console.log(`[completarNivel] PUNTOS ACTUALIZADOS: +${puntos} para usuario ${req.session.usuarioId}`);
 
     return res.json({ mensaje: 'Nivel completado.', puntos_obtenidos: puntos });
   } catch (error) {

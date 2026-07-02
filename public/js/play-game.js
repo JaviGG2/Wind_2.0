@@ -1,5 +1,7 @@
 const params = new URLSearchParams(window.location.search);
 const juegoId = params.get('id');
+const moduloId = params.get('modulo');
+const nivelId = params.get('nivel');
 
 const state = {
     memoryEmparejados: 0,
@@ -148,6 +150,18 @@ function getTipoIcon(tipo) {
     return map[tipo] || 'quiz';
 }
 
+async function completarNivelModulo() {
+    if (moduloId && nivelId) {
+        try {
+            await fetch(`/api/modulos/${moduloId}/niveles/${nivelId}/completar`, {
+                method: 'POST', credentials: 'include'
+            });
+        } catch (err) {
+            console.error('[play-game] Fallo al completar nivel:', err);
+        }
+    }
+}
+
 async function responderTrivia(juego, letra, btnElegido) {
     const correcta = juego.opcion_correcta || juego.correcta;
     const respuesta = { juego_id: juego.id, respuesta_usuario: letra };
@@ -180,6 +194,7 @@ async function responderTrivia(juego, letra, btnElegido) {
         }
     });
 
+    if (esCorrecta) await completarNivelModulo();
     mostrarResultado(juego, esCorrecta, puntosGanados);
 }
 
@@ -265,6 +280,7 @@ async function responderScramblee(juego) {
         console.error('[play-game] Fallo en responderScramblee:', err);
     }
 
+    if (esCorrecta) await completarNivelModulo();
     mostrarResultado(juego, esCorrecta, puntosGanados);
 }
 
@@ -287,6 +303,7 @@ async function completarJuego(juego) {
         console.error('[play-game] Fallo en completarJuego:', err);
     }
 
+    if (esCorrecta) await completarNivelModulo();
     mostrarResultado(juego, esCorrecta, puntosGanados);
 }
 
@@ -324,5 +341,14 @@ function mostrarResultado(juego, esCorrecta, puntosGanados) {
         } else {
             $('#resultado-correcta-wrap').style.display = 'none';
         }
+    }
+
+    if (moduloId && esCorrecta) {
+        const btnSig = $('#btn-siguiente-nivel');
+        if (btnSig) {
+            btnSig.style.display = 'inline-flex';
+            btnSig.onclick = () => { window.location.href = `/modulos/${moduloId}`; };
+        }
+        setTimeout(() => { window.location.href = `/modulos/${moduloId}`; }, 3000);
     }
 }
