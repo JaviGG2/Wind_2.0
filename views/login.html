@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
-<head><style>body{background:#f5f6f8}</style>
+<head><script>window.WIND_CACHE_VERSION='{{ cacheVersion }}'</script>
+<style>body{background:#f5f6f8}</style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - Wind</title>
@@ -16,7 +17,7 @@
 <body>
     <main class="login-split anim-fade-down">
         <div class="login-panel-bienvenida anim-slide-up">
-            <img src="/img/logo2.png" alt="Wind" style="width:100px;height:auto;margin-bottom:20px;">
+            <img src="/img/logo2.png?v={{ cacheVersion }}" alt="Wind" style="width:100px;height:auto;margin-bottom:20px;">
             <h1>Wind</h1>
             <p>Explora, aprende y preserva el patrimonio cultural de Coro. Descubre historias, tradiciones y secretos de nuestra tierra.</p>
             <div class="marcas-agua">
@@ -29,7 +30,7 @@
         <div class="login-panel-form">
             <div class="tarjeta-registro" style="box-shadow:none;border:none;width:100%;">
                 <div class="cabecera-login">
-                    <img src="/img/logo2.png" alt="Wind" class="logo-login">
+                    <img src="/img/logo2.png?v={{ cacheVersion }}" alt="Wind" class="logo-login">
                     <h2>Iniciar Sesión</h2>
                 </div>
                 <p>Ingresa tus credenciales para acceder a Wind.</p>
@@ -67,5 +68,10 @@
 
     <script src="/js/login.js?v={{ cacheVersion }}"></script>
     <script type="module" src="/js/info-burbuja.js?v={{ cacheVersion }}"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js');
+        }
+    </script>
 </body>
 </html>

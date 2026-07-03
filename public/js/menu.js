@@ -4,7 +4,7 @@ const barraHTML = `
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
   <nav class="barra-navegacion">
     <div class="logo-menu">
-      <img src="/img/logo2.png" alt="Wind">
+      <img src="/img/logo2.png?v=${window.WIND_CACHE_VERSION || Date.now()}" alt="Wind">
       <button id="btn-notif-barra" class="notif-barra-btn" aria-label="Notificaciones">
         <span class="material-symbols-outlined">notifications</span>
         <span id="notif-badge" class="notif-badge" style="display:none;">0</span>

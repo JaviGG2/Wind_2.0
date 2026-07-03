@@ -3,6 +3,7 @@ const session = require('express-session');
 const nunjucks = require('nunjucks');
 require('dotenv').config();
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 
@@ -33,8 +34,22 @@ app.use('/css', express.static(path.join(__dirname, 'public', 'css'), noCache));
 app.use('/js', express.static(path.join(__dirname, 'public', 'js'), noCache));
 app.use('/img', express.static(path.join(__dirname, 'public', 'img'), noCache));
 app.use('/fonts', express.static(path.join(__dirname, 'public', 'fonts'), noCache));
-app.use('/manifest.json', express.static(path.join(__dirname, 'public', 'manifest.json'), noCache));
-app.use('/sw.js', express.static(path.join(__dirname, 'public', 'sw.js'), noCache));
+app.get('/manifest.json', (req, res) => {
+    let manifest = fs.readFileSync(path.join(__dirname, 'public', 'manifest.json'), 'utf8');
+    manifest = JSON.parse(manifest);
+    manifest.icons = manifest.icons.map(icon => ({
+        ...icon,
+        src: icon.src + '?v=' + app.locals.cacheVersion
+    }));
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.json(manifest);
+});
+app.get('/sw.js', (req, res) => {
+    let sw = fs.readFileSync(path.join(__dirname, 'views', 'sw.js'), 'utf8');
+    sw = sw.replace(/{{CACHE_VERSION}}/g, app.locals.cacheVersion);
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.type('application/javascript').send(sw);
+});
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads'), noCache));
 app.use(express.static(path.join(__dirname, 'public'), noCache));
 
