@@ -28,6 +28,7 @@ app.use(session({
 }));
 
 const noCache = { maxAge: 0, setHeaders: (res) => { res.setHeader('Cache-Control', 'no-store'); } };
+app.locals.cacheVersion = Date.now();
 app.use('/css', express.static(path.join(__dirname, 'public', 'css'), noCache));
 app.use('/js', express.static(path.join(__dirname, 'public', 'js'), noCache));
 app.use('/img', express.static(path.join(__dirname, 'public', 'img'), noCache));

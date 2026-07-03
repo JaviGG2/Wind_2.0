@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="es">
 <head><style>body{background:#f5f6f8}</style>
     <meta charset="UTF-8">
@@ -7,25 +7,25 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="/css/base.css">
-    <link rel="stylesheet" href="/css/estilos.css">
-    <link rel="stylesheet" href="/css/registro.css">
+<link rel="stylesheet" href="/css/base.css?v={{ cacheVersion }}">
+    <link rel="stylesheet" href="/css/estilos.css?v={{ cacheVersion }}">
+    <link rel="stylesheet" href="/css/registro.css?v={{ cacheVersion }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
-    <link rel="stylesheet" href="/css/animaciones.css">
+    <link rel="stylesheet" href="/css/animaciones.css?v={{ cacheVersion }}">
 </head>
 <body>
     <main class="contenedor-principal">
         <div class="tarjeta-registro">
             <h2>Crear Cuenta en Wind</h2>
-            <p>Únete a nuestra comunidad para descubrir y preservar la historia.</p>
+            <p>ï¿½nete a nuestra comunidad para descubrir y preservar la historia.</p>
             
             <form id="formulario-registro">
                 <div class="grupo-campo">
                     <label for="nombre">Nombre Completo:</label>
-                    <input type="text" id="nombre" required placeholder="Ej. Juan Pérez">
+                    <input type="text" id="nombre" required placeholder="Ej. Juan Pï¿½rez">
                 </div>
                 <div class="grupo-campo">
-                    <label for="correo">Correo Electrónico:</label>
+                    <label for="correo">Correo Electrï¿½nico:</label>
                     <input type="email" id="correo" required placeholder="ejemplo@correo.com">
                 </div>
                 <div class="grupo-campo">
@@ -33,19 +33,19 @@
                     <input type="text" id="username" required placeholder="Ej. juan_coro">
                 </div>
                 <div class="grupo-campo">
-                    <label for="contrasena">Contraseña:</label>
+                    <label for="contrasena">Contraseï¿½a:</label>
                     <div class="campo-con-ojo">
-                        <input type="password" id="contrasena" required placeholder="Mínimo 6 caracteres">
+                        <input type="password" id="contrasena" required placeholder="Mï¿½nimo 6 caracteres">
                         <button type="button" class="btn-ojo" data-target="contrasena" tabindex="-1">
                             <span class="material-symbols-outlined">visibility_off</span>
                         </button>
                     </div>
-                    <small class="input-ayuda" id="password-requisitos">Debe tener al menos 6 caracteres, 1 mayúscula, 1 número y 1 carácter especial</small>
+                    <small class="input-ayuda" id="password-requisitos">Debe tener al menos 6 caracteres, 1 mayï¿½scula, 1 nï¿½mero y 1 carï¿½cter especial</small>
                 </div>
                 <div class="grupo-campo">
-                    <label for="contrasena-confirmar">Confirmar Contraseña:</label>
+                    <label for="contrasena-confirmar">Confirmar Contraseï¿½a:</label>
                     <div class="campo-con-ojo">
-                        <input type="password" id="contrasena-confirmar" required placeholder="Repite la contraseña">
+                        <input type="password" id="contrasena-confirmar" required placeholder="Repite la contraseï¿½a">
                         <button type="button" class="btn-ojo" data-target="contrasena-confirmar" tabindex="-1">
                             <span class="material-symbols-outlined">visibility_off</span>
                         </button>
@@ -57,13 +57,13 @@
 
             <div id="seccion-codigo">
     <h2>Verifica tu Cuenta</h2>
-    <p>Ingresa el código de 6 dígitos que enviamos a tu correo electrónico.</p>
+    <p>Ingresa el cï¿½digo de 6 dï¿½gitos que enviamos a tu correo electrï¿½nico.</p>
     
     <form id="form-verificar">
         <input type="hidden" id="verificar-correo">
         
         <div class="grupo-campo">
-            <label for="codigo-input">Código de Seguridad:</label>
+            <label for="codigo-input">Cï¿½digo de Seguridad:</label>
             <input type="text" id="codigo-input" maxlength="6" placeholder="000000" required>
         </div>
         
@@ -74,10 +74,10 @@
 </div>
 
             <div id="mensaje-consola" class="mensaje-oculto"></div>
-            <a href="/login" class="boton-secundario">Volver a iniciar sesión</a>
+            <a href="/login" class="boton-secundario">Volver a iniciar sesiï¿½n</a>
         </div>
     </main>
 
-    <script src="/js/Registro.js"></script>
+    <script src="/js/Registro.js?v={{ cacheVersion }}"></script>
 </body>
 </html>
