@@ -22,6 +22,31 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    function renderizarRecomendaciones(lista) {
+        if (lista.length === 0) {
+            contenedor.innerHTML = '<p class="muted center" style="padding:40px 0;">Sin resultados.</p>';
+            return;
+        }
+        contenedor.innerHTML = lista.map(item => {
+            const fecha = item.fecha_publicacion ? new Date(item.fecha_publicacion).toLocaleDateString() : '';
+            const resumen = item.resumen || item.contenido || '';
+            return `
+                <a href="/ver-tema?id=${item.id}" class="recom-card">
+                    <div class="recom-card-tag">Tema histórico</div>
+                    <h3>${item.titulo || 'Sin título'}</h3>
+                    <p>${resumen.substring(0, 150)}...</p>
+                    <div class="recom-card-footer">
+                        <span>${item.categoria || 'General'} · ${fecha}</span>
+                        <span class="recom-card-score">
+                            <span class="material-symbols-outlined">trending_up</span>
+                            ${item.likes || 0}
+                        </span>
+                    </div>
+                </a>
+            `;
+        }).join('');
+    }
+
     async function cargarRecomendaciones() {
         contenedor.innerHTML = '<p class="muted center">Cargando recomendaciones...</p>';
         try {
@@ -30,6 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await res.json();
 
             const items = data.temas || [];
+            window.itemsCache = items;
             if (items.length === 0) {
                 contenedor.innerHTML = `
                     <div style="grid-column:1/-1;text-align:center;padding:40px 0;">
@@ -39,24 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            contenedor.innerHTML = items.map(item => {
-                const fecha = item.fecha_publicacion ? new Date(item.fecha_publicacion).toLocaleDateString() : '';
-                const resumen = item.resumen || item.contenido || '';
-                return `
-                    <a href="/ver-tema?id=${item.id}" class="recom-card">
-                        <div class="recom-card-tag">Tema histórico</div>
-                        <h3>${item.titulo || 'Sin título'}</h3>
-                        <p>${resumen.substring(0, 150)}...</p>
-                        <div class="recom-card-footer">
-                            <span>${item.categoria || 'General'} · ${fecha}</span>
-                            <span class="recom-card-score">
-                                <span class="material-symbols-outlined">trending_up</span>
-                                ${item.likes || 0}
-                            </span>
-                        </div>
-                    </a>
-                `;
-            }).join('');
+            renderizarRecomendaciones(items);
         } catch {
             contenedor.innerHTML = '<p class="muted center error">Error al cargar recomendaciones.</p>';
         }
@@ -80,4 +89,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     await Promise.all([cargarEstado(), cargarRecomendaciones()]);
+
+    const input = document.getElementById('recom-buscar');
+    if (input) {
+        input.addEventListener('input', () => {
+            const q = input.value.trim().toLowerCase();
+            if (!q) {
+                renderizarRecomendaciones(window.itemsCache || []);
+                return;
+            }
+            const filtrados = (window.itemsCache || []).filter(item =>
+                (item.titulo || '').toLowerCase().includes(q) ||
+                (item.resumen || item.contenido || '').substring(0, 200).toLowerCase().includes(q)
+            );
+            renderizarRecomendaciones(filtrados);
+        });
+    }
 });

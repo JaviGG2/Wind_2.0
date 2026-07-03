@@ -1,21 +1,4 @@
-const fs = require('fs').promises;
-const path = require('path');
 const db = require('../config/db');
-
-const ARCHIVO = path.join(__dirname, '..', 'feedback', 'feedback.json');
-
-async function leerFeedback() {
-    try {
-        const data = await fs.readFile(ARCHIVO, 'utf-8');
-        return JSON.parse(data);
-    } catch {
-        return [];
-    }
-}
-
-async function guardarFeedback(lista) {
-    await fs.writeFile(ARCHIVO, JSON.stringify(lista, null, 2), 'utf-8');
-}
 
 exports.enviarFeedback = async (req, res) => {
     const { mensaje } = req.body;
@@ -23,26 +6,10 @@ exports.enviarFeedback = async (req, res) => {
         return res.status(400).json({ mensaje: 'Escribe un mensaje.' });
     }
     try {
-        const usuario = await db.query(
-            'SELECT nombre, username FROM usuarios WHERE id = $1',
-            [req.session.usuarioId]
+        await db.query(
+            `INSERT INTO feedback (usuario_id, mensaje, pagina) VALUES ($1, $2, $3)`,
+            [req.session.usuarioId, mensaje.trim(), req.body.pagina || '']
         );
-        const userData = usuario.rows[0] || { nombre: 'Desconocido', username: 'unknown' };
-
-        const lista = await leerFeedback();
-        const entry = {
-            id: lista.length > 0 ? lista[lista.length - 1].id + 1 : 1,
-            usuario_id: req.session.usuarioId,
-            usuario_nombre: userData.nombre,
-            usuario_username: userData.username,
-            mensaje: mensaje.trim(),
-            pagina: req.body.pagina || '',
-            leido: false,
-            fecha_creacion: new Date().toISOString()
-        };
-        lista.push(entry);
-        await guardarFeedback(lista);
-
         res.status(201).json({ mensaje: 'Feedback enviado. ¡Gracias!' });
     } catch (err) {
         console.error('Error al guardar feedback:', err.message);
@@ -52,8 +19,12 @@ exports.enviarFeedback = async (req, res) => {
 
 exports.listarFeedback = async (req, res) => {
     try {
-        const lista = await leerFeedback();
-        res.json(lista.reverse());
+        const result = await db.query(`
+            SELECT f.id, f.mensaje, f.pagina, f.fecha_creacion,
+                   u.nombre AS usuario_nombre, u.username AS usuario_username
+            FROM feedback f LEFT JOIN usuarios u ON f.usuario_id = u.id
+            ORDER BY f.id DESC`);
+        res.json(result.rows);
     } catch (err) {
         console.error('Error al listar feedback:', err.message);
         res.status(500).json({ mensaje: 'Error al cargar feedback.' });
@@ -64,11 +35,7 @@ exports.eliminarFeedback = async (req, res) => {
     const id = parseInt(req.params.id, 10);
     if (Number.isNaN(id)) return res.status(400).json({ mensaje: 'ID inválido.' });
     try {
-        let lista = await leerFeedback();
-        const antes = lista.length;
-        lista = lista.filter(f => f.id !== id);
-        if (lista.length === antes) return res.status(404).json({ mensaje: 'Feedback no encontrado.' });
-        await guardarFeedback(lista);
+        await db.query('DELETE FROM feedback WHERE id = $1', [id]);
         res.json({ mensaje: 'Feedback eliminado.' });
     } catch (err) {
         console.error('Error al eliminar feedback:', err.message);

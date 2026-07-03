@@ -131,6 +131,37 @@ document.addEventListener('DOMContentLoaded', async () => {
             msj.className = 'ajustes-mensaje error';
         }
     });
+
+    document.getElementById('btn-enviar-feedback')?.addEventListener('click', async () => {
+        const textarea = document.getElementById('feedback-mensaje');
+        const msg = textarea.value.trim();
+        const msj = document.getElementById('mensaje-feedback');
+        if (!msg) {
+            msj.textContent = 'Escribe un mensaje.';
+            msj.className = 'ajustes-mensaje error';
+            return;
+        }
+        try {
+            const r = await fetch('/api/feedback', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ mensaje: msg, pagina: window.location.href })
+            });
+            const data = await r.json();
+            if (r.ok) {
+                msj.textContent = 'Feedback enviado. ¡Gracias!';
+                msj.className = 'ajustes-mensaje exito';
+                textarea.value = '';
+            } else {
+                msj.textContent = data.mensaje || 'Error al enviar.';
+                msj.className = 'ajustes-mensaje error';
+            }
+        } catch {
+            msj.textContent = 'Error de conexión.';
+            msj.className = 'ajustes-mensaje error';
+        }
+    });
 });
 
 async function cargarNivelPerfil() {

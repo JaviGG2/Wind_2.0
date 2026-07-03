@@ -182,12 +182,12 @@
 }
 
 .logo-login {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    object-fit: cover;
+    width: 100px;
+    height: auto;
+    object-fit: contain;
     display: block;
     margin: 0 auto 10px;
+    border-radius: 0;
 }
 
 .cabecera-login {

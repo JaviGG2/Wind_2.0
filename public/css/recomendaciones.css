@@ -51,7 +51,7 @@
   transform: translate(-50%, -50%);
   
   
-  animation: recom-spin 6s linear infinite;
+  animation: recom-spin 10s linear infinite;
   pointer-events: none;
   object-fit: contain;
   z-index: 2; 
@@ -190,10 +190,20 @@
   gap: 6px;
 }
 
+.boton-enviar {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 25px;
+  
+ 
+}
 #btn-entrenar:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  
 }
+
+
 
 @media (min-width: 769px) {
   .contenido-principal {
