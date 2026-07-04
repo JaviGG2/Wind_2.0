@@ -121,6 +121,21 @@ function mostrarJuego(juego) {
         });
         caja.appendChild(colTemas);
         caja.appendChild(colResps);
+        const matchSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        matchSvg.setAttribute('class', 'match-svg');
+        caja.appendChild(matchSvg);
+        state.matchSvg = matchSvg;
+        state.matchLines = [];
+        const resizeSvg = () => {
+            const r = caja.getBoundingClientRect();
+            if (r.width) {
+                matchSvg.setAttribute('viewBox', `0 0 ${r.width} ${r.height}`);
+                matchSvg.style.width = r.width + 'px';
+                matchSvg.style.height = r.height + 'px';
+            }
+        };
+        resizeSvg();
+        window.addEventListener('resize', resizeSvg);
         opcionesEl.appendChild(caja);
     } else if (tipo === 'Scramblee') {
         const pista = juego.pregunta || '';
@@ -230,8 +245,13 @@ function voltearMemory(carta, juego) {
 
 function seleccionarMatch(btn, juego) {
     if (btn.classList.contains('conectado')) return;
+    const caja = btn.closest('.match-caja');
     if (btn.dataset.tipo === 'concepto') {
-        if (state.matchConcepto) state.matchConcepto.classList.remove('seleccionado');
+        if (state.matchConcepto) {
+            state.matchConcepto.classList.remove('seleccionado');
+        }
+        state.matchLines.forEach(l => { if (l.dashed) { l.el.remove(); } });
+        state.matchLines = state.matchLines.filter(l => !l.dashed);
         state.matchConcepto = btn;
         btn.classList.add('seleccionado');
     } else if (btn.dataset.tipo === 'respuesta' && state.matchConcepto) {
@@ -240,6 +260,8 @@ function seleccionarMatch(btn, juego) {
             conceptoBtn.classList.remove('seleccionado');
             conceptoBtn.classList.add('conectado');
             btn.classList.add('conectado');
+            drawMatchLine(caja, conceptoBtn, btn, '#22c55e', false);
+            state.matchLines = state.matchLines.filter(l => !l.dashed);
             state.matchConectados++;
             state.matchConcepto = null;
             if (state.matchConectados >= state.matchTotal) {
@@ -248,13 +270,43 @@ function seleccionarMatch(btn, juego) {
         } else {
             btn.classList.add('incorrecto');
             conceptoBtn.classList.add('incorrecto');
+            const badLine = drawMatchLine(caja, conceptoBtn, btn, '#ef4444', false);
             setTimeout(() => {
                 btn.classList.remove('incorrecto', 'seleccionado');
                 conceptoBtn.classList.remove('incorrecto', 'seleccionado');
+                badLine.remove();
+                state.matchLines = state.matchLines.filter(l => l.el !== badLine);
                 state.matchConcepto = null;
             }, 500);
         }
     }
+}
+
+function drawMatchLine(caja, btn1, btn2, color, dashed) {
+    const svg = caja.querySelector('.match-svg');
+    const cr = caja.getBoundingClientRect();
+    const r1 = btn1.getBoundingClientRect();
+    const r2 = btn2.getBoundingClientRect();
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    const x1 = r1.right - cr.left + 6;
+    const y1 = r1.top + r1.height / 2 - cr.top;
+    const x2 = r2.left - cr.left - 6;
+    const y2 = r2.top + r2.height / 2 - cr.top;
+    const dist = Math.abs(x2 - x1);
+    const wave = Math.max(40, dist * 0.25);
+    const d = `M ${x1},${y1} C ${x1 + dist*0.35},${y1 - wave} ${x2 - dist*0.35},${y2 + wave} ${x2},${y2}`;
+    path.setAttribute('d', d);
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', color);
+    path.setAttribute('stroke-width', '2.5');
+    path.setAttribute('stroke-linecap', 'round');
+    if (dashed) {
+        path.setAttribute('stroke-dasharray', '6,4');
+    }
+    svg.appendChild(path);
+    const entry = { el: path, dashed };
+    state.matchLines.push(entry);
+    return path;
 }
 
 async function responderScramblee(juego) {
