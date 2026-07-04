@@ -20,7 +20,7 @@ function $$(sel) { return document.querySelectorAll(sel); }
 
 async function cargarDatosJuegos() {
     const statusEl = $('#juegos-status');
-    if (statusEl) statusEl.textContent = 'Cargando...';
+    if (statusEl) statusEl.innerHTML = '<img src="/images/loading.svg" class="anim-loading" alt="Cargando...">';
 
     try {
         const [juegosRes, perfilRes] = await Promise.all([
@@ -44,6 +44,7 @@ async function cargarDatosJuegos() {
             $('#mis-puntos-count').textContent = state.puntosUsuario;
         }
 
+        await new Promise(r => setTimeout(r, 1000));
         if (state.filtro) {
             aplicarFiltro(state.filtro);
         } else {

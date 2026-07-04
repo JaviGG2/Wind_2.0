@@ -13,12 +13,13 @@ const autorFecha = document.getElementById('autor-fecha');
 if (!relatoId) {
     if (bloqueCarga) bloqueCarga.innerHTML = '<p>No se especificó un relato.</p>';
 } else {
-    fetch(`/api/relatos/${relatoId}`, { credentials: 'include' })
-        .then(r => {
+    Promise.all([
+        fetch(`/api/relatos/${relatoId}`, { credentials: 'include' }).then(r => {
             if (!r.ok) throw new Error('Relato no encontrado');
             return r.json();
-        })
-        .then(relato => {
+        }),
+        new Promise(r => setTimeout(r, 1000))
+    ]).then(([relato]) => {
             if (bloqueCarga) bloqueCarga.style.display = 'none';
             if (bloqueContenido) bloqueContenido.style.display = 'block';
 

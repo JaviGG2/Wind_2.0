@@ -1,0 +1,23 @@
+<svg viewBox="10 5 490 200" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    path {
+      fill: none;
+      stroke: #FF5500;
+      stroke-width: 44;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 9999;
+      stroke-dashoffset: 9999;
+      opacity: 0;
+      animation: destello 3s cubic-bezier(0.2, 0, 0.6, 1) infinite;
+    }
+    @keyframes destello {
+      0%   { stroke-dashoffset: 9999; opacity: 0; }
+      8%   { opacity: 1; }
+      20%  { stroke-dashoffset: 0; opacity: 1; }
+      40%  { stroke-dashoffset: 0; opacity: 0; }
+      100% { stroke-dashoffset: 9999; opacity: 0; }
+    }
+  </style>
+  <path d="M 20 160 C 80 10, 160 10, 250 100 C 340 190, 420 190, 480 100" />
+</svg>

@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     const [moduloRes, perfilRes] = await Promise.all([
       fetch(`/api/modulos/${moduloId}`, { credentials: 'include' }),
-      fetch('/auth/perfil', { credentials: 'include' })
+      fetch('/auth/perfil', { credentials: 'include' }),
+      new Promise(r => setTimeout(r, 1000))
     ]);
     if (!moduloRes.ok) throw new Error('Error');
     const modulo = await moduloRes.json();

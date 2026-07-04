@@ -142,7 +142,15 @@ app.get('/ver-tema', verificarSesion, (req, res) => {
     res.render('ver-tema');
 });
 
-app.get('/recomendaciones', verificarSesion, (req, res) => res.render('recomendaciones'));
+app.get('/recomendaciones', verificarSesion, async (req, res) => {
+    try {
+        const r = await db.query('SELECT nombre FROM usuarios WHERE id = $1', [req.session.usuarioId]);
+        const nombre = r.rows[0]?.nombre || '';
+        res.render('recomendaciones', { nombreUsuario: nombre });
+    } catch {
+        res.render('recomendaciones', { nombreUsuario: '' });
+    }
+});
 app.get('/ser-rol', verificarSesion, (req, res) => res.render('ser-rol'));
 app.get('/comunidad', (req, res) => res.render('comunidad'));
 app.get('/historias', (req, res) => res.render('historias'));
@@ -216,12 +224,27 @@ app.get('/0505/api/juegos', verificar0505, async (req, res) => {
 app.get('/0505/api/temas', verificar0505, async (req, res) => {
     try {
         const r = await db.query(`
-            SELECT t.id, t.titulo, t.likes, c.nombre AS categoria_nombre,
+            SELECT t.id, t.titulo, t.likes, t.estado, c.nombre AS categoria_nombre,
                    u.nombre AS creador_nombre, u.username AS creador_username
             FROM temas t
             LEFT JOIN categorias c ON t.categoria_id = c.id
             LEFT JOIN usuarios u ON t.creador_id = u.id
             ORDER BY t.id DESC LIMIT 50`);
+        res.json(r.rows);
+    } catch (e) { res.status(500).json([]); }
+});
+
+app.get('/0505/api/temas/pendientes', verificar0505, async (req, res) => {
+    try {
+        const r = await db.query(`
+            SELECT t.id, t.titulo, t.likes, t.estado, t.fecha_publicacion,
+                   c.nombre AS categoria_nombre,
+                   u.nombre AS creador_nombre, u.username AS creador_username
+            FROM temas t
+            LEFT JOIN categorias c ON t.categoria_id = c.id
+            LEFT JOIN usuarios u ON t.creador_id = u.id
+            WHERE t.estado = 'pendiente'
+            ORDER BY t.fecha_publicacion ASC`);
         res.json(r.rows);
     } catch (e) { res.status(500).json([]); }
 });
@@ -373,6 +396,34 @@ app.delete('/0505/api/temas/:id', verificar0505, async (req, res) => {
     } catch (e) { res.status(500).json({ mensaje: 'Error al eliminar.' }); }
 });
 
+app.post('/0505/api/temas/:id/aprobar', verificar0505, async (req, res) => {
+    try {
+        const id = parseInt(req.params.id, 10);
+        const r = await db.query('UPDATE temas SET estado = $1 WHERE id = $2 RETURNING titulo, creador_id', ['aprobado', id]);
+        if (r.rowCount === 0) return res.status(404).json({ mensaje: 'Tema no encontrado.' });
+        const { titulo, creador_id } = r.rows[0];
+        await db.query(
+            `INSERT INTO notificaciones (usuario_id, titulo, mensaje, enlace) VALUES ($1, $2, $3, $4)`,
+            [creador_id, 'Tema aprobado', `Tu tema "${titulo}" ha sido aprobado y ya está visible.`, `/ver-tema?id=${id}`]
+        );
+        res.json({ mensaje: 'Tema aprobado.' });
+    } catch (e) { res.status(500).json({ mensaje: 'Error al aprobar.' }); }
+});
+
+app.post('/0505/api/temas/:id/rechazar', verificar0505, async (req, res) => {
+    try {
+        const id = parseInt(req.params.id, 10);
+        const r = await db.query('UPDATE temas SET estado = $1 WHERE id = $2 RETURNING titulo, creador_id', ['rechazado', id]);
+        if (r.rowCount === 0) return res.status(404).json({ mensaje: 'Tema no encontrado.' });
+        const { titulo, creador_id } = r.rows[0];
+        await db.query(
+            `INSERT INTO notificaciones (usuario_id, titulo, mensaje, enlace) VALUES ($1, $2, $3, $4)`,
+            [creador_id, 'Tema no aprobado', `Tu tema "${titulo}" no ha sido aprobado. Revisa el contenido e inténtalo de nuevo.`, `/dashboard`]
+        );
+        res.json({ mensaje: 'Tema rechazado.' });
+    } catch (e) { res.status(500).json({ mensaje: 'Error al rechazar.' }); }
+});
+
 // Juegos
 app.delete('/0505/api/juegos/:id', verificar0505, async (req, res) => {
     try {
@@ -433,6 +484,13 @@ app.listen(PORT, async () => {
         console.log('Tabla historial_vistas lista.');
     } catch (err) {
         console.error('Error creando tabla historial_vistas:', err.message);
+    }
+
+    try {
+        await db.query(`ALTER TABLE temas ADD COLUMN IF NOT EXISTS estado VARCHAR(20) DEFAULT 'aprobado'`);
+        console.log('Columna estado en temas lista.');
+    } catch (err) {
+        console.error('Error agregando columna estado a temas:', err.message);
     }
 
     try {

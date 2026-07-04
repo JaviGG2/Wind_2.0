@@ -14,11 +14,7 @@ async function cargarRelatos(categoria = '') {
 
     if (!grid) return;
 
-    grid.innerHTML = `
-        <div class="loading-skeleton">
-            ${[1,2,3,4,5,6].map(() => '<div class="skeleton-card"></div>').join('')}
-        </div>
-    `;
+    grid.innerHTML = '<img src="/images/loading.svg" class="anim-loading" alt="Cargando...">';
     if (empty) empty.style.display = 'none';
 
     try {
@@ -40,6 +36,7 @@ async function cargarRelatos(categoria = '') {
         console.log('[comunidad] Relatos recibidos:', relatos.length, relatos);
         todosLosRelatos = relatos;
 
+        await new Promise(r => setTimeout(r, 1000));
         grid.innerHTML = '';
 
         if (!relatos || relatos.length === 0) {

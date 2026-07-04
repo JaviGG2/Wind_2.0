@@ -2,13 +2,14 @@ async function cargarNotificaciones() {
   const contenedor = document.getElementById('notif-list');
   if (!contenedor) return;
 
-  contenedor.innerHTML = '<p class="notif-loading">Cargando...</p>';
+  contenedor.innerHTML = '<img src="/images/loading.svg" class="anim-loading" alt="Cargando...">';
 
   try {
     const res = await fetch('/api/notificaciones', { credentials: 'include' });
     if (!res.ok) { contenedor.innerHTML = '<p>Error al cargar notificaciones.</p>'; return; }
 
     const notis = await res.json();
+    await new Promise(r => setTimeout(r, 1000));
     if (notis.length === 0) {
       contenedor.innerHTML = '<div class="notif-empty"><span class="material-symbols-outlined">notifications_off</span><p>No tienes notificaciones.</p></div>';
       return;
@@ -43,6 +44,7 @@ async function cargarNotificaciones() {
       contenedor.appendChild(div);
     });
   } catch (err) {
+    await new Promise(r => setTimeout(r, 1000));
     contenedor.innerHTML = '<p>Error de conexión.</p>';
     console.error('[notificaciones] Error:', err);
   }

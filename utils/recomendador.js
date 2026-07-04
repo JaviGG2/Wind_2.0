@@ -34,7 +34,7 @@ class Recomendador {
 
     async entrenar() {
         const [temas, relatos, historial] = await Promise.all([
-            db.query(`SELECT id, titulo, contenido FROM temas`),
+            db.query(`SELECT id, titulo, contenido FROM temas WHERE estado = 'aprobado'`),
             db.query(`SELECT id, titulo, contenido_relato FROM relatos_community`),
             db.query(`SELECT usuario_id, contenido_id FROM historial_vistas WHERE tipo_contenido = 'tema'`)
         ]);

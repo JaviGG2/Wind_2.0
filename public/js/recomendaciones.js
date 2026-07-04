@@ -24,9 +24,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function renderizarRecomendaciones(lista) {
         if (lista.length === 0) {
-            contenedor.innerHTML = '<p class="muted center" style="padding:40px 0;">Sin resultados.</p>';
+            document.getElementById('recom-header-icon').innerHTML = '<img src="/img/w2.png" alt="Wind" class="recom-logo anim-fade-in"><img src="/img/w1-glow.png" alt="" class="recom-glow">';
+            contenedor.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 0;"><p class="muted" style="font-size:1.1rem;">No tengo contenido para ti</p></div>';
             return;
         }
+        document.getElementById('recom-header-icon').innerHTML = '<img src="/img/w1.png" alt="Wind" class="recom-logo"><img src="/img/w1-glow.png" alt="" class="recom-glow">';
         contenedor.innerHTML = lista.map(item => {
             const fecha = item.fecha_publicacion ? new Date(item.fecha_publicacion).toLocaleDateString() : '';
             const resumen = item.resumen || item.contenido || '';
@@ -57,14 +59,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             const items = data.temas || [];
             window.itemsCache = items;
             if (items.length === 0) {
+                await new Promise(r => setTimeout(r, 1000));
+                document.getElementById('recom-header-icon').innerHTML = '<img src="/img/w2.png" alt="Wind" class="recom-logo anim-fade-in"><img src="/img/w1-glow.png" alt="" class="recom-glow">';
                 contenedor.innerHTML = `
-                    <div style="grid-column:1/-1;text-align:center;padding:40px 0;">
-                        <span class="material-symbols-outlined" style="font-size:3rem;color:var(--texto-muted);">auto_awesome</span>
-                        <p class="muted" style="margin-top:12px;">Aún no hay suficientes datos.<br>Visita algunos temas para recibir recomendaciones.</p>
+                    <div style="grid-column:1/-1;text-align:center;padding:60px 0;">
+                        <p class="muted" style="font-size:1.1rem;">No tengo contenido para ti</p>
                     </div>`;
                 return;
             }
 
+            await new Promise(r => setTimeout(r, 1000));
             renderizarRecomendaciones(items);
         } catch {
             contenedor.innerHTML = '<p class="muted center error">Error al cargar recomendaciones.</p>';

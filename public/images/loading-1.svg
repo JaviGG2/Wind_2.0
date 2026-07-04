@@ -1,0 +1,19 @@
+<svg viewBox="60 40 110 240" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    path {
+      fill: none;
+      stroke: #FF5500;
+      stroke-width: 12;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 100 100;
+      stroke-dashoffset: 2000;
+      animation: dibujarContinuo 15s linear infinite;
+    }
+    @keyframes dibujarContinuo {
+      0%   { stroke-dashoffset: 2000; }
+      100% { stroke-dashoffset: 0; }
+    }
+  </style>
+  <path d="M 120 50 Q 150 70 120 90 Q 90 110 130 130 T 90 200 Q 80 230 100 260" />
+</svg>

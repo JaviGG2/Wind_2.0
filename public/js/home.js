@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            
             mensajeCarga.style.display = 'none';
             temas.forEach(tema => temasContainer.appendChild(crearTarjetaTema(tema, currentUser)));
         } catch (error) {

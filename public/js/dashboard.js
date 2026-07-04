@@ -393,11 +393,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.cargarUsuarios = cargarUsuarios;
     window.cargarFeedback = cargarFeedback;
 
-    /* --- Notificaciones bell --- */
-    const bellBtn = document.getElementById('btn-notif-bell');
-    const dropdown = document.getElementById('notif-dropdown');
-    const badge = document.getElementById('notif-badge');
-    const dropdownLista = document.getElementById('notif-dropdown-lista');
+    /* --- Notificaciones badge --- */
+    const badge = document.querySelector('.perfil-acciones .notif-badge');
 
     async function actualizarNotif() {
         try {
@@ -412,79 +409,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         } catch {}
     }
-
-    async function cargarDropdownNotif() {
-        dropdownLista.innerHTML = '<p class="notif-dropdown-loading">Cargando...</p>';
-        try {
-            const res = await fetch('/api/notificaciones', { credentials: 'include' });
-            if (!res.ok) throw new Error();
-            const notifs = await res.json();
-            if (notifs.length === 0) {
-                dropdownLista.innerHTML = '<p class="notif-dropdown-empty">No tienes notificaciones.</p>';
-                return;
-            }
-            dropdownLista.innerHTML = notifs.slice(0, 8).map(n => {
-                const noLeida = n.leida ? '' : 'no-leida';
-                const fecha = n.fecha_creacion ? new Date(n.fecha_creacion).toLocaleDateString() : '';
-                const enlace = n.enlace || '#';
-                return `<a href="${enlace}" class="notif-dropdown-item ${noLeida}" data-id="${n.id}">
-                    <span class="notif-dropdown-dot ${noLeida}"></span>
-                    <div class="notif-dropdown-body">
-                        <div class="notif-dropdown-titulo">${n.titulo || ''}</div>
-                        <div class="notif-dropdown-msg">${n.mensaje || ''}</div>
-                        <div class="notif-dropdown-time">${fecha}</div>
-                    </div>
-                </a>`;
-            }).join('');
-            if (notifs.length > 8) {
-                dropdownLista.innerHTML += '<a href="/notificaciones" class="notif-dropdown-item" style="justify-content:center;color:var(--primario);font-weight:600;font-size:0.82rem;">Ver más...</a>';
-            }
-            dropdownLista.innerHTML += '<button id="notif-btn-vaciar" class="notif-dropdown-item" style="justify-content:center;color:#dc2626;font-weight:600;font-size:0.82rem;border:none;background:none;cursor:pointer;width:100%;padding:10px;">Vaciar todas</button>';
-        } catch {
-            dropdownLista.innerHTML = '<p class="notif-dropdown-empty">Error al cargar.</p>';
-        }
-    }
-
-    bellBtn.addEventListener('click', async (e) => {
-        e.stopPropagation();
-        const isOpen = dropdown.style.display !== 'none';
-        if (isOpen) {
-            dropdown.style.display = 'none';
-        } else {
-            await cargarDropdownNotif();
-            dropdown.style.display = '';
-        }
-    });
-
-    document.addEventListener('click', (e) => {
-        const wrapper = document.querySelector('.notif-bell-wrapper');
-        if (wrapper && !wrapper.contains(e.target) && dropdown.style.display !== 'none') {
-            dropdown.style.display = 'none';
-        }
-    });
-
-    dropdown.addEventListener('click', async (e) => {
-        if (e.target.id === 'notif-btn-vaciar' || e.target.closest('#notif-btn-vaciar')) {
-            if (!confirm('¿Eliminar todas las notificaciones?')) return;
-            try {
-                const res = await fetch('/api/notificaciones', { method: 'DELETE', credentials: 'include' });
-                if (res.ok) {
-                    dropdownLista.innerHTML = '<p class="notif-dropdown-empty">No tienes notificaciones.</p>';
-                    actualizarNotif();
-                }
-            } catch {}
-            return;
-        }
-        const item = e.target.closest('.notif-dropdown-item');
-        if (!item || item.classList.contains('no-leida')) return;
-        const id = item.dataset.id;
-        if (id) {
-            try {
-                await fetch(`/api/notificaciones/${id}/leer`, { method: 'PUT', credentials: 'include' });
-                actualizarNotif();
-            } catch {}
-        }
-    });
 
     actualizarNotif();
     setInterval(actualizarNotif, 30000);

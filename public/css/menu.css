@@ -13,6 +13,9 @@
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     transition: all 0.3s ease;
     font-family:'arial', 'segoe ui';
+    background: rgba(24, 24, 24, 0.904);
+    backdrop-filter: blur(10px);
+    gap: 12px;
 }
 
 .logo-menu {
@@ -85,7 +88,7 @@
     flex-direction: column;
     min-height: 100vh;
 }
-
+/* Mobile version */
 @media (max-width: 768px) {
     .app-layout {
         display: block;
@@ -146,13 +149,22 @@
     @media (max-width: 360px) {
         .barra-navegacion { padding: 10px; }
     }
-}
 
+    .ajustes-link {
+        display: none;
+    }
+}
+/* pc version*/
 @media (min-width: 769px) {
     .app-layout {
         display: flex;
         width: 100%;
         min-height: 100vh;
+    }
+
+    .contenido-principal {
+        margin-left: 270px;
+        width: calc(100% - 270px);
     }
 
     .barra-navegacion {
@@ -254,5 +266,14 @@
     .logout-link:hover {
         background: rgba(255,255,255,0.04);
     }
+
+     .ajustes-link {
+        margin-top: auto;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        padding-top: 10px;
+        margin-bottom: 4px;
+    }
+
 
 }

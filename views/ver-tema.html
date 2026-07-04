@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/css/menu.css?v={{ cacheVersion }}">
     <link rel="stylesheet" href="/css/animaciones.css?v={{ cacheVersion }}">
     <link rel="stylesheet" href="/css/info-popup.css?v={{ cacheVersion }}">
+    
     <link rel="manifest" href="/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -41,6 +42,9 @@
                     <option value="pt">Portugués</option>
                     <option value="it">Italiano</option>
                     <option value="de">Alemán</option>
+                    <option value="ja">Japonés</option>
+                    <option value="zh">Chino</option>
+                    <option value="ko">Coreano</option>
                 </select>
                 <button type="button" id="btn-traducir" class="btn-traducir">Traducir</button>
                 <button type="button" id="btn-original" class="btn-original anim-fade-in" style="display:none">Original</button>
@@ -49,8 +53,9 @@
             </div>
         </div>
 
-        <div id="bloque-carga" class="cargando-contenedor">
+        <div id="bloque-carga" class="cargando-contenedor anim-fade-in">
             <p>Cargando el contenido patrimonial...</p>
+            <img src="/images/loading-4.svg" class="anim-loading" alt="Cargando...">
         </div>
 
         <article id="bloque-contenido" class="articulo-patrimonial anim-fade-up" style="display: none;">

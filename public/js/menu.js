@@ -7,13 +7,14 @@ const barraHTML = `
       <img src="/img/logo2.png?v=${window.WIND_CACHE_VERSION || Date.now()}" alt="Wind">
       <button id="btn-notif-barra" class="notif-barra-btn" aria-label="Notificaciones">
         <span class="material-symbols-outlined">notifications</span>
-        <span id="notif-badge" class="notif-badge" style="display:none;">0</span>
+        <span id="notif-badge-menu" class="notif-badge" style="display:none;">0</span>
       </button>
     </div>
     <a href="/home" class="nav-link"><span class="material-symbols-outlined">explore</span><span>Descubrir</span></a>
     <a href="/comunidad" class="nav-link"><span class="material-symbols-outlined">Groups_2</span><span>Comunidad</span></a>
     <a href="/juegos" class="nav-link"><span class="material-symbols-outlined">Play_circle</span><span>Jugar</span></a>
     <a href="/dashboard" class="nav-link"><span class="material-symbols-outlined">person</span><span>Perfil</span></a>
+    <a href="/ajustes-perfil" class="nav-link ajustes-link"><span class="material-symbols-outlined">settings</span><span>Ajustes</span></a>
     <a href="#" id="menu-logout" class="nav-link logout-link"><span class="material-symbols-outlined">logout</span><span>Cerrar Sesión</span></a>
   </nav>
 
@@ -98,7 +99,7 @@ function iniciarScrollMenu() {
 }
 
 async function actualizarBadge() {
-  const badge = document.getElementById('notif-badge');
+  const badge = document.getElementById('notif-badge-menu');
   if (!badge) return;
   try {
     const res = await fetch('/api/notificaciones/no-leidas', { credentials: 'include' });

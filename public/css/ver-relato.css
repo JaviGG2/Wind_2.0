@@ -37,19 +37,7 @@
     color: #888;
 }
 
-.spinner {
-    width: 36px;
-    height: 36px;
-    border: 3px solid #e0e0e0;
-    border-top-color: #ff4500;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    margin-bottom: 12px;
-}
 
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
 
 .articulo-relato {
     background: #fff;

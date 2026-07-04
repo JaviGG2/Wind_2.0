@@ -1,0 +1,22 @@
+<svg viewBox="10 5 490 200" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    path {
+      fill: none;
+      stroke: #FF5500;
+      stroke-width: 44;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 9999;
+      stroke-dashoffset: 9999;
+      opacity: 0;
+      animation: relampago 3.5s steps(1, start) infinite;
+    }
+    @keyframes relampago {
+      0%   { stroke-dashoffset: 9999; opacity: 0; }
+      5%   { stroke-dashoffset: 0; opacity: 1; }
+      50%  { stroke-dashoffset: 0; opacity: 0; }
+      100% { stroke-dashoffset: 9999; opacity: 0; }
+    }
+  </style>
+  <path d="M 20 100 C 80 10, 140 10, 200 100 C 260 190, 320 190, 380 100 C 440 10, 480 10, 500 100" />
+</svg>

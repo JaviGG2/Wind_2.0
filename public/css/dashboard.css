@@ -1,8 +1,4 @@
 @media (min-width: 769px) {
-    .contenido-principal {
-        margin-left: 270px;
-        width: calc(100% - 270px);
-    }
     .dashboard-root {
         max-width: 900px;
         padding: 32px 40px;
@@ -100,9 +96,7 @@
 
 @media (min-width: 769px) {
     .perfil-acciones {
-        flex-direction: column;
-        gap: 8px;
-        padding-top: 8px;
+        display: none;
     }
 }
 
@@ -263,8 +257,9 @@
     color: var(--texto-sec);
     display: flex;
     align-items: center;
-    padding: 8px;
-    border-radius: 50%;
+    padding: 8px 12px;
+    border: 1px solid var(--borde);
+    border-radius: 25px;
     transition: all 0.2s;
     text-decoration: none;
 }
@@ -728,5 +723,82 @@
 }
 
 .perfil-acciones{
-    gap: 20px;
+    gap: 30px;
 }
+
+.icon-noti{
+
+    background: rgba(255,255,255,0.04);
+    
+    
+    
+}
+
+
+.recom-card-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 24px 0 12px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, var(--primario-light), #fff);
+    border: 1px solid rgba(255,69,0,0.15);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    color: var(--texto);
+    transition: all 0.25s ease;
+    box-shadow: var(--sombra-sm);
+}
+
+.recom-card-btn:hover {
+    border-color: var(--primario);
+    box-shadow: 0 4px 16px var(--primario-glow);
+    transform: translateY(-1px);
+}
+
+.recom-card-icon {
+    font-size: 2rem;
+    color: var(--primario);
+    font-variation-settings: 'FILL' 1;
+}
+
+.recom-card-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.recom-card-text strong {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--texto);
+}
+
+.recom-card-text small {
+    font-size: 0.78rem;
+    color: var(--texto-muted);
+    margin-top: 1px;
+}
+
+.recom-card-arrow {
+    color: var(--texto-muted);
+    font-size: 1.3rem;
+    transition: transform 0.2s ease;
+}
+
+.recom-card-btn:hover .recom-card-arrow {
+    transform: translateX(3px);
+    color: var(--primario);
+}
+
+@media (max-width: 600px) {
+    .recom-card-btn {
+        padding: 14px 16px;
+        margin: 16px 0 10px;
+    }
+    .recom-card-icon {
+        font-size: 1.6rem;
+    }
+}
+
+

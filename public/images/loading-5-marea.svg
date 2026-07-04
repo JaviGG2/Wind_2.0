@@ -1,0 +1,20 @@
+<svg viewBox="-5 -15 510 250" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    path {
+      fill: none;
+      stroke: #FF5500;
+      stroke-width: 24;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 100 100;
+      stroke-dashoffset: 1000;
+      animation: marea 12s ease-in-out infinite;
+    }
+    @keyframes marea {
+      0%   { stroke-dashoffset: 1000; }
+      50%  { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: 1000; }
+    }
+  </style>
+  <path d="M 25 70 C 80 25, 60 190, 115 190 C 170 190, 175 45, 230 55 C 285 65, 215 200, 275 200 C 335 200, 360 20, 475 40" />
+</svg>

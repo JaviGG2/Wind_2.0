@@ -35,7 +35,7 @@
             <header class="dashboard-header">
                 <div class="dashboard-header-top">
                     <div class="perfil-cabecera">
-                        <img id="perfil-avatar" src="/img/avatar.svg" alt="avatar" class="perfil-avatar" >
+                        <img id="perfil-avatar" src="/img/avatar.svg" alt="avatar" class="perfil-avatar " >
                         <div class="perfil-info">
                             <div class="perfil-meta">
                                 <h2 id="nombre-usuario">Panel de Control</h2>
@@ -44,22 +44,11 @@
                             <div id="rol-usuario" class="rol-usuario ">Cargando perfil...</div>
                         </div>
                     </div>
-                    <div class="perfil-acciones">
-                        <div class="notif-bell-wrapper">
-                            <button id="btn-notif-bell" class="btn-icono-config" aria-label="Notificaciones">
-                                <span class="material-symbols-outlined anim-fade-down">notifications</span>
-                                <span id="notif-badge" class="notif-badge" style="display:none;">0</span>
-                            </button>
-                            <div id="notif-dropdown" class="notif-dropdown " style="display:none;">
-                                <div class="notif-dropdown-header">
-                                    <span>Notificaciones</span>
-                                    <a href="/notificaciones" class="notif-dropdown-ver-todas">Ver todas</a>
-                                </div>
-                                <div id="notif-dropdown-lista" class="notif-dropdown-lista">
-                                    <p class="notif-dropdown-loading">Cargando...</p>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="perfil-acciones anim-fade-down">
+                    <a href="/notificaciones" id="btn-notif-bell" class="btn-icono-config" aria-label="Notificaciones">
+                        <span class="material-symbols-outlined anim-fade-down icon-noti">notifications</span>
+                        <span class="notif-badge" style="display:none;">0</span>
+                    </a>
                         <a href="/ajustes-perfil" class="btn-icono-config" aria-label="Configuración">
                             <span class="material-symbols-outlined anim-fade-down">settings</span>
                         </a>
@@ -84,12 +73,14 @@
                 </div>
             </header>
 
-            <div style="margin:24px 0 12px;text-align:center;">
-              <a href="/recomendaciones" class="boton-enviar" style="display:inline-flex;align-items:center;gap:8px;padding:12px 28px;">
-                <span class="material-symbols-outlined" style="font-size:1.3rem;">Stars_2</span>
-                Recomendaciones
-              </a>
-            </div>
+            <a href="/recomendaciones" class="recom-card-btn">
+                <span class="material-symbols-outlined recom-card-icon">auto_awesome</span>
+                <span class="recom-card-text">
+                    <strong>Recomendaciones</strong>
+                    <small>Contenido sugerido para ti</small>
+                </span>
+                <span class="material-symbols-outlined recom-card-arrow">chevron_right</span>
+            </a>
 
             <div id="btn-ascender-wrap" style="display:none;margin:20px 0 12px;text-align:center;">
               <a href="/ser-rol" class="boton-enviar" style="display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:linear-gradient(135deg,#ff4500,#e63e00);">
@@ -195,6 +186,8 @@
                 </div>
               </div>
             </div>
+
+            <img src="/images/loading.svg" class="anim-loading" alt="Cargando...">
 
             <div id="mensaje-consola" class="mensaje-oculto"></div>
         </div>

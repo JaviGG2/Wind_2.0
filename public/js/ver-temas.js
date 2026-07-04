@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             body: JSON.stringify({ tipo_contenido: 'tema', contenido_id: tema.id })
         }).catch(() => {});
 
+        await new Promise(r => setTimeout(r, 500));
         bloqueCarga.style.display = 'none';
         bloqueContenido.style.display = 'block';
 

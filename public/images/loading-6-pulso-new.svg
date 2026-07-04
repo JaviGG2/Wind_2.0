@@ -1,0 +1,23 @@
+<svg viewBox="10 15 480 180" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    path {
+      fill: none;
+      stroke: #FF5500;
+      stroke-width: 44;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 9999;
+      stroke-dashoffset: 9999;
+      opacity: 0;
+      animation: pulso 2.5s ease-in-out infinite;
+    }
+    @keyframes pulso {
+      0%   { stroke-dashoffset: 9999; opacity: 0; }
+      10%  { opacity: 1; }
+      30%  { stroke-dashoffset: 0; opacity: 1; }
+      40%  { stroke-dashoffset: 0; opacity: 0; }
+      100% { stroke-dashoffset: 9999; opacity: 0; }
+    }
+  </style>
+  <path d="M 20 160 L 80 30 L 140 160 L 200 60 L 260 160 L 320 40 L 380 160 L 440 80 L 480 160" />
+</svg>

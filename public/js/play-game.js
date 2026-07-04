@@ -18,9 +18,10 @@ function $(sel) { return document.querySelector(sel); }
 if (!juegoId) {
     $('#bloque-carga').innerHTML = '<p>No se especificó un juego.</p>';
 } else {
-    fetch(`/api/juegos/${juegoId}`, { credentials: 'include' })
-        .then(r => { if (!r.ok) throw new Error('Juego no encontrado'); return r.json(); })
-        .then(juego => {
+    Promise.all([
+        fetch(`/api/juegos/${juegoId}`, { credentials: 'include' }).then(r => { if (!r.ok) throw new Error('Juego no encontrado'); return r.json(); }),
+        new Promise(r => setTimeout(r, 1000))
+    ]).then(([juego]) => {
             const carga = $('#bloque-carga');
             const contenido = $('#play-contenido');
             if (carga) carga.style.display = 'none';

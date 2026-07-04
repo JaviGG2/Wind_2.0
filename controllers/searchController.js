@@ -59,8 +59,8 @@ exports.buscarContenido = async (req, res) => {
             db.query(
                 `SELECT id, titulo, contenido, imagen_portada AS imagen, 'tema' AS tipo, '/ver-tema?id=' || id AS url
                  FROM temas
-                 WHERE translate(lower(titulo), 'áéíóúÁÉÍÓÚñÑüÜ', 'aeiouaeiounnue') LIKE translate(lower($1), 'áéíóúÁÉÍÓÚñÑüÜ', 'aeiouaeiounnue')
-                    OR translate(lower(contenido), 'áéíóúÁÉÍÓÚñÑüÜ', 'aeiouaeiounnue') LIKE translate(lower($1), 'áéíóúÁÉÍÓÚñÑüÜ', 'aeiouaeiounnue')
+                 WHERE estado = 'aprobado' AND (translate(lower(titulo), 'áéíóúÁÉÍÓÚñÑüÜ', 'aeiouaeiounnue') LIKE translate(lower($1), 'áéíóúÁÉÍÓÚñÑüÜ', 'aeiouaeiounnue')
+                    OR translate(lower(contenido), 'áéíóúÁÉÍÓÚñÑüÜ', 'aeiouaeiounnue') LIKE translate(lower($1), 'áéíóúÁÉÍÓÚñÑüÜ', 'aeiouaeiounnue'))
                  ORDER BY fecha_publicacion DESC
                  LIMIT 25`,
                 [term]
@@ -91,7 +91,7 @@ exports.buscarContenido = async (req, res) => {
 
         if (total === 0) {
             const [allTemas, allRelatos, allJuegos] = await Promise.all([
-                db.query(`SELECT id, titulo, contenido, imagen_portada AS imagen, 'tema' AS tipo, '/ver-tema?id=' || id AS url FROM temas ORDER BY fecha_publicacion DESC LIMIT 200`),
+                db.query(`SELECT id, titulo, contenido, imagen_portada AS imagen, 'tema' AS tipo, '/ver-tema?id=' || id AS url FROM temas WHERE estado = 'aprobado' ORDER BY fecha_publicacion DESC LIMIT 200`),
                 db.query(`SELECT id, titulo, contenido_relato AS contenido, imagen_url AS imagen, 'relato' AS tipo, '/ver-relato?id=' || id AS url FROM relatos_community ORDER BY fecha_publicacion DESC LIMIT 200`),
                 db.query(`SELECT id, titulo, titulo AS contenido, NULL AS imagen, 'juego' AS tipo, '/play-game?id=' || id AS url FROM juegos ORDER BY id DESC LIMIT 200`)
             ]);

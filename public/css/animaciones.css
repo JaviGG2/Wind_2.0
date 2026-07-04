@@ -53,7 +53,7 @@
 }
 
 .anim-reveal {
-  animation: animReveal 0.8s var(--anim-easing) var(--anim-delay) both;
+  animation: animReveal 2s var(--anim-easing) var(--anim-delay) both;
 }
 
 /* 2. Continuas (loops) */
@@ -292,6 +292,25 @@
   40% { transform: rotate(8deg); }
   60% { transform: rotate(-4deg); }
   80% { transform: rotate(4deg); }
+}
+
+img.anim-loading {
+  width: 100px;
+  height: auto;
+  display: block;
+  margin: 50px auto;
+  animation: flotar 2.8s ease-in-out infinite;
+}
+
+@keyframes flotar {
+  0%   { transform: translateY(0px) rotate(0deg); }
+  50%  { transform: translateY(-8px) rotate(2deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@keyframes dibujarContinuo {
+  0%   { stroke-dashoffset: 9999; }
+  100% { stroke-dashoffset: 0; }
 }
 
 

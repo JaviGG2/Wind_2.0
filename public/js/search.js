@@ -251,17 +251,15 @@ function crearBuscador() {
         }
 
         setCapsuleExpanded(capsule, true);
-        resultContainer.innerHTML = `
-            <div class="search-loading">
-                <div class="loading-spinner"></div>
-                <p>Buscando...</p>
-            </div>`;
+        resultContainer.innerHTML = '<img src="/images/loading.svg" class="anim-loading" alt="Cargando...">';
         filterBar.style.display = 'none';
 
         try {
             const resultados = await buscarEnWind(consulta);
+            await new Promise(r => setTimeout(r, 1000));
             renderResultados(resultados, resultContainer, capsule);
         } catch (error) {
+            await new Promise(r => setTimeout(r, 1000));
             resultContainer.innerHTML = `
                 <div class="search-error">
                     <p>${error.message}</p>

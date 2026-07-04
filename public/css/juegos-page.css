@@ -419,23 +419,6 @@ body {
     border-color: rgba(22, 163, 74, 0.4);
 }
 
-.loading-skeleton {
-    display: contents;
-}
-
-.skeleton-juego {
-    height: 260px;
-    background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.4s infinite linear;
-    border-radius: var(--radius-md);
-}
-
-@keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-}
-
 .juegos-empty {
     grid-column: 1 / -1;
     display: flex;

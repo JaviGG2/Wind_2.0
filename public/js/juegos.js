@@ -85,10 +85,12 @@ async function cargarJuegosPublicados() {
 
         const juegos = await res.json();
         if (!juegos || juegos.length === 0) {
+            await new Promise(r => setTimeout(r, 1000));
             contenedor.innerHTML = '<p style="font-size: 0.95rem; color: #777; text-align:center;">No hay juegos publicados aún.</p>';
             return;
         }
 
+        await new Promise(r => setTimeout(r, 1000));
         contenedor.innerHTML = '';
             let perfil = null;
             try {
@@ -174,15 +176,18 @@ async function cargarMisTemas() {
     try {
         const res = await fetch('/admin/mis-temas', { credentials: 'include' });
         if (!res.ok) {
+            await new Promise(r => setTimeout(r, 1000));
             cont.innerHTML = '<p style="text-align:center; color:red;">No se pudieron cargar tus temas.</p>';
             return;
         }
         const temas = await res.json();
         if (!temas || temas.length === 0) {
+            await new Promise(r => setTimeout(r, 1000));
             cont.innerHTML = '<p style="text-align:center; color:#777;">Aún no has subido temas.</p>';
             return;
         }
 
+        await new Promise(r => setTimeout(r, 1000));
         cont.innerHTML = '';
         temas.forEach(t => {
             const item = document.createElement('div');
@@ -251,16 +256,19 @@ async function cargarModuloJuegos() {
     try {
         const respuesta = await fetch('/api/juegos');
         if (!respuesta.ok) {
+            await new Promise(r => setTimeout(r, 1000));
             contenedor.innerHTML = '<p style="color: red; font-size: 0.85rem;">No se pudo cargar el módulo de juegos.</p>';
             return;
         }
 
         const juegos = await respuesta.json();
         if (!juegos || juegos.length === 0) {
+            await new Promise(r => setTimeout(r, 1000));
             contenedor.innerHTML = '<p style="font-size: 0.95rem; color: #777;">No hay juegos disponibles por ahora.</p>';
             return;
         }
 
+        await new Promise(r => setTimeout(r, 1000));
         contenedor.innerHTML = '';
         juegos.slice(0, 5).forEach(juego => {
             const tarjeta = document.createElement('article');

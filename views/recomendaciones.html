@@ -29,13 +29,12 @@
         </div>
 
         <header class="recom-header">
-          <div class="recom-header-icon anim-float">
+          <div id="recom-header-icon" class="recom-header-icon anim-float">
             <img src="/img/w1.png" alt="Wind" class="recom-logo">
             <img src="/img/w1-glow.png" alt="" class="recom-glow">
           </div>
           <div class="perfil-info">
-            <h1>Recomendaciones</h1>
-            <p class="muted">Contenido sugerido especialmente para ti, basado en tus visitas y en la similitud de los textos.</p>
+            <p class="recom-saludo">Hola {{nombreUsuario}}, aquí tienes páginas que te pueden interesar.</p>
           </div>
           <input type="text" id="recom-buscar" placeholder="Buscar recomendaciones..." class="input-buscar">
           </header>
@@ -48,11 +47,14 @@
             Para ti
           </h2>
           <div id="recom-listado" class="recom-grid">
-            <p class="muted center">Cargando recomendaciones...</p>
+            <p class="muted center">Cargando...</p>
+            
           </div>
 
-          <button id="btn-entrenar" class="boton-enviar" style="margin-top:12px;">
-            <span class="material-symbols-outlined">refresh</span> Dame una ayudita
+          
+
+          <button id="btn-entrenar" class="boton-enviar" >
+            <span class="material-symbols-outlined">refresh</span>
           </button>
         </section>
 
@@ -64,7 +66,7 @@
           <div id="recom-estado-info" class="recom-estado-card">
             <p class="muted">Verificando estado...</p>
           </div>
-          <button id="btn-entrenar" class="boton-enviar" style="margin-top:12px;">
+          <button id="btn-entrenar" class="boton-enviar" >
             <span class="material-symbols-outlined">refresh</span> Dale una ayudaita
           </button>
         </section>

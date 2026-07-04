@@ -131,8 +131,6 @@ body {
   padding: 28px 32px;
   overflow-y: auto;
 }
-.panel-loading { color: rgba(255,255,255,0.3); text-align: center; padding: 60px 0; font-size: 0.9rem; }
-
 /* --- Tab content cards --- */
 .panel-tab { animation: fadeIn 0.2s ease; }
 .panel-tab h2 { font-size: 1.3rem; font-weight: 700; color: #fff; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
@@ -231,7 +229,9 @@ body {
   text-transform: capitalize;
 }
 .ctrl-estado.pendiente { background: rgba(245,158,11,0.15); color: #f59e0b; }
+.ctrl-estado.aprobado,
 .ctrl-estado.aprobada { background: rgba(16,185,129,0.15); color: #10b981; }
+.ctrl-estado.rechazado,
 .ctrl-estado.rechazada { background: rgba(239,68,68,0.15); color: #ef4444; }
 
 .ctrl-badge.solicitudes { background: rgba(245,158,11,0.15); color: #f59e0b; font-size: 0.7rem; }

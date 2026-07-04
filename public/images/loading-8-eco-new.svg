@@ -1,0 +1,23 @@
+<svg viewBox="30 20 380 170" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    path {
+      fill: none;
+      stroke: #FF5500;
+      stroke-width: 32;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 9999;
+      stroke-dashoffset: 9999;
+      opacity: 0;
+      animation: eco 6s ease-in-out infinite;
+    }
+    @keyframes eco {
+      0%   { stroke-dashoffset: 9999; opacity: 0; }
+      3%   { opacity: 1; }
+      35%  { stroke-dashoffset: 0; opacity: 1; }
+      55%  { stroke-dashoffset: 0; opacity: 0; }
+      100% { stroke-dashoffset: 9999; opacity: 0; }
+    }
+  </style>
+  <path d="M 60 100 Q 110 30, 160 100 T 260 100 T 360 100" />
+</svg>

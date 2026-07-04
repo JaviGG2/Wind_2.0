@@ -48,12 +48,6 @@
   gap: 10px;
 }
 
-.notif-loading {
-  text-align: center;
-  color: #ff4500;
-  padding: 40px 0;
-}
-
 .notif-empty {
   text-align: center;
   color: #000000;
@@ -146,15 +140,8 @@
 }
 
 
-/* Evita el zoom táctil en toda la página */
 html, body {
-    touch-action: pan-x pan-y;  /* Permite desplazamiento pero no zoom */
-    touch-action: none;         /* Deshabilita completamente gestos táctiles */
-}
-
-/* O solo para elementos específicos */
-.contenedor-sin-zoom {
-    touch-action: pan-y pinch-zoom;  /* Permite scroll vertical pero no zoom */
+    touch-action: pan-y pinch-zoom;
 }
 
 /* Para evitar zoom con doble clic en móviles */

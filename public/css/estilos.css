@@ -222,10 +222,55 @@
     height: 100vh;
     overflow: hidden;
     background: linear-gradient(135deg, #f5f6f8 0%, #e8eaef 100%);
+    position: relative;
+}
+
+.login-fondo {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.login-fondo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.1;
+}
+
+.deco-el {
+    display: none;
 }
 
 .login-panel-bienvenida {
     display: none;
+}
+
+.deco-bg-1,
+.deco-bg-2 {
+    display: none;
+}
+
+.bienvenida-contenido {
+    position: relative;
+    z-index: 1;
+}
+
+.deco-form {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 120px;
+    opacity: 0.3;
+    pointer-events: none;
+    animation: flotar 5s ease-in-out infinite;
+}
+
+.deco-form path {
+    stroke-dasharray: 9999;
+    stroke-dashoffset: 9999;
+    animation: dibujarContinuo 15s linear infinite;
 }
 
 .login-panel-form {
@@ -234,6 +279,8 @@
     justify-content: center;
     width: 100%;
     padding: 26px 18px;
+    position: relative;
+    z-index: 2;
 }
 
 @media (min-width: 900px) {
@@ -251,7 +298,78 @@
         background: linear-gradient(135deg, #f3cdbf 30%);
         color: #ff4500;
         text-align: center;
+        position: relative;
+        overflow: hidden;
+        z-index: 2;
     }
+
+    .deco-bg-1,
+    .deco-bg-2 {
+        display: block;
+        position: absolute;
+        pointer-events: none;
+    }
+
+        .deco-bg-1 {
+        width: 120%;
+        bottom: -20px;
+        left: -10%;
+        opacity: 0.6;
+        animation: flotar 6s ease-in-out infinite;
+    }
+
+    .deco-bg-1 path {
+        stroke-dasharray: 9999;
+        stroke-dashoffset: 9999;
+        animation: dibujarContinuo 30s linear infinite;
+    }
+
+    .deco-bg-2 {
+        width: 80%;
+        top: -10px;
+        right: -10%;
+        opacity: 0.5;
+        animation: flotar 8s ease-in-out infinite reverse;
+    }
+
+    .deco-bg-2 path {
+        stroke-dasharray: 9999;
+        stroke-dashoffset: 9999;
+        animation: dibujarContinuo 25s linear infinite;
+    }
+
+    .login-fondo {
+        display: block;
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .deco-el {
+        display: block;
+        position: absolute;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.4;
+        animation: flotar 6s ease-in-out infinite;
+    }
+
+    .deco-el.el-1 { width: 60px; top: 6%; left: 6%; animation-delay: 0s; }
+    .deco-el.el-2 { width: 45px; top: 12%; right: 10%; animation-delay: 0.5s; }
+    .deco-el.el-3 { width: 70px; bottom: 18%; left: 8%; animation-delay: 1s; }
+    .deco-el.el-4 { width: 50px; bottom: 8%; right: 12%; animation-delay: 1.5s; }
+    .deco-el.el-5 { width: 40px; top: 45%; left: 4%; animation-delay: 2s; }
+    .deco-el.el-6 { width: 55px; top: 30%; right: 8%; animation-delay: 2.5s; }
+
+    .login-fondo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.15;
+    }
+
+
 
     .login-panel-bienvenida .logo-icono {
         font-size: 4rem;
@@ -277,6 +395,7 @@
 
     .login-panel-bienvenida .marcas-agua {
         display: flex;
+        justify-content: center;
         gap: 20px;
         opacity: 0.3;
     }
@@ -290,6 +409,13 @@
         width: 440px;
         min-width: 440px;
         padding: 32px;
+    }
+
+    .deco-form {
+        width: 180px;
+        opacity: 0.4;
+        top: 20px;
+        right: 20px;
     }
 
     .login-panel-form .tarjeta-registro {

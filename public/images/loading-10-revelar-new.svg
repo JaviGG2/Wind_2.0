@@ -1,0 +1,23 @@
+<svg viewBox="10 5 490 200" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    path {
+      fill: none;
+      stroke: #FF5500;
+      stroke-width: 44;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 9999;
+      stroke-dashoffset: 9999;
+      opacity: 0;
+      animation: revelar 5s cubic-bezier(0.1, 0.7, 0.3, 1) infinite;
+    }
+    @keyframes revelar {
+      0%   { stroke-dashoffset: 9999; opacity: 0; }
+      4%   { opacity: 1; }
+      40%  { stroke-dashoffset: 0; opacity: 1; }
+      55%  { stroke-dashoffset: 0; opacity: 0; }
+      100% { stroke-dashoffset: 9999; opacity: 0; }
+    }
+  </style>
+  <path d="M 20 180 C 120 20, 180 20, 250 180 C 320 20, 380 20, 480 180" />
+</svg>

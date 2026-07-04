@@ -22,8 +22,8 @@ exports.subirTema = async (req, res) => {
         const rutaImagen = req.file ? await subirASupabase(req.file, 'temas') : null;
 
         const queryFinal = `
-            INSERT INTO temas (titulo, contenido, categoria_id, creador_id, imagen_portada, fecha_publicacion) 
-            VALUES ($1, $2, $3, $4, $5, NOW())
+            INSERT INTO temas (titulo, contenido, categoria_id, creador_id, imagen_portada, fecha_publicacion, estado) 
+            VALUES ($1, $2, $3, $4, $5, NOW(), 'pendiente')
         `;
         
         const parametros = [
@@ -39,10 +39,10 @@ exports.subirTema = async (req, res) => {
         notificacion.crear({
             creadorId: req.session.usuarioId,
             titulo: 'Nuevo tema histórico',
-            mensaje: `"${titulo}" ha sido publicado.`,
-            enlace: `/paginaTema.html?id=${temaId}`
+            mensaje: `"${titulo}" ha sido enviado para revisión.`,
+            enlace: `/dashboard`
         });
-        return res.status(201).json({ mensaje: '¡Tema histórico publicado con éxito!' });
+        return res.status(201).json({ mensaje: '¡Tema enviado para revisión con éxito!' });
 
     } catch (error) {
         console.error('❌ ERROR REAL EN NEON:', error.message);
@@ -123,7 +123,7 @@ exports.listarTemas = async (req, res) => {
              FROM temas t
              LEFT JOIN categorias c ON t.categoria_id = c.id
              LEFT JOIN usuarios u ON t.creador_id = u.id
-             WHERE t.categoria_id = $${usuarioId ? 2 : 1}
+             WHERE t.categoria_id = $${usuarioId ? 2 : 1} AND t.estado = 'aprobado'
              ORDER BY t.fecha_publicacion DESC
              LIMIT 50`,
                 params
@@ -142,6 +142,7 @@ exports.listarTemas = async (req, res) => {
              FROM temas t
              LEFT JOIN categorias c ON t.categoria_id = c.id
              LEFT JOIN usuarios u ON t.creador_id = u.id
+             WHERE t.estado = 'aprobado'
              ORDER BY t.fecha_publicacion DESC
              LIMIT 50`,
                 params
@@ -166,7 +167,7 @@ exports.obtenerTemaPorId = async (req, res) => {
 
         if (!Number.isNaN(temaIdNum)) {
             result = await db.query(
-                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes,
+                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes, t.estado,
                         ${usuarioId ? '(SELECT true FROM temas_likes WHERE tema_id = t.id AND usuario_id = $2 LIMIT 1)' : 'false'} AS usuario_dio_like,
                         c.nombre AS categoria_nombre,
                         u.nombre AS creador_nombre,
@@ -176,7 +177,7 @@ exports.obtenerTemaPorId = async (req, res) => {
                  FROM temas t
                  LEFT JOIN categorias c ON t.categoria_id = c.id
                  LEFT JOIN usuarios u ON t.creador_id = u.id
-                 WHERE t.id = $1
+                 WHERE t.id = $1 ${usuarioId ? 'AND (t.estado = \'aprobado\' OR t.creador_id = $2)' : 'AND t.estado = \'aprobado\''}
                  LIMIT 1`,
                 usuarioId ? [temaIdNum, usuarioId] : [temaIdNum]
             );
@@ -185,7 +186,7 @@ exports.obtenerTemaPorId = async (req, res) => {
         if (!result || !result.rows || result.rows.length === 0) {
             console.log(`obtenerTemaPorId: intento alternativo por texto con '${rawId}'`);
             result = await db.query(
-                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes,
+                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes, t.estado,
                         ${usuarioId ? '(SELECT true FROM temas_likes WHERE tema_id = t.id AND usuario_id = $2 LIMIT 1)' : 'false'} AS usuario_dio_like,
                         c.nombre AS categoria_nombre,
                         u.nombre AS creador_nombre,
@@ -195,7 +196,7 @@ exports.obtenerTemaPorId = async (req, res) => {
                  FROM temas t
                  LEFT JOIN categorias c ON t.categoria_id = c.id
                  LEFT JOIN usuarios u ON t.creador_id = u.id
-                 WHERE t.id::text = $1 OR t.slug = $1
+                 WHERE (t.id::text = $1 OR t.slug = $1) ${usuarioId ? 'AND (t.estado = \'aprobado\' OR t.creador_id = $2)' : 'AND t.estado = \'aprobado\''}
                  LIMIT 1`,
                 usuarioId ? [rawId, usuarioId] : [rawId]
             );
