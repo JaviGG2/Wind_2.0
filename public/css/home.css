@@ -83,12 +83,25 @@
     object-fit: cover;
     border: 2px solid var(--borde-light);
     background: var(--bg-card);
+    cursor: pointer;
+    transition: opacity 180ms;
+}
+.creator-avatar:hover {
+    opacity: 0.75;
 }
 
 .creator-name {
     font-weight: 600;
     color: var(--texto);
     font-size: var(--font-sm);
+}
+.creator-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color 180ms;
+}
+.creator-link:hover {
+    color: #ff4500;
 }
 
 .tema-footer {

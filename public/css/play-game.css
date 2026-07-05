@@ -312,21 +312,24 @@
 /* Memory */
 .memory-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
     margin-top: 16px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .memory-carta {
     aspect-ratio: 1;
     background: transparent;
     border: none;
-    border-radius: 14px;
+    border-radius: 16px;
     cursor: pointer;
     position: relative;
     font-size: 0;
     padding: 0;
-    min-height: 70px;
+    min-height: 90px;
     perspective: 800px;
     transition: transform 0.4s ease;
     transform-style: preserve-3d;
@@ -348,9 +351,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     font-weight: 700;
-    border-radius: 12px;
+    border-radius: 14px;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     border: 2px solid rgba(18,18,18,0.06);
@@ -366,8 +369,8 @@
 .memory-carta .memory-front::before {
     content: '';
     display: block;
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     background: #fff;
     mask-size: contain;
     -webkit-mask-size: contain;
@@ -533,7 +536,7 @@
     .play-card { padding: 24px 16px; border-radius: 16px; }
     .play-pregunta { font-size: 1.15rem; }
     .opcion-btn { padding: 14px 16px; gap: 12px; }
-    .memory-grid { grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); }
+    .memory-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 320px; }
     .resultado-titulo { font-size: 1.3rem; }
     .resultado-puntos { padding: 10px 20px; font-size: 1rem; }
     .match-caja { gap: 50px; padding: 8px 8px; }

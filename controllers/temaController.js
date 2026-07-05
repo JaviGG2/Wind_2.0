@@ -102,52 +102,42 @@ exports.actualizarTema = async (req, res) => {
 exports.listarTemas = async (req, res) => {
     try {
         const categoriaId = req.query.categoria ? parseInt(req.query.categoria, 10) : null;
+        const filtroCreador = req.query.creador_id ? parseInt(req.query.creador_id, 10) : null;
         const usuarioId = req.session.usuarioId || null;
         const likeSubquery = ', (SELECT true FROM temas_likes WHERE tema_id = t.id AND usuario_id = $1 LIMIT 1) AS usuario_dio_like';
         let result;
         let params;
+        let idx = 1;
 
         const commentCountSubquery = ', (SELECT COUNT(*) FROM comentarios WHERE tema_id = t.id) AS comentarios_count';
 
-        if (categoriaId && !Number.isNaN(categoriaId)) {
-            params = usuarioId ? [usuarioId, categoriaId] : [0, categoriaId];
-            result = await db.query(
-                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes
-                    ${usuarioId ? likeSubquery : ', false AS usuario_dio_like'}
-                    ${commentCountSubquery},
-                    c.nombre AS categoria_nombre,
-                    u.nombre AS creador_nombre,
-                    u.imagen_perfil AS creador_avatar,
-                    u.avatar_fondo AS creador_avatar_fondo,
-                    u.rol AS creador_rol
-             FROM temas t
-             LEFT JOIN categorias c ON t.categoria_id = c.id
-             LEFT JOIN usuarios u ON t.creador_id = u.id
-             WHERE t.categoria_id = $${usuarioId ? 2 : 1} AND t.estado = 'aprobado'
-             ORDER BY t.fecha_publicacion DESC
-             LIMIT 50`,
-                params
-            );
-        } else {
-            params = usuarioId ? [usuarioId] : [0];
-            result = await db.query(
-                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes
-                    ${usuarioId ? likeSubquery : ', false AS usuario_dio_like'}
-                    ${commentCountSubquery},
-                    c.nombre AS categoria_nombre,
-                    u.nombre AS creador_nombre,
-                    u.imagen_perfil AS creador_avatar,
-                    u.avatar_fondo AS creador_avatar_fondo,
-                    u.rol AS creador_rol
-             FROM temas t
-             LEFT JOIN categorias c ON t.categoria_id = c.id
-             LEFT JOIN usuarios u ON t.creador_id = u.id
-             WHERE t.estado = 'aprobado'
-             ORDER BY t.fecha_publicacion DESC
-             LIMIT 50`,
-                params
-            );
-        }
+        const baseSelect = `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes
+            ${usuarioId ? likeSubquery.replace('$1', `$${idx}`) : ', false AS usuario_dio_like'}
+            ${commentCountSubquery},
+            c.nombre AS categoria_nombre,
+            u.nombre AS creador_nombre,
+            u.imagen_perfil AS creador_avatar,
+            u.avatar_fondo AS creador_avatar_fondo,
+            u.rol AS creador_rol
+     FROM temas t
+     LEFT JOIN categorias c ON t.categoria_id = c.id
+     LEFT JOIN usuarios u ON t.creador_id = u.id
+     WHERE t.estado = 'aprobado'`;
+
+        const conds = [];
+        const vals = [];
+
+        if (usuarioId) { vals.push(usuarioId); idx++; }
+        if (categoriaId && !Number.isNaN(categoriaId)) { conds.push(`t.categoria_id = $${idx++}`); vals.push(categoriaId); }
+        if (filtroCreador && !Number.isNaN(filtroCreador)) { conds.push(`t.creador_id = $${idx++}`); vals.push(filtroCreador); }
+
+        const whereExtra = conds.length > 0 ? ' AND ' + conds.join(' AND ') : '';
+        params = vals;
+
+        result = await db.query(
+            baseSelect + whereExtra + ' ORDER BY t.fecha_publicacion DESC LIMIT 50',
+            params
+        );
         return res.json(result.rows);
     } catch (error) {
         console.error('Error al listar temas:', error.message);

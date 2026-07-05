@@ -104,35 +104,48 @@ exports.obtenerJuego = async (req, res) => {
 exports.listarPublicos = async (req, res) => {
     try {
         const categoriaId = req.query.categoria ? parseInt(req.query.categoria, 10) : null;
-        const usuarioId = req.session?.usuarioId || null;
+        const filtroUsuario = req.query.usuario_id ? parseInt(req.query.usuario_id, 10) : null;
+        const usuarioSesion = req.session?.usuarioId || null;
         let queryTexto;
         let params = [];
 
-        const jugadoJoin = usuarioId
-            ? `LEFT JOIN historial_vistas hv ON hv.contenido_id = j.id AND hv.tipo_contenido = 'juego' AND hv.usuario_id = $${categoriaId ? 2 : 1}`
-            : '';
-        const jugadoSelect = usuarioId ? ', CASE WHEN hv.id IS NOT NULL THEN true ELSE false END AS jugado' : ', false AS jugado';
-        const exclusionWhere = `WHERE j.id NOT IN (SELECT id_juego FROM nivel WHERE id_juego IS NOT NULL)`;
-
-        if (categoriaId && !Number.isNaN(categoriaId)) {
-            params = usuarioId ? [categoriaId, usuarioId] : [categoriaId];
+        if (filtroUsuario && !Number.isNaN(filtroUsuario)) {
+            queryTexto = `
+                SELECT j.id, j.titulo, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, c.nombre AS categoria_nombre, false AS jugado
+                FROM juegos j
+                LEFT JOIN categorias c ON j.categoria_id = c.id
+                WHERE j.usuario_id = $1
+                ORDER BY j.id DESC
+                LIMIT 100
+            `;
+            params = [filtroUsuario];
+        } else if (categoriaId && !Number.isNaN(categoriaId)) {
+            const jugadoJoin = usuarioSesion
+                ? `LEFT JOIN historial_vistas hv ON hv.contenido_id = j.id AND hv.tipo_contenido = 'juego' AND hv.usuario_id = $2`
+                : '';
+            const jugadoSelect = usuarioSesion ? ', CASE WHEN hv.id IS NOT NULL THEN true ELSE false END AS jugado' : ', false AS jugado';
+            params = usuarioSesion ? [categoriaId, usuarioSesion] : [categoriaId];
             queryTexto = `
                 SELECT j.id, j.titulo, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, c.nombre AS categoria_nombre${jugadoSelect}
                 FROM juegos j
                 LEFT JOIN categorias c ON j.categoria_id = c.id
                 ${jugadoJoin}
-                ${exclusionWhere} AND j.categoria_id = $1
+                WHERE j.id NOT IN (SELECT id_juego FROM nivel WHERE id_juego IS NOT NULL) AND j.categoria_id = $1
                 ORDER BY j.id DESC
                 LIMIT 100
             `;
         } else {
-            params = usuarioId ? [usuarioId] : [];
+            const jugadoJoin = usuarioSesion
+                ? `LEFT JOIN historial_vistas hv ON hv.contenido_id = j.id AND hv.tipo_contenido = 'juego' AND hv.usuario_id = $1`
+                : '';
+            const jugadoSelect = usuarioSesion ? ', CASE WHEN hv.id IS NOT NULL THEN true ELSE false END AS jugado' : ', false AS jugado';
+            params = usuarioSesion ? [usuarioSesion] : [];
             queryTexto = `
                 SELECT j.id, j.titulo, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, c.nombre AS categoria_nombre${jugadoSelect}
                 FROM juegos j
                 LEFT JOIN categorias c ON j.categoria_id = c.id
                 ${jugadoJoin}
-                ${exclusionWhere}
+                WHERE j.id NOT IN (SELECT id_juego FROM nivel WHERE id_juego IS NOT NULL)
                 ORDER BY j.id DESC
                 LIMIT 100
             `;

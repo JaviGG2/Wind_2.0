@@ -125,8 +125,58 @@ function cargarTraductor() {
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => { insertarBarra(); cargarTraductor(); });
+  document.addEventListener('DOMContentLoaded', () => { insertarBarra(); cargarTraductor(); restaurarScroll(); });
 } else {
   insertarBarra();
   cargarTraductor();
+  restaurarScroll();
 }
+
+const SCROLL_KEY = 'wind_scroll_' + location.pathname;
+const DETAIL_PATHS = ['/ver-tema', '/ver-relato', '/play-game', '/modulo-detalle', '/notificaciones'];
+
+window.addEventListener('beforeunload', () => {
+  sessionStorage.setItem(SCROLL_KEY, window.scrollY);
+});
+
+function restaurarScroll() {
+  const saved = sessionStorage.getItem(SCROLL_KEY);
+  if (saved === null) return;
+  sessionStorage.removeItem(SCROLL_KEY);
+  try {
+    const ref = new URL(document.referrer);
+    if (!DETAIL_PATHS.some(p => ref.pathname.startsWith(p))) return;
+  } catch (_) { return; }
+  const pos = parseInt(saved);
+  if (pos <= 0) return;
+  const intentar = (intentos) => {
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    if (maxScroll >= pos || intentos <= 0) {
+      window.scrollTo(0, Math.min(pos, maxScroll));
+      return;
+    }
+    setTimeout(() => intentar(intentos - 1), 200);
+  };
+  intentar(20);
+}
+
+window.addEventListener('pageshow', () => {
+  const saved = sessionStorage.getItem(SCROLL_KEY);
+  if (saved === null) return;
+  sessionStorage.removeItem(SCROLL_KEY);
+  try {
+    const ref = new URL(document.referrer);
+    if (!DETAIL_PATHS.some(p => ref.pathname.startsWith(p))) return;
+  } catch (_) { return; }
+  const pos = parseInt(saved);
+  if (pos <= 0) return;
+  const intentar = (intentos) => {
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    if (maxScroll >= pos || intentos <= 0) {
+      window.scrollTo(0, Math.min(pos, maxScroll));
+      return;
+    }
+    setTimeout(() => intentar(intentos - 1), 200);
+  };
+  intentar(20);
+});

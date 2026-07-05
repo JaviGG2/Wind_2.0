@@ -93,6 +93,32 @@ app.get('/api/usuario/nivel', verificarSesion, async (req, res) => {
     }
 });
 
+// --- Perfil público de usuario ---
+app.get('/api/usuarios/:id/perfil', verificarSesion, async (req, res) => {
+    try {
+        const id = parseInt(req.params.id, 10);
+        if (isNaN(id)) return res.status(400).json({ mensaje: 'ID inválido.' });
+        const r = await db.query(
+            'SELECT id, nombre, username, rol, puntos, imagen_perfil, avatar_fondo FROM usuarios WHERE id = $1',
+            [id]
+        );
+        if (r.rows.length === 0) return res.status(404).json({ mensaje: 'Usuario no encontrado.' });
+        const user = r.rows[0];
+        const nivel = calcularNivel(user.puntos || 0);
+
+        let conteo_relatos = 0, conteo_temas = 0, conteo_juegos = 0;
+        try { const q = await db.query('SELECT COUNT(*)::int as c FROM relatos_community WHERE usuario_id = $1', [id]); conteo_relatos = q.rows[0].c; } catch (_) {}
+        try { const q = await db.query('SELECT COUNT(*)::int as c FROM temas WHERE creador_id = $1 AND estado = $2', [id, 'aprobado']); conteo_temas = q.rows[0].c; } catch (_) {}
+        try { const q = await db.query('SELECT COUNT(*)::int as c FROM juegos WHERE usuario_id = $1', [id]); conteo_juegos = q.rows[0].c; } catch (_) {}
+
+        res.json({ ...user, nivel, conteo_relatos, conteo_temas, conteo_juegos });
+    } catch (e) {
+        console.error('Error al obtener perfil:', e);
+        res.status(500).json({ mensaje: 'Error al cargar perfil.' });
+    }
+});
+
+
 app.use(authRoutes);
 app.use(juegoRoutes);
 app.use(temaRoutes);
@@ -140,6 +166,10 @@ app.get('/notificaciones', verificarSesion, (req, res) => {
 
 app.get('/ver-tema', verificarSesion, (req, res) => {
     res.render('ver-tema');
+});
+
+app.get('/ver-perfil', verificarSesion, (req, res) => {
+    res.render('ver-perfil');
 });
 
 app.get('/recomendaciones', verificarSesion, async (req, res) => {
@@ -349,8 +379,8 @@ app.post('/0505/api/usuarios/:id/advertir', verificar0505, async (req, res) => {
         const r = await db.query('SELECT id FROM usuarios WHERE id = $1', [id]);
         if (r.rows.length === 0) return res.status(404).json({ mensaje: 'Usuario no encontrado.' });
         const notificacion = require('./controllers/notificacionController');
-        await notificacion.crear({
-            creadorId: id, titulo, mensaje, enlace: '/0505'
+        await notificacion.crearParaUsuario({
+            usuarioId: id, titulo, mensaje, enlace: '/0505'
         });
         res.json({ mensaje: 'Advertencia enviada.' });
     } catch (e) { res.status(500).json({ mensaje: 'Error al enviar.' }); }

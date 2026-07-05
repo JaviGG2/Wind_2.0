@@ -247,6 +247,15 @@ body {
     font-size: 1rem;
     flex-shrink: 0;
 }
+.relato-avatar-link {
+    display: inline-block;
+    text-decoration: none;
+    line-height: 0;
+}
+.relato-avatar-link:hover .relato-avatar {
+    border-color: var(--c-primario, #ff4500);
+    box-shadow: 0 0 0 2px rgba(255,69,0,0.2);
+}
 
 .relato-avatar img {
     width: 100%;
@@ -260,6 +269,14 @@ body {
     font-size: 0.88rem;
     font-weight: 600;
     color: var(--c-texto);
+}
+.relato-autor-link {
+    color: var(--c-texto);
+    text-decoration: none;
+    transition: color 180ms;
+}
+.relato-autor-link:hover {
+    color: var(--c-primario, #ff4500);
 }
 .relato-fecha {
     font-size: 0.77rem;

@@ -44,40 +44,35 @@ exports.crearRelato = async (req, res) => {
 
 exports.obtenerRelatos = async (req, res) => {
     try {
+        const categoria = req.query.categoria ? String(req.query.categoria).trim() : '';
+        const usuarioId = req.query.usuario_id ? parseInt(req.query.usuario_id, 10) : null;
         let querySQL;
         let params = [];
-
-        const categoria = req.query.categoria ? String(req.query.categoria).trim() : '';
+        const conds = [];
+        let idx = 1;
 
         if (categoria && categoria !== 'undefined' && categoria !== 'null') {
-            querySQL = `
-                SELECT r.id, r.titulo, r.contenido_relato, r.fecha_publicacion,
-                       r.usuario_id, r.imagen_url,
-                     u.nombre AS autor_nombre,
-                        u.imagen_perfil AS autor_avatar,
-                        u.avatar_fondo AS autor_avatar_fondo,
-                        u.rol AS autor_rol
-                FROM relatos_community r
-                LEFT JOIN usuarios u ON r.usuario_id = u.id
-                WHERE r.categoria = $1
-                ORDER BY r.fecha_publicacion DESC
-                LIMIT 200
-            `;
-            params = [categoria];
-        } else {
-            querySQL = `
-                SELECT r.id, r.titulo, r.contenido_relato, r.fecha_publicacion,
-                       r.usuario_id, r.imagen_url,
-                     u.nombre AS autor_nombre,
-                        u.imagen_perfil AS autor_avatar,
-                        u.avatar_fondo AS autor_avatar_fondo,
-                        u.rol AS autor_rol
-                FROM relatos_community r
-                LEFT JOIN usuarios u ON r.usuario_id = u.id
-                ORDER BY r.fecha_publicacion DESC
-                LIMIT 200
-            `;
+            conds.push(`r.categoria = $${idx++}`);
+            params.push(categoria);
         }
+        if (usuarioId && !isNaN(usuarioId)) {
+            conds.push(`r.usuario_id = $${idx++}`);
+            params.push(usuarioId);
+        }
+
+        querySQL = `
+            SELECT r.id, r.titulo, r.contenido_relato, r.fecha_publicacion,
+                   r.usuario_id, r.imagen_url,
+                 u.nombre AS autor_nombre,
+                    u.imagen_perfil AS autor_avatar,
+                    u.avatar_fondo AS autor_avatar_fondo,
+                    u.rol AS autor_rol
+            FROM relatos_community r
+            LEFT JOIN usuarios u ON r.usuario_id = u.id
+            ${conds.length > 0 ? 'WHERE ' + conds.join(' AND ') : ''}
+            ORDER BY r.fecha_publicacion DESC
+            LIMIT 200
+        `;
 
         console.log('[relatosController] Ejecutando query:', querySQL.replace(/\s+/g, ' ').trim());
         console.log('[relatosController] Params:', params);

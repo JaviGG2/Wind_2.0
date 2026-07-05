@@ -40,6 +40,12 @@ const ESTILOS_POPUP = `
 .popup-relato-contenido .popup-meta {
     font-size: 0.85rem; color: #888; margin: 0 0 16px;
 }
+.popup-autor-link {
+    color: #888; text-decoration: none; transition: color 180ms;
+}
+.popup-autor-link:hover {
+    color: #ff4500;
+}
 .popup-relato-contenido p {
     font-size: 0.95rem; line-height: 1.6; color: #444;
     white-space: pre-wrap;
@@ -69,7 +75,7 @@ function crearPopupRelato(relato) {
                 <span class="material-symbols-outlined">close</span>
             </button>
             <h2>${relato.titulo}</h2>
-            <p class="popup-meta">${relato.autor_nombre || 'Anónimo'}${relato.autor_rol === 'Especialista' ? '<span class="badge-especialista"><img src="/img/Rol.png" alt="Especialista"></span>' : ''} — ${new Date(relato.fecha_publicacion).toLocaleDateString()}</p>
+            <p class="popup-meta">${relato.usuario_id ? `<a href="/ver-perfil?id=${relato.usuario_id}" class="popup-autor-link">${relato.autor_nombre || 'Anónimo'}</a>` : (relato.autor_nombre || 'Anónimo')}${relato.autor_rol === 'Especialista' ? '<span class="badge-especialista"><img src="/img/Rol.png" alt="Especialista"></span>' : ''} — ${new Date(relato.fecha_publicacion).toLocaleDateString()}</p>
             <p>${relato.contenido_relato}</p>
             ${relato.imagen_url ? `<img src="${relato.imagen_url}" alt="${relato.titulo}">` : ''}
         </div>

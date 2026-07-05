@@ -1,42 +1,44 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head><style>body{background:#f5f6f8}</style>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Módulos de Juego - Wind</title>
-  
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <title>Módulos - Wind</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
   <link rel="stylesheet" href="/css/base.css?v={{ cacheVersion }}">
   <link rel="stylesheet" href="/css/estilos.css?v={{ cacheVersion }}">
   <link rel="stylesheet" href="/css/menu.css?v={{ cacheVersion }}">
-  <link rel="stylesheet" href="/css/search.css?v={{ cacheVersion }}">
-  <link rel="stylesheet" href="/css/modulo.css?v={{ cacheVersion }}">
   <link rel="stylesheet" href="/css/animaciones.css?v={{ cacheVersion }}">
+  <link rel="stylesheet" href="/css/estilos-modulos.css?v={{ cacheVersion }}">
 </head>
 <body>
   <script src="/js/menu.js?v={{ cacheVersion }}"></script>
   <div class="app-layout">
     <div id="menu-placeholder"></div>
     <main class="contenido-principal">
-      <div style="margin-bottom:8px;">
-        <a href="javascript:void(0)" class="btn-volver" onclick="history.back()" aria-label="Volver">
-          <span class="material-symbols-outlined ">arrow_back</span>
-          Atrás
-        </a>
-      </div>
-      <div class="crear-container">
-        <div class="modulos-page-hero">
-          <div class="hero-icon"><span class="material-symbols-outlined">layers</span></div>
-          <h1>Módulos de Juego</h1>
-          <p>Completa niveles en orden y desbloquea nuevos desafíos patrimoniales.</p>
+      <div class="modulos-wrapper">
+        <div class="modulos-header">
+          <div class="modulos-header-icon">
+            <span class="material-symbols-outlined">stadia_controller</span>
+          </div>
+          <div class="modulos-header-text">
+            <h1>Módulos</h1>
+            <p>Completa niveles en orden y desbloquea nuevos desafíos</p>
+          </div>
         </div>
-        <div id="modulos-listado" class="modulos-grid"></div>
-        <div id="modulos-mensaje" class="mensaje-oculto"></div>
+        <div class="modulos-loading" id="modulos-loading">
+          <img src="/images/loading.svg" class="anim-loading" alt="Cargando...">
+        </div>
+        <div class="modulos-grid" id="modulos-grid"></div>
+        <div class="modulos-empty" id="modulos-empty">
+          <span class="material-symbols-outlined">layers</span>
+          <p>No hay módulos disponibles aún</p>
+        </div>
       </div>
     </main>
   </div>
-  <script src="/js/modulos.js?v={{ cacheVersion }}"></script>
+  <script src="/js/modulos-page.js?v={{ cacheVersion }}"></script>
 </body>
 </html>

@@ -17,6 +17,17 @@ exports.crear = async ({ creadorId, titulo, mensaje, enlace }) => {
     }
 };
 
+exports.crearParaUsuario = async ({ usuarioId, titulo, mensaje, enlace }) => {
+    try {
+        await db.query(
+            'INSERT INTO notificaciones (usuario_id, titulo, mensaje, enlace, fecha_creacion) VALUES ($1, $2, $3, $4, NOW())',
+            [usuarioId, titulo, mensaje, enlace]
+        );
+    } catch (error) {
+        console.error('Error creando notificación para usuario:', error.message);
+    }
+};
+
 exports.listar = async (req, res) => {
   try {
     const result = await db.query(

@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let perfil = null;
     if (perfilRes.ok) perfil = await perfilRes.json();
 
-    const esCreador = perfil && (perfil.id === modulo.id_usuario || perfil.rol === 'Especialista');
+    const esCreador = perfil && perfil.id === modulo.id_usuario;
 
     const progress = modulo.niveles.filter(n => n.completado).length;
     const total = modulo.niveles.length;
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       : '';
 
     container.innerHTML = `
-      <div class="modulo-detalle-hero">
+      <div class="modulo-detalle-hero anim-fade-in">
         <h2>${modulo.nombre}</h2>
         <p>${modulo.descripcion || ''}</p>
         <div class="modulo-progress-compact">

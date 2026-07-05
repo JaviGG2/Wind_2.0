@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - Wind</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/css/base.css?v={{ cacheVersion }}">
+    <link rel="stylesheet" href="/css/estilos.css?v={{ cacheVersion }}">
+    <link rel="stylesheet" href="/css/menu.css?v={{ cacheVersion }}">
+    <link rel="stylesheet" href="/css/ver-perfil.css?v={{ cacheVersion }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="/css/info-popup.css?v={{ cacheVersion }}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Wind">
+    <link rel="apple-touch-icon" href="/img/app.png">
+    <link rel="stylesheet" href="/css/animaciones.css?v={{ cacheVersion }}">
+    <meta name="theme-color" content="#ff4500">
+</head>
+<body>
+    <script src="/js/menu.js?v={{ cacheVersion }}"></script>
+    <script type="module" src="/js/info-burbuja.js?v={{ cacheVersion }}"></script>
+
+    <div class="app-layout">
+        <div id="menu-placeholder"></div>
+        <main class="contenido-principal anim-fade-down">
+            <div class="perfil-root">
+                <header class="perfil-header">
+                    <a href="javascript:history.back()" class="perfil-volver">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                        Volver
+                    </a>
+                    <div class="perfil-cabecera">
+                        <img id="perfil-avatar" src="/img/avatar.svg" alt="avatar" class="perfil-avatar">
+                        <div class="perfil-info">
+                            <h2 id="nombre-usuario">Cargando...</h2>
+                            <div id="username" class="muted username">&nbsp;</div>
+                        </div>
+                        <div id="rol-usuario" class="rol-usuario">...</div>
+                    </div>
+                </header>
+
+                <div class="nivel-bar" id="nivel-bar">
+                    <div class="nivel-header">
+                        <span class="nivel-badge" id="nivel-badge">Nv 1</span>
+                        <span class="nivel-titulo" id="nivel-titulo">Novato</span>
+                    </div>
+                    <div class="nivel-progreso">
+                        <div class="nivel-progreso-bar" id="nivel-progreso-bar"></div>
+                    </div>
+                    <div class="nivel-puntos">
+                        <span><span id="nivel-puntos-actual">0</span> pts</span>
+                        <span>Próximo nivel: <span id="nivel-puntos-siguiente">100</span> pts</span>
+                    </div>
+                </div>
+
+                <div class="perfil-stats">
+                    <div class="stat-card" data-tipo="relatos" onclick="toggleContenido('relatos')">
+                        <span class="material-symbols-outlined stat-icon">auto_stories</span>
+                        <div class="stat-num" id="stat-relatos">0</div>
+                        <div class="stat-label">Relatos</div>
+                    </div>
+                    <div class="stat-card" data-tipo="temas" onclick="toggleContenido('temas')">
+                        <span class="material-symbols-outlined stat-icon">topic</span>
+                        <div class="stat-num" id="stat-temas">0</div>
+                        <div class="stat-label">Temas</div>
+                    </div>
+                    <div class="stat-card" data-tipo="juegos" onclick="toggleContenido('juegos')">
+                        <span class="material-symbols-outlined stat-icon">stadia_controller</span>
+                        <div class="stat-num" id="stat-juegos">0</div>
+                        <div class="stat-label">Juegos</div>
+                    </div>
+                </div>
+                <div id="perfil-contenido-expandido" class="perfil-contenido-expandido"></div>
+            </div>
+
+            <img src="/images/loading.svg" class="anim-loading" alt="Cargando...">
+            <div id="mensaje-consola" class="mensaje-oculto"></div>
+        </main>
+    </div>
+
+    <script src="/js/ver-perfil.js?v={{ cacheVersion }}"></script>
+</body>
+</html>

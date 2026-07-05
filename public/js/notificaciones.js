@@ -78,6 +78,20 @@ document.getElementById('btn-leer-todas')?.addEventListener('click', async () =>
   }
 });
 
+document.getElementById('btn-vaciar')?.addEventListener('click', async () => {
+  if (!confirm('¿Eliminar todas las notificaciones?')) return;
+  try {
+    const r = await fetch('/api/notificaciones', {
+      method: 'DELETE', credentials: 'include'
+    });
+    if (r.ok) {
+      document.getElementById('notif-list').innerHTML = '<div class="notif-empty"><span class="material-symbols-outlined">notifications_off</span><p>No tienes notificaciones.</p></div>';
+    }
+  } catch (err) {
+    console.error('[notificaciones] Error al vaciar:', err);
+  }
+});
+
 function escapeHtml(text) {
   const d = document.createElement('div');
   d.textContent = text;

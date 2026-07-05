@@ -14,18 +14,34 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     container.innerHTML = modulos.map((m, i) => `
       <a href="/modulos/${m.id}" class="modulo-card" style="animation-delay:${i * 80}ms">
-        <div class="modulo-card-accent"></div>
-        <div class="modulo-card-body">
+        <div class="modulo-card-top">
           <div class="modulo-card-icon"><span class="material-symbols-outlined">layers</span></div>
-          <h3>${m.nombre}</h3>
+          <div class="modulo-card-top-info">
+            <h3>${m.nombre}</h3>
+            <span class="niveles-badge"><span class="material-symbols-outlined">stadia_controller</span> ${m.total_niveles} nivel(es)</span>
+          </div>
+        </div>
+        <div class="modulo-card-body">
           <p>${m.descripcion || 'Sin descripción'}</p>
           <div class="modulo-card-footer">
-            <span class="creador"><span class="material-symbols-outlined">person</span> ${m.creador_nombre}</span>
-            <span class="niveles-count"><span class="material-symbols-outlined">stadia_controller</span> ${m.total_niveles} nivel(es)</span>
+            <span class="creador" data-usuario-id="${m.id_usuario || ''}"><span class="material-symbols-outlined">person</span> <span class="creador-nombre">${m.creador_nombre || ''}</span></span>
+            <span class="niveles-count"><span class="material-symbols-outlined">chevron_right</span></span>
           </div>
         </div>
       </a>
     `).join('');
+
+    container.addEventListener('click', (e) => {
+      const creador = e.target.closest('.creador');
+      if (creador) {
+        const usuarioId = creador.dataset.usuarioId;
+        if (usuarioId) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.location.href = `/ver-perfil?id=${usuarioId}`;
+        }
+      }
+    });
   } catch (e) {
     mensaje.textContent = 'Error al cargar módulos.';
     mensaje.className = 'mensaje-alerta error';

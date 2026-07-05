@@ -34,14 +34,21 @@ if (!relatoId) {
             const badgeHtml = esEspecialista ? '<span class="badge-especialista"><img src="/img/Rol.png" alt="Especialista"></span>' : '';
 
             if (autorAvatar) {
+                const autorHref = relato.usuario_id ? `/ver-perfil?id=${relato.usuario_id}` : null;
                 if (relato.autor_avatar) {
-                    autorAvatar.innerHTML = `<img src="${relato.autor_avatar}" alt="${autor}" onerror="this.outerHTML='${inicial}'" style="background:${avatarFondo};">`;
+                    const img = `<img src="${relato.autor_avatar}" alt="${autor}" onerror="this.outerHTML='${inicial}'" style="background:${avatarFondo};">`;
+                    autorAvatar.innerHTML = autorHref ? `<a href="${autorHref}">${img}</a>` : img;
                 } else {
-                    autorAvatar.textContent = inicial;
+                    autorAvatar.innerHTML = autorHref ? `<a href="${autorHref}">${inicial}</a>` : inicial;
                 }
             }
 
-            if (autorNombre) autorNombre.innerHTML = `${autor} ${badgeHtml}`;
+            if (autorNombre) {
+                const autorLink = relato.usuario_id ? `/ver-perfil?id=${relato.usuario_id}` : null;
+                autorNombre.innerHTML = autorLink
+                    ? `<a href="${autorLink}" class="autor-perfil-link">${autor}</a> ${badgeHtml}`
+                    : `${autor} ${badgeHtml}`;
+            }
             if (autorFecha) autorFecha.textContent = fecha;
 
             if (txtTitulo) txtTitulo.textContent = relato.titulo || 'Sin título';

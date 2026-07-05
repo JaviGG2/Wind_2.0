@@ -77,9 +77,14 @@ function crearCardRelato(relato, index) {
     const avatarFondo = relato.autor_avatar_fondo || '#e8e8e8';
     const esEspecialista = relato.autor_rol === 'Especialista';
     const badgeHtml = esEspecialista ? '<span class="badge-especialista"><img src="/img/Rol.png" alt="Especialista"></span>' : '';
-    const avatarHtml = relato.autor_avatar
-        ? `<div class="relato-avatar" style="background:${avatarFondo};"><img src="${relato.autor_avatar}" alt="${autor}" onerror="this.parentElement.textContent='${inicial}'"></div>`
-        : `<div class="relato-avatar">${inicial}</div>`;
+    const autorHref = relato.usuario_id ? `/ver-perfil?id=${relato.usuario_id}` : null;
+    const avatarHtml = autorHref
+        ? (relato.autor_avatar
+            ? `<a href="${autorHref}" class="relato-avatar-link" onclick="event.stopPropagation()"><div class="relato-avatar" style="background:${avatarFondo};"><img src="${relato.autor_avatar}" alt="${autor}" onerror="this.parentElement.textContent='${inicial}'"></div></a>`
+            : `<a href="${autorHref}" class="relato-avatar-link" onclick="event.stopPropagation()"><div class="relato-avatar">${inicial}</div></a>`)
+        : (relato.autor_avatar
+            ? `<div class="relato-avatar" style="background:${avatarFondo};"><img src="${relato.autor_avatar}" alt="${autor}" onerror="this.parentElement.textContent='${inicial}'"></div>`
+            : `<div class="relato-avatar">${inicial}</div>`);
 
     const categoria = relato.categoria || 'General';
     const extracto = relato.contenido_relato
@@ -90,12 +95,19 @@ function crearCardRelato(relato, index) {
         ? `<div class="relato-imagen"><img src="${relato.imagen_url}" alt="${sanitizar(relato.titulo)}" loading="lazy"></div>`
         : '';
 
+    const autorLink = relato.usuario_id
+        ? `/ver-perfil?id=${relato.usuario_id}`
+        : null;
+    const autorNombreHtml = autorLink
+        ? `<a href="${autorLink}" class="relato-autor-link" onclick="event.stopPropagation()">${sanitizar(autor)}</a>`
+        : sanitizar(autor);
+
     card.innerHTML = `
         <div class="relato-card-header">
             <div class="relato-autor-row">
                 ${avatarHtml}
                 <div class="relato-autor-info">
-                    <div class="relato-autor-nombre">${sanitizar(autor)}${badgeHtml}</div>
+                    <div class="relato-autor-nombre">${autorNombreHtml}${badgeHtml}</div>
                     <div class="relato-fecha">${fecha}</div>
                 </div>
             </div>

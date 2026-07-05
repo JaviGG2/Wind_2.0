@@ -31,6 +31,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('txt-categoria').textContent = tema.categoria_nombre || 'General';
         document.getElementById('txt-cuerpo').innerHTML = tema.contenido || 'Contenido vacío';
 
+        const txtMeta = document.getElementById('txt-meta');
+        if (txtMeta) {
+            const creadorLink = tema.creador_id ? `<a href="/ver-perfil?id=${tema.creador_id}" class="tema-creador-link">${tema.creador_nombre || 'Anónimo'}</a>` : (tema.creador_nombre || '');
+            const fecha = tema.fecha_publicacion ? new Date(tema.fecha_publicacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+            txtMeta.innerHTML = creadorLink ? `${creadorLink} — ${fecha}` : fecha;
+        }
+
         const imgPortadaEl = document.getElementById('img-portada');
         if (tema.imagen_portada) {
             let imgPath = tema.imagen_portada;
@@ -131,16 +138,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         comentariosLista.innerHTML = comentarios.map(c => {
             const avatarFondo = c.usuario_avatar_fondo || '#e8e8e8';
             const esEspecialista = c.usuario_rol === 'Especialista';
+            const autorHref = c.usuario_id ? `/ver-perfil?id=${c.usuario_id}` : null;
             const avatarInner = c.usuario_avatar
                 ? `<img src="${c.usuario_avatar}" alt="" class="comentario-avatar-img" onerror="this.style.display='none';this.nextElementSibling.style.display=''">
                    <span class="material-symbols-outlined" style="display:none;">person</span>`
                 : `<span class="material-symbols-outlined">person</span>`;
+            const avatarWrap = autorHref
+                ? `<a href="${autorHref}" class="comentario-avatar-link" style="background-color:${avatarFondo};">${avatarInner}</a>`
+                : `<div class="comentario-avatar" style="background-color:${avatarFondo};">${avatarInner}</div>`;
             return `
             <div class="comentario-item" data-id="${c.id}">
-                <div class="comentario-avatar" style="background-color:${avatarFondo};">${avatarInner}</div>
+                ${avatarWrap}
                 <div class="comentario-cuerpo">
                     <div class="comentario-encabezado">
-                        <span class="comentario-autor">${c.usuario_nombre || 'Anónimo'}${esEspecialista ? '<span class="badge-especialista"><img src="/img/Rol.png" alt="Especialista"></span>' : ''}</span>
+                        <span class="comentario-autor">${c.usuario_id ? `<a href="/ver-perfil?id=${c.usuario_id}" class="comentario-autor-link">${c.usuario_nombre || 'Anónimo'}</a>` : (c.usuario_nombre || 'Anónimo')}${esEspecialista ? '<span class="badge-especialista"><img src="/img/Rol.png" alt="Especialista"></span>' : ''}</span>
                         <span class="comentario-fecha">${formatDate(c.fecha_creacion)}</span>
                     </div>
                     <div class="comentario-texto">${escapeHtml(c.contenido)}</div>

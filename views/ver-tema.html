@@ -30,7 +30,7 @@
     <script src="/js/menu.js?v={{ cacheVersion }}"></script>
     <main class="pantalla-tema">
         <div class="barra-superior">
-            <a href="/home" class="btn-retroceder" aria-label="Volver al inicio">
+            <a href="javascript:history.back()" class="btn-retroceder" aria-label="Volver al inicio">
                 <span class="material-symbols-outlined back-icon">arrow_back</span>
                 Atrás
                 <span class="back-text"></span>
@@ -45,6 +45,8 @@
                     <option value="ja">Japonés</option>
                     <option value="zh">Chino</option>
                     <option value="ko">Coreano</option>
+                    <option value="ru">Ruso</option>
+                    
                 </select>
                 <button type="button" id="btn-traducir" class="btn-traducir">Traducir</button>
                 <button type="button" id="btn-original" class="btn-original anim-fade-in" style="display:none">Original</button>
