@@ -12,29 +12,17 @@ export const baseDeConocimiento = {
         titulo: "Recuperar Contraseña",
         contenido: "<p>Ingresa tu correo y te enviaremos un enlace de restablecimiento.</p>"
     },
-    "Descubrir (Home)": {
-        titulo: "¿Qué es este apartado?",
-        contenido: "<p>Aquí encuentras los temas históricos oficiales y artículos rigurosos creados por los especialistas.</p>"
+    "Ayuda-Descubrir": {
+        titulo: "Ayuda - Descubrir",
+        contenido: "<p><strong>¿Qué es este apartado?</strong><br>Aquí encuentras los temas históricos oficiales y artículos rigurosos creados por los especialistas.</p><p><strong>¿Cómo busco un tema?</strong><br>Escribe palabras clave en el buscador (ej. &quot;médanos&quot;) para filtrar al instante todo el contenido relacionado en la aplicación.</p>"
     },
-    "Descubrir(Home)": {
-        titulo: "¿Cómo busco un tema?",
-        contenido: '<p> Escribe palabras clave en el buscador (ej. "médanos") para filtrar al instante todo el contenido relacionado en la aplicación.</p>'
+    "Ayuda-Comunidad": {
+        titulo: "Ayuda - Comunidad",
+        contenido: "<p><strong>¿Qué es este apartado?</strong><br>Un muro comunitario para leer las experiencias y vivencias reales escritas por los ciudadanos.</p><p><strong>¿Cómo publico mi historia?</strong><br>Los relatos se redactan y se suben directamente desde la sección de tu Perfil. Una vez publicados, aparecerán listados aquí para que todos los lean.</p>"
     },
-    "Comunidad": {
-        titulo: "¿Qué es este apartado?",
-        contenido: "<p>Un muro comunitario para leer las experiencias y vivencias reales escritas por los ciudadanos.</p>"
-    },
-    "Relatos": {
-        titulo: "¿Cómo publico mi historia?",
-        contenido: "<p>Los relatos se redactan y se suben directamente desde la sección de tu Perfil. Una vez publicados, aparecerán listados aquí para que todos los lean.</p>"
-    },
-    "Jugar(Arcade)": {
-        titulo: "¿Qué es este apartado?",
-        contenido: "<p>La zona interactiva para jugar las dinámicas educativas diseñadas por los especialistas.</p>"
-    },
-    "Jugar (Arcade)": {
-        titulo: "¿Cómo gano puntos?",
-        contenido: "<p>Elige entre el modo de juego libre o avanza completando los niveles de los módulos configurados para subir tu puntuación.</p>"
+    "Ayuda-Jugar": {
+        titulo: "Ayuda - Juegos",
+        contenido: "<p><strong>¿Qué es este apartado?</strong><br>La zona interactiva para jugar las dinámicas educativas diseñadas por los especialistas.</p><p><strong>¿Cómo gano puntos?</strong><br>Elige entre el modo de juego libre o avanza completando los niveles de los módulos configurados para subir tu puntuación.</p>"
     },
     "Perfil(Natural)": {
         titulo: "¿Qué encuentro aquí?",
