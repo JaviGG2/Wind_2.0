@@ -27,6 +27,7 @@
     "nodemailer": "^8.0.10",
     "nunjucks": "^3.2.4",
     "pg": "^8.21.0",
+    "puppeteer-core": "^25.3.0",
     "sharp": "^0.35.3"
   },
   "name": "wind_2.0",

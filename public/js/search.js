@@ -181,7 +181,7 @@ function getSearchWidgetHTML() {
                             <path d="M11 5H5l3 3.5z"/>
                         </svg>
                     </button>
-                    <div class="cat-select-popup" id="cat-select-popup">
+                    <div class="cat-select-popup anim-fade-in" id="cat-select-popup">
                         <div class="cat-select-list" id="cat-select-list"></div>
                     </div>
                 </div>

@@ -52,6 +52,12 @@
 .modulo-admin-link {
   margin-top: 16px;
 }
+.modulo-admin-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
 .niveles-listado {
   display: flex;
   flex-direction: column;

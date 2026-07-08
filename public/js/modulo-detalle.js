@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     let perfil = null;
     if (perfilRes.ok) perfil = await perfilRes.json();
 
-    const esCreador = perfil && perfil.id === modulo.id_usuario;
+    const esCreador = perfil && Number(perfil.id) === Number(modulo.id_usuario);
+    const esEspecialista = perfil && perfil.rol === 'Especialista';
 
     const progress = modulo.niveles.filter(n => n.completado).length;
     const total = modulo.niveles.length;
@@ -49,11 +50,20 @@ document.addEventListener('DOMContentLoaded', async () => {
       `;
     }).join('');
 
-    const adminBtn = esCreador
-      ? `<a href="/admin/editar-modulo?id=${moduloId}" class="btn-outline modulo-admin-link" style="display:inline-flex;align-items:center;gap:6px;">
-           <span class="material-symbols-outlined">add</span> Agregar nivel
-         </a>`
+    const eliminarBtn = esCreador || esEspecialista
+      ? `<button type="button" class="btn-outline btn-eliminar-modulo" data-id="${moduloId}" style="display:inline-flex;align-items:center;gap:6px;color:#dc2626;border-color:#dc2626;">
+           <span class="material-symbols-outlined">delete</span> Eliminar módulo
+         </button>`
       : '';
+
+    const adminBtn = esCreador
+      ? `<div class="modulo-admin-actions">
+           <a href="/admin/editar-modulo?id=${moduloId}" class="btn-outline modulo-admin-link" style="display:inline-flex;align-items:center;gap:6px;">
+             <span class="material-symbols-outlined">add</span> Agregar nivel
+           </a>
+           ${eliminarBtn}
+         </div>`
+      : eliminarBtn;
 
     container.innerHTML = `
       <div class="modulo-detalle-hero anim-fade-in">
@@ -67,6 +77,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       </div>
       <div class="niveles-listado">${nivelesHtml || '<p style="text-align:center;color:#9ca3af;padding:40px 0;">Este módulo aún no tiene niveles.</p>'}</div>
     `;
+
+    document.querySelector('.btn-eliminar-modulo')?.addEventListener('click', async function() {
+      if (!confirm('¿Estás seguro de eliminar este módulo? Se borrarán todos sus niveles y juegos. Esta acción no se puede deshacer.')) return;
+      try {
+        const res = await fetch(`/admin/api/modulos/${this.dataset.id}`, { method: 'DELETE', credentials: 'include' });
+        if (!res.ok) { const d = await res.json(); alert(d.mensaje || 'Error'); return; }
+        window.location.href = '/modulos';
+      } catch { alert('Error de conexión.'); }
+    });
   } catch (e) {
     container.innerHTML = '<p style="color:red;">Error al cargar el módulo.</p>';
   }

@@ -161,6 +161,36 @@ exports.eliminarNivel = async (req, res) => {
   }
 };
 
+exports.eliminarModulo = async (req, res) => {
+  if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
+    return res.status(403).json({ mensaje: 'Acceso denegado.' });
+  }
+  const moduloId = parseInt(req.params.id, 10);
+  if (Number.isNaN(moduloId)) return res.status(400).json({ mensaje: 'ID inválido.' });
+
+  try {
+    const mod = await db.query('SELECT id_usuario FROM modulo_juegos WHERE id = $1', [moduloId]);
+    if (mod.rows.length === 0) return res.status(404).json({ mensaje: 'Módulo no encontrado.' });
+    if (mod.rows[0].id_usuario !== req.session.usuarioId) {
+      return res.status(403).json({ mensaje: 'No eres el creador de este módulo.' });
+    }
+
+    const niveles = await db.query('SELECT id, id_juego FROM nivel WHERE id_modulo = $1', [moduloId]);
+    for (const nivel of niveles.rows) {
+      await db.query('DELETE FROM historial_vistas WHERE tipo_contenido = $1 AND contenido_id = $2', ['juego', nivel.id_juego]);
+      await db.query('DELETE FROM progreso_modulo WHERE nivel_id = $1', [nivel.id]);
+      await db.query('DELETE FROM juegos WHERE id = $1', [nivel.id_juego]);
+    }
+    await db.query('DELETE FROM nivel WHERE id_modulo = $1', [moduloId]);
+    await db.query('DELETE FROM modulo_juegos WHERE id = $1', [moduloId]);
+
+    return res.json({ mensaje: 'Módulo eliminado.' });
+  } catch (error) {
+    console.error('Error al eliminar módulo:', error.message);
+    return res.status(500).json({ mensaje: 'Error al eliminar módulo.' });
+  }
+};
+
 exports.completarNivel = async (req, res) => {
   if (!req.session.usuarioId) return res.status(401).json({ mensaje: 'Debes iniciar sesión.' });
   const moduloId = parseInt(req.params.id, 10);

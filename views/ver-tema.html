@@ -36,21 +36,25 @@
                 <span class="back-text"></span>
             </a>
             <div class="traductor-toolbar" id="traductor-toolbar">
-                <select id="idioma-select" class="traductor-select ">
-                    <option value="en">Inglés</option>
-                    <option value="fr">Francés</option>
-                    <option value="pt">Portugués</option>
-                    <option value="it">Italiano</option>
-                    <option value="de">Alemán</option>
-                    <option value="ja">Japonés</option>
-                    <option value="zh">Chino</option>
-                    <option value="ko">Coreano</option>
-                    <option value="ru">Ruso</option>
-                    
-                </select>
-                <button type="button" id="btn-traducir" class="btn-traducir">Traducir</button>
-                <button type="button" id="btn-original" class="btn-original anim-fade-in" style="display:none">Original</button>
-                <span id="traduciendo" class="traduciendo anim-fade-in" style="display:none">Traduciendo...</span>
+                <button type="button" id="btn-mobile-translate" class="btn-mobile-translate material-symbols-outlined" aria-label="Traducir contenido">translate</button>
+                <div class="traductor-collapse anim-fade-down">
+                    <select id="idioma-select" class="traductor-select ">
+                        <option value="en">Inglés</option>
+                        <option value="fr">Francés</option>
+                        <option value="pt">Portugués</option>
+                        <option value="it">Italiano</option>
+                        <option value="de">Alemán</option>
+                        <option value="ja">Japonés</option>
+                        <option value="zh">Chino</option>
+                        <option value="ko">Coreano</option>
+                        <option value="ru">Ruso</option>
+                        
+                    </select>
+                    <button type="button" id="btn-traducir" class="btn-traducir">Traducir</button>
+                    <button type="button" id="btn-original" class="btn-original anim-fade-in" style="display:none">Original</button>
+                    <span id="traduciendo" class="traduciendo anim-fade-in" style="display:none">Traduciendo...</span>
+                </div>
+                <a href="#" class="btn-report material-symbols-outlined" aria-label="Reportar contenido">report</a>
                 
             </div>
         </div>
@@ -68,7 +72,13 @@
             <div id="img-portada" class="imagen-principal"></div>
 
             <div id="txt-cuerpo" class="cuerpo-contenido"></div>
+
+            
         </article>
+
+        <a href="#" class="contenido-revisado anim-fade-in" style="display: block; color: #5e9730; text-align: center; margin-top: 20px; font-size: 14px; text-decoration: none;">
+            Contenido revisado por el equipo de edición
+        </a>
 
         <section class="seccion-comentarios" id="seccion-comentarios">
             <h2 class="comentarios-titulo">
@@ -84,6 +94,18 @@
     </main>
 
     <script src="/js/ver-temas.js?v={{ cacheVersion }}"></script>
+    <script>
+      document.getElementById('btn-mobile-translate')?.addEventListener('click', function(e) {
+        e.stopPropagation();
+        document.getElementById('traductor-toolbar').classList.toggle('is-open');
+      });
+      document.addEventListener('click', function(e) {
+        const toolbar = document.getElementById('traductor-toolbar');
+        if (toolbar?.classList.contains('is-open') && !toolbar.querySelector('.traductor-collapse')?.contains(e.target) && e.target !== document.getElementById('btn-mobile-translate')) {
+          toolbar.classList.remove('is-open');
+        }
+      });
+    </script>
     <script type="module" src="/js/info-burbuja.js?v={{ cacheVersion }}"></script>
 </body>
 </html>

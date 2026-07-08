@@ -6,7 +6,7 @@
     --search-muted: rgba(255, 255, 255, 0.55);
     --search-item-bg: rgba(255, 255, 255, 0.1);
     --search-radius-pill: 999px;
-    --search-radius-panel: 20px;
+    --search-radius-panel: 12px;
     --search-float-gap: 20px;
     --search-float-top: 16px;
 }
@@ -38,7 +38,7 @@
 .wind-search-shell {
     width: 100%;
     margin: 0;
-    padding: 20px 15px;
+    padding: 14px 15px 4px;
     background: rgba(255,255,255,0.6);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -67,7 +67,7 @@ body.modal-open .wind-search-shell {
     align-items: center;
     flex-wrap: wrap;
     gap: 6px;
-    padding: 12px 15px 16px;
+    padding: 10px 15px 8px;
 }
 
 .cat-chip {
