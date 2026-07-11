@@ -34,21 +34,8 @@ async function generarAvatarSVG(seed, estilo = 'avataaars') {
 
 const CORREO_USER = (process.env.CORREO_EMISOR || '').trim();
 const CORREO_PASS = (process.env.CORREO_PASSWORD || '').replace(/\s+/g, '');
-const SENDGRID_KEY = (process.env.SENDGRID_API_KEY || '').trim();
-const sgMail = SENDGRID_KEY ? require('@sendgrid/mail') : null;
-if (sgMail) sgMail.setApiKey(SENDGRID_KEY);
 
 async function enviarCorreo(destino, asunto, html) {
-    if (sgMail) {
-        await sgMail.send({
-            to: destino,
-            from: { email: CORREO_USER, name: 'Wind' },
-            subject: asunto,
-            html: html
-        });
-        return;
-    }
-
     const transportador = nodemailer.createTransport(
         process.env.SMTP_HOST
             ? {

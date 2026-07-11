@@ -13,7 +13,6 @@
     "@dicebear/pixel-art": "^9.4.2",
     "@dicebear/shapes": "^9.4.2",
     "@google/genai": "^2.10.0",
-    "@sendgrid/mail": "^8.1.6",
     "@supabase/supabase-js": "^2.108.2",
     "bcryptjs": "^3.0.3",
     "dotenv": "^17.4.2",
