@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             window.itemsCache = items;
             if (items.length === 0) {
                 await new Promise(r => setTimeout(r, 1000));
-                document.getElementById('recom-header-icon').innerHTML = '<img src="/img/w2.png" alt="Wind" class="recom-logo anim-fade-in"><img src="/img/w1-glow.png" alt="" class="recom-glow">';
+                document.getElementById('recom-header-icon').innerHTML = '<img src="/img/w2.png" alt="Wind" class="recom-logo"><img src="/img/w1-glow.png" alt="" class="recom-glow">';
                 contenedor.innerHTML = `
                     <div style="grid-column:1/-1;text-align:center;padding:60px 0;">
                         <p class="muted" style="font-size:1.1rem;">No tengo contenido para ti</p>

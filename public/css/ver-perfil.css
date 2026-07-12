@@ -125,6 +125,13 @@
     color: rgba(255,255,255,0.6);
 }
 
+.perfil-follow-stats {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--c-muted, #6b7280);
+    margin-bottom: 16px;
+}
+
 .perfil-stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -154,6 +161,56 @@
     border-color: var(--c-primario, #ff4500);
     background: rgba(255, 69, 0, 0.05);
     box-shadow: 0 4px 16px rgba(255, 69, 0, 0.12);
+}
+
+.perfil-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.perfil-follow-stats {
+    font-size: 0.78rem;
+    color: var(--c-muted, #6b7280);
+    white-space: nowrap;
+}
+
+.perfil-actions-wrap {
+    display: inline-flex;
+}
+
+.btn-seguir {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 4px 14px;
+    border: 1.5px solid var(--c-primario, #ff4500);
+    border-radius: 999px;
+    background: var(--c-primario, #ff4500);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.78rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 200ms ease;
+    min-width: 80px;
+    line-height: 1.4;
+}
+.btn-seguir:hover {
+    background: #e63e00;
+    box-shadow: 0 2px 8px rgba(255,69,0,0.25);
+}
+.btn-seguir.siguiendo {
+    background: transparent;
+    color: var(--c-primario, #ff4500);
+}
+.btn-seguir.siguiendo:hover {
+    background: rgba(255,69,0,0.08);
+    box-shadow: none;
 }
 
 .perfil-contenido-expandido {
@@ -278,6 +335,10 @@
 
     .stat-card {
         padding: 14px 8px;
+    }
+    .perfil-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
     }
 
     .stat-num {

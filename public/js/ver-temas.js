@@ -108,6 +108,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             }, 300);
         }
 
+        initValoracion(tema);
+
     } catch (error) {
         console.error("Error en ver-tema.js:", error);
         bloqueCarga.innerHTML = `<p style="color: red;">Error al cargar el contenido: ${error.message}</p>`;
@@ -215,5 +217,50 @@ document.addEventListener('DOMContentLoaded', async () => {
         const div = document.createElement('div');
         div.appendChild(document.createTextNode(text));
         return div.innerHTML;
+    }
+
+    function initValoracion(tema) {
+        const section = document.getElementById('valoracion-section');
+        const stars = section?.querySelectorAll('.star-rating .star');
+        const promedioEl = document.getElementById('val-promedio');
+        const countEl = document.getElementById('val-count');
+        if (!stars?.length) return;
+
+        const id = tema.id;
+        let miPunt = tema.mi_puntuacion || null;
+
+        function renderStars(punt) {
+            stars.forEach(s => {
+                const val = parseInt(s.dataset.val, 10);
+                s.classList.toggle('active', val <= punt);
+            });
+        }
+
+        function renderStats(promedio, total) {
+            if (promedioEl) promedioEl.textContent = promedio ? `${promedio} ★` : '—';
+            if (countEl) countEl.textContent = `(${total || 0} valoraciones)`;
+        }
+
+        if (miPunt) renderStars(miPunt);
+        renderStats(tema.promedio_valoracion, tema.likes);
+
+        stars.forEach(s => {
+            s.addEventListener('click', async () => {
+                const val = parseInt(s.dataset.val, 10);
+                try {
+                    const res = await fetch(`/api/temas/${id}/like`, {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ puntuacion: val })
+                    });
+                    if (!res.ok) { if (res.status === 401) window.location.href = '/login.html'; return; }
+                    const data = await res.json();
+                    miPunt = data.mi_puntuacion;
+                    renderStars(miPunt);
+                    renderStats(data.promedio, data.likes);
+                } catch (e) { console.error('Error valoracion:', e); }
+            });
+        });
     }
 });

@@ -3,13 +3,22 @@ const notificacion = require('./notificacionController');
 
 exports.listarModulos = async (req, res) => {
   try {
-    const result = await db.query(
-      `SELECT m.id, m.nombre, m.descripcion, m.id_usuario, u.nombre AS creador_nombre,
-              (SELECT COUNT(*) FROM nivel WHERE id_modulo = m.id) AS total_niveles
-       FROM modulo_juegos m
-       JOIN usuarios u ON m.id_usuario = u.id
-       ORDER BY m.id DESC`
-    );
+    const usuarioSes = req.session?.usuarioId || null;
+    const miPuntSelect = usuarioSes
+      ? `, (SELECT puntuacion FROM modulos_likes WHERE modulo_id = m.id AND usuario_id = $1 LIMIT 1) AS mi_puntuacion`
+      : ', null AS mi_puntuacion';
+    const params = usuarioSes ? [usuarioSes] : [];
+    const sql = `
+      SELECT m.id, m.nombre, m.descripcion, m.id_usuario, m.likes,
+             u.nombre AS creador_nombre,
+             (SELECT COUNT(*) FROM nivel WHERE id_modulo = m.id) AS total_niveles,
+             ROUND(COALESCE((SELECT AVG(puntuacion) FROM modulos_likes WHERE modulo_id = m.id), 0), 1)::float AS promedio_valoracion
+             ${miPuntSelect}
+      FROM modulo_juegos m
+      JOIN usuarios u ON m.id_usuario = u.id
+      ORDER BY m.id DESC
+    `;
+    const result = await db.query(sql, params);
     return res.json(result.rows);
   } catch (error) {
     console.error('Error al listar módulos:', error.message);
@@ -24,8 +33,13 @@ exports.obtenerModulo = async (req, res) => {
 
   try {
     const modResult = await db.query(
-      `SELECT m.*, u.nombre AS creador_nombre FROM modulo_juegos m
-       JOIN usuarios u ON m.id_usuario = u.id WHERE m.id = $1`, [id]
+      `SELECT m.*, u.nombre AS creador_nombre,
+              ROUND(COALESCE((SELECT AVG(puntuacion) FROM modulos_likes WHERE modulo_id = m.id), 0), 1)::float AS promedio_valoracion,
+              ${usuarioId ? '(SELECT puntuacion FROM modulos_likes WHERE modulo_id = m.id AND usuario_id = $2 LIMIT 1)' : 'null'} AS mi_puntuacion
+       FROM modulo_juegos m
+       JOIN usuarios u ON m.id_usuario = u.id
+       WHERE m.id = $1`,
+      usuarioId ? [id, usuarioId] : [id]
     );
     if (modResult.rows.length === 0) return res.status(404).json({ mensaje: 'Módulo no encontrado.' });
 
@@ -232,5 +246,47 @@ exports.completarNivel = async (req, res) => {
   } catch (error) {
     console.error('Error al completar nivel:', error.message);
     return res.status(500).json({ mensaje: 'Error al completar nivel.' });
+  }
+};
+
+exports.likeModulo = async (req, res) => {
+  if (!req.session.usuarioId) return res.status(401).json({ mensaje: 'Debes iniciar sesión.' });
+  const id = parseInt(req.params.id, 10);
+  const usuarioId = req.session.usuarioId;
+  if (Number.isNaN(id)) return res.status(400).json({ mensaje: 'ID inválido.' });
+  const puntuacion = Math.min(5, Math.max(1, parseInt(req.body.puntuacion, 10) || 5));
+  try {
+    const anterior = await db.query('SELECT puntuacion FROM modulos_likes WHERE modulo_id = $1 AND usuario_id = $2', [id, usuarioId]);
+    const oldP = anterior.rows.length > 0 ? anterior.rows[0].puntuacion : 0;
+
+    await db.query(`
+      INSERT INTO modulos_likes (modulo_id, usuario_id, puntuacion)
+      VALUES ($1, $2, $3)
+      ON CONFLICT (modulo_id, usuario_id)
+      DO UPDATE SET puntuacion = EXCLUDED.puntuacion
+    `, [id, usuarioId, puntuacion]);
+
+    const stats = await db.query(`
+      SELECT COUNT(*)::int AS total, ROUND(COALESCE(AVG(puntuacion),0), 1)::float AS promedio
+      FROM modulos_likes WHERE modulo_id = $1
+    `, [id]);
+    const { total, promedio } = stats.rows[0];
+
+    await db.query('UPDATE modulo_juegos SET likes = $1 WHERE id = $2', [total, id]);
+
+    const creador = await db.query('SELECT id_usuario FROM modulo_juegos WHERE id = $1', [id]);
+    if (creador.rows.length > 0) {
+      const creadorId = creador.rows[0].id_usuario;
+      const diff = puntuacion - oldP;
+      if (diff !== 0) {
+        await db.query('UPDATE usuarios SET reputacion = GREATEST(0, COALESCE(reputacion,0) + $1) WHERE id = $2 AND rol = $3',
+          [diff, creadorId, 'Especialista']);
+      }
+    }
+
+    return res.json({ likes: total, promedio, mi_puntuacion: puntuacion, mensaje: oldP > 0 ? 'Valoración actualizada' : 'Gracias por tu valoración' });
+  } catch (error) {
+    console.error('Error al valorar módulo:', error.message);
+    return res.status(500).json({ mensaje: 'Error al procesar la valoración.' });
   }
 };

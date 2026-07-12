@@ -111,13 +111,48 @@ function renderGrid(juegos) {
             </div>
             <div class="juego-card-footer">
                 ${jugado ? '<span class="jugado-badge"><span class="material-symbols-outlined">check_circle</span> Jugado</span>' : ''}
-                <a href="/play-game?id=${juego.id}" class="btn-jugar">
-                    <span class="material-symbols-outlined">play_arrow</span>
-                    Jugar
-                </a>
+                <div class="juego-card-actions">
+                    <button type="button" class="btn-valoracion" data-id="${juego.id}">
+                        <span class="material-symbols-outlined btn-val-icon${(juego.mi_puntuacion || 0) > 0 ? ' rated' : ''}">${(juego.mi_puntuacion || 0) > 0 ? 'star' : 'star_outline'}</span>
+                        <span class="btn-val-promedio">${(juego.promedio_valoracion || 0) > 0 ? Number(juego.promedio_valoracion).toFixed(1) : '—'}</span>
+                        <span class="btn-val-count">(${juego.likes || 0})</span>
+                    </button>
+                    <a href="/play-game?id=${juego.id}" class="btn-jugar">
+                        <span class="material-symbols-outlined">play_arrow</span>
+                        Jugar
+                    </a>
+                </div>
             </div>
         `;
         contenedor.appendChild(tarjeta);
+
+        const btnVal = tarjeta.querySelector('.btn-valoracion');
+        let miPunt = juego.mi_puntuacion || 0;
+        btnVal.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            abrirPopupValoracion(juego.id, 'juegos', miPunt, async (val) => {
+                try {
+                    const res = await fetch(`/api/juegos/${juego.id}/like`, {
+                        method: 'POST', credentials: 'include',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ puntuacion: val })
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        miPunt = data.mi_puntuacion;
+                        const icon = btnVal.querySelector('.btn-val-icon');
+                        icon.textContent = miPunt > 0 ? 'star' : 'star_outline';
+                        icon.classList.toggle('rated', miPunt > 0);
+                        btnVal.querySelector('.btn-val-promedio').textContent = (data.promedio || 0).toFixed(1);
+                        btnVal.querySelector('.btn-val-count').textContent = `(${data.likes})`;
+                    } else if (res.status === 401) {
+                        window.location.href = '/login.html';
+                    }
+                } catch (e) {
+                    console.error('Error al valorar:', e);
+                }
+            });
+        });
     });
 }
 

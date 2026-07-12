@@ -29,11 +29,13 @@ exports.crearRelato = async (req, res) => {
         const values = [titulo, contenido, req.session.usuarioId, imagenUrl];
         const resultado = await db.query(querySQL, values);
         const relatoId = resultado.rows[0].id;
+
         notificacion.crear({
             creadorId: req.session.usuarioId,
             titulo: 'Nuevo relato comunitario',
             mensaje: `"${titulo}" ha sido compartido por la comunidad.`,
-            enlace: `/relatos-community`
+            enlace: `/relatos-community`,
+            soloSeguidores: true
         });
         res.status(201).json({ message: 'Relato creado con éxito', relato: resultado.rows[0] });
     } catch (error) {
@@ -60,9 +62,10 @@ exports.obtenerRelatos = async (req, res) => {
             params.push(usuarioId);
         }
 
+        const usuarioSesion = req.session?.usuarioId || null;
         querySQL = `
             SELECT r.id, r.titulo, r.contenido_relato, r.fecha_publicacion,
-                   r.usuario_id, r.imagen_url,
+                   r.usuario_id, r.imagen_url, r.likes,
                  u.nombre AS autor_nombre,
                     u.imagen_perfil AS autor_avatar,
                     u.avatar_fondo AS autor_avatar_fondo,
@@ -102,7 +105,7 @@ exports.obtenerRelato = async (req, res) => {
         const { id } = req.params;
         const querySQL = `
             SELECT r.id, r.titulo, r.contenido_relato, r.fecha_publicacion,
-                   r.usuario_id, r.imagen_url,
+                   r.usuario_id, r.imagen_url, r.likes,
                    u.nombre AS autor_nombre,
                    u.imagen_perfil AS autor_avatar,
                    u.avatar_fondo AS autor_avatar_fondo,

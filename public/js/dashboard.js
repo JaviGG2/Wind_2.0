@@ -53,6 +53,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
+        const fs = document.getElementById('dash-follow-stats');
+        if (fs) {
+            fs.textContent = `${usuario.seguidores_count ?? 0} seguidores · ${usuario.siguiendo_count ?? 0} siguiendo`;
+        }
+
         if (!usuario.nombre) {
             mostrarMensaje('Perfil cargado pero falta el nombre en la sesión.', 'error');
             console.warn('[dashboard] perfil sin nombre:', usuario);
@@ -60,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         bienvenida.innerHTML = `¡Hola, <strong>${usuario.nombre || 'Usuario'}</strong>! Bienvenido a la plataforma web de preservación digital.`;
 
-        cargarNivel();
+        cargarNivel(usuario.rol);
 
         configurarVistasPorRol(usuario.rol);
         if (typeof cargarMisRelatos === 'function') cargarMisRelatos();
@@ -414,15 +419,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     setInterval(actualizarNotif, 30000);
 });
 
-async function cargarNivel() {
+async function cargarNivel(rol) {
     try {
-        const res = await fetch('/api/usuario/nivel');
+        const isEsp = rol === 'Especialista';
+        const url = isEsp ? '/api/usuario/reputacion' : '/api/usuario/nivel';
+        const res = await fetch(url);
         if (!res.ok) return;
         const data = await res.json();
-        document.getElementById('nivel-badge').textContent = `Nv ${data.nivel}`;
+        document.getElementById('nivel-badge').textContent = isEsp ? data.titulo : `Nv ${data.nivel}`;
         document.getElementById('nivel-titulo').textContent = data.titulo;
         document.getElementById('nivel-progreso-bar').style.width = `${data.progreso}%`;
         document.getElementById('nivel-puntos-actual').textContent = data.puntos;
         document.getElementById('nivel-puntos-siguiente').textContent = data.puntosSiguiente;
+        const label = document.getElementById('nivel-next-label');
+        if (label) label.textContent = isEsp ? 'Próximo rango' : 'Próximo nivel';
     } catch {}
 }

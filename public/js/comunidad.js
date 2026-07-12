@@ -116,9 +116,11 @@ function crearCardRelato(relato, index) {
         ${imgHtml}
         <h3 class="relato-titulo">${sanitizar(relato.titulo || 'Sin título')}</h3>
         <p class="relato-extracto">${sanitizar(extracto)}</p>
-        <button class="relato-leer-mas" data-id="${relato.id}">
-            Leer relato completo <span class="material-symbols-outlined" style="font-size:1rem;">arrow_forward</span>
-        </button>
+        <div class="relato-card-actions">
+            <button class="relato-leer-mas" data-id="${relato.id}">
+                Leer relato completo <span class="material-symbols-outlined" style="font-size:1rem;">arrow_forward</span>
+            </button>
+        </div>
     `;
 
     card.querySelector('.relato-leer-mas').addEventListener('click', (e) => {

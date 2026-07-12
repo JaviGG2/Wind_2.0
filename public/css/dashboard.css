@@ -281,6 +281,13 @@
     overflow: hidden;
 }
 
+.dash-follow-stats {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--c-muted, #6b7280);
+    margin-top: 8px;
+}
+
 @media (min-width: 769px) {
     .nivel-bar {
         max-width: 480px;

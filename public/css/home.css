@@ -1,16 +1,17 @@
 .contenido-principal {
     padding: 30px 24px;
+    margin-top: -10px;
 }
 
 .titulo {
     font-size: var(--font-3xl);
     font-weight: 800;
     color: var(--texto);
-    ;
+    
 }
 
 .inicio-temas {
-    margin-top: 28px;
+    margin-top: 10px;
 }
 
 .inicio-temas-header h2 {
@@ -135,42 +136,6 @@
 .btn-comentario .material-symbols-outlined {
     font-size: 1.1rem;
     font-variation-settings: 'wght' 400;
-}
-
-.btn-like {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    border: 1.5px solid rgba(18,18,18,0.08);
-    border-radius: 999px;
-    background: transparent;
-    color: var(--texto-sec);
-    font-weight: 600;
-    font-size: var(--font-sm);
-    cursor: pointer;
-    transition: all 200ms ease;
-}
-
-.btn-like:hover {
-    border-color: #e11d48;
-    color: #e11d48;
-    background: #fff1f2;
-}
-
-.btn-like.liked {
-    border-color: #e11d48;
-    color: #e11d48;
-    background: #fff1f2;
-}
-
-.btn-like .like-icon {
-    font-size: 1.1rem;
-    font-variation-settings: 'FILL' 0;
-}
-
-.btn-like.liked .like-icon {
-    font-variation-settings: 'FILL' 1;
 }
 
 .tema-contenido h3 {

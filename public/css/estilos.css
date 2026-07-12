@@ -438,3 +438,52 @@
         font-size: var(--font-xl);
     }
 }
+
+.btn-secundario {
+    padding: 10px 20px;
+    border: 1.5px solid #d1d5db;
+    border-radius: var(--radius-md);
+    background: #fff;
+    color: #374151;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+}
+
+.btn-secundario:hover {
+    border-color: #9ca3af;
+    background: #f9fafb;
+}
+
+.btn-secundario:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.mensaje-alerta {
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    font-weight: 500;
+    line-height: 1.4;
+    margin: 12px 0 0;
+    text-align: center;
+}
+
+.mensaje-alerta.exito {
+    background: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+.mensaje-alerta.error {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.mensaje-oculto {
+    display: none;
+}

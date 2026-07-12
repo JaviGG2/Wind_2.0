@@ -50,6 +50,22 @@
     color: #333;
 }
 
+.ajustes-peligro {
+    border-color: #fecaca;
+}
+
+.ajustes-peligro h4 {
+    color: #dc2626;
+}
+
+.ajustes-peligro details summary {
+    list-style: none;
+}
+
+.ajustes-peligro details summary::-webkit-details-marker {
+    display: none;
+}
+
 .ajustes-form-row {
     display: flex;
     gap: 8px;

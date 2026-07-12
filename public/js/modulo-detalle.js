@@ -75,8 +75,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         </div>
         ${adminBtn}
       </div>
+      <div class="valoracion-section" id="valoracion-section">
+        <div class="valoracion-header">
+          <span class="material-symbols-outlined">star</span>
+          Valoraciones
+        </div>
+        <div class="valoracion-body">
+          <div class="valoracion-promedio" id="val-promedio">${(modulo.promedio_valoracion || 0) > 0 ? modulo.promedio_valoracion + ' ★' : '—'}</div>
+          <div class="star-rating" id="star-rating-detalle">
+            ${[1,2,3,4,5].map(n => `<span class="star${(modulo.mi_puntuacion || 0) >= n ? ' active' : ''}" data-val="${n}"><span class="material-symbols-outlined">star</span></span>`).join('')}
+          </div>
+          <div class="valoracion-count" id="val-count">(${modulo.likes || 0} valoraciones)</div>
+        </div>
+      </div>
       <div class="niveles-listado">${nivelesHtml || '<p style="text-align:center;color:#9ca3af;padding:40px 0;">Este módulo aún no tiene niveles.</p>'}</div>
     `;
+
+    initValoracion(modulo);
 
     document.querySelector('.btn-eliminar-modulo')?.addEventListener('click', async function() {
       if (!confirm('¿Estás seguro de eliminar este módulo? Se borrarán todos sus niveles y juegos. Esta acción no se puede deshacer.')) return;
@@ -88,5 +103,50 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   } catch (e) {
     container.innerHTML = '<p style="color:red;">Error al cargar el módulo.</p>';
+  }
+
+  function initValoracion(modulo) {
+    const section = document.getElementById('valoracion-section');
+    const stars = section?.querySelectorAll('.star-rating .star');
+    const promedioEl = document.getElementById('val-promedio');
+    const countEl = document.getElementById('val-count');
+    if (!stars?.length) return;
+
+    const id = modulo.id;
+    let miPunt = modulo.mi_puntuacion || null;
+
+    function renderStars(punt) {
+      stars.forEach(s => {
+        const val = parseInt(s.dataset.val, 10);
+        s.classList.toggle('active', val <= punt);
+      });
+    }
+
+    function renderStats(promedio, total) {
+      if (promedioEl) promedioEl.textContent = promedio ? `${promedio} ★` : '—';
+      if (countEl) countEl.textContent = `(${total || 0} valoraciones)`;
+    }
+
+    if (miPunt) renderStars(miPunt);
+    renderStats(modulo.promedio_valoracion, modulo.likes);
+
+    stars.forEach(s => {
+      s.addEventListener('click', async () => {
+        const val = parseInt(s.dataset.val, 10);
+        try {
+          const res = await fetch(`/api/modulos/${id}/like`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ puntuacion: val })
+          });
+          if (!res.ok) { if (res.status === 401) window.location.href = '/login.html'; return; }
+          const data = await res.json();
+          miPunt = data.mi_puntuacion;
+          renderStars(miPunt);
+          renderStats(data.promedio, data.likes);
+        } catch (e) { console.error('Error valoracion:', e); }
+      });
+    });
   }
 });

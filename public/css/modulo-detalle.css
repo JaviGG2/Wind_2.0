@@ -126,3 +126,84 @@
   .modulo-detalle-hero h2 { font-size: 1.3rem; }
   .nivel-card { padding: 14px 16px; }
 }
+
+/* --- Valoración en detalle de módulo --- */
+.valoracion-section {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+}
+
+.valoracion-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #111827;
+  margin-bottom: 12px;
+}
+
+.valoracion-header .material-symbols-outlined {
+  font-size: 1.2rem;
+  color: #f59e0b;
+}
+
+.valoracion-body {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.valoracion-promedio {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #111827;
+  min-width: 50px;
+}
+
+.valoracion-count {
+  font-size: 0.82rem;
+  color: #6b7280;
+}
+
+.valoracion-body .star-rating .star .material-symbols-outlined {
+  font-size: 1.5rem;
+}
+
+.star-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+}
+
+.star-rating .star {
+  display: inline-flex;
+  color: #d1d5db;
+  transition: color 120ms ease;
+}
+
+.star-rating .star .material-symbols-outlined {
+  font-size: 1.2rem;
+  font-variation-settings: 'FILL' 0;
+}
+
+.star-rating .star.active .material-symbols-outlined,
+.star-rating .star:hover .material-symbols-outlined {
+  font-variation-settings: 'FILL' 1;
+  color: #f59e0b;
+}
+
+.star-rating .star.active {
+  color: #f59e0b;
+}
+
+.star-rating .star:hover ~ .star .material-symbols-outlined {
+  font-variation-settings: 'FILL' 0;
+  color: #d1d5db;
+}

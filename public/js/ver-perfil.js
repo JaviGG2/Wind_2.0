@@ -35,16 +35,62 @@ async function cargarPerfil(id) {
         }
 
         if (user.nivel) {
-            document.getElementById('nivel-badge').textContent = `Nv ${user.nivel.nivel}`;
-            document.getElementById('nivel-titulo').textContent = user.nivel.titulo;
-            document.getElementById('nivel-puntos-actual').textContent = user.nivel.puntos;
-            document.getElementById('nivel-puntos-siguiente').textContent = user.nivel.puntosSiguiente;
-            document.getElementById('nivel-progreso-bar').style.width = `${user.nivel.progreso}%`;
+            const isEsp = user.rol === 'Especialista';
+            const rango = user.reputacionRango;
+            if (isEsp && rango && typeof rango.titulo === 'string') {
+                document.getElementById('nivel-badge').textContent = rango.titulo;
+                document.getElementById('nivel-titulo').textContent = rango.titulo;
+                document.getElementById('nivel-puntos-actual').textContent = rango.puntos;
+                document.getElementById('nivel-puntos-siguiente').textContent = rango.puntosSiguiente;
+                document.getElementById('nivel-progreso-bar').style.width = `${rango.progreso}%`;
+                const label = document.getElementById('nivel-next-label');
+                if (label) label.textContent = 'Próximo rango';
+            } else {
+                document.getElementById('nivel-badge').textContent = `Nv ${user.nivel.nivel}`;
+                document.getElementById('nivel-titulo').textContent = user.nivel.titulo;
+                document.getElementById('nivel-puntos-actual').textContent = user.nivel.puntos;
+                document.getElementById('nivel-puntos-siguiente').textContent = user.nivel.puntosSiguiente;
+                document.getElementById('nivel-progreso-bar').style.width = `${user.nivel.progreso}%`;
+            }
         }
 
         document.getElementById('stat-relatos').textContent = user.conteo_relatos;
         document.getElementById('stat-temas').textContent = user.conteo_temas;
         document.getElementById('stat-juegos').textContent = user.conteo_juegos;
+
+        const followStats = document.getElementById('perfil-follow-stats');
+        if (followStats) {
+            const seg = user.seguidores_count ?? 0;
+            const sig = user.siguiendo_count ?? 0;
+            followStats.textContent = `${seg} seguidores · ${sig} siguiendo`;
+        }
+
+        const actions = document.getElementById('perfil-actions');
+        if (actions && user.siguiendo !== undefined) {
+            const siguiendo = user.siguiendo;
+            const btn = document.createElement('button');
+            btn.className = `btn-seguir${siguiendo ? ' siguiendo' : ''}`;
+            btn.textContent = siguiendo ? 'Siguiendo' : 'Seguir';
+            btn.addEventListener('click', async () => {
+                try {
+                    const res = await fetch(`/api/seguir/${usuarioId}`, { method: 'POST', credentials: 'include' });
+                    if (!res.ok) { const d = await res.json(); alert(d.mensaje || 'Error'); return; }
+                    const data = await res.json();
+                    btn.textContent = data.siguiendo ? 'Siguiendo' : 'Seguir';
+                    btn.classList.toggle('siguiendo', data.siguiendo);
+
+                    // actualizar contador al instante
+                    const fs = document.getElementById('perfil-follow-stats');
+                    if (fs) {
+                        let count = user.seguidores_count ?? 0;
+                        if (data.siguiendo) count++; else count--;
+                        user.seguidores_count = count;
+                        fs.textContent = `${count} seguidores · ${user.siguiendo_count ?? 0} siguiendo`;
+                    }
+                } catch { alert('Error de conexión.'); }
+            });
+            actions.appendChild(btn);
+        }
 
     } catch (e) {
         console.error('Error al cargar perfil:', e);

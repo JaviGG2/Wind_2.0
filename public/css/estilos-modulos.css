@@ -167,6 +167,13 @@
   border-top: 1px solid #f3f4f6;
 }
 
+.mod-card-footer-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .mod-card-author {
   display: flex;
   align-items: center;

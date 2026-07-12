@@ -370,9 +370,18 @@ body {
 .juego-card-footer {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
     gap: 10px;
     padding: 20px 24px 24px;
     margin-top: auto;
+}
+
+.juego-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
 }
 
 .btn-jugar {

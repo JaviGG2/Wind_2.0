@@ -36,12 +36,23 @@
                     <div class="perfil-cabecera">
                         <img id="perfil-avatar" src="/img/avatar.svg" alt="avatar" class="perfil-avatar">
                         <div class="perfil-info">
-                            <h2 id="nombre-usuario">Cargando...</h2>
+                            <h2 id="nombre-usuario">Cargando... <img src="/images/loading-4.svg" alt=""></h2>
                             <div id="username" class="muted username">&nbsp;</div>
+                            <div class="perfil-meta">
+                                <span id="rol-usuario" class="rol-usuario">...</span>
+                                <div id="perfil-actions" class="perfil-actions-wrap"></div>
+                            </div>
                         </div>
-                        <div id="rol-usuario" class="rol-usuario">...</div>
                     </div>
+
+                
+
+                    
                 </header>
+
+                <div class="perfil-follow-stats" id="perfil-follow-stats"></div>
+
+                
 
                 <div class="nivel-bar" id="nivel-bar">
                     <div class="nivel-header">
@@ -53,9 +64,11 @@
                     </div>
                     <div class="nivel-puntos">
                         <span><span id="nivel-puntos-actual">0</span> pts</span>
-                        <span>Próximo nivel: <span id="nivel-puntos-siguiente">100</span> pts</span>
+                        <span><span id="nivel-next-label">Próximo nivel</span>: <span id="nivel-puntos-siguiente">100</span> pts</span>
                     </div>
                 </div>
+
+                
 
                 <div class="perfil-stats">
                     <div class="stat-card" data-tipo="relatos" onclick="toggleContenido('relatos')">
@@ -77,7 +90,7 @@
                 <div id="perfil-contenido-expandido" class="perfil-contenido-expandido"></div>
             </div>
 
-            <img src="/images/loading.svg" class="anim-loading" alt="Cargando...">
+            
             <div id="mensaje-consola" class="mensaje-oculto"></div>
         </main>
     </div>

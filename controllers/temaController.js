@@ -36,11 +36,13 @@ exports.subirTema = async (req, res) => {
 
         const temaRes = await db.query(queryFinal + ' RETURNING id', parametros);
         const temaId = temaRes.rows[0].id;
+
         notificacion.crear({
             creadorId: req.session.usuarioId,
             titulo: 'Nuevo tema histórico',
             mensaje: `"${titulo}" ha sido enviado para revisión.`,
-            enlace: `/dashboard`
+            enlace: `/dashboard`,
+            soloSeguidores: true
         });
         return res.status(201).json({ mensaje: '¡Tema enviado para revisión con éxito!' });
 
@@ -104,15 +106,20 @@ exports.listarTemas = async (req, res) => {
         const categoriaId = req.query.categoria ? parseInt(req.query.categoria, 10) : null;
         const filtroCreador = req.query.creador_id ? parseInt(req.query.creador_id, 10) : null;
         const usuarioId = req.session.usuarioId || null;
-        const likeSubquery = ', (SELECT true FROM temas_likes WHERE tema_id = t.id AND usuario_id = $1 LIMIT 1) AS usuario_dio_like';
+        const puntuacionSubquery = usuarioId
+            ? ', (SELECT puntuacion FROM temas_likes WHERE tema_id = t.id AND usuario_id = $1 LIMIT 1) AS mi_puntuacion'
+            : ', null AS mi_puntuacion';
         let result;
         let params;
         let idx = 1;
 
+        const promedioSubquery = ', ROUND(COALESCE((SELECT AVG(puntuacion) FROM temas_likes WHERE tema_id = t.id), 0), 1)::float AS promedio_valoracion';
+
         const commentCountSubquery = ', (SELECT COUNT(*) FROM comentarios WHERE tema_id = t.id) AS comentarios_count';
 
         const baseSelect = `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes
-            ${usuarioId ? likeSubquery.replace('$1', `$${idx}`) : ', false AS usuario_dio_like'}
+            ${usuarioId ? puntuacionSubquery.replace('$1', `$${idx}`) : ', null AS mi_puntuacion'}
+            ${promedioSubquery}
             ${commentCountSubquery},
             c.nombre AS categoria_nombre,
             u.nombre AS creador_nombre,
@@ -158,7 +165,8 @@ exports.obtenerTemaPorId = async (req, res) => {
         if (!Number.isNaN(temaIdNum)) {
             result = await db.query(
                 `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes, t.estado,
-                        ${usuarioId ? '(SELECT true FROM temas_likes WHERE tema_id = t.id AND usuario_id = $2 LIMIT 1)' : 'false'} AS usuario_dio_like,
+                        ROUND(COALESCE((SELECT AVG(puntuacion) FROM temas_likes WHERE tema_id = t.id), 0), 1)::float AS promedio_valoracion,
+                        ${usuarioId ? '(SELECT puntuacion FROM temas_likes WHERE tema_id = t.id AND usuario_id = $2 LIMIT 1)' : 'null'} AS mi_puntuacion,
                         c.nombre AS categoria_nombre,
                         u.nombre AS creador_nombre,
                     u.imagen_perfil AS creador_avatar,
@@ -177,7 +185,8 @@ exports.obtenerTemaPorId = async (req, res) => {
             console.log(`obtenerTemaPorId: intento alternativo por texto con '${rawId}'`);
             result = await db.query(
                 `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes, t.estado,
-                        ${usuarioId ? '(SELECT true FROM temas_likes WHERE tema_id = t.id AND usuario_id = $2 LIMIT 1)' : 'false'} AS usuario_dio_like,
+                        ROUND(COALESCE((SELECT AVG(puntuacion) FROM temas_likes WHERE tema_id = t.id), 0), 1)::float AS promedio_valoracion,
+                        ${usuarioId ? '(SELECT puntuacion FROM temas_likes WHERE tema_id = t.id AND usuario_id = $2 LIMIT 1)' : 'null'} AS mi_puntuacion,
                         c.nombre AS categoria_nombre,
                         u.nombre AS creador_nombre,
                         u.imagen_perfil AS creador_avatar,
@@ -210,23 +219,42 @@ exports.likeTema = async (req, res) => {
     const id = parseInt(req.params.id, 10);
     const usuarioId = req.session.usuarioId;
     if (Number.isNaN(id)) return res.status(400).json({ mensaje: 'ID inválido.' });
+    const puntuacion = Math.min(5, Math.max(1, parseInt(req.body.puntuacion, 10) || 5));
     try {
-        const result = await db.query(`
-            WITH insercion AS (
-                INSERT INTO temas_likes (tema_id, usuario_id)
-                VALUES ($1, $2)
-                ON CONFLICT DO NOTHING
-                RETURNING 1
-            )
-            UPDATE temas SET likes = COALESCE(likes, 0) + 1
-            WHERE id = $1 AND EXISTS (SELECT 1 FROM insercion)
-            RETURNING likes
-        `, [id, usuarioId]);
-        if (result.rows.length === 0) return res.status(409).json({ mensaje: 'Ya diste like a este tema.' });
-        return res.json({ likes: result.rows[0].likes });
+        // obtener valor anterior si existe
+        const anterior = await db.query('SELECT puntuacion FROM temas_likes WHERE tema_id = $1 AND usuario_id = $2', [id, usuarioId]);
+        const oldP = anterior.rows.length > 0 ? anterior.rows[0].puntuacion : 0;
+
+        await db.query(`
+            INSERT INTO temas_likes (tema_id, usuario_id, puntuacion)
+            VALUES ($1, $2, $3)
+            ON CONFLICT (tema_id, usuario_id)
+            DO UPDATE SET puntuacion = EXCLUDED.puntuacion
+        `, [id, usuarioId, puntuacion]);
+
+        const stats = await db.query(`
+            SELECT COUNT(*)::int AS total, ROUND(COALESCE(AVG(puntuacion),0), 1)::float AS promedio
+            FROM temas_likes WHERE tema_id = $1
+        `, [id]);
+        const { total, promedio } = stats.rows[0];
+
+        await db.query('UPDATE temas SET likes = $1 WHERE id = $2', [total, id]);
+
+        // reputación: ajustar por la diferencia
+        const creador = await db.query('SELECT creador_id FROM temas WHERE id = $1', [id]);
+        if (creador.rows.length > 0) {
+            const creadorId = creador.rows[0].creador_id;
+            const diff = puntuacion - oldP;
+            if (diff !== 0) {
+                await db.query('UPDATE usuarios SET reputacion = GREATEST(0, COALESCE(reputacion,0) + $1) WHERE id = $2 AND rol = $3',
+                    [diff, creadorId, 'Especialista']);
+            }
+        }
+
+        return res.json({ likes: total, promedio, mi_puntuacion: puntuacion, mensaje: oldP > 0 ? 'Valoración actualizada' : 'Gracias por tu valoración' });
     } catch (error) {
-        console.error('Error al dar like:', error.message);
-        return res.status(500).json({ mensaje: 'Error al procesar el like.' });
+        console.error('Error al valorar:', error.message);
+        return res.status(500).json({ mensaje: 'Error al procesar la valoración.' });
     }
 };
 

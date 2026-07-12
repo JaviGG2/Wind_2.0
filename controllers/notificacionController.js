@@ -1,11 +1,21 @@
 const db = require('../config/db');
 
-exports.crear = async ({ creadorId, titulo, mensaje, enlace }) => {
+exports.crear = async ({ creadorId, titulo, mensaje, enlace, soloSeguidores }) => {
     try {
-        const usuarios = await db.query(
-            'SELECT id FROM usuarios WHERE id != $1 AND cuenta_activa = true',
-            [creadorId]
-        );
+        let usuarios;
+        if (soloSeguidores) {
+            usuarios = await db.query(
+                `SELECT u.id FROM usuarios u
+                 JOIN seguidores s ON s.seguidor_id = u.id
+                 WHERE s.siguiendo_id = $1 AND u.cuenta_activa = true`,
+                [creadorId]
+            );
+        } else {
+            usuarios = await db.query(
+                'SELECT id FROM usuarios WHERE id != $1 AND cuenta_activa = true',
+                [creadorId]
+            );
+        }
         if (usuarios.rows.length === 0) return;
 
         const values = usuarios.rows.map(u =>

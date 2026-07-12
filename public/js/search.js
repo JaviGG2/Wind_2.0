@@ -174,6 +174,7 @@ function getSearchWidgetHTML() {
             </div>
             <div class="wind-search-categorias">
                 <button type="button" class="cat-chip active" data-cat="todo">Todo</button>
+                
                 <div class="cat-select-wrapper">
                     <button type="button" class="cat-select-trigger" id="cat-select-trigger">
                         <span class="cat-select-value" id="cat-select-value">Categoría</span>
@@ -181,6 +182,7 @@ function getSearchWidgetHTML() {
                             <path d="M11 5H5l3 3.5z"/>
                         </svg>
                     </button>
+                    <a href="/recomendaciones" type="button" class="cat-chip" style="border: 1px solid #ff6400;">Para ti</a>
                     <div class="cat-select-popup anim-fade-in" id="cat-select-popup">
                         <div class="cat-select-list" id="cat-select-list"></div>
                     </div>

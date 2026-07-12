@@ -40,13 +40,17 @@ if (sgMail) sgMail.setApiKey(SENDGRID_KEY);
 
 async function enviarCorreo(destino, asunto, html) {
     if (sgMail) {
-        await sgMail.send({
-            to: destino,
-            from: { email: CORREO_USER, name: 'Wind' },
-            subject: asunto,
-            html: html
-        });
-        return;
+        try {
+            await sgMail.send({
+                to: destino,
+                from: { email: CORREO_USER, name: 'Wind' },
+                subject: asunto,
+                html: html
+            });
+            return;
+        } catch (errSG) {
+            console.warn('SendGrid falló, usando fallback SMTP:', errSG?.message);
+        }
     }
 
     const transportador = nodemailer.createTransport(
@@ -143,9 +147,8 @@ exports.registro = async (req, res) => {
             if (errorMail?.response?.body) console.error('   SendGrid:', JSON.stringify(errorMail.response.body));
             else if (errorMail?.message) console.error('   Error:', errorMail.message);
             if (errorMail?.code) console.error('   Código:', errorMail.code);
-            console.log('   Código generado (bypass):', codigoVerificacion);
             return res.status(201).json({
-                mensaje: 'Registro exitoso (Modo Desarrollo Activo).',
+                mensaje: 'Registro exitoso. No se pudo enviar el correo, pero puedes usar este código.',
                 requiereVerificacion: true,
                 correo: correo,
                 codigoBypass: codigoVerificacion
@@ -192,6 +195,73 @@ exports.verificarCodigo = async (req, res) => {
     } catch (error) {
         console.error('Error al verificar el código:', error);
         return res.status(500).json({ mensaje: 'Error interno del servidor al procesar la verificación.' });
+    }
+};
+
+exports.eliminarCuenta = async (req, res) => {
+    if (!req.session.usuarioId) return res.status(401).json({ mensaje: 'Debes iniciar sesión.' });
+    const { contrasena } = req.body;
+    if (!contrasena) return res.status(400).json({ mensaje: 'Debes ingresar tu contraseña para confirmar.' });
+
+    try {
+        const result = await db.query('SELECT contrasena FROM usuarios WHERE id = $1', [req.session.usuarioId]);
+        if (result.rows.length === 0) return res.status(404).json({ mensaje: 'Usuario no encontrado.' });
+
+        const valida = await bcrypt.compare(contrasena, result.rows[0].contrasena);
+        if (!valida) return res.status(403).json({ mensaje: 'Contraseña incorrecta.' });
+
+        await db.query('DELETE FROM usuarios WHERE id = $1', [req.session.usuarioId]);
+
+        req.session.destroy(() => {});
+        return res.json({ mensaje: 'Cuenta eliminada permanentemente.' });
+    } catch (error) {
+        console.error('Error al eliminar cuenta:', error);
+        return res.status(500).json({ mensaje: 'Error al eliminar la cuenta.' });
+    }
+};
+
+exports.reEnviarCodigo = async (req, res) => {
+    const { correo } = req.body;
+    if (!correo) return res.status(400).json({ mensaje: 'El correo es requerido.' });
+
+    try {
+        const result = await db.query('SELECT id, nombre, cuenta_activa FROM usuarios WHERE correo = $1', [correo]);
+        if (result.rows.length === 0) return res.status(404).json({ mensaje: 'No existe una cuenta con ese correo.' });
+
+        const usuario = result.rows[0];
+        if (usuario.cuenta_activa) return res.status(400).json({ mensaje: 'Esta cuenta ya está activada.' });
+
+        const nuevoCodigo = Math.floor(100000 + Math.random() * 900000).toString();
+        await db.query('UPDATE usuarios SET codigo_verificacion = $1 WHERE id = $2', [nuevoCodigo, usuario.id]);
+
+        const asunto = `${nuevoCodigo} es tu nuevo código de verificación en Wind`;
+        const htmlCorreo = `
+            <div style="font-family: Arial, sans-serif; max-width: 520px; margin: 0 auto; padding: 0;">
+                <div style="background: #FF4500; padding: 20px; text-align: center; border-radius: 12px 12px 0 0;">
+                    <h1 style="color: #fff; margin: 0; font-size: 24px;">Wind</h1>
+                </div>
+                <div style="background: #fff; padding: 32px 24px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 12px 12px;">
+                    <h2 style="color: #111; margin: 0 0 12px;">Hola, ${usuario.nombre}</h2>
+                    <p style="color: #555; line-height: 1.6; margin: 0 0 20px;">Usa este código para activar tu cuenta en Wind.</p>
+                    <div style="background: #fff5f0; border: 2px dashed #FF4500; padding: 16px; text-align: center; border-radius: 12px; margin: 0 0 20px;">
+                        <span style="font-size: 36px; letter-spacing: 8px; font-weight: 800; color: #FF4500;">${nuevoCodigo}</span>
+                    </div>
+                    <hr style="border: none; border-top: 1px solid #f3f4f6; margin: 20px 0;">
+                    <p style="color: #9ca3af; font-size: 12px; margin: 0;">Si no pediste este código, ignorá este mensaje.</p>
+                </div>
+            </div>
+        `;
+
+        try {
+            await enviarCorreo(correo, asunto, htmlCorreo);
+            return res.json({ mensaje: 'Código reenviado a tu correo.' });
+        } catch (errorMail) {
+            console.warn('⚠️ Falló el reenvío del correo:', errorMail?.message);
+            return res.json({ mensaje: 'No se pudo enviar el correo, pero puedes usar este código.', codigoBypass: nuevoCodigo });
+        }
+    } catch (error) {
+        console.error('Error al reenviar código:', error);
+        return res.status(500).json({ mensaje: 'Error al reenviar el código.' });
     }
 };
 
@@ -269,7 +339,7 @@ exports.perfil = async (req, res) => {
         let result;
         try {
             result = await db.query(
-                'SELECT correo, puntos, imagen_perfil, avatar_fondo FROM usuarios WHERE id = $1',
+                'SELECT correo, puntos, imagen_perfil, avatar_fondo, reputacion FROM usuarios WHERE id = $1',
                 [usuarioId]
             );
         } catch (error) {
@@ -291,6 +361,18 @@ exports.perfil = async (req, res) => {
             extra.imagen_perfil = avatarUri;
         }
 
+        let seguidores_count = 0, siguiendo_count = 0;
+        try {
+            const q1 = await db.query('SELECT COUNT(*)::int as c FROM seguidores WHERE siguiendo_id = $1', [usuarioId]);
+            seguidores_count = q1.rows[0].c;
+        } catch (e) { console.error('[auth.perfil] error seguidores_count:', e.message); }
+        try {
+            const q2 = await db.query('SELECT COUNT(*)::int as c FROM seguidores WHERE seguidor_id = $1', [usuarioId]);
+            siguiendo_count = q2.rows[0].c;
+        } catch (e) { console.error('[auth.perfil] error siguiendo_count:', e.message); }
+
+        const reputacion = extra.reputacion ?? 0;
+
         return res.json({
             id: usuarioId,
             nombre: req.session.usuario?.nombre || req.session.nombre,
@@ -299,7 +381,10 @@ exports.perfil = async (req, res) => {
             rol: req.session.usuario?.rol || req.session.rol,
             puntos: extra.puntos || 0,
             imagen_perfil: extra.imagen_perfil || null,
-            avatar_fondo: extra.avatar_fondo || '#e8e8e8'
+            avatar_fondo: extra.avatar_fondo || '#e8e8e8',
+            seguidores_count,
+            siguiendo_count,
+            reputacion
         });
     } catch (error) {
         console.error('Error al obtener perfil extendido:', error);

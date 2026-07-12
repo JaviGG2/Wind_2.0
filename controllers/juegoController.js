@@ -46,11 +46,13 @@ exports.crearJuego = async (req, res) => {
         }
 
         await db.query(queryTexto, valores);
+
         notificacion.crear({
             creadorId: req.session.usuarioId,
             titulo: 'Nueva trivia patrimonial',
             mensaje: `"${(titulo || pregunta || '').substring(0, 80)}" ha sido agregado.`,
-            enlace: `/juegos`
+            enlace: `/juegos`,
+            soloSeguidores: true
         });
         return res.status(201).json({ mensaje: '¡Nueva trivia patrimonial publicada con éxito!' });
 
@@ -87,11 +89,15 @@ exports.obtenerJuego = async (req, res) => {
     if (Number.isNaN(id)) return res.status(400).json({ mensaje: 'ID inválido.' });
 
     try {
+        const usuarioSes = req.session?.usuarioId || null;
         const result = await db.query(
-            `SELECT j.*, c.nombre AS categoria_nombre
+            `SELECT j.*, c.nombre AS categoria_nombre,
+                    ROUND(COALESCE((SELECT AVG(puntuacion) FROM juegos_likes WHERE juego_id = j.id), 0), 1)::float AS promedio_valoracion,
+                    ${usuarioSes ? '(SELECT puntuacion FROM juegos_likes WHERE juego_id = j.id AND usuario_id = $2 LIMIT 1)' : 'null'} AS mi_puntuacion
              FROM juegos j
              LEFT JOIN categorias c ON j.categoria_id = c.id
-             WHERE j.id = $1`, [id]
+             WHERE j.id = $1`,
+            usuarioSes ? [id, usuarioSes] : [id]
         );
         if (result.rows.length === 0) return res.status(404).json({ mensaje: 'Juego no encontrado.' });
         return res.json(result.rows[0]);
@@ -111,7 +117,7 @@ exports.listarPublicos = async (req, res) => {
 
         if (filtroUsuario && !Number.isNaN(filtroUsuario)) {
             queryTexto = `
-                SELECT j.id, j.titulo, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, c.nombre AS categoria_nombre, false AS jugado
+                SELECT j.id, j.titulo, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, j.likes, ROUND(COALESCE((SELECT AVG(puntuacion) FROM juegos_likes WHERE juego_id = j.id), 0), 1)::float AS promedio_valoracion, null AS mi_puntuacion, c.nombre AS categoria_nombre, false AS jugado
                 FROM juegos j
                 LEFT JOIN categorias c ON j.categoria_id = c.id
                 WHERE j.usuario_id = $1
@@ -124,9 +130,10 @@ exports.listarPublicos = async (req, res) => {
                 ? `LEFT JOIN historial_vistas hv ON hv.contenido_id = j.id AND hv.tipo_contenido = 'juego' AND hv.usuario_id = $2`
                 : '';
             const jugadoSelect = usuarioSesion ? ', CASE WHEN hv.id IS NOT NULL THEN true ELSE false END AS jugado' : ', false AS jugado';
+            const miPuntSelect = usuarioSesion ? `, (SELECT puntuacion FROM juegos_likes WHERE juego_id = j.id AND usuario_id = $2 LIMIT 1) AS mi_puntuacion` : ', null AS mi_puntuacion';
             params = usuarioSesion ? [categoriaId, usuarioSesion] : [categoriaId];
             queryTexto = `
-                SELECT j.id, j.titulo, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, c.nombre AS categoria_nombre${jugadoSelect}
+                SELECT j.id, j.titulo, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, j.likes, ROUND(COALESCE((SELECT AVG(puntuacion) FROM juegos_likes WHERE juego_id = j.id), 0), 1)::float AS promedio_valoracion${miPuntSelect}, c.nombre AS categoria_nombre${jugadoSelect}
                 FROM juegos j
                 LEFT JOIN categorias c ON j.categoria_id = c.id
                 ${jugadoJoin}
@@ -139,9 +146,10 @@ exports.listarPublicos = async (req, res) => {
                 ? `LEFT JOIN historial_vistas hv ON hv.contenido_id = j.id AND hv.tipo_contenido = 'juego' AND hv.usuario_id = $1`
                 : '';
             const jugadoSelect = usuarioSesion ? ', CASE WHEN hv.id IS NOT NULL THEN true ELSE false END AS jugado' : ', false AS jugado';
+            const miPuntSelect = usuarioSesion ? `, (SELECT puntuacion FROM juegos_likes WHERE juego_id = j.id AND usuario_id = $1 LIMIT 1) AS mi_puntuacion` : ', null AS mi_puntuacion';
             params = usuarioSesion ? [usuarioSesion] : [];
             queryTexto = `
-                SELECT j.id, j.titulo, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, c.nombre AS categoria_nombre${jugadoSelect}
+                SELECT j.id, j.titulo, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, j.likes, ROUND(COALESCE((SELECT AVG(puntuacion) FROM juegos_likes WHERE juego_id = j.id), 0), 1)::float AS promedio_valoracion${miPuntSelect}, c.nombre AS categoria_nombre${jugadoSelect}
                 FROM juegos j
                 LEFT JOIN categorias c ON j.categoria_id = c.id
                 ${jugadoJoin}
@@ -260,8 +268,13 @@ exports.responderJuego = async (req, res) => {
             });
         }
 
-        await db.query('UPDATE usuarios SET puntos = COALESCE(puntos,0) + $1 WHERE id = $2', [puntos, req.session.usuarioId]);
-        console.log(`[responderJuego] PUNTOS ACTUALIZADOS en BD: +${puntos} para usuario ${req.session.usuarioId}`);
+        const esEspecialista = req.session.rol === 'Especialista';
+        if (esEspecialista) {
+            console.log(`[responderJuego] Especialista, NO se otorgan puntos`);
+        } else {
+            await db.query('UPDATE usuarios SET puntos = COALESCE(puntos,0) + $1 WHERE id = $2', [puntos, req.session.usuarioId]);
+            console.log(`[responderJuego] PUNTOS ACTUALIZADOS en BD: +${puntos} para usuario ${req.session.usuarioId}`);
+        }
 
         await db.query(
             'INSERT INTO historial_vistas (usuario_id, tipo_contenido, contenido_id) VALUES ($1, $2, $3)',
@@ -270,11 +283,54 @@ exports.responderJuego = async (req, res) => {
 
         return res.json({
             correcto: true,
-            puntos_ganados: puntos,
-            mensaje: `¡Correcto! Has ganado ${puntos} pts.`
+            puntos_ganados: esEspecialista ? 0 : puntos,
+            mensaje: esEspecialista ? '¡Correcto! Como Especialista no recibes puntos.' : `¡Correcto! Has ganado ${puntos} pts.`
         });
     } catch (error) {
         console.error('Error al procesar el juego:', error.message);
         return res.status(500).json({ mensaje: 'Error al procesar el juego.' });
+    }
+};
+
+exports.likeJuego = async (req, res) => {
+    if (!req.session.usuarioId) return res.status(401).json({ mensaje: 'Debes iniciar sesión.' });
+    const id = parseInt(req.params.id, 10);
+    const usuarioId = req.session.usuarioId;
+    if (Number.isNaN(id)) return res.status(400).json({ mensaje: 'ID inválido.' });
+    const puntuacion = Math.min(5, Math.max(1, parseInt(req.body.puntuacion, 10) || 5));
+    try {
+        const anterior = await db.query('SELECT puntuacion FROM juegos_likes WHERE juego_id = $1 AND usuario_id = $2', [id, usuarioId]);
+        const oldP = anterior.rows.length > 0 ? anterior.rows[0].puntuacion : 0;
+
+        await db.query(`
+            INSERT INTO juegos_likes (juego_id, usuario_id, puntuacion)
+            VALUES ($1, $2, $3)
+            ON CONFLICT (juego_id, usuario_id)
+            DO UPDATE SET puntuacion = EXCLUDED.puntuacion
+        `, [id, usuarioId, puntuacion]);
+
+        const stats = await db.query(`
+            SELECT COUNT(*)::int AS total, ROUND(COALESCE(AVG(puntuacion),0), 1)::float AS promedio
+            FROM juegos_likes WHERE juego_id = $1
+        `, [id]);
+        const { total, promedio } = stats.rows[0];
+
+        await db.query('UPDATE juegos SET likes = $1 WHERE id = $2', [total, id]);
+
+        // reputación: ajustar por diferencia
+        const creador = await db.query('SELECT usuario_id FROM juegos WHERE id = $1', [id]);
+        if (creador.rows.length > 0) {
+            const creadorId = creador.rows[0].usuario_id;
+            const diff = puntuacion - oldP;
+            if (diff !== 0) {
+                await db.query('UPDATE usuarios SET reputacion = GREATEST(0, COALESCE(reputacion,0) + $1) WHERE id = $2 AND rol = $3',
+                    [diff, creadorId, 'Especialista']);
+            }
+        }
+
+        return res.json({ likes: total, promedio, mi_puntuacion: puntuacion, mensaje: oldP > 0 ? 'Valoración actualizada' : 'Gracias por tu valoración' });
+    } catch (error) {
+        console.error('Error al valorar:', error.message);
+        return res.status(500).json({ mensaje: 'Error al procesar la valoración.' });
     }
 };

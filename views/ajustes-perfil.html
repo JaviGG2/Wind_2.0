@@ -112,9 +112,23 @@
                     <div class="ajustes-form-row">
                         <input type="password" id="input-nueva-contrasena" class="input" placeholder="Nueva contraseña (mín. 6 caracteres)">
                     </div>
-                    <button id="btn-cambiar-contrasena" class="boton-enviar" style="width:auto;">Cambiar contraseña</button>
-                    <div id="mensaje-contrasena" class="ajustes-mensaje"></div>
-                </div>
+                <button id="btn-cambiar-contrasena" class="boton-enviar" style="width:auto;">Cambiar contraseña</button>
+                <div id="mensaje-contrasena" class="ajustes-mensaje"></div>
+            </div>
+
+            <div class="ajustes-seccion ajustes-peligro">
+                <h4>Eliminar Cuenta</h4>
+                <p class="muted" style="margin-bottom:10px;">Esta acción eliminará tu cuenta y todos tus datos de forma permanente. No se puede deshacer.</p>
+                <details style="margin-top:8px;">
+                    <summary style="cursor:pointer;color:#dc2626;font-weight:600;font-size:0.85rem;">Eliminar mi cuenta</summary>
+                    <div style="margin-top:12px;padding:16px;background:#fef2f2;border-radius:12px;border:1px solid #fecaca;">
+                        <p style="font-size:0.85rem;color:#dc2626;margin:0 0 10px;">Confirma tu contraseña para eliminar la cuenta:</p>
+                        <input type="password" id="input-eliminar-contrasena" class="input" placeholder="Tu contraseña actual" style="margin-bottom:10px;border-color:#fecaca;">
+                        <button id="btn-eliminar-cuenta" class="boton-enviar" style="background:#dc2626;width:auto;">Eliminar cuenta permanentemente</button>
+                        <div id="mensaje-eliminar" class="ajustes-mensaje"></div>
+                    </div>
+                </details>
+            </div>
 
                 <div id="mensaje-consola" class="mensaje-oculto"></div>
             </div>

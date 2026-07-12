@@ -58,8 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const avatarFondo = tema.creador_avatar_fondo || '#e8e8e8';
     const esEspecialista = tema.creador_rol === 'Especialista';
     const likesCount = tema.likes || 0;
+    const promedio = tema.promedio_valoracion || 0;
+    let miPunt = tema.mi_puntuacion || 0;
 
-    const yaDioLike = tema.usuario_dio_like === true;
     const comentariosCount = tema.comentarios_count || 0;
     tarjeta.innerHTML = `
         <div class="tema-imagen" style="background-image: url('${tema.imagen_portada || '/img/app.png'}');"></div>
@@ -76,14 +77,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="tema-autor">Publicado: ${tema.fecha_publicacion ? new Date(tema.fecha_publicacion).toLocaleDateString() : 'Desconocida'}</span>
             </div>
             <div class="tema-footer">
+                <button type="button" class="btn-valoracion" data-id="${tema.id}">
+                    <span class="material-symbols-outlined btn-val-icon${miPunt > 0 ? ' rated' : ''}">${miPunt > 0 ? 'star' : 'star_outline'}</span>
+                    <span class="btn-val-promedio">${promedio > 0 ? promedio.toFixed(1) : '—'}</span>
+                    <span class="btn-val-count">(${likesCount})</span>
+                </button>
                 <a href="/ver-tema?id=${tema.id}#comentarios" class="btn-comentario" onclick="event.stopPropagation()">
                     <span class="material-symbols-outlined">chat_bubble</span>
                     <span>${comentariosCount}</span>
                 </a>
-                <button class="btn-like${yaDioLike ? ' liked' : ''}" data-id="${tema.id}">
-                    <span class="material-symbols-outlined like-icon">favorite</span>
-                    <span class="like-count">${likesCount}</span>
-                </button>
                 <span class="btn-explorar">
                     Explorar <span class="material-symbols-outlined" style="font-size:1rem;">arrow_forward</span>
                 </span>
@@ -91,24 +93,31 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
     `;
 
-    const btnLike = tarjeta.querySelector('.btn-like');
-    btnLike.addEventListener('click', async (ev) => {
+    const btnVal = tarjeta.querySelector('.btn-valoracion');
+    btnVal.addEventListener('click', async (ev) => {
         ev.stopPropagation();
-        if (btnLike.classList.contains('liked')) return;
-        try {
-            const res = await fetch(`/api/temas/${tema.id}/like`, { method: 'POST', credentials: 'include' });
-            if (res.ok) {
-                const data = await res.json();
-                btnLike.querySelector('.like-count').textContent = data.likes;
-                btnLike.classList.add('liked');
-            } else if (res.status === 401) {
-                window.location.href = '/login.html';
-            } else if (res.status === 409) {
-                btnLike.classList.add('liked');
+        abrirPopupValoracion(tema.id, 'temas', miPunt, async (val) => {
+            try {
+                const res = await fetch(`/api/temas/${tema.id}/like`, {
+                    method: 'POST', credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ puntuacion: val })
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    miPunt = data.mi_puntuacion;
+                    const icon = btnVal.querySelector('.btn-val-icon');
+                    icon.textContent = miPunt > 0 ? 'star' : 'star_outline';
+                    icon.classList.toggle('rated', miPunt > 0);
+                    btnVal.querySelector('.btn-val-promedio').textContent = (data.promedio || 0).toFixed(1);
+                    btnVal.querySelector('.btn-val-count').textContent = `(${data.likes})`;
+                } else if (res.status === 401) {
+                    window.location.href = '/login.html';
+                }
+            } catch (e) {
+                console.error('Error al valorar:', e);
             }
-        } catch (e) {
-            console.error('Error al dar like:', e);
-        }
+        });
     });
 
     tarjeta.addEventListener('click', (evento) => {

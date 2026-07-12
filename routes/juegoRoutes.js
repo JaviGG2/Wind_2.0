@@ -16,6 +16,7 @@ router.get('/api/juegos', juegoController.listarPublicos);
 router.get('/api/juegos/ranking', juegoController.rankingGlobal);
 router.get('/api/juegos/:id', juegoController.obtenerJuego);
 router.post('/api/juegos/responder', juegoController.responderJuego);
+router.post('/api/juegos/:id/like', juegoController.likeJuego);
 router.delete('/admin/juegos/:id', juegoController.eliminarJuego);
 
 module.exports = router;

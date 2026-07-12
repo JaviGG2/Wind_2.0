@@ -33,5 +33,6 @@ router.post('/admin/api/modulos/:id/niveles', verificarSesion, moduloController.
 router.delete('/admin/api/modulos/:id/niveles/:nivelId', verificarSesion, moduloController.eliminarNivel);
 router.delete('/admin/api/modulos/:id', verificarSesion, moduloController.eliminarModulo);
 router.post('/api/modulos/:id/niveles/:nivelId/completar', verificarSesion, moduloController.completarNivel);
+router.post('/api/modulos/:id/like', verificarSesion, moduloController.likeModulo);
 
 module.exports = router;

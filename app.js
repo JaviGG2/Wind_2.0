@@ -78,9 +78,11 @@ const moduloRoutes = require('./routes/moduloRoutes');
 const notificacionRoutes = require('./routes/notificacionRoutes');
 const recomendacionRoutes = require('./routes/recomendacionRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
+const seguidoresController = require('./controllers/seguidoresController');
 const traduccionController = require('./controllers/traduccionController');
 const { verificarSesion, esEspecialista } = require('./middlewares/autenticacion');
 const { calcularNivel } = require('./utils/niveles');
+const { calcularRangoReputacion } = require('./utils/reputacion');
 
 app.get('/api/usuario/nivel', verificarSesion, async (req, res) => {
     try {
@@ -93,13 +95,24 @@ app.get('/api/usuario/nivel', verificarSesion, async (req, res) => {
     }
 });
 
+app.get('/api/usuario/reputacion', verificarSesion, async (req, res) => {
+    try {
+        const result = await db.query('SELECT reputacion FROM usuarios WHERE id = $1', [req.session.usuarioId]);
+        const reputacion = result.rows[0]?.reputacion || 0;
+        res.json(calcularRangoReputacion(reputacion));
+    } catch (error) {
+        console.error('Error al obtener reputacion:', error);
+        res.status(500).json({ mensaje: 'Error al cargar reputacion.' });
+    }
+});
+
 // --- Perfil público de usuario ---
 app.get('/api/usuarios/:id/perfil', verificarSesion, async (req, res) => {
     try {
         const id = parseInt(req.params.id, 10);
         if (isNaN(id)) return res.status(400).json({ mensaje: 'ID inválido.' });
         const r = await db.query(
-            'SELECT id, nombre, username, rol, puntos, imagen_perfil, avatar_fondo FROM usuarios WHERE id = $1',
+            'SELECT id, nombre, username, rol, puntos, imagen_perfil, avatar_fondo, reputacion FROM usuarios WHERE id = $1',
             [id]
         );
         if (r.rows.length === 0) return res.status(404).json({ mensaje: 'Usuario no encontrado.' });
@@ -111,7 +124,29 @@ app.get('/api/usuarios/:id/perfil', verificarSesion, async (req, res) => {
         try { const q = await db.query('SELECT COUNT(*)::int as c FROM temas WHERE creador_id = $1 AND estado = $2', [id, 'aprobado']); conteo_temas = q.rows[0].c; } catch (_) {}
         try { const q = await db.query('SELECT COUNT(*)::int as c FROM juegos WHERE usuario_id = $1', [id]); conteo_juegos = q.rows[0].c; } catch (_) {}
 
-        res.json({ ...user, nivel, conteo_relatos, conteo_temas, conteo_juegos });
+        let seguidores_count = 0, siguiendo_count = 0, siguiendo = false;
+        try {
+          const sc = await db.query('SELECT COUNT(*)::int as c FROM seguidores WHERE siguiendo_id = $1', [id]);
+          seguidores_count = sc.rows[0].c;
+        } catch (_) {}
+        try {
+          const sc = await db.query('SELECT COUNT(*)::int as c FROM seguidores WHERE seguidor_id = $1', [id]);
+          siguiendo_count = sc.rows[0].c;
+        } catch (_) {}
+        if (req.session.usuarioId && req.session.usuarioId !== id) {
+          try {
+            const sf = await db.query('SELECT id FROM seguidores WHERE seguidor_id = $1 AND siguiendo_id = $2',
+              [req.session.usuarioId, id]);
+            siguiendo = sf.rows.length > 0;
+          } catch (_) {}
+        }
+
+        let reputacionRango = null;
+        try {
+            reputacionRango = calcularRangoReputacion(user.reputacion || 0);
+        } catch (_) {}
+
+        res.json({ ...user, nivel, reputacionRango, conteo_relatos, conteo_temas, conteo_juegos, seguidores_count, siguiendo_count, siguiendo });
     } catch (e) {
         console.error('Error al obtener perfil:', e);
         res.status(500).json({ mensaje: 'Error al cargar perfil.' });
@@ -130,6 +165,9 @@ app.use(moduloRoutes);
 app.use(notificacionRoutes);
 app.use(recomendacionRoutes);
 app.use(feedbackRoutes);
+app.post('/api/seguir/:id', seguidoresController.toggleSeguir);
+app.get('/api/seguidores/:id', seguidoresController.obtenerSeguidores);
+app.get('/api/siguiendo/:id', seguidoresController.obteniendoSigo);
 app.post('/api/traducir', traduccionController.traducir);
 
 app.get('/home', verificarSesion, (req, res) => {
@@ -580,6 +618,118 @@ app.listen(PORT, async () => {
         console.log('Tabla feedback lista.');
     } catch (err) {
         console.error('Error creando tabla feedback:', err.message);
+    }
+
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS seguidores (
+                id SERIAL PRIMARY KEY,
+                seguidor_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+                siguiendo_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+                fecha_seguido TIMESTAMP DEFAULT NOW(),
+                UNIQUE(seguidor_id, siguiendo_id)
+            )
+        `);
+        console.log('Tabla seguidores lista.');
+    } catch (err) {
+        console.error('Error creando tabla seguidores:', err.message);
+    }
+
+    try {
+        await db.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS reputacion INTEGER DEFAULT 0');
+        console.log('Columna reputacion lista.');
+    } catch (err) {
+        console.error('Error agregando reputacion:', err.message);
+    }
+
+    try {
+        await db.query('ALTER TABLE relatos_community ADD COLUMN IF NOT EXISTS likes INTEGER DEFAULT 0');
+        console.log('Columna likes en relatos_community lista.');
+    } catch (err) {
+        console.error('Error agregando likes a relatos_community:', err.message);
+    }
+
+    try {
+        await db.query('ALTER TABLE juegos ADD COLUMN IF NOT EXISTS likes INTEGER DEFAULT 0');
+        console.log('Columna likes en juegos lista.');
+    } catch (err) {
+        console.error('Error agregando likes a juegos:', err.message);
+    }
+
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS relatos_likes (
+                id SERIAL PRIMARY KEY,
+                relato_id INTEGER NOT NULL REFERENCES relatos_community(id) ON DELETE CASCADE,
+                usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+                puntuacion INTEGER CHECK (puntuacion >= 1 AND puntuacion <= 5),
+                UNIQUE(relato_id, usuario_id)
+            )
+        `);
+        console.log('Tabla relatos_likes lista.');
+    } catch (err) {
+        console.error('Error creando tabla relatos_likes:', err.message);
+    }
+
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS juegos_likes (
+                id SERIAL PRIMARY KEY,
+                juego_id INTEGER NOT NULL REFERENCES juegos(id) ON DELETE CASCADE,
+                usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+                puntuacion INTEGER CHECK (puntuacion >= 1 AND puntuacion <= 5),
+                UNIQUE(juego_id, usuario_id)
+            )
+        `);
+        console.log('Tabla juegos_likes lista.');
+    } catch (err) {
+        console.error('Error creando tabla juegos_likes:', err.message);
+    }
+
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS temas_likes (
+                id SERIAL PRIMARY KEY,
+                tema_id INTEGER NOT NULL REFERENCES temas(id) ON DELETE CASCADE,
+                usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+                puntuacion INTEGER CHECK (puntuacion >= 1 AND puntuacion <= 5),
+                UNIQUE(tema_id, usuario_id)
+            )
+        `);
+        console.log('Tabla temas_likes lista.');
+    } catch (err) {
+        console.error('Error creando tabla temas_likes:', err.message);
+    }
+
+    // agregar columna puntuacion por si las tablas ya existen sin ella
+    for (const tbl of ['temas_likes', 'relatos_likes', 'juegos_likes']) {
+        try {
+            await db.query(`ALTER TABLE ${tbl} ADD COLUMN IF NOT EXISTS puntuacion INTEGER CHECK (puntuacion >= 1 AND puntuacion <= 5)`);
+        } catch (_) {}
+    }
+
+    // tabla modulos_likes para valoración de módulos
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS modulos_likes (
+                id SERIAL PRIMARY KEY,
+                modulo_id INTEGER NOT NULL REFERENCES modulo_juegos(id) ON DELETE CASCADE,
+                usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+                puntuacion INTEGER CHECK (puntuacion >= 1 AND puntuacion <= 5),
+                UNIQUE(modulo_id, usuario_id)
+            )
+        `);
+        console.log('Tabla modulos_likes lista.');
+    } catch (err) {
+        console.error('Error creando tabla modulos_likes:', err.message);
+    }
+
+    // columna likes en modulo_juegos
+    try {
+        await db.query(`ALTER TABLE modulo_juegos ADD COLUMN IF NOT EXISTS likes INTEGER DEFAULT 0`);
+        console.log('Columna likes agregada a modulo_juegos.');
+    } catch (err) {
+        console.error('Error agregando columna likes:', err.message);
     }
 
     // Crear índices para rendimiento

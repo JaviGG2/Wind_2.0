@@ -5,14 +5,14 @@ let popup = null;
 function crearPopup() {
     const div = document.createElement('div');
     div.id = 'info-popup';
-    div.className = 'info-popup oculto';
+    div.className = 'info-popup oculto anim-fade-in';
     div.innerHTML = `
-        <div class="info-popup-contenido">
+        <div class="info-popup-contenido anim-fade-up">
             <button type="button" class="info-popup-cerrar">
                 <span class="material-symbols-outlined">close</span>
             </button>
             <h3 id="info-titulo"></h3>
-            <div id="info-cuerpo"></div>
+            <div id="info-cuerpo" "></div>
         </div>
     `;
     document.body.appendChild(div);

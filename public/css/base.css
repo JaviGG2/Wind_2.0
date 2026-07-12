@@ -383,3 +383,133 @@ select.input {
         grid-template-columns: 1fr;
     }
 }
+
+/* --- Popup valoración --- */
+.popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+}
+
+.popup-valoracion-contenido {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px 40px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    animation: popupFadeIn 0.2s ease;
+}
+
+@keyframes popupFadeIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.popup-valoracion-header {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #111827;
+}
+
+.popup-valoracion-estrellas {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.popup-star {
+    cursor: pointer;
+    color: #d1d5db;
+    transition: color 0.1s, transform 0.1s;
+}
+
+.popup-star .material-symbols-outlined {
+    font-size: 2.5rem;
+    font-variation-settings: 'FILL' 0;
+}
+
+.popup-star.active .material-symbols-outlined,
+.popup-star:hover .material-symbols-outlined {
+    font-variation-settings: 'FILL' 1;
+    color: #f59e0b;
+}
+
+.popup-star.active {
+    color: #f59e0b;
+}
+
+.popup-star:hover {
+    transform: scale(1.15);
+}
+
+.popup-btn-cancelar {
+    padding: 8px 24px;
+    border: 1px solid #d1d5db;
+    border-radius: 999px;
+    background: #fff;
+    color: #6b7280;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.popup-btn-cancelar:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+/* --- Botón de valoración compacto (cards) --- */
+.btn-valoracion {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border: 1px solid #e5e7eb;
+    border-radius: 999px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #6b7280;
+    transition: all 0.15s;
+    line-height: 1;
+    font-family: inherit;
+}
+
+.btn-valoracion:hover {
+    border-color: #f59e0b;
+    color: #f59e0b;
+    background: #fffbeb;
+}
+
+.btn-val-icon {
+    font-size: 1rem !important;
+    font-variation-settings: 'FILL' 0;
+    color: #d1d5db;
+}
+
+.btn-val-icon.rated {
+    font-variation-settings: 'FILL' 1;
+    color: #f59e0b;
+}
+
+.btn-valoracion:hover .btn-val-icon {
+    font-variation-settings: 'FILL' 1;
+    color: #f59e0b;
+}
+
+.btn-val-promedio {
+    min-width: 18px;
+    text-align: center;
+}
+
+.btn-val-count {
+    font-size: 0.7rem;
+    color: #9ca3af;
+}

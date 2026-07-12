@@ -9,6 +9,7 @@ router.post('/auth/login', authController.login);
 router.get('/auth/perfil', authController.perfil);
 router.post('/auth/logout', authController.logout);
 router.post('/auth/verificar', authController.verificarCodigo);
+router.post('/auth/re-enviar-codigo', authController.reEnviarCodigo);
 router.post('/auth/actualizar-foto', upload.single('foto_perfil'), authController.actualizarFotoPerfil);
 router.post('/api/avatar/generar', authController.generarAvatar);
 router.get('/api/avatar/previews', authController.generarPreviews);
@@ -19,6 +20,7 @@ router.post('/auth/restablecer-contrasena', authController.restablecerContrasena
 router.post('/auth/actualizar-nombre', authController.actualizarNombre);
 router.post('/auth/actualizar-username', authController.actualizarUsername);
 router.post('/auth/cambiar-contrasena', authController.cambiarContrasena);
+router.post('/auth/eliminar-cuenta', authController.eliminarCuenta);
 router.post('/auth/solicitar-ascenso', upload.single('foto'), authController.solicitarAscenso);
 router.get('/api/categorias', async (req, res) => {
     try {

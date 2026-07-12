@@ -162,6 +162,44 @@ document.addEventListener('DOMContentLoaded', async () => {
             msj.className = 'ajustes-mensaje error';
         }
     });
+
+    document.getElementById('btn-eliminar-cuenta')?.addEventListener('click', async () => {
+        if (!confirm('¿Estás SEGURO? Esta acción eliminará tu cuenta y todos tus datos de forma permanente. No podrás recuperarla.')) return;
+        const contrasena = document.getElementById('input-eliminar-contrasena').value;
+        const msj = document.getElementById('mensaje-eliminar');
+        if (!contrasena) {
+            msj.textContent = 'Ingresa tu contraseña para confirmar.';
+            msj.className = 'ajustes-mensaje error';
+            return;
+        }
+        const btn = document.getElementById('btn-eliminar-cuenta');
+        btn.disabled = true;
+        btn.textContent = 'Eliminando...';
+        try {
+            const res = await fetch('/auth/eliminar-cuenta', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ contrasena })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                msj.textContent = 'Cuenta eliminada. Redirigiendo...';
+                msj.className = 'ajustes-mensaje exito';
+                setTimeout(() => window.location.href = '/', 2000);
+            } else {
+                msj.textContent = data.mensaje || 'Error al eliminar.';
+                msj.className = 'ajustes-mensaje error';
+                btn.disabled = false;
+                btn.textContent = 'Eliminar cuenta permanentemente';
+            }
+        } catch {
+            msj.textContent = 'Error de conexión.';
+            msj.className = 'ajustes-mensaje error';
+            btn.disabled = false;
+            btn.textContent = 'Eliminar cuenta permanentemente';
+        }
+    });
 });
 
 async function cargarNivelPerfil() {
