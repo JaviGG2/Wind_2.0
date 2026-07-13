@@ -3,6 +3,27 @@ inicializarEditor('contenido', 'editor-contenido');
 const formulario = document.getElementById('formulario-subir-tema');
 const bloqueMensaje = document.getElementById('mensaje-consola');
 
+// Cargar categorías desde la BD
+(async function cargarCategorias() {
+    var select = document.getElementById('categoria_id');
+    try {
+        var res = await fetch('/api/categorias', { credentials: 'include' });
+        if (res.ok) {
+            var cats = await res.json();
+            select.innerHTML = '<option value="" disabled selected>Selecciona una categoría...</option>';
+            cats.forEach(function (c) {
+                var opt = document.createElement('option');
+                opt.value = c.id;
+                opt.textContent = c.nombre;
+                select.appendChild(opt);
+            });
+        }
+    } catch (e) {
+        console.error('Error cargando categorías:', e);
+        select.innerHTML = '<option value="" disabled selected>Error al cargar categorías</option>';
+    }
+})();
+
 formulario.addEventListener('submit', async (evento) => {
     evento.preventDefault();
 
@@ -17,6 +38,13 @@ formulario.addEventListener('submit', async (evento) => {
     datosFormulario.append('categoria_id', document.getElementById('categoria_id').value);
     datosFormulario.append('titulo', document.getElementById('titulo').value);
     datosFormulario.append('contenido', contenido);
+
+    const latInput = document.getElementById('latitud');
+    const lngInput = document.getElementById('longitud');
+    if (latInput && latInput.value) {
+        datosFormulario.append('latitud', latInput.value);
+        datosFormulario.append('longitud', lngInput.value);
+    }
     
     // Capturamos el archivo binario de la imagen
     const inputImagen = document.getElementById('imagen_portada');

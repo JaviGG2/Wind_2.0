@@ -223,6 +223,7 @@ app.get('/ser-rol', verificarSesion, (req, res) => res.render('ser-rol'));
 app.get('/comunidad', (req, res) => res.render('comunidad'));
 app.get('/historias', (req, res) => res.render('historias'));
 app.get('/juegos', verificarSesion, (req, res) => res.render('juegos'));
+app.get('/mapa', verificarSesion, (req, res) => res.render('mapa'));
 app.get('/play-game', verificarSesion, (req, res) => res.render('play-game'));
 app.get('/ranking-game', verificarSesion, (req, res) => res.render('ranking-game'));
 app.get('/barra_navegacion', (req, res) => res.render('barra_navegacion'));
@@ -559,6 +560,14 @@ app.listen(PORT, async () => {
         console.log('Columna estado en temas lista.');
     } catch (err) {
         console.error('Error agregando columna estado a temas:', err.message);
+    }
+
+    try {
+        await db.query(`ALTER TABLE temas ADD COLUMN IF NOT EXISTS latitud DECIMAL(10,7)`);
+        await db.query(`ALTER TABLE temas ADD COLUMN IF NOT EXISTS longitud DECIMAL(10,7)`);
+        console.log('Columnas latitud/longitud en temas listas.');
+    } catch (err) {
+        console.error('Error agregando columnas latitud/longitud:', err.message);
     }
 
     try {

@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/css/menu.css?v={{ cacheVersion }}">
     <link rel="stylesheet" href="/css/search.css?v={{ cacheVersion }}">
     <link rel="stylesheet" href="/css/formularios-crear.css?v={{ cacheVersion }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="/css/subir-tema.css?v={{ cacheVersion }}">
     <link rel="stylesheet" href="/css/editor-rico.css?v={{ cacheVersion }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
@@ -50,11 +51,7 @@
                         <div class="grupo-campo">
                             <label for="categoria_id">Eje Temático / Categoría:</label>
                             <select id="categoria_id" required>
-                                <option value="" disabled selected>Selecciona una categoría...</option>
-                                <option value="1">Arquitectura Colonial</option>
-                                <option value="2">Tradiciones Indígenas (Caquetíos)</option>
-                                <option value="3">Personajes Históricos</option>
-                                <option value="4">Leyendas Falconianas</option>
+                                <option value="" disabled selected>Cargando categorías...</option>
                             </select>
                         </div>
 
@@ -75,6 +72,41 @@
                                     <img id="image-preview" src="#" alt="Vista previa">
                                     <p class="texto-imagen-seleccionada">Imagen seleccionada</p>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="grupo-campo ubicacion-campo">
+                            <label>Ubicación en Coro (opcional):</label>
+                            <div id="ubicacion-badge" class="ubicacion-badge" style="display:none;">
+                                <span class="material-symbols-outlined">location_on</span>
+                                <span>Ubicación guardada</span>
+                                <button type="button" id="btn-editar-ubicacion" class="ubicacion-editar-btn" aria-label="Editar ubicación">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </button>
+                            </div>
+                            <button type="button" id="btn-agregar-ubicacion" class="btn-agregar-ubicacion">
+                                <span class="material-symbols-outlined">add_location</span>
+                                <span>Agregar ubicación</span>
+                            </button>
+                            <input type="hidden" id="latitud" name="latitud">
+                            <input type="hidden" id="longitud" name="longitud">
+                        </div>
+
+                        <div id="ubicacion-modal-overlay" class="modal-overlay" style="display:none;">
+                            <div class="modal-contenido modal-ubicacion">
+                                <div class="modal-header">
+                                    <h3>Seleccionar ubicación</h3>
+                                    <button type="button" id="btn-cerrar-ubicacion" class="modal-cerrar-btn" aria-label="Cerrar">
+                                        <span class="material-symbols-outlined">close</span>
+                                    </button>
+                                </div>
+                                <input type="text" id="buscar-ubicacion" placeholder="Buscar lugar en Coro..." class="input-ubicacion-modal">
+                                <div id="mapa-ubicacion" class="mapa-ubicacion"></div>
+                                <div class="coord-info" id="coord-info">
+                                    <span>Lat: <strong id="coord-lat">—</strong></span>
+                                    <span>Lng: <strong id="coord-lng">—</strong></span>
+                                </div>
+                                <button type="button" id="btn-guardar-ubicacion" class="boton-enviar" style="margin-top:10px;">Guardar ubicación</button>
                             </div>
                         </div>
 
@@ -119,7 +151,9 @@
         </main>
     </div>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="/js/editor-rico.js?v={{ cacheVersion }}"></script>
+    <script src="/js/ubicacion-picker.js?v={{ cacheVersion }}"></script>
     <script src="/js/subir-tema.js?v={{ cacheVersion }}"></script>
     <script type="module" src="/js/info-burbuja.js?v={{ cacheVersion }}"></script>
     <script>

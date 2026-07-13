@@ -457,7 +457,7 @@
 }
 
 .accordion-item.is-open .accordion-panel {
-    max-height: 2000px;
+    max-height: none;
     padding: 0 22px 22px;
 }
 

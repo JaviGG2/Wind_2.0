@@ -68,6 +68,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         const selectorIdioma = document.getElementById('idioma-select');
         const spanTraduciendo = document.getElementById('traduciendo');
 
+        const btnVerMapa = document.getElementById('btn-ver-mapa');
+        if (btnVerMapa) {
+            var lat = parseFloat(tema.latitud);
+            var lng = parseFloat(tema.longitud);
+            if (!isNaN(lat) && !isNaN(lng)) {
+                btnVerMapa.href = '/mapa?lat=' + lat + '&lng=' + lng + '&id=' + tema.id;
+            } else {
+                btnVerMapa.style.display = 'none';
+            }
+        }
+
         btnTraducir.addEventListener('click', async () => {
             const idioma = selectorIdioma.value;
             btnTraducir.disabled = true;

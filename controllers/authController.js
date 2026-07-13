@@ -314,6 +314,10 @@ exports.login = async (req, res) => {
         req.session.rol = usuario.rol;
         req.session.session_token = sessionToken;
 
+        if (req.body.mantener_sesion) {
+            req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30;
+        }
+
         return res.status(200).json({
             mensaje: `¡Bienvenido de vuelta, ${usuario.nombre}!`,
             usuario: req.session.usuario

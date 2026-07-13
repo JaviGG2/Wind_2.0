@@ -8,7 +8,7 @@ exports.subirTema = async (req, res) => {
         return res.status(403).json({ mensaje: 'Acceso denegado: Se requieren permisos de Especialista.' });
     }
 
-    const { categoria_id, titulo, contenido } = req.body;
+    const { categoria_id, titulo, contenido, latitud, longitud } = req.body;
 
     if (!titulo || !contenido) {
         return res.status(400).json({ mensaje: 'El título y el contenido son obligatorios.' });
@@ -22,8 +22,8 @@ exports.subirTema = async (req, res) => {
         const rutaImagen = req.file ? await subirASupabase(req.file, 'temas') : null;
 
         const queryFinal = `
-            INSERT INTO temas (titulo, contenido, categoria_id, creador_id, imagen_portada, fecha_publicacion, estado) 
-            VALUES ($1, $2, $3, $4, $5, NOW(), 'pendiente')
+            INSERT INTO temas (titulo, contenido, categoria_id, creador_id, imagen_portada, fecha_publicacion, estado, latitud, longitud) 
+            VALUES ($1, $2, $3, $4, $5, NOW(), 'pendiente', $6, $7)
         `;
         
         const parametros = [
@@ -31,7 +31,9 @@ exports.subirTema = async (req, res) => {
             contenido, 
             parseInt(categoria_id, 10) || null, 
             req.session.usuarioId, 
-            rutaImagen
+            rutaImagen,
+            latitud && !isNaN(latitud) ? parseFloat(latitud) : null,
+            longitud && !isNaN(longitud) ? parseFloat(longitud) : null
         ];
 
         const temaRes = await db.query(queryFinal + ' RETURNING id', parametros);
@@ -62,7 +64,7 @@ exports.actualizarTema = async (req, res) => {
     }
 
     const { id } = req.params;
-    const { categoria_id, titulo, contenido } = req.body;
+    const { categoria_id, titulo, contenido, latitud, longitud } = req.body;
     
     if (!titulo || !contenido) {
         return res.status(400).json({ mensaje: 'El título y el contenido son obligatorios.' });
@@ -77,16 +79,22 @@ exports.actualizarTema = async (req, res) => {
         if (req.file) {
             const rutaImagen = await subirASupabase(req.file, 'temas');
             queryFinal = `
-                UPDATE temas SET titulo = $1, contenido = $2, categoria_id = $3, imagen_portada = $4 
-                WHERE id = $5 AND creador_id = $6
+                UPDATE temas SET titulo = $1, contenido = $2, categoria_id = $3, imagen_portada = $4, latitud = $5, longitud = $6
+                WHERE id = $7 AND creador_id = $8
             `;
-            parametros = [titulo, contenido, parseInt(categoria_id, 10) || null, rutaImagen, parseInt(id, 10), req.session.usuarioId];
+            parametros = [titulo, contenido, parseInt(categoria_id, 10) || null, rutaImagen,
+                latitud && !isNaN(latitud) ? parseFloat(latitud) : null,
+                longitud && !isNaN(longitud) ? parseFloat(longitud) : null,
+                parseInt(id, 10), req.session.usuarioId];
         } else {
             queryFinal = `
-                UPDATE temas SET titulo = $1, contenido = $2, categoria_id = $3 
-                WHERE id = $4 AND creador_id = $5
+                UPDATE temas SET titulo = $1, contenido = $2, categoria_id = $3, latitud = $4, longitud = $5
+                WHERE id = $6 AND creador_id = $7
             `;
-            parametros = [titulo, contenido, parseInt(categoria_id, 10) || null, parseInt(id, 10), req.session.usuarioId];
+            parametros = [titulo, contenido, parseInt(categoria_id, 10) || null,
+                latitud && !isNaN(latitud) ? parseFloat(latitud) : null,
+                longitud && !isNaN(longitud) ? parseFloat(longitud) : null,
+                parseInt(id, 10), req.session.usuarioId];
         }
 
         const result = await db.query(queryFinal, parametros);
@@ -117,7 +125,7 @@ exports.listarTemas = async (req, res) => {
 
         const commentCountSubquery = ', (SELECT COUNT(*) FROM comentarios WHERE tema_id = t.id) AS comentarios_count';
 
-        const baseSelect = `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes
+        const baseSelect = `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes, t.latitud, t.longitud
             ${usuarioId ? puntuacionSubquery.replace('$1', `$${idx}`) : ', null AS mi_puntuacion'}
             ${promedioSubquery}
             ${commentCountSubquery},
@@ -164,7 +172,7 @@ exports.obtenerTemaPorId = async (req, res) => {
 
         if (!Number.isNaN(temaIdNum)) {
             result = await db.query(
-                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes, t.estado,
+                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes, t.estado, t.latitud, t.longitud,
                         ROUND(COALESCE((SELECT AVG(puntuacion) FROM temas_likes WHERE tema_id = t.id), 0), 1)::float AS promedio_valoracion,
                         ${usuarioId ? '(SELECT puntuacion FROM temas_likes WHERE tema_id = t.id AND usuario_id = $2 LIMIT 1)' : 'null'} AS mi_puntuacion,
                         c.nombre AS categoria_nombre,
@@ -184,7 +192,7 @@ exports.obtenerTemaPorId = async (req, res) => {
         if (!result || !result.rows || result.rows.length === 0) {
             console.log(`obtenerTemaPorId: intento alternativo por texto con '${rawId}'`);
             result = await db.query(
-                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes, t.estado,
+                `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes, t.estado, t.latitud, t.longitud,
                         ROUND(COALESCE((SELECT AVG(puntuacion) FROM temas_likes WHERE tema_id = t.id), 0), 1)::float AS promedio_valoracion,
                         ${usuarioId ? '(SELECT puntuacion FROM temas_likes WHERE tema_id = t.id AND usuario_id = $2 LIMIT 1)' : 'null'} AS mi_puntuacion,
                         c.nombre AS categoria_nombre,
@@ -313,5 +321,27 @@ exports.misTemas = async (req, res) => {
     } catch (error) {
         console.error('Error al listar temas del usuario:', error.message);
         return res.status(500).json({ mensaje: 'Error al cargar tus temas.' });
+    }
+};
+
+exports.listarTemasMapa = async (req, res) => {
+    try {
+        const result = await db.query(`
+            SELECT t.id, t.titulo, t.latitud, t.longitud, t.imagen_portada,
+                   u.nombre AS creador_nombre, u.username AS creador_username,
+                   c.nombre AS categoria_nombre
+            FROM temas t
+            LEFT JOIN usuarios u ON t.creador_id = u.id
+            LEFT JOIN categorias c ON t.categoria_id = c.id
+            WHERE t.estado = 'aprobado'
+              AND t.latitud IS NOT NULL
+              AND t.longitud IS NOT NULL
+            ORDER BY t.fecha_publicacion DESC
+            LIMIT 200
+        `);
+        return res.json(result.rows);
+    } catch (error) {
+        console.error('Error al listar temas para mapa:', error.message);
+        return res.status(500).json({ mensaje: 'Error al cargar datos del mapa.' });
     }
 };

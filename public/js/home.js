@@ -63,8 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const comentariosCount = tema.comentarios_count || 0;
     tarjeta.innerHTML = `
-        <div class="tema-imagen" style="background-image: url('${tema.imagen_portada || '/img/app.png'}');"></div>
-        <div class="tema-contenido">
+        <div class="tema-imagen anim-fade-up" style="background-image: url('${tema.imagen_portada || '/img/app.png'}');"></div>
+        <div class="tema-contenido anim-fade-up">
             <div class="creator-row">
                 <img class="creator-avatar" src="${avatar}" alt="avatar" style="background:${avatarFondo};" onclick="event.stopPropagation();window.location.href='/ver-perfil?id=${tema.creador_id}'" />
                 <div class="creator-name"><a href="/ver-perfil?id=${tema.creador_id}" class="creator-link">${tema.creador_nombre || 'Anónimo'}</a>${esEspecialista ? '<span class="badge-especialista"><img src="/img/Rol.png" alt="Especialista"></span>' : ''}</div>

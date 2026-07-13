@@ -80,6 +80,23 @@
     box-shadow: 0 4px 14px var(--primario-glow);
 }
 
+.mantener-sesion {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 6px 0 4px;
+    font-size: 0.85rem;
+    color: #666;
+    cursor: pointer;
+    user-select: none;
+}
+
+.mantener-sesion input[type="checkbox"] {
+    width: auto;
+    accent-color: #FF4500;
+    margin: 0;
+}
+
 .boton-enviar:hover {
     background: var(--primario-hover);
     transform: translateY(-1px);

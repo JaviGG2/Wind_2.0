@@ -11,6 +11,7 @@ router.get('/subir-tema.html', (req, res) => {
     }
     res.sendFile(path.join(__dirname, '../views', 'subir-tema.html'));
 });
+router.get('/api/temas/mapa', temaController.listarTemasMapa);
 router.get('/api/temas', temaController.listarTemas);
 router.post('/admin/subir-tema', upload.single('imagen_portada'), temaController.subirTema);
 router.get('/api/temas/:id', temaController.obtenerTemaPorId);

@@ -55,13 +55,14 @@ formulario.addEventListener('submit', async (evento) => {
 
     const correo = document.getElementById('correo').value;
     const contrasena = document.getElementById('contrasena').value;
+    const mantener = document.getElementById('mantener-sesion').checked;
 
     try {
         const respuesta = await fetch('/auth/login', {
             method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ correo, contrasena })
+            body: JSON.stringify({ correo, contrasena, mantener_sesion: mantener })
         });
 
         const resultado = await respuesta.json();

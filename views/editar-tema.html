@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="/css/search.css?v={{ cacheVersion }}">
     <link rel="stylesheet" href="/css/formularios-crear.css?v={{ cacheVersion }}">
     <link rel="stylesheet" href="/css/editar-tema.css?v={{ cacheVersion }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="/css/subir-tema.css?v={{ cacheVersion }}">
     <link rel="stylesheet" href="/css/editor-rico.css?v={{ cacheVersion }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="manifest" href="/manifest.json">
@@ -69,6 +71,45 @@
                             </div>
                         </div>
 
+                        <div class="grupo-campo ubicacion-campo">
+                            <label>Ubicación en Coro (opcional):</label>
+                            <div id="ubicacion-badge" class="ubicacion-badge" style="display:none;">
+                                <span class="material-symbols-outlined">location_on</span>
+                                <span id="ubicacion-badge-texto">Ubicación guardada</span>
+                                <button type="button" id="btn-editar-ubicacion" class="ubicacion-editar-btn" aria-label="Editar ubicación">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </button>
+                                <button type="button" id="btn-quitar-ubicacion" class="ubicacion-editar-btn" aria-label="Quitar ubicación" title="Quitar ubicación">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </div>
+                            <button type="button" id="btn-agregar-ubicacion" class="btn-agregar-ubicacion">
+                                <span class="material-symbols-outlined">add_location</span>
+                                <span>Agregar ubicación</span>
+                            </button>
+                            <input type="hidden" id="latitud" name="latitud">
+                            <input type="hidden" id="longitud" name="longitud">
+                            <input type="hidden" id="quitar-ubicacion" name="quitar_ubicacion" value="">
+                        </div>
+
+                        <div id="ubicacion-modal-overlay" class="modal-overlay" style="display:none;">
+                            <div class="modal-contenido modal-ubicacion">
+                                <div class="modal-header">
+                                    <h3>Seleccionar ubicación</h3>
+                                    <button type="button" id="btn-cerrar-ubicacion" class="modal-cerrar-btn" aria-label="Cerrar">
+                                        <span class="material-symbols-outlined">close</span>
+                                    </button>
+                                </div>
+                                <input type="text" id="buscar-ubicacion" placeholder="Buscar lugar en Coro..." class="input-ubicacion-modal">
+                                <div id="mapa-ubicacion" class="mapa-ubicacion"></div>
+                                <div class="coord-info" id="coord-info">
+                                    <span>Lat: <strong id="coord-lat">—</strong></span>
+                                    <span>Lng: <strong id="coord-lng">—</strong></span>
+                                </div>
+                                <button type="button" id="btn-guardar-ubicacion" class="boton-enviar" style="margin-top:10px;">Guardar ubicación</button>
+                            </div>
+                        </div>
+
                         <div class="grupo-campo editor-wrapper">
                             <label for="contenido">Contenido del Artículo:</label>
                             <div class="editor-toolbar">
@@ -115,7 +156,9 @@
         </main>
     </div>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="/js/editor-rico.js?v={{ cacheVersion }}"></script>
+    <script src="/js/ubicacion-picker.js?v={{ cacheVersion }}"></script>
     <script src="/js/editar-tema.js?v={{ cacheVersion }}"></script>
 </body>
 </html>

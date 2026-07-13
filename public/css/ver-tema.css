@@ -383,7 +383,7 @@ h1 {
 .traductor-toolbar {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 15px;
   margin-bottom: 20px;
   flex-wrap: wrap;
   flex: 1;
@@ -399,6 +399,17 @@ h1 {
 }
 .traductor-toolbar .btn-report:hover {
   color: #ff4500;
+}
+.traductor-toolbar .btn-ver-mapa {
+  text-decoration: none;
+  color: #888;
+  font-size: 22px;
+  padding: 6px;
+  border-radius: 8px;
+  transition: color 0.2s;
+}
+.traductor-toolbar .btn-ver-mapa:hover {
+  color: #2E7D32;
 }
 .traductor-select {
   padding: 8px 12px;

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa de Coro — Wind</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="/css/base.css?v={{ cacheVersion }}">
+    <link rel="stylesheet" href="/css/menu.css?v={{ cacheVersion }}">
+    <link rel="stylesheet" href="/css/animaciones.css?v={{ cacheVersion }}">
+    <link rel="stylesheet" href="/css/mapa.css?v={{ cacheVersion }}">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Wind">
+    <link rel="apple-touch-icon" href="/img/app.png">
+    <meta name="theme-color" content="#ff4500">
+</head>
+<body class="pagina-mapa">
+    <script src="/js/menu.js?v={{ cacheVersion }}"></script>
+    
+    <div class="app-layout">
+        <div id="buscar-placeholder"></div>
+        <div id="menu-placeholder"></div>
+        
+        <main class="contenido-principal anim-fade-in anim-fade-down mapa-page">
+            
+            <div class="mapa-header">
+                <a href="/home" class="btn-volver" onclick="history.back()" style="flex-shrink:0;">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </a>
+                <div class="mapa-header-left">
+                    <h1>Mapa de Coro</h1>
+                    
+                </div>
+                <p class="sub">Explora temas históricos por ubicación</p>
+                <div class="mapa-buscar">
+                    <span class="material-symbols-outlined">search</span>
+                    <input type="text" id="mapa-buscar-input" placeholder="Buscar en el mapa..." autocomplete="off">
+                </div>
+            </div>
+
+            
+
+            <div id="mapa-contenedor">
+                <div class="mapa-loading" id="mapa-loading">
+                    <span class="material-symbols-outlined">map</span>
+                    <span>Cargando mapa...</span>
+                </div>
+                <button class="mapa-milugar-btn" id="btn-milugar" title="Mi ubicación">
+                    <span class="material-symbols-outlined">my_location</span>
+                </button>
+            </div>
+
+            <div class="mapa-leyenda" id="mapa-leyenda">
+                <div class="mapa-leyenda-item">
+                    <span class="mapa-leyenda-dot" style="background:#FF4500;"></span>
+                    <span>Arquitectura Colonial</span>
+                </div>
+                <div class="mapa-leyenda-item">
+                    <span class="mapa-leyenda-dot" style="background:#2E7D32;"></span>
+                    <span>Tradiciones Indígenas</span>
+                </div>
+                <div class="mapa-leyenda-item">
+                    <span class="mapa-leyenda-dot" style="background:#1565C0;"></span>
+                    <span>Personajes Históricos</span>
+                </div>
+                <div class="mapa-leyenda-item">
+                    <span class="mapa-leyenda-dot" style="background:#6A1B9A;"></span>
+                    <span>Leyendas Falconianas</span>
+                </div>
+                
+            </div>
+
+        </main>
+       
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/js/mapa.js?v={{ cacheVersion }}"></script>
+</body>
+</html>

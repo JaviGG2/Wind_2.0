@@ -39,8 +39,6 @@
     
 }
 
-
-
 .enlace-volver .material-symbols-outlined {
     font-size: 1.1rem;
     vertical-align: middle;
@@ -68,3 +66,155 @@
     border: 1px solid #f5c6cb;
 }
 
+.ubicacion-campo {
+    margin-top: 18px;
+}
+
+.btn-agregar-ubicacion {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f0f0f0;
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    padding: 14px 18px;
+    width: 100%;
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+    transition: all .2s;
+    font-family: inherit;
+}
+
+.btn-agregar-ubicacion:hover {
+    background: #e8e8e8;
+    border-color: #FF4500;
+    color: #FF4500;
+}
+
+.btn-agregar-ubicacion .material-symbols-outlined {
+    font-size: 22px;
+}
+
+.ubicacion-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #e8f5e9;
+    border: 1px solid #a5d6a7;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #2e7d32;
+    margin-bottom: 8px;
+}
+
+.ubicacion-badge .material-symbols-outlined {
+    font-size: 18px;
+}
+
+.ubicacion-editar-btn {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 2px;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+.ubicacion-editar-btn:hover {
+    color: #FF4500;
+}
+
+/* Modal overlay */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn .2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-contenido {
+    background: #fff;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 520px;
+    max-height: 90vh;
+    padding: 24px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+    animation: slideUp .25s ease;
+    overflow-y: auto;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.modal-cerrar-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #888;
+    padding: 4px;
+    border-radius: 8px;
+    display: flex;
+}
+
+.modal-cerrar-btn:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.input-ubicacion-modal {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 14px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.mapa-ubicacion {
+    width: 100%;
+    height: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #eee;
+}
+
+.coord-info {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+    font-size: 13px;
+    color: #888;
+}
+
+.coord-info strong {
+    color: #333;
+}

@@ -34,11 +34,33 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('imagen-actual-contenedor').style.display = 'block';
         }
 
+        // Location
+        if (tema.latitud && tema.longitud) {
+            document.getElementById('latitud').value = tema.latitud;
+            document.getElementById('longitud').value = tema.longitud;
+            const badge = document.getElementById('ubicacion-badge');
+            badge.style.display = 'flex';
+            document.getElementById('ubicacion-badge-texto').textContent =
+                `Ubicación: ${parseFloat(tema.latitud).toFixed(4)}, ${parseFloat(tema.longitud).toFixed(4)}`;
+        }
+
     } catch (error) {
         consola.style.color = 'red';
         consola.textContent = 'Error al cargar los datos del tema.';
         console.error(error);
         return;
+    }
+
+    // Quitar ubicación
+    const btnQuitar = document.getElementById('btn-quitar-ubicacion');
+    if (btnQuitar) {
+        btnQuitar.addEventListener('click', function () {
+            document.getElementById('latitud').value = '';
+            document.getElementById('longitud').value = '';
+            document.getElementById('quitar-ubicacion').value = '1';
+            document.getElementById('ubicacion-badge').style.display = 'none';
+            document.getElementById('btn-agregar-ubicacion').style.display = 'flex';
+        });
     }
 
     form.addEventListener('submit', async (e) => {
@@ -50,6 +72,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         consola.textContent = '';
 
         const formData = new FormData(form);
+
+        const latInput = document.getElementById('latitud');
+        const lngInput = document.getElementById('longitud');
+        const quitarInput = document.getElementById('quitar-ubicacion');
+        if (latInput && lngInput) {
+            if (latInput.value && lngInput.value) {
+                formData.set('latitud', latInput.value);
+                formData.set('longitud', lngInput.value);
+            } else if (quitarInput && quitarInput.value === '1') {
+                formData.set('latitud', '');
+                formData.set('longitud', '');
+            }
+        }
 
         try {
             const respuesta = await fetch(`/admin/temas/${temaId}`, {
