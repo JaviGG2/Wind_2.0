@@ -37,7 +37,7 @@ $('#btn-logout').addEventListener('click', async () => {
 async function iniciarPanel() {
   $('#panel-content').innerHTML = '<img src="/images/loading.svg" class="anim-loading" alt="Cargando...">';
   try {
-    const [usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, pendientes] = await Promise.all([
+    const [usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, recientes] = await Promise.all([
       fetch('/0505/api/usuarios').then(r => r.ok ? r.json() : []),
       fetch('/0505/api/categorias').then(r => r.ok ? r.json() : []),
       fetch('/0505/api/juegos').then(r => r.ok ? r.json() : []),
@@ -46,10 +46,10 @@ async function iniciarPanel() {
       fetch('/0505/api/modulos').then(r => r.ok ? r.json() : []),
       fetch('/0505/api/feedback').then(r => r.ok ? r.json() : []),
       fetch('/0505/api/solicitudes').then(r => r.ok ? r.json() : []),
-      fetch('/0505/api/temas/pendientes').then(r => r.ok ? r.json() : []),
+      fetch('/0505/api/temas/recientes').then(r => r.ok ? r.json() : []),
       new Promise(r => setTimeout(r, 1000))
     ]);
-    cache = { usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, pendientes };
+    cache = { usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, recientes };
     mostrarResumen();
     configurarNavegacion();
   } catch { $('#panel-content').innerHTML = '<div style="color:#ef4444;padding:40px;text-align:center;">Error al cargar datos.</div>'; }
@@ -61,7 +61,7 @@ function programarRecarga() {
     const active = $('.panel-nav-item.active');
     const tab = active ? active.dataset.tab : 'resumen';
     try {
-      const [usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, pendientes] = await Promise.all([
+      const [usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, recientes] = await Promise.all([
         fetch('/0505/api/usuarios').then(r => r.ok ? r.json() : []),
         fetch('/0505/api/categorias').then(r => r.ok ? r.json() : []),
         fetch('/0505/api/juegos').then(r => r.ok ? r.json() : []),
@@ -70,13 +70,13 @@ function programarRecarga() {
         fetch('/0505/api/modulos').then(r => r.ok ? r.json() : []),
         fetch('/0505/api/feedback').then(r => r.ok ? r.json() : []),
         fetch('/0505/api/solicitudes').then(r => r.ok ? r.json() : []),
-        fetch('/0505/api/temas/pendientes').then(r => r.ok ? r.json() : [])
+        fetch('/0505/api/temas/recientes').then(r => r.ok ? r.json() : [])
       ]);
-      cache = { usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, pendientes };
+      cache = { usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, recientes };
       if (tab === 'resumen') mostrarResumen();
       else if (tab === 'usuarios') mostrarUsuarios();
       else if (tab === 'temas') mostrarTemas();
-      else if (tab === 'pendientes') mostrarPendientes();
+      else if (tab === 'recientes') mostrarRecientes();
       else if (tab === 'juegos') mostrarJuegos();
       else if (tab === 'relatos') mostrarRelatos();
       else if (tab === 'modulos') mostrarModulos();
@@ -96,7 +96,7 @@ function configurarNavegacion() {
       if (tab === 'resumen') mostrarResumen();
       else if (tab === 'usuarios') mostrarUsuarios();
       else if (tab === 'temas') mostrarTemas();
-      else if (tab === 'pendientes') mostrarPendientes();
+      else if (tab === 'recientes') mostrarRecientes();
       else if (tab === 'juegos') mostrarJuegos();
       else if (tab === 'relatos') mostrarRelatos();
       else if (tab === 'modulos') mostrarModulos();
@@ -394,26 +394,27 @@ function mostrarTemas() {
     </div>`;
 }
 
-// --- Pendientes ---
-function mostrarPendientes() {
-  const list = cache.pendientes || [];
+// --- Revisar temas ---
+function mostrarRecientes() {
+  const list = cache.recientes || [];
   $('#panel-content').innerHTML = `
     <div class="panel-tab">
-      <h2><span class="material-symbols-outlined">rate_review</span>Pendientes de Revisión <span class="ctrl-badge solicitudes">${list.length} pendientes</span></h2>
-      ${list.length === 0 ? '<div class="ctrl-empty">No hay temas pendientes de revisión.</div>' : `
+      <h2><span class="material-symbols-outlined">rate_review</span>Revisar Temas (${list.length})</h2>
+      ${list.length === 0 ? '<div class="ctrl-empty">No hay temas para revisar.</div>' : `
       <div class="ctrl-card" style="overflow-x:auto;">
         <table class="ctrl-table">
-          <thead><tr><th>ID</th><th>Título</th><th>Categoría</th><th>Creador</th><th>Fecha</th><th style="width:120px;">Acción</th></tr></thead>
+          <thead><tr><th>ID</th><th>Título</th><th>Categoría</th><th>Creador</th><th>Estado</th><th>Fecha</th><th style="width:100px;">Acción</th></tr></thead>
           <tbody>${list.map(t => `
             <tr>
               <td>${t.id}</td>
               <td class="truncate">${esc(t.titulo)}</td>
               <td>${esc(t.categoria_nombre || '—')}</td>
               <td>${esc(t.creador_nombre || t.creador_username || '—')}</td>
+              <td><span class="ctrl-estado ${t.estado}">${t.estado || 'aprobado'}</span></td>
               <td>${t.fecha_publicacion ? new Date(t.fecha_publicacion).toLocaleDateString() : '—'}</td>
               <td><div class="ctrl-actions">
-                <button class="ctrl-btn approve" onclick="aprobarTema(${t.id})" title="Aprobar"><span class="material-symbols-outlined">check</span></button>
-                <button class="ctrl-btn reject" onclick="rechazarTema(${t.id})" title="Rechazar"><span class="material-symbols-outlined">close</span></button>
+                ${t.estado !== 'rechazado' ? `<button class="ctrl-btn reject" onclick="rechazarTema(${t.id})" title="Rechazar"><span class="material-symbols-outlined">close</span></button>` : ''}
+                <button class="ctrl-btn delete" onclick="eliminar('/0505/api/temas/${t.id}','tema #${t.id}')" title="Eliminar"><span class="material-symbols-outlined">delete</span></button>
               </div></td>
             </tr>`).join('')}</tbody>
         </table>
@@ -421,18 +422,8 @@ function mostrarPendientes() {
     </div>`;
 }
 
-async function aprobarTema(id) {
-  if (!await confirmar('¿Aprobar este tema? Se notificará al creador y el tema será visible para todos.')) return;
-  try {
-    const r = await apiCall('POST', `/0505/api/temas/${id}/aprobar`);
-    const d = await r.json();
-    if (r.ok) { notificar(d.mensaje || 'Aprobado.', 'success'); programarRecarga(); }
-    else { notificar(d.mensaje || 'Error.', 'error'); }
-  } catch { notificar('Error de conexión.', 'error'); }
-}
-
 async function rechazarTema(id) {
-  if (!await confirmar('¿Rechazar este tema? Se notificará al creador.')) return;
+  if (!await confirmar('¿Rechazar este tema? Se notificará al creador y el tema dejará de ser visible.')) return;
   try {
     const r = await apiCall('POST', `/0505/api/temas/${id}/rechazar`);
     const d = await r.json();

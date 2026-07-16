@@ -131,8 +131,9 @@ function observeSearchShell() {
 }
 
 function getSearchWidgetHTML() {
+    const esHome = window.location.pathname === '/home' || window.location.pathname === '/home.html';
     return `
-        <div class="wind-search-shell">
+        <div class="wind-search-shell${esHome ? '' : ' wind-search-shell--no-cats '}">
             <div class="wind-search-capsule" id="wind-search-capsule">
                 <form class="wind-search-form" id="search-form">
                     <div class="wind-search-input-row">
@@ -172,6 +173,7 @@ function getSearchWidgetHTML() {
                     </div>
                 </div>
             </div>
+            ${esHome ? `
             <div class="wind-search-categorias">
                 <button type="button" class="cat-chip active" data-cat="todo">Todo</button>
                 
@@ -188,6 +190,7 @@ function getSearchWidgetHTML() {
                     </div>
                 </div>
             </div>
+            ` : ''}
         </div>
     `;
 }

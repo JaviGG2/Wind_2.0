@@ -80,13 +80,6 @@
     font-weight: 600;
 }
 
-.bienvenida-text {
-    color: var(--texto-sec);
-    margin: 12px 0 0;
-    font-size: var(--font-sm);
-    text-align: center;
-}
-
 .perfil-acciones {
     display: flex;
     gap: 6px;

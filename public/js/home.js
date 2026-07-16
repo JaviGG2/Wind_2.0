@@ -86,9 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="material-symbols-outlined">chat_bubble</span>
                     <span>${comentariosCount}</span>
                 </a>
-                <span class="btn-explorar">
+                <button class="btn-explorar">
                     Explorar <span class="material-symbols-outlined" style="font-size:1rem;">arrow_forward</span>
-                </span>
+                </button>
             </div>
         </div>
     `;

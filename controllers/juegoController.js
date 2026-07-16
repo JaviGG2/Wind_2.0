@@ -171,7 +171,7 @@ exports.rankingGlobal = async (req, res) => {
         const result = await db.query(
             `SELECT id, nombre, username, puntos, imagen_perfil, avatar_fondo
              FROM usuarios
-             WHERE puntos > 0
+             WHERE puntos > 0 AND (rol IS NULL OR rol != 'Especialista')
              ORDER BY puntos DESC
              LIMIT 100`
         );

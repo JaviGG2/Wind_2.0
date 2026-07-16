@@ -224,6 +224,7 @@ app.get('/comunidad', (req, res) => res.render('comunidad'));
 app.get('/historias', (req, res) => res.render('historias'));
 app.get('/juegos', verificarSesion, (req, res) => res.render('juegos'));
 app.get('/mapa', verificarSesion, (req, res) => res.render('mapa'));
+app.get('/prueba-qr', (req, res) => res.render('prueba-qr'));
 app.get('/play-game', verificarSesion, (req, res) => res.render('play-game'));
 app.get('/ranking-game', verificarSesion, (req, res) => res.render('ranking-game'));
 app.get('/barra_navegacion', (req, res) => res.render('barra_navegacion'));
@@ -303,7 +304,7 @@ app.get('/0505/api/temas', verificar0505, async (req, res) => {
     } catch (e) { res.status(500).json([]); }
 });
 
-app.get('/0505/api/temas/pendientes', verificar0505, async (req, res) => {
+app.get('/0505/api/temas/recientes', verificar0505, async (req, res) => {
     try {
         const r = await db.query(`
             SELECT t.id, t.titulo, t.likes, t.estado, t.fecha_publicacion,
@@ -312,8 +313,8 @@ app.get('/0505/api/temas/pendientes', verificar0505, async (req, res) => {
             FROM temas t
             LEFT JOIN categorias c ON t.categoria_id = c.id
             LEFT JOIN usuarios u ON t.creador_id = u.id
-            WHERE t.estado = 'pendiente'
-            ORDER BY t.fecha_publicacion ASC`);
+            ORDER BY t.fecha_publicacion DESC
+            LIMIT 50`);
         res.json(r.rows);
     } catch (e) { res.status(500).json([]); }
 });
@@ -611,6 +612,13 @@ app.listen(PORT, async () => {
         console.log('Columna avatar_fondo lista.');
     } catch (err) {
         console.error('Error agregando avatar_fondo:', err.message);
+    }
+
+    try {
+        await db.query(`ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS session_token_creado TIMESTAMP`);
+        console.log('Columna session_token_creado lista.');
+    } catch (err) {
+        console.error('Error agregando session_token_creado:', err.message);
     }
 
     try {

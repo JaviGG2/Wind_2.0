@@ -47,6 +47,10 @@
     box-sizing: border-box;
 }
 
+.wind-search-shell--no-cats {
+    padding-bottom: 14px;
+}
+
 body:not(.search-page-body) .wind-search-shell {
     position: fixed;
     z-index: 200;

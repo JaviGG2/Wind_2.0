@@ -23,7 +23,7 @@ exports.subirTema = async (req, res) => {
 
         const queryFinal = `
             INSERT INTO temas (titulo, contenido, categoria_id, creador_id, imagen_portada, fecha_publicacion, estado, latitud, longitud) 
-            VALUES ($1, $2, $3, $4, $5, NOW(), 'pendiente', $6, $7)
+            VALUES ($1, $2, $3, $4, $5, NOW(), 'aprobado', $6, $7)
         `;
         
         const parametros = [
@@ -42,11 +42,11 @@ exports.subirTema = async (req, res) => {
         notificacion.crear({
             creadorId: req.session.usuarioId,
             titulo: 'Nuevo tema histórico',
-            mensaje: `"${titulo}" ha sido enviado para revisión.`,
-            enlace: `/dashboard`,
+            mensaje: `"${titulo}" ha sido publicado.`,
+            enlace: `/ver-tema?id=${temaId}`,
             soloSeguidores: true
         });
-        return res.status(201).json({ mensaje: '¡Tema enviado para revisión con éxito!' });
+        return res.status(201).json({ mensaje: '¡Tema publicado con éxito!' });
 
     } catch (error) {
         console.error('❌ ERROR REAL EN NEON:', error.message);
@@ -183,7 +183,7 @@ exports.obtenerTemaPorId = async (req, res) => {
                  FROM temas t
                  LEFT JOIN categorias c ON t.categoria_id = c.id
                  LEFT JOIN usuarios u ON t.creador_id = u.id
-                 WHERE t.id = $1 ${usuarioId ? 'AND (t.estado = \'aprobado\' OR t.creador_id = $2)' : 'AND t.estado = \'aprobado\''}
+                 WHERE t.id = $1 AND t.estado = 'aprobado'
                  LIMIT 1`,
                 usuarioId ? [temaIdNum, usuarioId] : [temaIdNum]
             );
@@ -203,7 +203,7 @@ exports.obtenerTemaPorId = async (req, res) => {
                  FROM temas t
                  LEFT JOIN categorias c ON t.categoria_id = c.id
                  LEFT JOIN usuarios u ON t.creador_id = u.id
-                 WHERE (t.id::text = $1 OR t.slug = $1) ${usuarioId ? 'AND (t.estado = \'aprobado\' OR t.creador_id = $2)' : 'AND t.estado = \'aprobado\''}
+                 WHERE (t.id::text = $1 OR t.slug = $1) AND t.estado = 'aprobado'
                  LIMIT 1`,
                 usuarioId ? [rawId, usuarioId] : [rawId]
             );

@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    const bienvenida = document.getElementById('bienvenida-usuario');
     const bloqueMensaje = document.getElementById('mensaje-consola');
     const btnLogout = document.getElementById('btn-logout');
 
@@ -63,8 +62,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.warn('[dashboard] perfil sin nombre:', usuario);
         }
 
-        bienvenida.innerHTML = `¡Hola, <strong>${usuario.nombre || 'Usuario'}</strong>! Bienvenido a la plataforma web de preservación digital.`;
-
         cargarNivel(usuario.rol);
 
         configurarVistasPorRol(usuario.rol);
@@ -72,7 +69,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     } catch (error) {
         console.error('[dashboard] Error cargando perfil:', error);
-        bienvenida.textContent = 'Error de conexión con el panel.';
     }
 
     document.getElementById('btn-agregar-categoria')?.addEventListener('click', async () => {

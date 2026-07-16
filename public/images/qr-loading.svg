@@ -1,0 +1,19 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    path {
+      fill: none;
+      stroke: #FF4500;
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 40 40;
+      stroke-dashoffset: 4000;
+      animation: dibujarQR 4s linear forwards;
+    }
+    @keyframes dibujarQR {
+      0%   { stroke-dashoffset: 4000; }
+      100% { stroke-dashoffset: 0; }
+    }
+  </style>
+  <path d="M 14 186 L 186 186 L 186 14 L 14 14 L 14 176 L 176 176 L 176 24 L 24 24 L 24 166 L 166 166 L 166 34 L 34 34 L 34 156 L 156 156 L 156 44 L 44 44 L 44 146 L 146 146 L 146 54 L 54 54 L 54 136 L 136 136 L 136 64 L 64 64 L 64 126 L 126 126 L 126 74 L 74 74 L 74 116 L 116 116 L 116 84 L 84 84 L 84 106 L 106 106 L 106 94 L 94 94" />
+</svg>
