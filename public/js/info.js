@@ -1,5 +1,4 @@
-// instrucciones.js
-export const baseDeConocimiento = {
+window.baseDeConocimiento = {
     "crear-tema": {
         titulo: "¿Que son los Temas?",
         contenido: "<p>Los temas historicos son una funcionalidad que permite a los usuarios publicar informacion sobre un lugar especifico de nuestra ciudad.</p>"
@@ -40,5 +39,4 @@ export const baseDeConocimiento = {
         titulo: "¿Para qué sirve?",
         contenido: "<p>Para registrar contenido estructurado o documentos de apoyo histórico avalados por la cronología institucional de la ciudad.</p>"
     }
-
 };
