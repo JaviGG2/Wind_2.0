@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const pgSession = require('connect-pg-simple')(session);
 const nunjucks = require('nunjucks');
 require('dotenv').config();
 const path = require('path');
@@ -17,12 +18,15 @@ app.set('view engine', 'html');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const { pool } = require('./config/db');
+
 app.use(session({
+    store: new pgSession({ pool }),
     secret: process.env.SESSION_SECRET || 'viento_caquetio_secret_key_2026',
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false,
+        secure: !!process.env.VERCEL,
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 2
     }
@@ -535,8 +539,10 @@ app.get('/ping', async (req, res) => {
 
 const db = require('./config/db');
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, async () => {
-    console.log(`El servidor de Wind se encuentra activo.`);
+
+if (!process.env.VERCEL) {
+    app.listen(PORT, async () => {
+        console.log(`El servidor de Wind se encuentra activo.`);
     console.log(`Registro: http://localhost:${PORT}/registro`);
     console.log(`Login: http://localhost:${PORT}/login`);
 
@@ -778,4 +784,6 @@ app.listen(PORT, async () => {
     } catch (err) {
         console.error('Error entrenando recomendador al iniciar:', err.message);
     }
-});
+}
+
+module.exports = app;

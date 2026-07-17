@@ -1,6 +1,6 @@
 const db = require('../config/db');
 const { subirASupabase } = require('../middlewares/subidaImagen');
-const { contieneMalasPalabras } = require('../utils/filter');
+const { contieneMalasPalabras, encontrarMalasPalabras } = require('../utils/filter');
 const notificacion = require('./notificacionController');
 
 exports.subirTema = async (req, res) => {
@@ -14,12 +14,13 @@ exports.subirTema = async (req, res) => {
         return res.status(400).json({ mensaje: 'El título y el contenido son obligatorios.' });
     }
 
-    if (contieneMalasPalabras(titulo, contenido)) {
-        return res.status(400).json({ mensaje: 'Por favor, revisa tu texto y evita lenguaje ofensivo.' });
-    }
-
     try {
         const rutaImagen = req.file ? await subirASupabase(req.file, 'temas') : null;
+
+        const malasPalabras = encontrarMalasPalabras(titulo, contenido);
+        if (malasPalabras.length > 0) {
+            return res.status(400).json({ mensaje: 'Se detectaron palabras inapropiadas. Revisa los campos marcados.', malasPalabras });
+        }
 
         const queryFinal = `
             INSERT INTO temas (titulo, contenido, categoria_id, creador_id, imagen_portada, fecha_publicacion, estado, latitud, longitud) 
@@ -70,8 +71,9 @@ exports.actualizarTema = async (req, res) => {
         return res.status(400).json({ mensaje: 'El título y el contenido son obligatorios.' });
     }
 
-    if (contieneMalasPalabras(titulo, contenido)) {
-        return res.status(400).json({ mensaje: 'Por favor, revisa tu texto y evita lenguaje ofensivo.' });
+    const malasPalabras = encontrarMalasPalabras(titulo, contenido);
+    if (malasPalabras.length > 0) {
+        return res.status(400).json({ mensaje: 'Se detectaron palabras inapropiadas. Revisa los campos marcados.', malasPalabras });
     }
 
     try {

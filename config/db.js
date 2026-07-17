@@ -26,6 +26,7 @@ pool.connect((err, client, release) => {
 });
 
 module.exports = {
+    pool,
     query: async (text, params) => {
         try {
             const result = await pool.query(text, params);

@@ -16,6 +16,7 @@
     "@sendgrid/mail": "^8.1.6",
     "@supabase/supabase-js": "^2.108.2",
     "bcryptjs": "^3.0.3",
+    "connect-pg-simple": "^10.0.0",
     "dotenv": "^17.4.2",
     "ejs": "^5.0.1",
     "express": "^5.2.1",
@@ -35,6 +36,7 @@
   "description": "Nueva versión",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "keepalive": "node scripts/keepalive.js"
   },
   "repository": {

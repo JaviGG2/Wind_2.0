@@ -218,3 +218,27 @@
 .coord-info strong {
     color: #333;
 }
+
+.bad-word-marker {
+    background: #fde8e8;
+    color: #c0392b;
+    border-radius: 3px;
+    padding: 0 2px;
+    text-decoration: underline wavy #e74c3c;
+}
+
+.bad-word-input {
+    border-color: #e74c3c !important;
+    background: #fef0f0 !important;
+}
+
+.bad-word-adv {
+    margin-top: 6px;
+    font-size: 0.8rem;
+    color: #c0392b;
+    font-weight: 500;
+    padding: 6px 10px;
+    background: #fef0f0;
+    border-radius: 6px;
+    border: 1px solid #f5c6cb;
+}
