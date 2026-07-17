@@ -6,12 +6,15 @@ require('dotenv').config();
 const path = require('path');
 const fs = require('fs');
 
+process.on('uncaughtException', err => console.error('Uncaught Exception:', err));
+process.on('unhandledRejection', err => console.error('Unhandled Rejection:', err));
+
 const app = express();
 
 nunjucks.configure('views', {
     autoescape: true,
     express: app,
-    watch: true
+    watch: !process.env.VERCEL
 });
 app.set('view engine', 'html');
 
@@ -785,5 +788,11 @@ if (!process.env.VERCEL) {
         console.error('Error entrenando recomendador al iniciar:', err.message);
     }
 }
+
+// Error handler global
+app.use((err, req, res, next) => {
+    console.error('Express error:', err);
+    res.status(500).json({ mensaje: 'Error interno del servidor.' });
+});
 
 module.exports = app;
