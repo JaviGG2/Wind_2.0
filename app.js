@@ -787,6 +787,7 @@ if (!process.env.VERCEL) {
     } catch (err) {
         console.error('Error entrenando recomendador al iniciar:', err.message);
     }
+    });
 }
 
 // Error handler global
