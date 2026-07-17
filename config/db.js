@@ -3,16 +3,16 @@ require('dotenv').config();
 
 if (!process.env.DATABASE_URL) {
     console.error('ERROR CRITICO: DATABASE_URL no está definida en el archivo .env');
-    if (!process.env.VERCEL) {
-        process.exit(1);
-    }
+    console.error('Crea un archivo .env en la raíz del proyecto con:');
+    console.error('DATABASE_URL=postgresql://usuario:password@host:puerto/nombre_db');
+    process.exit(1);
 }
 
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL || 'postgresql://localhost:5432/wind',
-    ssl: process.env.DATABASE_URL ? {
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
         rejectUnauthorized: false
-    } : false
+    }
 });
 
 pool.connect((err, client, release) => {
@@ -26,7 +26,6 @@ pool.connect((err, client, release) => {
 });
 
 module.exports = {
-    pool,
     query: async (text, params) => {
         try {
             const result = await pool.query(text, params);

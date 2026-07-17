@@ -7,20 +7,15 @@ const ASSETS = [
     '/css/animations.css',
     '/js/menu.js',
     '/img/icon-192.png',
-    '/img/icon-512.png'
+    '/img/icon-512.png',
+    'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0'
 ];
 
 self.addEventListener('install', (event) => {
     self.skipWaiting();
     event.waitUntil(
-        caches.open(CACHE_NAME).then(async (cache) => {
-            for (const url of ASSETS) {
-                try {
-                    await cache.add(url);
-                } catch (e) {
-                    console.warn('SW cache skip:', url, e.message);
-                }
-            }
+        caches.open(CACHE_NAME).then((cache) => {
+            return cache.addAll(ASSETS);
         })
     );
 });

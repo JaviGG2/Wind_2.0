@@ -1,35 +1,28 @@
 const express = require('express');
 const session = require('express-session');
-const pgSession = require('connect-pg-simple')(session);
 const nunjucks = require('nunjucks');
 require('dotenv').config();
 const path = require('path');
 const fs = require('fs');
 
-process.on('uncaughtException', err => console.error('Uncaught Exception:', err));
-process.on('unhandledRejection', err => console.error('Unhandled Rejection:', err));
-
 const app = express();
 
-nunjucks.configure(path.join(__dirname, 'views'), {
+nunjucks.configure('views', {
     autoescape: true,
     express: app,
-    watch: !process.env.VERCEL
+    watch: true
 });
 app.set('view engine', 'html');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const { pool } = require('./config/db');
-
 app.use(session({
-    store: new pgSession({ pool }),
     secret: process.env.SESSION_SECRET || 'viento_caquetio_secret_key_2026',
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: !!process.env.VERCEL,
+        secure: false,
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 2
     }
@@ -542,10 +535,8 @@ app.get('/ping', async (req, res) => {
 
 const db = require('./config/db');
 const PORT = process.env.PORT || 3000;
-
-if (!process.env.VERCEL) {
-    app.listen(PORT, async () => {
-        console.log(`El servidor de Wind se encuentra activo.`);
+app.listen(PORT, async () => {
+    console.log(`El servidor de Wind se encuentra activo.`);
     console.log(`Registro: http://localhost:${PORT}/registro`);
     console.log(`Login: http://localhost:${PORT}/login`);
 
@@ -787,13 +778,4 @@ if (!process.env.VERCEL) {
     } catch (err) {
         console.error('Error entrenando recomendador al iniciar:', err.message);
     }
-    });
-}
-
-// Error handler global
-app.use((err, req, res, next) => {
-    console.error('Express error:', err);
-    res.status(500).json({ mensaje: 'Error interno del servidor.' });
 });
-
-module.exports = app;
