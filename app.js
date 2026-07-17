@@ -11,7 +11,7 @@ process.on('unhandledRejection', err => console.error('Unhandled Rejection:', er
 
 const app = express();
 
-nunjucks.configure('views', {
+nunjucks.configure(path.join(__dirname, 'views'), {
     autoescape: true,
     express: app,
     watch: !process.env.VERCEL
