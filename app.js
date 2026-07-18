@@ -615,13 +615,6 @@ app.listen(PORT, async () => {
     }
 
     try {
-        await db.query(`ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS session_token_creado TIMESTAMP`);
-        console.log('Columna session_token_creado lista.');
-    } catch (err) {
-        console.error('Error agregando session_token_creado:', err.message);
-    }
-
-    try {
         await db.query(`
             CREATE TABLE IF NOT EXISTS feedback (
                 id SERIAL PRIMARY KEY,
