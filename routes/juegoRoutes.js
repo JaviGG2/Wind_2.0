@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const juegoController = require('../controllers/juegoController');
+const { verificarRolDesdeDB } = require('../middlewares/autenticacion');
 
-router.get('/crear-juego', (req, res) => {
-    if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
+router.get('/crear-juego', async (req, res) => {
+    if (!await verificarRolDesdeDB(req)) {
         return res.redirect('/login.html');
     }
     res.sendFile(path.join(__dirname, '../views', 'crear-juego.html'));

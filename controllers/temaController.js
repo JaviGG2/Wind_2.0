@@ -2,9 +2,10 @@ const db = require('../config/db');
 const { subirASupabase } = require('../middlewares/subidaImagen');
 const { contieneMalasPalabras, encontrarMalasPalabras } = require('../utils/filter');
 const notificacion = require('./notificacionController');
+const { verificarRolDesdeDB } = require('../middlewares/autenticacion');
 
 exports.subirTema = async (req, res) => {
-    if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
+    if (!await verificarRolDesdeDB(req)) {
         return res.status(403).json({ mensaje: 'Acceso denegado: Se requieren permisos de Especialista.' });
     }
 
@@ -50,17 +51,15 @@ exports.subirTema = async (req, res) => {
         return res.status(201).json({ mensaje: '¡Tema publicado con éxito!' });
 
     } catch (error) {
-        console.error('❌ ERROR REAL EN NEON:', error.message);
-        
-        // Si el error es porque la columna se llama diferente, te lo dirá en la consola de VS Code
+        console.error('❌ ERROR REAL EN NEON:', error.message, error.stack);
         return res.status(500).json({ 
-            mensaje: 'Error en la base de datos. Verifica los nombres de tus columnas en Neon.' 
+            mensaje: 'Error: ' + error.message 
         });
     }
 };
 
 exports.actualizarTema = async (req, res) => {
-    if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
+    if (!await verificarRolDesdeDB(req)) {
         return res.status(403).json({ mensaje: 'Acceso denegado: Se requieren permisos de Especialista.' });
     }
 
@@ -269,7 +268,7 @@ exports.likeTema = async (req, res) => {
 };
 
 exports.eliminarTema = async (req, res) => {
-    if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
+    if (!await verificarRolDesdeDB(req)) {
         return res.status(403).json({ mensaje: 'Acceso denegado.' });
     }
 

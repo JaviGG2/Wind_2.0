@@ -3,6 +3,7 @@ const router = express.Router();
 const authController = require('../controllers/authController');
 const upload = require('../middlewares/subidaImagen');
 const db = require('../config/db');
+const { verificarRolDesdeDB } = require('../middlewares/autenticacion');
 
 router.post('/auth/registro', authController.registro);
 router.post('/auth/login', authController.login);
@@ -33,7 +34,7 @@ router.get('/api/categorias', async (req, res) => {
 });
 
 router.post('/api/categorias', async (req, res) => {
-    if (req.session.rol !== 'Especialista') {
+    if (!await verificarRolDesdeDB(req)) {
         return res.status(403).json({ mensaje: 'Acceso denegado.' });
     }
     const { nombre } = req.body;
@@ -54,7 +55,7 @@ router.post('/api/categorias', async (req, res) => {
 
 
 router.delete('/api/categorias/:id', async (req, res) => {
-    if (req.session.rol !== 'Especialista') {
+    if (!await verificarRolDesdeDB(req)) {
         return res.status(403).json({ mensaje: 'Acceso denegado.' });
     }
     const id = parseInt(req.params.id, 10);
@@ -74,7 +75,7 @@ router.delete('/api/categorias/:id', async (req, res) => {
 })
 
 router.get('/api/usuarios', async (req, res) => {
-    if (req.session.rol !== 'Especialista') {
+    if (!await verificarRolDesdeDB(req)) {
         return res.status(403).json({ mensaje: 'Acceso denegado.' });
     }
     try {

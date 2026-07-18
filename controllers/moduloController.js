@@ -1,5 +1,6 @@
 const db = require('../config/db');
 const notificacion = require('./notificacionController');
+const { verificarRolDesdeDB } = require('../middlewares/autenticacion');
 
 exports.listarModulos = async (req, res) => {
   try {
@@ -89,7 +90,7 @@ exports.misModulos = async (req, res) => {
 };
 
 exports.crearModulo = async (req, res) => {
-  if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
+  if (!await verificarRolDesdeDB(req)) {
     return res.status(403).json({ mensaje: 'Acceso denegado.' });
   }
   const { nombre, descripcion } = req.body;
@@ -115,7 +116,7 @@ exports.crearModulo = async (req, res) => {
 };
 
 exports.agregarNivel = async (req, res) => {
-  if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
+  if (!await verificarRolDesdeDB(req)) {
     return res.status(403).json({ mensaje: 'Acceso denegado.' });
   }
   const moduloId = parseInt(req.params.id, 10);
@@ -156,7 +157,7 @@ exports.agregarNivel = async (req, res) => {
 };
 
 exports.eliminarNivel = async (req, res) => {
-  if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
+  if (!await verificarRolDesdeDB(req)) {
     return res.status(403).json({ mensaje: 'Acceso denegado.' });
   }
   const nivelId = parseInt(req.params.nivelId, 10);
@@ -176,7 +177,7 @@ exports.eliminarNivel = async (req, res) => {
 };
 
 exports.eliminarModulo = async (req, res) => {
-  if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
+  if (!await verificarRolDesdeDB(req)) {
     return res.status(403).json({ mensaje: 'Acceso denegado.' });
   }
   const moduloId = parseInt(req.params.id, 10);

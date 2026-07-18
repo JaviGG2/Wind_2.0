@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const moduloController = require('../controllers/moduloController');
-const { verificarSesion } = require('../middlewares/autenticacion');
+const { verificarSesion, esEspecialista } = require('../middlewares/autenticacion');
 router.get('/modulos', verificarSesion, (req, res) => {
   res.render('modulos');
 });
@@ -11,18 +11,15 @@ router.get('/modulos/:id', verificarSesion, (req, res) => {
   res.render('modulo-detalle', { moduloId: req.params.id });
 });
 
-router.get('/admin/crear-modulo', verificarSesion, (req, res) => {
-  if (req.session.rol !== 'Especialista') return res.redirect('/login');
+router.get('/admin/crear-modulo', verificarSesion, esEspecialista, (req, res) => {
   res.render('crear-modulo');
 });
 
-router.get('/admin/modulos', verificarSesion, (req, res) => {
-  if (req.session.rol !== 'Especialista') return res.redirect('/login');
+router.get('/admin/modulos', verificarSesion, esEspecialista, (req, res) => {
   res.render('admin-modulos');
 });
 
-router.get('/admin/editar-modulo', verificarSesion, (req, res) => {
-  if (req.session.rol !== 'Especialista') return res.redirect('/login');
+router.get('/admin/editar-modulo', verificarSesion, esEspecialista, (req, res) => {
   res.render('editar-modulo');
 });
 router.get('/api/modulos', moduloController.listarModulos);

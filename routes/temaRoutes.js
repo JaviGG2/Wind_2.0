@@ -3,10 +3,10 @@ const router = express.Router();
 const path = require('path');
 const temaController = require('../controllers/temaController');
 const upload = require('../middlewares/subidaImagen');
-const { verificarSesion } = require('../middlewares/autenticacion');
+const { verificarSesion, verificarRolDesdeDB } = require('../middlewares/autenticacion');
 
-router.get('/subir-tema.html', (req, res) => {
-    if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
+router.get('/subir-tema.html', async (req, res) => {
+    if (!await verificarRolDesdeDB(req)) {
         return res.redirect('/login.html');
     }
     res.sendFile(path.join(__dirname, '../views', 'subir-tema.html'));

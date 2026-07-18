@@ -2,6 +2,7 @@ const db = require('../config/db');
 const { subirASupabase } = require('../middlewares/subidaImagen');
 const { contieneMalasPalabras } = require('../utils/filter');
 const notificacion = require('./notificacionController');
+const { verificarRolDesdeDB } = require('../middlewares/autenticacion');
 
 exports.crearRelato = async (req, res) => {
     if (!req.session.usuarioId) {
@@ -143,7 +144,7 @@ exports.eliminarRelato = async (req, res) => {
         }
 
         const esPropietario = result.rows[0].usuario_id === req.session.usuarioId;
-        const esAdmin = req.session.rol === 'Especialista';
+        const esAdmin = await verificarRolDesdeDB(req);
 
         if (!esPropietario && !esAdmin) {
             return res.status(403).json({ error: 'No tienes permiso para eliminar este relato' });

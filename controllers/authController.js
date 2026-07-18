@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const db = require('../config/db');
 const nodemailer = require('nodemailer');
 const { contieneMalasPalabras } = require('../utils/filter');
+const { verificarRolDesdeDB } = require('../middlewares/autenticacion');
 
 const ESTILOS_AVATAR = ['avataaars', 'adventurer', 'shapes', 'lorelei', 'bottts', 'identicon', 'open-peeps', 'pixel-art', 'fun-emoji'];
 
@@ -641,7 +642,7 @@ exports.solicitarAscenso = async (req, res) => {
     if (!req.session.usuarioId) {
         return res.status(401).json({ mensaje: 'Debes iniciar sesión.' });
     }
-    if (req.session.rol === 'Especialista') {
+    if (await verificarRolDesdeDB(req)) {
         return res.status(400).json({ mensaje: 'Ya eres Especialista.' });
     }
     try {

@@ -1,8 +1,9 @@
 const db = require('../config/db');
 const notificacion = require('./notificacionController');
+const { verificarRolDesdeDB } = require('../middlewares/autenticacion');
 
 exports.crearJuego = async (req, res) => {
-    if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
+    if (!await verificarRolDesdeDB(req)) {
         return res.status(403).json({ mensaje: 'Acceso denegado: Rol insuficiente.' });
     }
 
@@ -63,7 +64,7 @@ exports.crearJuego = async (req, res) => {
 };
 
 exports.misJuegos = async (req, res) => {
-    if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
+    if (!await verificarRolDesdeDB(req)) {
         return res.status(403).json({ mensaje: 'Acceso denegado.' });
     }
 
@@ -183,7 +184,7 @@ exports.rankingGlobal = async (req, res) => {
 };
 
 exports.eliminarJuego = async (req, res) => {
-    if (!req.session.usuarioId || req.session.rol !== 'Especialista') {
+    if (!await verificarRolDesdeDB(req)) {
         return res.status(403).json({ mensaje: 'Acceso denegado.' });
     }
 
@@ -268,7 +269,7 @@ exports.responderJuego = async (req, res) => {
             });
         }
 
-        const esEspecialista = req.session.rol === 'Especialista';
+        const esEspecialista = await verificarRolDesdeDB(req);
         if (esEspecialista) {
             console.log(`[responderJuego] Especialista, NO se otorgan puntos`);
         } else {
