@@ -30,7 +30,7 @@ export const baseDeConocimiento = {
     },
     "Perfil(Especialista)": {
         titulo: "Eres Especialista! ",
-        contenido: "<p>Tu centro de control de autor. Este panel te habilita el acceso exclusivo a las herramientas de creacion de contenido.</p>"
+        contenido: "<p>Ya puedes disfrutar de las herramientas exclusivas para creadores de contenido.</p>"
     },
     "Diseñar Nivel / Minijuego": {
         titulo: "¿Para qué sirve?",

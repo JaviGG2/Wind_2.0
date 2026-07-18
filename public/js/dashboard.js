@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         cargarNivel(usuario.rol);
+        cargarRacha(usuario.rol);
 
         configurarVistasPorRol(usuario.rol);
         if (typeof cargarMisRelatos === 'function') cargarMisRelatos();
@@ -429,5 +430,27 @@ async function cargarNivel(rol) {
         document.getElementById('nivel-puntos-siguiente').textContent = data.puntosSiguiente;
         const label = document.getElementById('nivel-next-label');
         if (label) label.textContent = isEsp ? 'Próximo rango' : 'Próximo nivel';
+    } catch {}
+}
+
+async function cargarRacha(rol) {
+    try {
+        const res = await fetch('/api/rachas');
+        if (!res.ok) return;
+        const data = await res.json();
+        const esEsp = rol === 'Especialista';
+
+        if (esEsp) {
+            document.getElementById('racha-num').textContent = data.racha_creacion_actual || 0;
+            document.getElementById('racha-label').textContent = 'días creando';
+            document.getElementById('racha-max').textContent = data.racha_creacion_maxima || 0;
+        } else {
+            document.getElementById('racha-icon').textContent = '🔥';
+            document.getElementById('racha-num').textContent = data.racha_actual || 0;
+            document.getElementById('racha-label').textContent = data.multiplicador > 1
+                ? `días seguidos (x${data.multiplicador})`
+                : 'días seguidos';
+            document.getElementById('racha-max').textContent = data.racha_maxima || 0;
+        }
     } catch {}
 }

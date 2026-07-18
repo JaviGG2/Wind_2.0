@@ -3,6 +3,7 @@ const { subirASupabase } = require('../middlewares/subidaImagen');
 const { contieneMalasPalabras, encontrarMalasPalabras } = require('../utils/filter');
 const notificacion = require('./notificacionController');
 const { verificarRolDesdeDB } = require('../middlewares/autenticacion');
+const { actualizarRachaCreacion } = require('../utils/rachas');
 
 exports.subirTema = async (req, res) => {
     if (!await verificarRolDesdeDB(req)) {
@@ -40,6 +41,8 @@ exports.subirTema = async (req, res) => {
 
         const temaRes = await db.query(queryFinal + ' RETURNING id', parametros);
         const temaId = temaRes.rows[0].id;
+
+        actualizarRachaCreacion(req.session.usuarioId).catch(() => {});
 
         notificacion.crear({
             creadorId: req.session.usuarioId,

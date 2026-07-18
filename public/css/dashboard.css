@@ -305,6 +305,62 @@
     50% { background-position: 100% 0; }
 }
 
+/* --- Racha card --- */
+.racha-card {
+    margin: 12px 0 0;
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, rgba(255,165,0,0.08), rgba(255,69,0,0.05));
+    border: 1px solid rgba(255,165,0,0.15);
+    border-radius: 14px;
+    padding: 14px 20px;
+}
+
+@media (min-width: 769px) {
+    .racha-card {
+        max-width: 480px;
+        margin: 12px auto 0;
+    }
+}
+
+.racha-icon {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.racha-gif {
+    width: 36px;
+    height: 36px;
+    display: block;
+}
+
+.racha-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.racha-num {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #ff4500;
+    line-height: 1.1;
+}
+
+.racha-label {
+    font-size: 0.8rem;
+    color: var(--texto-sec);
+    font-weight: 500;
+}
+
+.racha-max {
+    font-size: 0.78rem;
+    color: var(--texto-muted);
+    text-align: right;
+}
+
 .nivel-header {
     display: flex;
     align-items: center;

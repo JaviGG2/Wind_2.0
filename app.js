@@ -557,6 +557,31 @@ app.listen(PORT, async () => {
     }
 
     try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS rachas (
+                id SERIAL PRIMARY KEY,
+                usuario_id INTEGER NOT NULL UNIQUE REFERENCES usuarios(id) ON DELETE CASCADE,
+                racha_actual INTEGER NOT NULL DEFAULT 0,
+                racha_maxima INTEGER NOT NULL DEFAULT 0,
+                ultimo_activo DATE,
+                updated_at TIMESTAMP DEFAULT NOW()
+            )
+        `);
+        console.log('Tabla rachas lista.');
+    } catch (err) {
+        console.error('Error creando tabla rachas:', err.message);
+    }
+
+    try {
+        await db.query(`ALTER TABLE rachas ADD COLUMN IF NOT EXISTS racha_creacion_actual INTEGER DEFAULT 0`);
+        await db.query(`ALTER TABLE rachas ADD COLUMN IF NOT EXISTS racha_creacion_maxima INTEGER DEFAULT 0`);
+        await db.query(`ALTER TABLE rachas ADD COLUMN IF NOT EXISTS ultimo_creacion DATE`);
+        console.log('Columnas de racha de creación listas.');
+    } catch (err) {
+        console.error('Error agregando columnas de creación:', err.message);
+    }
+
+    try {
         await db.query(`ALTER TABLE temas ADD COLUMN IF NOT EXISTS estado VARCHAR(20) DEFAULT 'aprobado'`);
         console.log('Columna estado en temas lista.');
     } catch (err) {
@@ -577,6 +602,13 @@ app.listen(PORT, async () => {
         console.log('Columnas reset_token listas.');
     } catch (err) {
         console.error('Error agregando columnas reset_token:', err.message);
+    }
+
+    try {
+        await db.query(`ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS session_token VARCHAR(64)`);
+        console.log('Columna session_token lista.');
+    } catch (err) {
+        console.error('Error agregando session_token:', err.message);
     }
 
     try {

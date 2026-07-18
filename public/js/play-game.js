@@ -85,6 +85,8 @@ function mostrarJuego(juego) {
             carta.className = 'memory-carta';
             carta.dataset.valor = palabra;
             carta.dataset.index = i;
+            const delayClass = i < 4 ? 'd-' + (i + 1) : '';
+            carta.className = 'memory-carta ' + delayClass;
             carta.innerHTML = `<span class="memory-front">?</span><span class="memory-back">${palabra}</span>`;
             carta.addEventListener('click', () => voltearMemory(carta, juego));
             grid.appendChild(carta);

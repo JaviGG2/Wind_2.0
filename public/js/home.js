@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!temasContainer || !mensajeCarga) return;
 
     async function cargarTemas(categoriaId) {
-        mensajeCarga.textContent = 'Cargando temas históricos...';
+        mensajeCarga.textContent = '';
         temasContainer.innerHTML = '';
 
         try {

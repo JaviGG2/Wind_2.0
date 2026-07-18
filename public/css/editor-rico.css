@@ -94,14 +94,21 @@
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 
-.editor-contenido ul,
+.editor-contenido ul {
+    margin: 8px 0;
+    padding-left: 24px;
+    list-style: disc;
+}
+
 .editor-contenido ol {
     margin: 8px 0;
     padding-left: 24px;
+    list-style: decimal;
 }
 
 .editor-contenido li {
     margin-bottom: 4px;
+    list-style-position: inside;
 }
 
 .editor-contenido a {

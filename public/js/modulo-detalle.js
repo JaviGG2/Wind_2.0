@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       `;
     }).join('');
 
-    const eliminarBtn = esCreador || esEspecialista
+    const eliminarBtn = esCreador
       ? `<button type="button" class="btn-outline btn-eliminar-modulo" data-id="${moduloId}" style="display:inline-flex;align-items:center;gap:6px;color:#dc2626;border-color:#dc2626;">
            <span class="material-symbols-outlined">delete</span> Eliminar módulo
          </button>`

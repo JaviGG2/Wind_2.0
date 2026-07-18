@@ -38,17 +38,13 @@
 .wind-search-shell {
     width: 100%;
     margin: 0;
-    padding: 14px 15px 4px;
+    padding: 14px 15px;
     background: rgba(255,255,255,0.6);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-radius: 20px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.06);
     box-sizing: border-box;
-}
-
-.wind-search-shell--no-cats {
-    padding-bottom: 14px;
 }
 
 body:not(.search-page-body) .wind-search-shell {
@@ -65,77 +61,14 @@ body.modal-open .wind-search-shell {
     z-index: 100;
 }
 
-/* --- Category bar (Todo, Con mas Like, + toolbar categories) --- */
-.wind-search-categorias {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 6px;
-    padding: 10px 15px 8px;
-}
-
-.cat-chip {
-    background: transparent;
-    border: 1px solid transparent;
-    color: rgba(0,0,0,0.55);
-    font-family: inherit;
-    font-size: 0.78rem;
-    font-weight: 600;
-    padding: 5px 18px;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-}
-
-.cat-chip:hover {
-    border-color: rgba(255, 69, 0, 0.3);
-    color: #000;
-    background: rgba(255, 255, 255, 0.5);
-}
-
-.cat-chip.active {
-    background: var(--search-accent);
-    border-color: var(--search-accent);
-    color: #fff;
-    box-shadow: 0 0 12px rgba(255, 69, 0, 0.25);
-}
-
 .cat-select-wrapper {
     position: relative;
-}
-
-.cat-select-trigger {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    background: transparent;
-    border: 1px solid transparent;
-    border-radius: 999px;
-    padding: 5px 10px;
-    font-family: inherit;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: rgba(0,0,0,0.55);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-}
-
-.cat-select-trigger:hover {
-    border-color: rgba(255, 69, 0, 0.3);
-    color: #000;
-    background: rgba(255, 255, 255, 0.5);
 }
 
 .cat-select-arrow {
     flex-shrink: 0;
     opacity: 0.5;
     transition: transform 0.2s ease;
-}
-
-.cat-select-trigger:hover .cat-select-arrow {
-    opacity: 0.8;
 }
 
 .cat-select-popup {
@@ -256,7 +189,6 @@ body.modal-open .wind-search-shell {
     border-radius: var(--search-radius-pill);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     transition: border-radius 0.28s ease, box-shadow 0.28s ease;
-    overflow: hidden;
     backdrop-filter: blur(12px) saturate(180%);
     -webkit-backdrop-filter: blur(12px) saturate(180%);
     background-color: rgba(18, 18, 18, 0.85);
@@ -319,7 +251,7 @@ body.modal-open .wind-search-shell {
     width: 32px;
     height: 32px;
     border: none;
-    border-radius: 10px;
+    border-radius: 20px;
     background: rgba(255, 255, 255, 0.08);
     color: var(--search-text);
     cursor: pointer;
@@ -336,6 +268,208 @@ body.modal-open .wind-search-shell {
     font-size: 18px;
 }
 
+.wind-search-filter-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--search-text);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.wind-search-filter-btn:hover {
+    background: rgba(255, 69, 0, 0.25);
+    color: var(--search-accent);
+}
+
+.wind-search-filter-btn .material-symbols-outlined {
+    font-size: 20px;
+}
+
+.search-filter-popup {
+    
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 14px;
+    min-width: 200px;
+    background:  rgba(24, 24, 24, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+
+    padding: 10px 12px;
+    z-index: 300;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(12px);
+    
+    
+}
+
+.search-filter-popup.open {
+    display: block;
+}
+
+.search-filter-popup .filtros-chips {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.search-filter-popup .filtros-chips .chip {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: transparent;
+    color: var(--search-muted);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: left;
+    width: 100%;
+}
+
+.search-filter-popup .filtros-chips .chip:hover {
+    border-color: rgba(255, 69, 0, 0.5);
+    color: var(--search-text);
+}
+
+.search-filter-popup .filtros-chips .chip.active {
+    background: var(--search-accent);
+    border-color: var(--search-accent);
+    color: #fff;
+}
+
+.popup-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 8px 0;
+}
+
+.popup-link {
+    display: block;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    font-family: inherit;
+    color: var(--search-muted);
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.popup-link:hover {
+    background: rgba(255, 69, 0, 0.15);
+    color: var(--search-accent);
+}
+
+.search-filter-popup .cat-select-wrapper {
+    position: relative;
+}
+
+.search-filter-popup .cat-select-trigger {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding: 8px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--search-muted);
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.search-filter-popup .cat-select-trigger:hover {
+    border-color: rgba(255, 69, 0, 0.5);
+    color: var(--search-text);
+}
+
+.search-filter-popup .cat-select-arrow {
+    margin-left: auto;
+    flex-shrink: 0;
+    opacity: 0.5;
+    transition: transform 0.2s ease;
+}
+
+.search-filter-popup .cat-select-popup {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    margin-top: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    background: rgba(30, 30, 30, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    z-index: 310;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.search-filter-popup .cat-select-popup.open {
+    display: block;
+}
+
+.search-filter-popup .cat-select-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 9px 14px;
+    border: none;
+    background: transparent;
+    color: var(--search-muted);
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.1s ease, color 0.1s ease;
+}
+
+.search-filter-popup .cat-select-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--search-text);
+}
+
+.search-filter-popup .cat-select-check {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    color: var(--search-accent);
+}
+
+.search-filter-popup .cat-select-item.selected .cat-select-check {
+    opacity: 1;
+}
+
+.search-filter-popup .cat-select-item.selected {
+    color: var(--search-text);
+}
+
+.wind-search-capsule {
+    position: relative;
+}
+
 .wind-search-body {
     display: none;
     padding: 0 14px 14px;
@@ -349,18 +483,18 @@ body.modal-open .wind-search-shell {
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.search-filters {
+.wind-search-capsule .search-filters {
     padding: 12px 4px 8px;
 }
 
-.filtros-header {
+.wind-search-capsule .filtros-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 10px;
 }
 
-.filtros-titulo {
+.wind-search-capsule .filtros-titulo {
     margin: 0;
     font-size: 0.82rem;
     font-weight: 600;
@@ -368,12 +502,12 @@ body.modal-open .wind-search-shell {
     text-transform: none;
 }
 
-.search-total {
+.wind-search-capsule .search-total {
     font-size: 0.75rem;
     color: var(--search-muted);
 }
 
-.filtros-chips {
+.wind-search-capsule .filtros-chips {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -592,9 +726,10 @@ body.modal-open .wind-search-shell {
 
     body:not(.search-page-body) .wind-search-shell {
         top: 18px;
-        left: calc(280px + 24px);
+        left: auto;
         right: 32px;
-        width: auto;
+        width: 380px;
+        max-width: calc(100% - 320px);
         min-height: auto;
     }
 

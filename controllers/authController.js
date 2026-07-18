@@ -300,6 +300,9 @@ exports.login = async (req, res) => {
             });
         }
 
+        const sessionToken = crypto.randomUUID();
+        await db.query('UPDATE usuarios SET session_token = $1 WHERE id = $2', [sessionToken, usuario.id]);
+
         req.session.usuario = {
             id: usuario.id,
             nombre: usuario.nombre,
@@ -310,6 +313,7 @@ exports.login = async (req, res) => {
         req.session.usuarioId = usuario.id;
         req.session.nombre = usuario.nombre;
         req.session.rol = usuario.rol;
+        req.session.session_token = sessionToken;
 
         if (req.body.mantener_sesion) {
             req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30;
@@ -507,6 +511,13 @@ exports.cambiarColorAvatar = async (req, res) => {
 };
 
 exports.logout = async (req, res) => {
+    try {
+        if (req.session.usuarioId) {
+            await db.query('UPDATE usuarios SET session_token = NULL WHERE id = $1', [req.session.usuarioId]);
+        }
+    } catch (e) {
+        console.error('Error al limpiar session_token:', e.message);
+    }
     req.session.destroy((err) => {
         if (err) return res.status(500).json({ mensaje: 'No se pudo cerrar la sesión.' });
         res.clearCookie('connect.sid', { path: '/' });

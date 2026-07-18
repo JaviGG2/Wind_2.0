@@ -3,6 +3,7 @@ const { subirASupabase } = require('../middlewares/subidaImagen');
 const { contieneMalasPalabras } = require('../utils/filter');
 const notificacion = require('./notificacionController');
 const { verificarRolDesdeDB } = require('../middlewares/autenticacion');
+const { actualizarRachaCreacion } = require('../utils/rachas');
 
 exports.crearRelato = async (req, res) => {
     if (!req.session.usuarioId) {
@@ -30,6 +31,11 @@ exports.crearRelato = async (req, res) => {
         const values = [titulo, contenido, req.session.usuarioId, imagenUrl];
         const resultado = await db.query(querySQL, values);
         const relatoId = resultado.rows[0].id;
+
+        const esEsp = await verificarRolDesdeDB(req);
+        if (esEsp) {
+            actualizarRachaCreacion(req.session.usuarioId).catch(() => {});
+        }
 
         notificacion.crear({
             creadorId: req.session.usuarioId,

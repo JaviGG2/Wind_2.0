@@ -86,6 +86,9 @@ let currentFilter = 'all';
 
 function applyFilter(filter) {
     currentFilter = filter;
+    document.querySelectorAll('.chip').forEach(chip => {
+        chip.classList.toggle('active', chip.dataset.filter === filter);
+    });
     const sections = document.querySelectorAll('#search-results .search-section');
     sections.forEach(section => {
         const tipo = section.dataset.tipo;
@@ -131,9 +134,8 @@ function observeSearchShell() {
 }
 
 function getSearchWidgetHTML() {
-    const esHome = window.location.pathname === '/home' || window.location.pathname === '/home.html';
     return `
-        <div class="wind-search-shell${esHome ? '' : ' wind-search-shell--no-cats '}">
+        <div class="wind-search-shell">
             <div class="wind-search-capsule" id="wind-search-capsule">
                 <form class="wind-search-form" id="search-form">
                     <div class="wind-search-input-row">
@@ -149,8 +151,32 @@ function getSearchWidgetHTML() {
                         <button type="button" class="wind-search-clear" id="search-clear" aria-label="Limpiar búsqueda">
                             <span class="material-symbols-outlined">close</span>
                         </button>
+                        <button type="button" class="wind-search-filter-btn" id="search-filter-btn" aria-label="Filtrar resultados">
+                            <span class="material-symbols-outlined">filter_list</span>
+                        </button>
                     </div>
                 </form>
+
+                <div class="search-filter-popup anim-fade-down" id="search-filter-popup">
+                    <div class="filtros-chips">
+                        <button type="button" class="chip" data-filter="all">Todo</button>
+                    </div>
+                    <div class="popup-divider"></div>
+                    <div class="cat-select-wrapper">
+                        <button type="button" class="cat-select-trigger" id="cat-select-trigger">
+                            <span class="cat-select-value" id="cat-select-value">Categorías</span>
+                            <svg class="cat-select-arrow" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                <path d="M11 5H5l3 3.5z"/>
+                            </svg>
+                        </button>
+                        <div class="cat-select-popup anim-fade-in" id="cat-select-popup">
+                            <div class="cat-select-list" id="cat-select-list"></div>
+                        </div>
+                    </div>
+                    <div class="popup-divider"></div>
+                    <a href="/recomendaciones" class="popup-link">Para ti</a>
+                    
+                </div>
 
                 <div class="wind-search-body" id="wind-search-body">
                     <div class="search-filters" id="search-filters" style="display:none;">
@@ -165,7 +191,6 @@ function getSearchWidgetHTML() {
                             <button type="button" class="chip" data-filter="juegos">Juegos</button>
                         </div>
                     </div>
-
                     <div class="search-results" id="search-results">
                         <div class="search-instruction">
                             <p>Escribe al menos 2 caracteres para buscar.</p>
@@ -173,24 +198,6 @@ function getSearchWidgetHTML() {
                     </div>
                 </div>
             </div>
-            ${esHome ? `
-            <div class="wind-search-categorias">
-                <button type="button" class="cat-chip active" data-cat="todo">Todo</button>
-                
-                <div class="cat-select-wrapper">
-                    <button type="button" class="cat-select-trigger" id="cat-select-trigger">
-                        <span class="cat-select-value" id="cat-select-value">Categoría</span>
-                        <svg class="cat-select-arrow" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                            <path d="M11 5H5l3 3.5z"/>
-                        </svg>
-                    </button>
-                    <a href="/recomendaciones" type="button" class="cat-chip" style="border: 1px solid #ff6400;">Para ti</a>
-                    <div class="cat-select-popup anim-fade-in" id="cat-select-popup">
-                        <div class="cat-select-list" id="cat-select-list"></div>
-                    </div>
-                </div>
-            </div>
-            ` : ''}
         </div>
     `;
 }
@@ -208,7 +215,7 @@ function renderResultados(data, contenedor, capsule) {
     });
 
     if (total === 0) {
-        filterBar.style.display = 'none';
+        if (filterBar) filterBar.style.display = 'none';
         const empty = crearElemento('div', 'search-no-results');
         empty.innerHTML = '<p>No se encontraron resultados para esta búsqueda.</p>';
         contenedor.appendChild(empty);
@@ -216,8 +223,8 @@ function renderResultados(data, contenedor, capsule) {
         return;
     }
 
-    filterBar.style.display = 'block';
-    totalSpan.textContent = `${total} resultado${total !== 1 ? 's' : ''}`;
+    if (filterBar) filterBar.style.display = 'block';
+    if (totalSpan) totalSpan.textContent = `${total} resultado${total !== 1 ? 's' : ''}`;
 
     const temas = crearSeccionResultados('Temas', data.temas || [], 'topic');
     const relatos = crearSeccionResultados('Relatos', data.relatos || [], 'auto_stories');
@@ -227,12 +234,13 @@ function renderResultados(data, contenedor, capsule) {
     setCapsuleExpanded(capsule, true);
 }
 
-function resetSearchUI(resultContainer, filterBar, capsule) {
+function resetSearchUI(resultContainer, capsule) {
     resultContainer.innerHTML = `
         <div class="search-instruction">
             <p>Escribe al menos 2 caracteres para buscar.</p>
         </div>`;
-    filterBar.style.display = 'none';
+    const filterBar = document.getElementById('search-filters');
+    if (filterBar) filterBar.style.display = 'none';
     setCapsuleExpanded(capsule, false);
 }
 
@@ -241,8 +249,9 @@ function crearBuscador() {
     const input = document.getElementById('search-input');
     const clearBtn = document.getElementById('search-clear');
     const resultContainer = document.getElementById('search-results');
-    const filterBar = document.getElementById('search-filters');
     const capsule = document.getElementById('wind-search-capsule');
+    const filterBtn = document.getElementById('search-filter-btn');
+    const filterPopup = document.getElementById('search-filter-popup');
 
     if (!form || !input || !resultContainer) return;
 
@@ -251,13 +260,14 @@ function crearBuscador() {
 
     const ejecutarBusqueda = async (consulta) => {
         if (consulta.length < 2) {
-            resetSearchUI(resultContainer, filterBar, capsule);
+            resetSearchUI(resultContainer, capsule);
             return;
         }
 
         setCapsuleExpanded(capsule, true);
         resultContainer.innerHTML = '<img src="/images/loading.svg" class="anim-loading" alt="Cargando...">';
-        filterBar.style.display = 'none';
+        const filterBar = document.getElementById('search-filters');
+        if (filterBar) filterBar.style.display = 'none';
 
         try {
             const resultados = await buscarEnWind(consulta);
@@ -269,7 +279,6 @@ function crearBuscador() {
                 <div class="search-error">
                     <p>${error.message}</p>
                 </div>`;
-            filterBar.style.display = 'none';
             setCapsuleExpanded(capsule, true);
         }
     };
@@ -284,7 +293,7 @@ function crearBuscador() {
 
         if (!valor) {
             ultimaConsulta = '';
-            resetSearchUI(resultContainer, filterBar, capsule);
+            resetSearchUI(resultContainer, capsule);
             return;
         }
 
@@ -312,39 +321,47 @@ function crearBuscador() {
         input.focus();
         ultimaConsulta = '';
         clearBtn.style.display = 'none';
-        resetSearchUI(resultContainer, filterBar, capsule);
+        resetSearchUI(resultContainer, capsule);
+    });
+
+    filterBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        filterPopup.classList.toggle('open');
     });
 
     document.querySelectorAll('.chip').forEach(chip => {
-        chip.addEventListener('click', () => {
+        chip.addEventListener('click', (e) => {
+            e.stopPropagation();
             document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
             chip.classList.add('active');
             applyFilter(chip.dataset.filter);
+
+            if (chip.closest('.search-filter-popup') && chip.dataset.filter === 'all') {
+                const valueEl = document.getElementById('cat-select-value');
+                if (valueEl) valueEl.textContent = 'Categorías';
+                document.querySelectorAll('.cat-select-item').forEach(i => i.classList.remove('selected'));
+                window.dispatchEvent(new CustomEvent('category-change', { detail: { categoria_id: '', categoria_nombre: '' } }));
+            }
+
+            filterPopup.classList.remove('open');
         });
     });
-
-    document.querySelectorAll('.cat-chip').forEach(chip => {
-        chip.addEventListener('click', () => {
-            document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
-            window.dispatchEvent(new CustomEvent('category-change', { detail: { categoria_id: '', categoria_nombre: '' } }));
-        });
-    });
-
-    const catSelect = document.getElementById('cat-select');
-    if (catSelect) {
-        catSelect.addEventListener('change', () => {
-            document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
-        });
-    }
 
     document.addEventListener('click', (event) => {
         if (!capsule || !capsule.classList.contains('wind-search-capsule--expanded')) return;
         if (capsule.contains(event.target)) return;
         if (input.value.trim().length < 2) {
-            resetSearchUI(resultContainer, filterBar, capsule);
+            resetSearchUI(resultContainer, capsule);
         }
     });
+
+    document.addEventListener('click', (event) => {
+        if (filterPopup.classList.contains('open') && !filterPopup.contains(event.target) && event.target !== filterBtn) {
+            filterPopup.classList.remove('open');
+        }
+    });
+
+
 }
 
 async function cargarCategoriasToolbar() {
@@ -392,9 +409,9 @@ async function cargarCategoriasToolbar() {
                 valueEl.textContent = c.nombre;
                 popup.classList.remove('open');
                 document.removeEventListener('click', cerrarSelect);
-                document.querySelectorAll('.cat-chip').forEach(ch => ch.classList.remove('active'));
                 document.querySelectorAll('.cat-select-item').forEach(i => i.classList.remove('selected'));
                 item.classList.add('selected');
+                document.querySelectorAll('.search-filter-popup .chip').forEach(ch => ch.classList.remove('active'));
                 window.dispatchEvent(new CustomEvent('category-change', { detail: { categoria_id: c.id, categoria_nombre: c.nombre } }));
             });
             list.appendChild(item);
