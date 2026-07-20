@@ -52,6 +52,37 @@
     border: 3px solid var(--primario-light);
 }
 
+.avatar-edit-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+.avatar-edit-btn {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #ff4500;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 2px 6px rgba(255,69,0,0.3);
+    transition: transform 0.15s, background 0.15s;
+}
+
+.avatar-edit-btn .material-symbols-outlined {
+    font-size: 14px;
+}
+
+.avatar-edit-btn:hover {
+    background: #e63e00;
+    transform: scale(1.1);
+}
+
 .perfil-info {
     text-align: center;
 }

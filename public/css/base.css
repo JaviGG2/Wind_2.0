@@ -328,30 +328,61 @@ select.input {
     color: var(--primario);
 }
 
-/* --- Botón volver atrás (icono simple) --- */
+/* --- Botón volver atrás (estilo principal) --- */
+.btn-retroceder,
 .btn-volver {
-    
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    color: #888;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.92);
+    color: #111;
     text-decoration: none;
-    padding: 6px 12px;
-    border-radius: 8px;
-    transition: all 0.2s;
-    cursor: pointer;
+    border-radius: 999px;
+    box-shadow: 0 8px 18px rgba(15,15,15,0.08);
+    transition: transform 0.12s ease, background 0.12s ease, color 0.12s ease;
+    font-weight: 600;
     border: none;
-    background: none;
-    font-size: 0.85rem;
-    font-weight: 500;
-    width: auto;
-    margin-bottom: 16px;
-    
+    cursor: pointer;
+    font-size: 0.95rem;
 }
 
+.btn-retroceder--fixed {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 1200;
+}
+
+.btn-retroceder .back-icon,
+.btn-volver .back-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.btn-retroceder:hover,
 .btn-volver:hover {
-    color: #ff4500;
-    background: rgba(255, 69, 0, 0.1);
+    background: #ff4500;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.btn-retroceder:focus,
+.btn-volver:focus {
+    box-shadow: 0 0 0 4px rgba(255,69,0,0.14);
+    outline: none;
+}
+
+@media (max-width: 600px) {
+    .btn-retroceder--fixed {
+        left: 12px;
+        padding: 8px;
+        gap: 6px;
+    }
+    .btn-retroceder .back-text,
+    .btn-volver .back-text {
+        display: none;
+    }
 }
 
 .avatar-con-badge {

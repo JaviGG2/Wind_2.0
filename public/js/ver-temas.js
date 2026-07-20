@@ -230,6 +230,58 @@ document.addEventListener('DOMContentLoaded', async () => {
         return div.innerHTML;
     }
 
+    // Denuncia modal
+    const btnDenunciar = document.getElementById('btn-denunciar');
+    const modalDenuncia = document.getElementById('modal-denuncia');
+    const modalClose = document.getElementById('modal-denuncia-close');
+    const denunciaMsg = document.getElementById('denuncia-msg');
+
+    if (btnDenunciar && modalDenuncia) {
+        btnDenunciar.addEventListener('click', () => {
+            modalDenuncia.style.display = 'flex';
+            if (denunciaMsg) denunciaMsg.textContent = '';
+        });
+
+        const cerrar = () => { modalDenuncia.style.display = 'none'; };
+
+        if (modalClose) modalClose.addEventListener('click', cerrar);
+        modalDenuncia.addEventListener('click', (e) => {
+            if (e.target === modalDenuncia) cerrar();
+        });
+
+        document.querySelectorAll('.denuncia-opcion').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const params = new URLSearchParams(window.location.search);
+                const temaId = params.get('id');
+                if (!temaId) { if (denunciaMsg) denunciaMsg.textContent = 'Error: ID del tema no encontrado.'; return; }
+
+                const motivo = btn.dataset.motivo;
+                btn.disabled = true;
+                try {
+                    const res = await fetch('/api/denuncias', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ tema_id: temaId, motivo })
+                    });
+                    const data = await res.json();
+                    if (denunciaMsg) {
+                        denunciaMsg.textContent = data.mensaje;
+                        denunciaMsg.className = 'denuncia-msg ' + (res.ok ? 'success' : 'error');
+                    }
+                    if (res.ok) {
+                        setTimeout(cerrar, 2000);
+                    }
+                } catch {
+                    if (denunciaMsg) {
+                        denunciaMsg.textContent = 'Error de conexión.';
+                        denunciaMsg.className = 'denuncia-msg error';
+                    }
+                }
+                btn.disabled = false;
+            });
+        });
+    }
+
     function initValoracion(tema) {
         const section = document.getElementById('valoracion-section');
         const stars = section?.querySelectorAll('.star-rating .star');

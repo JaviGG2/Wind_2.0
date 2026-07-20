@@ -273,8 +273,8 @@
 }
 
 @keyframes animBreathing {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
+  0%, 100% { opacity: 0.6; color: #ff8c00; }
+  50% { opacity: 1; color: #ff4500; }
 }
 
 @keyframes animTyping {

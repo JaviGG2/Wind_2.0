@@ -37,7 +37,7 @@ $('#btn-logout').addEventListener('click', async () => {
 async function iniciarPanel() {
   $('#panel-content').innerHTML = '<img src="/images/loading.svg" class="anim-loading" alt="Cargando...">';
   try {
-    const [usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, recientes] = await Promise.all([
+    const [usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, recientes, denuncias] = await Promise.all([
       fetch('/0505/api/usuarios').then(r => r.ok ? r.json() : []),
       fetch('/0505/api/categorias').then(r => r.ok ? r.json() : []),
       fetch('/0505/api/juegos').then(r => r.ok ? r.json() : []),
@@ -47,9 +47,10 @@ async function iniciarPanel() {
       fetch('/0505/api/feedback').then(r => r.ok ? r.json() : []),
       fetch('/0505/api/solicitudes').then(r => r.ok ? r.json() : []),
       fetch('/0505/api/temas/recientes').then(r => r.ok ? r.json() : []),
+      fetch('/0505/api/denuncias').then(r => r.ok ? r.json() : []),
       new Promise(r => setTimeout(r, 1000))
     ]);
-    cache = { usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, recientes };
+    cache = { usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, recientes, denuncias };
     mostrarResumen();
     configurarNavegacion();
   } catch { $('#panel-content').innerHTML = '<div style="color:#ef4444;padding:40px;text-align:center;">Error al cargar datos.</div>'; }
@@ -61,7 +62,7 @@ function programarRecarga() {
     const active = $('.panel-nav-item.active');
     const tab = active ? active.dataset.tab : 'resumen';
     try {
-      const [usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, recientes] = await Promise.all([
+      const [usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, recientes, denuncias] = await Promise.all([
         fetch('/0505/api/usuarios').then(r => r.ok ? r.json() : []),
         fetch('/0505/api/categorias').then(r => r.ok ? r.json() : []),
         fetch('/0505/api/juegos').then(r => r.ok ? r.json() : []),
@@ -70,9 +71,10 @@ function programarRecarga() {
         fetch('/0505/api/modulos').then(r => r.ok ? r.json() : []),
         fetch('/0505/api/feedback').then(r => r.ok ? r.json() : []),
         fetch('/0505/api/solicitudes').then(r => r.ok ? r.json() : []),
-        fetch('/0505/api/temas/recientes').then(r => r.ok ? r.json() : [])
+        fetch('/0505/api/temas/recientes').then(r => r.ok ? r.json() : []),
+        fetch('/0505/api/denuncias').then(r => r.ok ? r.json() : [])
       ]);
-      cache = { usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, recientes };
+      cache = { usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, recientes, denuncias };
       if (tab === 'resumen') mostrarResumen();
       else if (tab === 'usuarios') mostrarUsuarios();
       else if (tab === 'temas') mostrarTemas();
@@ -83,6 +85,7 @@ function programarRecarga() {
       else if (tab === 'categorias') mostrarCategorias();
       else if (tab === 'solicitudes') mostrarSolicitudes();
       else if (tab === 'feedback') mostrarFeedback();
+      else if (tab === 'denuncias') mostrarDenuncias();
     } catch {}
   }, 100);
 }
@@ -103,6 +106,7 @@ function configurarNavegacion() {
       else if (tab === 'categorias') mostrarCategorias();
       else if (tab === 'solicitudes') mostrarSolicitudes();
       else if (tab === 'feedback') mostrarFeedback();
+      else if (tab === 'denuncias') mostrarDenuncias();
     });
   });
 }
@@ -182,6 +186,7 @@ function mostrarResumen() {
         <div class="ctrl-stat"><div class="ctrl-stat-num">${(modulos||[]).length}</div><div class="ctrl-stat-label">Módulos</div></div>
         <div class="ctrl-stat"><div class="ctrl-stat-num">${(categorias||[]).length}</div><div class="ctrl-stat-label">Categorías</div></div>
         <div class="ctrl-stat"><div class="ctrl-stat-num">${(feedback||[]).length}</div><div class="ctrl-stat-label">Feedbacks</div></div>
+        <div class="ctrl-stat"><div class="ctrl-stat-num">${(cache.denuncias||[]).length}</div><div class="ctrl-stat-label">Denuncias</div></div>
       </div>
     </div>`;
 }
@@ -576,6 +581,38 @@ function mostrarFeedback() {
         </table>
       </div>`}
     </div>`;
+}
+
+// --- Denuncias ---
+function mostrarDenuncias() {
+    const denuncias = cache.denuncias || [];
+    $('#panel-content').innerHTML = `
+        <div class="panel-tab">
+            <h2><span class="material-symbols-outlined">flag</span>Denuncias de temas (${denuncias.length})</h2>
+            <p class="muted" style="color:rgba(255,255,255,0.4);font-size:0.85rem;margin-bottom:16px;">Revisa las denuncias enviadas por los usuarios.</p>
+            <div class="lista-denuncias" id="lista-denuncias">
+                ${denuncias.length === 0 ? '<div class="ctrl-empty">No hay denuncias.</div>' : denuncias.map(d => `
+                    <div class="denuncia-item ${d.estado}">
+                        <div class="denuncia-top">
+                            <strong>${esc(d.denunciante)}</strong>
+                            <span class="denuncia-badge ${d.estado}">${d.estado}</span>
+                        </div>
+                        <p class="denuncia-motivo">${esc(d.motivo)}</p>
+                        <p class="denuncia-tema">Tema: <a href="/ver-tema?id=${d.tema_id}" target="_blank">${esc(d.tema_titulo)}</a></p>
+                        <small class="denuncia-fecha">${new Date(d.fecha_creacion).toLocaleDateString()}</small>
+                        ${d.estado === 'pendiente' ? `<button class="btn-resolver" data-id="${d.id}">Marcar revisada</button>` : ''}
+                    </div>
+                `).join('')}
+            </div>
+        </div>`;
+
+    document.querySelectorAll('.btn-resolver').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const id = btn.dataset.id;
+            await fetch('/0505/api/denuncias/' + id + '/resolver', { method: 'POST' });
+            programarRecarga();
+        });
+    });
 }
 
 function esc(s) {

@@ -78,6 +78,7 @@ const moduloRoutes = require('./routes/moduloRoutes');
 const notificacionRoutes = require('./routes/notificacionRoutes');
 const recomendacionRoutes = require('./routes/recomendacionRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
+const denunciaRoutes = require('./routes/denunciaRoutes');
 const seguidoresController = require('./controllers/seguidoresController');
 const traduccionController = require('./controllers/traduccionController');
 const { verificarSesion, esEspecialista } = require('./middlewares/autenticacion');
@@ -165,6 +166,7 @@ app.use(moduloRoutes);
 app.use(notificacionRoutes);
 app.use(recomendacionRoutes);
 app.use(feedbackRoutes);
+app.use(denunciaRoutes);
 app.post('/api/seguir/:id', seguidoresController.toggleSeguir);
 app.get('/api/seguidores/:id', seguidoresController.obtenerSeguidores);
 app.get('/api/siguiendo/:id', seguidoresController.obteniendoSigo);
@@ -380,6 +382,35 @@ app.get('/0505/api/feedback', verificar0505, async (req, res) => {
     } catch (e) { res.status(500).json([]); }
 });
 
+app.get('/0505/api/denuncias', verificar0505, async (req, res) => {
+    try {
+        const result = await db.query(`
+            SELECT d.id, d.motivo, d.fecha_creacion, d.estado,
+                   d.tema_id, t.titulo AS tema_titulo,
+                   u.username AS denunciante
+            FROM denuncias d
+            JOIN temas t ON d.tema_id = t.id
+            JOIN usuarios u ON d.usuario_id = u.id
+            ORDER BY d.fecha_creacion DESC
+        `);
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error al listar denuncias:', error.message);
+        res.status(500).json({ mensaje: 'Error al listar denuncias.' });
+    }
+});
+
+app.post('/0505/api/denuncias/:id/resolver', verificar0505, async (req, res) => {
+    const { id } = req.params;
+    try {
+        await db.query('UPDATE denuncias SET estado = $1 WHERE id = $2', ['revisado', id]);
+        res.json({ mensaje: 'Denuncia marcada como revisada.' });
+    } catch (error) {
+        console.error('Error al resolver denuncia:', error.message);
+        res.status(500).json({ mensaje: 'Error al resolver denuncia.' });
+    }
+});
+
 // --- Acciones CRUD 0505 ---
 
 // Usuarios
@@ -579,6 +610,22 @@ app.listen(PORT, async () => {
         console.log('Columnas de racha de creación listas.');
     } catch (err) {
         console.error('Error agregando columnas de creación:', err.message);
+    }
+
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS denuncias (
+                id SERIAL PRIMARY KEY,
+                usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+                tema_id INTEGER NOT NULL REFERENCES temas(id) ON DELETE CASCADE,
+                motivo VARCHAR(50) NOT NULL,
+                fecha_creacion TIMESTAMP DEFAULT NOW(),
+                estado VARCHAR(20) DEFAULT 'pendiente'
+            )
+        `);
+        console.log('Tabla denuncias lista.');
+    } catch (err) {
+        console.error('Error creando tabla denuncias:', err.message);
     }
 
     try {

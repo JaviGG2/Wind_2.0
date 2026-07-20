@@ -30,15 +30,14 @@
     <div class="app-layout">
         <div id="menu-placeholder"></div>
         <main class="contenido-principal">
-            <div style="margin-bottom:8px;">
-                <a href="javascript:void(0)" class="btn-volver" onclick="history.back()">
-                    <span class="material-symbols-outlined">arrow_back</span>
-                    Atrás
-                </a>
-            </div>
             <div class="crear-container">
                 <header class="crear-header">
-                    <h1><span class="material-symbols-outlined">menu_book</span> Publicar Tema Histórico</h1>
+                    <a href="javascript:history.back()" class="btn-retroceder" aria-label="Volver">
+                        <span class="material-symbols-outlined back-icon">arrow_back</span>
+                        Atrás
+                        <span class="back-text"></span>
+                    </a>
+                    <h1>Publicar Tema Histórico</h1>
                     <p class="muted">Registra crónicas, datos arquitectónicos o tradiciones oficiales de Coro.</p>
                     <button type="button" data-info="crear-tema" class="btn-info-icono" aria-label="Información">
                     <span class="help">¿Que son los Temas?</span>

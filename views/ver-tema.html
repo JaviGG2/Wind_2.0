@@ -56,7 +56,10 @@
                     <span id="traduciendo" class="traduciendo anim-fade-in" style="display:none">Traduciendo...</span>
                 </div>
                 <a href="/mapa" id="btn-ver-mapa" class="btn-ver-mapa material-symbols-outlined" aria-label="Ver en mapa">map</a>
-                <a href="#" class="btn-report material-symbols-outlined" aria-label="Reportar contenido">report</a>
+                <button type="button" class="btn-denunciar" id="btn-denunciar" aria-label="Denunciar">
+                    <span class="material-symbols-outlined">report</span>
+                    
+                </button>
                 
                 
             </div>
@@ -91,6 +94,7 @@
                         <span class="star" data-val="5"><span class="material-symbols-outlined">star</span></span>
                     </div>
                     <div class="valoracion-count" id="val-count">(0 valoraciones)</div>
+                    
                 </div>
             </div>
 
@@ -110,6 +114,32 @@
             </div>
             <div id="comentarios-lista" class="comentarios-lista"></div>
         </section>
+    <div id="modal-denuncia" class="modal-denuncia-overlay" style="display:none;">
+        <div class="modal-denuncia">
+            <div class="modal-denuncia-header">
+                <h3>Denunciar tema</h3>
+                <button type="button" class="modal-denuncia-close" id="modal-denuncia-close">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <p class="modal-denuncia-desc">Selecciona el motivo de la denuncia:</p>
+            <div class="modal-denuncia-opciones" id="modal-denuncia-opciones">
+                <button type="button" class="denuncia-opcion" data-motivo="Contenido inapropiado">
+                    <span class="material-symbols-outlined">block</span>
+                    Contenido inapropiado
+                </button>
+                <button type="button" class="denuncia-opcion" data-motivo="Información incorrecta">
+                    <span class="material-symbols-outlined">error_outline</span>
+                    Información incorrecta
+                </button>
+                <button type="button" class="denuncia-opcion" data-motivo="Spam o publicidad">
+                    <span class="material-symbols-outlined">campaign</span>
+                    Spam o publicidad
+                </button>
+            </div>
+            <div id="denuncia-msg" class="denuncia-msg"></div>
+        </div>
+    </div>
     </main>
 
     <script src="/js/ver-temas.js?v={{ cacheVersion }}"></script>

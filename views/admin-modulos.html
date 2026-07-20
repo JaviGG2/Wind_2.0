@@ -19,15 +19,14 @@
   <div class="app-layout">
     <div id="menu-placeholder"></div>
     <main class="contenido-principal">
-      <div style="margin-bottom:8px;">
-        <a href="javascript:void(0)" class="btn-volver" onclick="history.back()">
-          <span class="material-symbols-outlined">arrow_back</span>
-          Atrás
-        </a>
-      </div>
       <div class="crear-container">
         <header class="crear-header">
-          <h1><span class="material-symbols-outlined">folder_special</span> Mis Módulos</h1>
+          <a href="javascript:history.back()" class="btn-retroceder" aria-label="Volver">
+            <span class="material-symbols-outlined back-icon">arrow_back</span>
+            Atrás
+            <span class="back-text"></span>
+          </a>
+          <h1>Mis Módulos</h1>
           <p class="muted">Administrá tus módulos de juego y sus niveles.</p>
         </header>
         <a href="/admin/crear-modulo" class="btn-outline" style="margin-bottom:20px;display:inline-flex;">

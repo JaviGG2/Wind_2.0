@@ -388,18 +388,6 @@ h1 {
   flex-wrap: wrap;
   flex: 1;
 }
-.traductor-toolbar .btn-report {
-  margin-left: auto;
-  text-decoration: none;
-  color: #888;
-  font-size: 22px;
-  padding: 6px;
-  border-radius: 8px;
-  transition: color 0.2s;
-}
-.traductor-toolbar .btn-report:hover {
-  color: #ff4500;
-}
 .traductor-toolbar .btn-ver-mapa {
   text-decoration: none;
   color: #888;
@@ -453,26 +441,128 @@ h1 {
 }
 
 .btn-denunciar {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 8px 14px;
-  margin-left: auto;
-  border: 1.5px solid #dc2626;
-  border-radius: 999px;
-  background: transparent;
-  color: #dc2626;
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: default;
-  transition: background 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: 1.5px solid #dc2626;
+    border-radius: 999px;
+    background: transparent;
+    color: #dc2626;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    font-family: inherit;
 }
+
 .btn-denunciar .material-symbols-outlined {
-  font-size: 1.1rem;
+    font-size: 1.1rem;
 }
+
 .btn-denunciar:hover {
-  background: rgba(220, 38, 38, 0.06);
+    background: #dc2626;
+    color: #fff;
 }
+
+/* --- Modal Denuncia --- */
+.modal-denuncia-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-denuncia {
+    background: #fff;
+    border-radius: 20px;
+    padding: 28px 24px;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    animation: animFadeDown 0.2s ease;
+}
+
+.modal-denuncia-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.modal-denuncia-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #111;
+}
+
+.modal-denuncia-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #888;
+    padding: 4px;
+    border-radius: 50%;
+    transition: background 0.15s;
+}
+
+.modal-denuncia-close:hover {
+    background: #f3f4f6;
+    color: #111;
+}
+
+.modal-denuncia-desc {
+    font-size: 0.88rem;
+    color: #6b7280;
+    margin: 0 0 16px;
+}
+
+.modal-denuncia-opciones {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.denuncia-opcion {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    background: #fff;
+    color: #111;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    font-family: inherit;
+    text-align: left;
+}
+
+.denuncia-opcion:hover {
+    border-color: #dc2626;
+    background: #fef2f2;
+}
+
+.denuncia-opcion .material-symbols-outlined {
+    font-size: 1.3rem;
+    color: #dc2626;
+}
+
+.denuncia-msg {
+    font-size: 0.85rem;
+    margin-top: 12px;
+    text-align: center;
+    min-height: 1.2em;
+}
+
+.denuncia-msg.success { color: #10b981; }
+.denuncia-msg.error { color: #dc2626; }
 
 .btn-mobile-translate {
   display: none;
@@ -504,19 +594,6 @@ h1 {
   }
   .btn-mobile-translate {
     margin-left: auto;
-  }
-  .traductor-toolbar .btn-report {
-    margin-left: 0;
-    position: relative;
-  }
-  .traductor-toolbar .btn-report::before {
-    content: '';
-    position: absolute;
-    left: -4px;
-    top: 6px;
-    bottom: 6px;
-    width: 1px;
-    background: rgba(0,0,0,0.1);
   }
   .traductor-collapse {
     display: none;
@@ -554,6 +631,7 @@ h1 {
   left: 12px;
   right: 12px;
   z-index: 99999;
+  
 }
 .barra-superior .btn-retroceder {
   display: inline-flex;

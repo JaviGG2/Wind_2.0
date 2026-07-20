@@ -17,25 +17,6 @@
     color: var(--primario);
 }
 
-.selavatar-back {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    color: var(--texto-sec);
-    text-decoration: none;
-    padding: 6px 12px;
-    border-radius: 8px;
-    transition: all var(--transition);
-    font-size: 0.85rem;
-    font-weight: 500;
-    width: auto;
-}
-
-.selavatar-back:hover {
-    color: var(--primario);
-    background: var(--primario-light);
-}
-
 .selavatar-current {
     display: flex;
     align-items: center;

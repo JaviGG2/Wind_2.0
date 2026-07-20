@@ -8,22 +8,6 @@
     margin-bottom: 24px;
 }
 
-.perfil-volver {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    color: var(--c-muted, #6b7280);
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-    transition: color 180ms;
-}
-
-.perfil-volver:hover {
-    color: var(--c-primario, #ff4500);
-}
-
 .perfil-cabecera {
     display: flex;
     flex-direction: column;

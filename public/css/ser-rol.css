@@ -6,12 +6,12 @@
     padding: 48px 24px 32px;
 }
 .ser-icon {
-    width: 72px;
-    height: 72px;
-    border-radius: 20px;
+    width: 82px;
+    height: 82px;
+    
     display: block;
     margin: 0 auto 16px;
-    box-shadow: 0 0 0 4px rgba(255,69,0,0.12);
+    
 }
 .ser-title {
     font-size: 2rem;
@@ -270,53 +270,41 @@
     color: rgba(255,255,255,0.6);
 }
 
+@media (min-width: 769px) {
+    .contenido-principal {
+        margin-left: 0;
+        width: 100%;
+    }
+    .ser-hero {
+        padding: 56px 24px 36px;
+        max-width: 780px;
+        margin: 0 auto;
+    }
+    .ser-benefits,
+    .ser-form-section {
+        width: min(100%, 980px);
+        margin: 0 auto;
+    }
+    .ser-grid {
+        max-width: 980px;
+        margin: 0 auto;
+    }
+    .ser-form-card {
+        max-width: 680px;
+        padding: 40px 36px 32px;
+    }
+    .ser-cta-btn {
+        max-width: 320px;
+        margin: 0 auto;
+    }
+}
+
 @media (max-width: 768px) {
     .ser-title { font-size: 1.5rem; }
     .ser-grid { grid-template-columns: 1fr; }
     .ser-hero { padding: 32px 16px 24px; }
     .ser-form-card { padding: 24px 18px; }
     .ser-form-row { grid-template-columns: 1fr; }
-}
-
-/* Mejoras para el botón "ir atrás" en esta vista */
-.btn-retroceder {
-    position: fixed;
-    top: 14px;
-    left: 14px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    background: rgba(255,255,255,0.92);
-    color: #111;
-    text-decoration: none;
-    border-radius: 12px;
-    box-shadow: 0 8px 18px rgba(15, 15, 15, 0.08);
-    transition: transform 0.12s ease, background 0.12s ease, color 0.12s ease;
-    z-index: 1200;
-    font-weight: 600;
-}
-.btn-retroceder .back-icon {
-    font-size: 20px;
-    line-height: 1;
-}
-.btn-retroceder .back-text {
-    display: inline-block;
-    font-size: 0.95rem;
-}
-.btn-retroceder:hover,
-.btn-retroceder:focus {
-    background: #ff4500;
-    color: #fff;
-    transform: translateY(-2px);
-}
-.btn-retroceder:focus {
-    box-shadow: 0 0 0 4px rgba(255,69,0,0.14);
-    outline: none;
-}
-@media (max-width: 600px) {
-    .btn-retroceder { padding: 8px; gap: 6px; }
-    .btn-retroceder .back-text { display: none; }
 }
 
 /* Utility para texto que solo ve el lector de pantalla */

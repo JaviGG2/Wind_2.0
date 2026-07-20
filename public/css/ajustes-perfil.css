@@ -17,25 +17,6 @@
     color: #ff4500;
 }
 
-.btn-volver {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    color: #888;
-    text-decoration: none;
-    padding: 6px 12px;
-    border-radius: 8px;
-    transition: all 0.2s;
-    font-size: 0.85rem;
-    font-weight: 500;
-    width: auto;
-}
-
-.btn-volver:hover {
-    color: #ff4500;
-    background: rgba(255, 69, 0, 0.1);
-}
-
 .ajustes-seccion {
     background: #fff;
     border: 1px solid #e0e0e0;

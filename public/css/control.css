@@ -301,6 +301,89 @@ body {
 .modal-msg.success { color: #10b981; }
 .modal-msg.error { color: #ef4444; }
 
+/* --- Denuncias --- */
+.lista-denuncias {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.denuncia-item {
+    background: #161616;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.denuncia-item.revisado {
+    opacity: 0.6;
+}
+
+.denuncia-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.denuncia-badge {
+    font-size: 0.75rem;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.denuncia-badge.pendiente {
+    background: rgba(245,158,11,0.15);
+    color: #f59e0b;
+}
+
+.denuncia-badge.revisado {
+    background: rgba(16,185,129,0.15);
+    color: #10b981;
+}
+
+.denuncia-motivo {
+    font-size: 0.9rem;
+    color: #e0e0e0;
+    margin: 0 0 4px;
+    font-weight: 600;
+}
+
+.denuncia-tema {
+    font-size: 0.82rem;
+    margin: 0 0 4px;
+}
+
+.denuncia-tema a {
+    color: #ff4500;
+    text-decoration: none;
+}
+
+.denuncia-fecha {
+    color: rgba(255,255,255,0.4);
+    font-size: 0.78rem;
+}
+
+.btn-resolver {
+    margin-top: 8px;
+    padding: 6px 16px;
+    border: 1px solid #ff4500;
+    border-radius: 8px;
+    background: transparent;
+    color: #ff4500;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+}
+
+.btn-resolver:hover {
+    background: rgba(255,69,0,0.1);
+}
+
 @media (max-width: 768px) {
   .panel-body { flex-direction: column; }
   .panel-sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.04); padding: 10px; }

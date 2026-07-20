@@ -5,6 +5,10 @@
 }
 
 .crear-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
     margin-bottom: 24px;
 }
 
@@ -12,16 +16,14 @@
     font-size: var(--font-2xl);
     font-weight: 700;
     color: var(--primario);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 0 0 6px;
+    margin: 0;
 }
 
 .crear-header p {
     color: var(--texto-sec);
     font-size: var(--font-sm);
     margin: 0;
+    flex-basis: 100%;
 }
 
 .crear-card {
