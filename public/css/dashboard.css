@@ -347,6 +347,15 @@
     border: 1px solid rgba(255,165,0,0.15);
     border-radius: 14px;
     padding: 14px 20px;
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.racha-card:hover {
+    border-color: var(--primario);
+    box-shadow: 0 4px 16px rgba(255,69,0,0.15);
+    transform: translateY(-1px);
 }
 
 @media (min-width: 769px) {

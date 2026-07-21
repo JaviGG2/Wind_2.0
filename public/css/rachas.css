@@ -1,0 +1,159 @@
+.rachas-root {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 24px 20px;
+}
+
+.rachas-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.rachas-logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 12px;
+    display: block;
+}
+
+.rachas-header h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--primario);
+    margin: 0;
+}
+
+.rachas-header p {
+    color: var(--texto-sec);
+    font-size: 0.9rem;
+    margin-top: 4px;
+}
+
+.rachas-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.rachas-stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--borde);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    text-align: center;
+    box-shadow: var(--sombra-sm);
+    transition: box-shadow var(--transition);
+}
+
+.rachas-stat-card:hover {
+    box-shadow: var(--sombra-md);
+}
+
+.rachas-stat-card.destacada {
+    background: linear-gradient(135deg, rgba(255,69,0,0.08), rgba(255,165,0,0.05));
+    border-color: rgba(255,69,0,0.2);
+}
+
+.rachas-stat-num {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #ff4500;
+    line-height: 1.1;
+}
+
+.rachas-stat-label {
+    font-size: 0.82rem;
+    color: var(--texto-sec);
+    font-weight: 500;
+    margin-top: 4px;
+    display: block;
+}
+
+.rachas-info-card {
+    background: var(--bg-card);
+    border: 1px solid var(--borde);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--sombra-sm);
+}
+
+.rachas-info-card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--texto);
+    margin: 0 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rachas-info-card h3 .material-symbols-outlined {
+    color: var(--primario);
+    font-size: 1.3rem;
+}
+
+.rachas-info-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.rachas-info-card ul li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--borde-light);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: var(--texto);
+}
+
+.rachas-info-card ul li:last-child {
+    border-bottom: none;
+}
+
+.rachas-info-card ul li .material-symbols-outlined {
+    font-size: 1.2rem;
+    color: var(--primario);
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.rachas-tip {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(255,165,0,0.06);
+    border: 1px solid rgba(255,165,0,0.15);
+    border-radius: var(--radius-md);
+    padding: 16px 18px;
+    margin-top: 16px;
+}
+
+.rachas-tip .material-symbols-outlined {
+    font-size: 1.5rem;
+    color: #ff8c00;
+    flex-shrink: 0;
+}
+
+.rachas-tip p {
+    margin: 0;
+    font-size: 0.88rem;
+    color: var(--texto-sec);
+    line-height: 1.5;
+}
+
+.rachas-tip strong {
+    color: var(--texto);
+}
+
+@media (max-width: 600px) {
+    .rachas-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .rachas-root {
+        padding: 16px;
+    }
+}

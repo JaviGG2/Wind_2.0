@@ -1,7 +1,7 @@
 const db = require('../config/db');
 const notificacion = require('./notificacionController');
 const { verificarRolDesdeDB } = require('../middlewares/autenticacion');
-const { actualizarRachaJuego, actualizarRachaCreacion, calcularMultiplicador } = require('../utils/rachas');
+const { actualizarRachaCreacion } = require('../utils/rachas');
 
 exports.crearJuego = async (req, res) => {
     if (!await verificarRolDesdeDB(req)) {
@@ -277,17 +277,8 @@ exports.responderJuego = async (req, res) => {
 
         const esEspecialista = await verificarRolDesdeDB(req);
 
-        let racha = 0;
-        let multiplicador = 1;
-
         if (!esEspecialista) {
-            racha = await actualizarRachaJuego(req.session.usuarioId).catch(() => 0);
-            multiplicador = calcularMultiplicador(racha);
-            const puntosFinal = Math.round(puntos * multiplicador);
-            await db.query('UPDATE usuarios SET puntos = COALESCE(puntos,0) + $1 WHERE id = $2', [puntosFinal, req.session.usuarioId]);
-            console.log(`[responderJuego] PUNTOS: base=${puntos} x${multiplicador}=${puntosFinal} para usuario ${req.session.usuarioId}, racha=${racha}`);
-        } else {
-            console.log(`[responderJuego] Especialista, NO se otorgan puntos`);
+            await db.query('UPDATE usuarios SET puntos = COALESCE(puntos,0) + $1 WHERE id = $2', [puntos, req.session.usuarioId]);
         }
 
         await db.query(
@@ -295,19 +286,14 @@ exports.responderJuego = async (req, res) => {
             [req.session.usuarioId, 'juego', juego_id]
         ).catch(() => {});
 
-        const puntosFinal = esEspecialista ? 0 : Math.round(puntos * multiplicador);
+        const puntosFinal = esEspecialista ? 0 : puntos;
         let mensaje = esEspecialista
             ? '¡Correcto! Como Especialista no recibes puntos.'
             : `¡Correcto! Has ganado ${puntosFinal} pts.`;
-        if (multiplicador > 1) {
-            mensaje += ` (racha x${multiplicador})`;
-        }
 
         return res.json({
             correcto: true,
             puntos_ganados: puntosFinal,
-            multiplicador,
-            racha,
             mensaje
         });
     } catch (error) {
@@ -365,20 +351,16 @@ exports.obtenerRacha = async (req, res) => {
     }
     try {
         const result = await db.query(
-            `SELECT racha_actual, racha_maxima, ultimo_activo,
-                    racha_creacion_actual, racha_creacion_maxima, ultimo_creacion
+            `SELECT racha_creacion_actual, racha_creacion_maxima, ultimo_creacion
              FROM rachas WHERE usuario_id = $1`,
             [req.session.usuarioId]
         );
         if (result.rows.length === 0) {
             return res.json({
-                racha_actual: 0, racha_maxima: 0, ultimo_activo: null,
                 racha_creacion_actual: 0, racha_creacion_maxima: 0, ultimo_creacion: null
             });
         }
-        const data = result.rows[0];
-        const multi = calcularMultiplicador(data.racha_actual || 0);
-        res.json({ ...data, multiplicador: multi });
+        res.json(result.rows[0]);
     } catch (error) {
         console.error('Error al obtener racha:', error.message);
         res.status(500).json({ mensaje: 'Error al obtener racha' });

@@ -232,6 +232,7 @@ app.get('/ranking-game', verificarSesion, (req, res) => res.render('ranking-game
 app.get('/barra_navegacion', (req, res) => res.render('barra_navegacion'));
 app.get('/registro', (req, res) => res.render('Registro'));
 app.get('/login', (req, res) => res.render('login'));
+app.get('/rachas', verificarSesion, (req, res) => res.render('rachas'));
 app.get('/ajustes-perfil', verificarSesion, (req, res) => res.render('ajustes-perfil'));
 app.get('/select-avatar', verificarSesion, (req, res) => res.render('select-avatar'));
 app.get('/recuperar-contrasena', (req, res) => res.render('recuperar-contrasena'));

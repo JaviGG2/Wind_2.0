@@ -434,23 +434,18 @@ async function cargarNivel(rol) {
 }
 
 async function cargarRacha(rol) {
+    const rachaCard = document.getElementById('racha-card');
+    if (rol !== 'Especialista') {
+        if (rachaCard) rachaCard.style.display = 'none';
+        return;
+    }
+    if (rachaCard) rachaCard.style.display = '';
     try {
         const res = await fetch('/api/rachas');
         if (!res.ok) return;
         const data = await res.json();
-        const esEsp = rol === 'Especialista';
-
-        if (esEsp) {
-            document.getElementById('racha-num').textContent = data.racha_creacion_actual || 0;
-            document.getElementById('racha-label').textContent = 'días creando';
-            document.getElementById('racha-max').textContent = data.racha_creacion_maxima || 0;
-        } else {
-            document.getElementById('racha-icon').textContent = '🔥';
-            document.getElementById('racha-num').textContent = data.racha_actual || 0;
-            document.getElementById('racha-label').textContent = data.multiplicador > 1
-                ? `días seguidos (x${data.multiplicador})`
-                : 'días seguidos';
-            document.getElementById('racha-max').textContent = data.racha_maxima || 0;
-        }
+        document.getElementById('racha-num').textContent = data.racha_creacion_actual || 0;
+        document.getElementById('racha-label').textContent = 'días creando';
+        document.getElementById('racha-max').textContent = data.racha_creacion_maxima || 0;
     } catch {}
 }
