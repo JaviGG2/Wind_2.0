@@ -29,8 +29,8 @@
                 </div>
 
                 <header class="rachas-header">
-                    <img src="/img/icons8-elemento-fuego.gif" alt="Racha" class="rachas-logo" style="border-radius:50%;">
-                    <h1>Mi Racha de Creación</h1>
+                    <img src="/img/Fire_Streak_Orange.svg" alt="Racha" class="rachas-logo" style="border-radius:20%;">
+                    <h1>Mi Racha de Creador</h1>
                     <p>Mantén tu racha publicando contenido todos los días</p>
                 </header>
 
@@ -38,13 +38,26 @@
 
                 <div id="racha-content" style="display:none;">
                     <div class="rachas-stats-grid">
-                        <div class="rachas-stat-card destacada">
+                        <div class="rachas-stat-card destacada anim-fade-down">
                             <div class="rachas-stat-num" id="racha-num">0</div>
                             <span class="rachas-stat-label">Días consecutivos</span>
                         </div>
-                        <div class="rachas-stat-card">
+                        <div class="rachas-stat-card anim-fade-down">
                             <div class="rachas-stat-num" id="racha-max">0</div>
                             <span class="rachas-stat-label">Racha máxima</span>
+                        </div>
+                    </div>
+                    <div class="rachas-info-card anim-fade-down" id="racha-reputacion-card">
+                        <h3><span class="material-symbols-outlined">military_tech</span>Tu reputación</h3>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                            <div>
+                                <span style="font-size:0.8rem;color:var(--texto-sec);display:block;">Puntos de reputación</span>
+                                <span style="font-size:1.8rem;font-weight:800;color:#ff4500;" id="racha-reputacion">0</span>
+                            </div>
+                            <div>
+                                <span style="font-size:0.8rem;color:var(--texto-sec);display:block;">Rango actual</span>
+                                <span style="font-size:1.8rem;font-weight:800;color:#ff4500;" id="racha-rango">—</span>
+                            </div>
                         </div>
                     </div>
 
@@ -77,19 +90,7 @@
                         </div>
                     </div>
 
-                    <div class="rachas-info-card" id="racha-reputacion-card">
-                        <h3><span class="material-symbols-outlined">military_tech</span>Tu reputación</h3>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                            <div>
-                                <span style="font-size:0.8rem;color:var(--texto-sec);display:block;">Puntos de reputación</span>
-                                <span style="font-size:1.8rem;font-weight:800;color:#ff4500;" id="racha-reputacion">0</span>
-                            </div>
-                            <div>
-                                <span style="font-size:0.8rem;color:var(--texto-sec);display:block;">Rango actual</span>
-                                <span style="font-size:1.8rem;font-weight:800;color:#ff4500;" id="racha-rango">—</span>
-                            </div>
-                        </div>
-                    </div>
+        
                 </div>
             </div>
         </main>

@@ -5,7 +5,7 @@ document.getElementById('form-crear-modulo').addEventListener('submit', async (e
   btn.textContent = 'Creando...';
 
   try {
-    const res = await fetch('/admin/api/modulos', {
+    const res = await fetch('/api/modulos-admin', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',

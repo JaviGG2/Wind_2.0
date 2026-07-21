@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const notificacion = require('./notificacionController');
 
 exports.enviarFeedback = async (req, res) => {
     const { mensaje } = req.body;
@@ -10,6 +11,17 @@ exports.enviarFeedback = async (req, res) => {
             `INSERT INTO feedback (usuario_id, mensaje, pagina) VALUES ($1, $2, $3)`,
             [req.session.usuarioId, mensaje.trim(), req.body.pagina || '']
         );
+
+        const esp = await db.query('SELECT id FROM usuarios WHERE rol = $1 AND cuenta_activa = true', ['Especialista']);
+        for (const e of esp.rows) {
+            notificacion.crearParaUsuario({
+                usuarioId: e.id,
+                titulo: 'Nuevo feedback',
+                mensaje: mensaje.trim().substring(0, 120),
+                enlace: '/admin'
+            });
+        }
+
         res.status(201).json({ mensaje: 'Feedback enviado. ¡Gracias!' });
     } catch (err) {
         console.error('Error al guardar feedback:', err.message);

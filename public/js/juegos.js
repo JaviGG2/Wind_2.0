@@ -17,6 +17,23 @@ async function cargarMisJuegosCreados() {
         }
 
         contenedorLista.innerHTML = '';
+        try {
+            const perfilRes = await fetch('/auth/perfil', { credentials: 'include' });
+            if (perfilRes.ok) {
+                const perfil = await perfilRes.json();
+                if (perfil.rol === 'Especialista') {
+                    const rr = await fetch('/api/rachas');
+                    if (rr.ok) {
+                        const rd = await rr.json();
+                        const banner = document.createElement('div');
+                        banner.style.cssText = 'background:rgba(255,69,0,0.08);border:1px solid rgba(255,69,0,0.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:10px;font-size:0.85rem;color:#ff4500;';
+                        banner.innerHTML = `<span class="material-symbols-outlined" style="font-size:20px;">local_fire_department</span><span><strong>${rd.racha_creacion_actual || 0}</strong> días de racha · Máx: <strong>${rd.racha_creacion_maxima || 0}</strong></span>`;
+                        contenedorLista.appendChild(banner);
+                    }
+                }
+            }
+        } catch {}
+
         juegos.forEach(juego => {
             const tarjeta = document.createElement('div');
             tarjeta.className = 'lista-item-card';
@@ -98,6 +115,19 @@ async function cargarJuegosPublicados() {
                 if (r.ok) perfil = await r.json();
             } catch (err) {
                 console.warn('No se pudo obtener perfil para permisos:', err);
+            }
+
+            if (perfil && perfil.rol === 'Especialista') {
+                try {
+                    const rr = await fetch('/api/rachas');
+                    if (rr.ok) {
+                        const rd = await rr.json();
+                        const banner = document.createElement('div');
+                        banner.style.cssText = 'background:rgba(255,69,0,0.08);border:1px solid rgba(255,69,0,0.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:10px;font-size:0.85rem;color:#ff4500;';
+                        banner.innerHTML = `<span class="material-symbols-outlined" style="font-size:20px;">local_fire_department</span><span><strong>${rd.racha_creacion_actual || 0}</strong> días de racha · Máx: <strong>${rd.racha_creacion_maxima || 0}</strong></span>`;
+                        contenedor.appendChild(banner);
+                    }
+                } catch {}
             }
 
             juegos.forEach(juego => {

@@ -141,7 +141,7 @@ exports.listarTemas = async (req, res) => {
      FROM temas t
      LEFT JOIN categorias c ON t.categoria_id = c.id
      LEFT JOIN usuarios u ON t.creador_id = u.id
-     WHERE t.estado = 'aprobado'`;
+     WHERE t.estado IN ('aprobado', 'revisado')`;
 
         const conds = [];
         const vals = [];
@@ -187,7 +187,7 @@ exports.obtenerTemaPorId = async (req, res) => {
                  FROM temas t
                  LEFT JOIN categorias c ON t.categoria_id = c.id
                  LEFT JOIN usuarios u ON t.creador_id = u.id
-                 WHERE t.id = $1 AND t.estado = 'aprobado'
+                 WHERE t.id = $1 AND t.estado IN ('aprobado', 'revisado')
                  LIMIT 1`,
                 usuarioId ? [temaIdNum, usuarioId] : [temaIdNum]
             );
@@ -207,7 +207,7 @@ exports.obtenerTemaPorId = async (req, res) => {
                  FROM temas t
                  LEFT JOIN categorias c ON t.categoria_id = c.id
                  LEFT JOIN usuarios u ON t.creador_id = u.id
-                 WHERE (t.id::text = $1 OR t.slug = $1) AND t.estado = 'aprobado'
+                 WHERE (t.id::text = $1 OR t.slug = $1) AND t.estado IN ('aprobado', 'revisado')
                  LIMIT 1`,
                 usuarioId ? [rawId, usuarioId] : [rawId]
             );
@@ -337,7 +337,7 @@ exports.listarTemasMapa = async (req, res) => {
             FROM temas t
             LEFT JOIN usuarios u ON t.creador_id = u.id
             LEFT JOIN categorias c ON t.categoria_id = c.id
-            WHERE t.estado = 'aprobado'
+            WHERE t.estado IN ('aprobado', 'revisado')
               AND t.latitud IS NOT NULL
               AND t.longitud IS NOT NULL
             ORDER BY t.fecha_publicacion DESC

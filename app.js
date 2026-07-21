@@ -239,20 +239,20 @@ app.get('/recuperar-contrasena', (req, res) => res.render('recuperar-contrasena'
 app.get('/restablecer-contrasena', (req, res) => res.render('restablecer-contrasena'));
 app.get('/', (req, res) => res.render('login'));
 
-// --- Panel de control 0505 (read-only, admin/Wind2.0) ---
+// --- Panel de control admin (read-only, admin/Wind2.0) ---
 function verificar0505(req, res, next) {
     if (req.session && req.session.admin0505) return next();
     res.status(401).json({ mensaje: 'No autorizado.' });
 }
 
-app.get('/0505', (req, res) => {
+app.get('/admin', (req, res) => {
     if (req.session && req.session.admin0505) {
         return res.render('control');
     }
     res.render('control');
 });
 
-app.post('/0505/auth', (req, res) => {
+app.post('/admin/auth', (req, res) => {
     const { usuario, contrasena } = req.body;
     if (usuario === 'admin' && contrasena === 'Wind2.0') {
         req.session.admin0505 = true;
@@ -261,19 +261,19 @@ app.post('/0505/auth', (req, res) => {
     res.status(401).json({ mensaje: 'Credenciales incorrectas.' });
 });
 
-app.post('/0505/logout', (req, res) => {
+app.post('/admin/logout', (req, res) => {
     delete req.session.admin0505;
     res.json({ mensaje: 'ok' });
 });
 
-app.get('/0505/api/usuarios', verificar0505, async (req, res) => {
+app.get('/admin/api/usuarios', verificar0505, async (req, res) => {
     try {
         const r = await db.query('SELECT id, nombre, username, correo, rol, puntos, cuenta_activa FROM usuarios ORDER BY id ASC');
         res.json(r.rows);
     } catch (e) { res.status(500).json([]); }
 });
 
-app.get('/0505/api/categorias', verificar0505, async (req, res) => {
+app.get('/admin/api/categorias', verificar0505, async (req, res) => {
     try {
         const r = await db.query(`
             SELECT c.id, c.nombre,
@@ -284,7 +284,7 @@ app.get('/0505/api/categorias', verificar0505, async (req, res) => {
     } catch (e) { res.status(500).json([]); }
 });
 
-app.get('/0505/api/juegos', verificar0505, async (req, res) => {
+app.get('/admin/api/juegos', verificar0505, async (req, res) => {
     try {
         const r = await db.query(`
             SELECT j.id, j.titulo, j.pregunta, j.tipo, j.puntos_recompensa, c.nombre AS categoria_nombre
@@ -294,10 +294,11 @@ app.get('/0505/api/juegos', verificar0505, async (req, res) => {
     } catch (e) { res.status(500).json([]); }
 });
 
-app.get('/0505/api/temas', verificar0505, async (req, res) => {
+app.get('/admin/api/temas', verificar0505, async (req, res) => {
     try {
         const r = await db.query(`
-            SELECT t.id, t.titulo, t.likes, t.estado, c.nombre AS categoria_nombre,
+            SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.likes, t.estado, t.fecha_publicacion,
+                   c.nombre AS categoria_nombre,
                    u.nombre AS creador_nombre, u.username AS creador_username
             FROM temas t
             LEFT JOIN categorias c ON t.categoria_id = c.id
@@ -307,22 +308,7 @@ app.get('/0505/api/temas', verificar0505, async (req, res) => {
     } catch (e) { res.status(500).json([]); }
 });
 
-app.get('/0505/api/temas/recientes', verificar0505, async (req, res) => {
-    try {
-        const r = await db.query(`
-            SELECT t.id, t.titulo, t.likes, t.estado, t.fecha_publicacion,
-                   c.nombre AS categoria_nombre,
-                   u.nombre AS creador_nombre, u.username AS creador_username
-            FROM temas t
-            LEFT JOIN categorias c ON t.categoria_id = c.id
-            LEFT JOIN usuarios u ON t.creador_id = u.id
-            ORDER BY t.fecha_publicacion DESC
-            LIMIT 50`);
-        res.json(r.rows);
-    } catch (e) { res.status(500).json([]); }
-});
-
-app.get('/0505/api/relatos', verificar0505, async (req, res) => {
+app.get('/admin/api/relatos', verificar0505, async (req, res) => {
     try {
         const r = await db.query(`
             SELECT r.id, r.titulo, r.fecha_publicacion, u.nombre AS autor_nombre, u.username AS autor_username
@@ -332,7 +318,7 @@ app.get('/0505/api/relatos', verificar0505, async (req, res) => {
     } catch (e) { res.status(500).json([]); }
 });
 
-app.get('/0505/api/modulos', verificar0505, async (req, res) => {
+app.get('/admin/api/modulos', verificar0505, async (req, res) => {
     try {
         const r = await db.query(`
             SELECT m.id, m.nombre, m.descripcion, u.nombre AS creador_nombre
@@ -343,7 +329,7 @@ app.get('/0505/api/modulos', verificar0505, async (req, res) => {
 });
 
 // --- Solicitudes de Especialista ---
-app.get('/0505/api/solicitudes', verificar0505, async (req, res) => {
+app.get('/admin/api/solicitudes', verificar0505, async (req, res) => {
     try {
         const r = await db.query(`
             SELECT s.*, u.imagen_perfil AS usuario_avatar
@@ -354,7 +340,7 @@ app.get('/0505/api/solicitudes', verificar0505, async (req, res) => {
     } catch (e) { res.status(500).json([]); }
 });
 
-app.put('/0505/api/solicitudes/:id/aprobar', verificar0505, async (req, res) => {
+app.put('/admin/api/solicitudes/:id/aprobar', verificar0505, async (req, res) => {
     try {
         const id = parseInt(req.params.id, 10);
         const sol = await db.query('SELECT usuario_id FROM solicitudes_especialista WHERE id = $1 AND estado = $2', [id, 'pendiente']);
@@ -365,7 +351,7 @@ app.put('/0505/api/solicitudes/:id/aprobar', verificar0505, async (req, res) => 
     } catch (e) { res.status(500).json({ mensaje: 'Error al aprobar.' }); }
 });
 
-app.put('/0505/api/solicitudes/:id/rechazar', verificar0505, async (req, res) => {
+app.put('/admin/api/solicitudes/:id/rechazar', verificar0505, async (req, res) => {
     try {
         const id = parseInt(req.params.id, 10);
         await db.query('UPDATE solicitudes_especialista SET estado = $1 WHERE id = $2', ['rechazada', id]);
@@ -373,7 +359,7 @@ app.put('/0505/api/solicitudes/:id/rechazar', verificar0505, async (req, res) =>
     } catch (e) { res.status(500).json({ mensaje: 'Error al rechazar.' }); }
 });
 
-app.get('/0505/api/feedback', verificar0505, async (req, res) => {
+app.get('/admin/api/feedback', verificar0505, async (req, res) => {
     try {
         const r = await db.query(`
             SELECT f.id, f.mensaje, f.pagina, f.fecha_creacion, u.nombre AS usuario_nombre, u.username AS usuario_username
@@ -383,7 +369,7 @@ app.get('/0505/api/feedback', verificar0505, async (req, res) => {
     } catch (e) { res.status(500).json([]); }
 });
 
-app.get('/0505/api/denuncias', verificar0505, async (req, res) => {
+app.get('/admin/api/denuncias', verificar0505, async (req, res) => {
     try {
         const result = await db.query(`
             SELECT d.id, d.motivo, d.fecha_creacion, d.estado,
@@ -401,21 +387,66 @@ app.get('/0505/api/denuncias', verificar0505, async (req, res) => {
     }
 });
 
-app.post('/0505/api/denuncias/:id/resolver', verificar0505, async (req, res) => {
+app.post('/admin/api/denuncias/:id/resolver-apropiado', verificar0505, async (req, res) => {
     const { id } = req.params;
     try {
-        await db.query('UPDATE denuncias SET estado = $1 WHERE id = $2', ['revisado', id]);
-        res.json({ mensaje: 'Denuncia marcada como revisada.' });
+        const d = await db.query(`
+            UPDATE denuncias SET estado = $1 WHERE id = $2
+            RETURNING usuario_id, tema_id
+        `, ['revisado', id]);
+        if (d.rowCount === 0) return res.status(404).json({ mensaje: 'Denuncia no encontrada.' });
+        const { usuario_id, tema_id } = d.rows[0];
+        const notificacion = require('./controllers/notificacionController');
+        await notificacion.crearParaUsuario({
+            usuarioId: usuario_id,
+            titulo: 'Denuncia revisada',
+            mensaje: 'Tu denuncia ha sido revisada y el contenido no incumple las normas de la comunidad.',
+            enlace: `/ver-tema?id=${tema_id}`
+        });
+        res.json({ mensaje: 'Denuncia resuelta. Se notificó al denunciante que el contenido es apropiado.' });
     } catch (error) {
         console.error('Error al resolver denuncia:', error.message);
         res.status(500).json({ mensaje: 'Error al resolver denuncia.' });
     }
 });
 
-// --- Acciones CRUD 0505 ---
+app.post('/admin/api/denuncias/:id/resolver-inapropiado', verificar0505, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const d = await db.query(`
+            UPDATE denuncias SET estado = $1 WHERE id = $2
+            RETURNING usuario_id, tema_id
+        `, ['rechazado', id]);
+        if (d.rowCount === 0) return res.status(404).json({ mensaje: 'Denuncia no encontrada.' });
+        const { usuario_id, tema_id } = d.rows[0];
+        await db.query('UPDATE temas SET estado = $1 WHERE id = $2', ['pausado', tema_id]);
+        const notificacion = require('./controllers/notificacionController');
+        await notificacion.crearParaUsuario({
+            usuarioId: usuario_id,
+            titulo: 'Denuncia revisada',
+            mensaje: 'Tu denuncia ha sido revisada y el contenido incumple las normas. El tema ha sido pausado. ¡Gracias por reportar!',
+            enlace: `/ver-tema?id=${tema_id}`
+        });
+        const tema = await db.query('SELECT creador_id, titulo FROM temas WHERE id = $1', [tema_id]);
+        if (tema.rows.length > 0) {
+            await notificacion.crearParaUsuario({
+                usuarioId: tema.rows[0].creador_id,
+                titulo: 'Contenido pausado',
+                mensaje: `Tu tema "${tema.rows[0].titulo}" ha sido pausado porque ha sido denunciado y revisado. Revisa las normas de la comunidad.`,
+                enlace: `/dashboard`
+            });
+        }
+        res.json({ mensaje: 'Denuncia resuelta. Tema pausado y notificaciones enviadas.' });
+    } catch (error) {
+        console.error('Error al resolver denuncia:', error.message);
+        res.status(500).json({ mensaje: 'Error al resolver denuncia.' });
+    }
+});
+
+// --- Acciones CRUD admin ---
 
 // Usuarios
-app.put('/0505/api/usuarios/:id', verificar0505, async (req, res) => {
+app.put('/admin/api/usuarios/:id', verificar0505, async (req, res) => {
     try {
         const { nombre, username, rol } = req.body;
         const id = parseInt(req.params.id, 10);
@@ -427,7 +458,7 @@ app.put('/0505/api/usuarios/:id', verificar0505, async (req, res) => {
     } catch (e) { res.status(500).json({ mensaje: 'Error al actualizar.' }); }
 });
 
-app.delete('/0505/api/usuarios/:id', verificar0505, async (req, res) => {
+app.delete('/admin/api/usuarios/:id', verificar0505, async (req, res) => {
     try {
         const id = parseInt(req.params.id, 10);
         await db.query('DELETE FROM notificaciones WHERE usuario_id = $1', [id]);
@@ -443,7 +474,7 @@ app.delete('/0505/api/usuarios/:id', verificar0505, async (req, res) => {
     } catch (e) { res.status(500).json({ mensaje: 'Error al eliminar.' }); }
 });
 
-app.post('/0505/api/usuarios/:id/advertir', verificar0505, async (req, res) => {
+app.post('/admin/api/usuarios/:id/advertir', verificar0505, async (req, res) => {
     try {
         const id = parseInt(req.params.id, 10);
         const { titulo, mensaje } = req.body;
@@ -452,14 +483,14 @@ app.post('/0505/api/usuarios/:id/advertir', verificar0505, async (req, res) => {
         if (r.rows.length === 0) return res.status(404).json({ mensaje: 'Usuario no encontrado.' });
         const notificacion = require('./controllers/notificacionController');
         await notificacion.crearParaUsuario({
-            usuarioId: id, titulo, mensaje, enlace: '/0505'
+            usuarioId: id, titulo, mensaje, enlace: '/admin'
         });
         res.json({ mensaje: 'Advertencia enviada.' });
     } catch (e) { res.status(500).json({ mensaje: 'Error al enviar.' }); }
 });
 
 // Categorias
-app.post('/0505/api/categorias', verificar0505, async (req, res) => {
+app.post('/admin/api/categorias', verificar0505, async (req, res) => {
     try {
         const { nombre } = req.body;
         if (!nombre || !nombre.trim()) return res.status(400).json({ mensaje: 'Nombre requerido.' });
@@ -468,7 +499,7 @@ app.post('/0505/api/categorias', verificar0505, async (req, res) => {
     } catch (e) { res.status(500).json({ mensaje: 'Error al crear.' }); }
 });
 
-app.put('/0505/api/categorias/:id', verificar0505, async (req, res) => {
+app.put('/admin/api/categorias/:id', verificar0505, async (req, res) => {
     try {
         const id = parseInt(req.params.id, 10);
         const { nombre } = req.body;
@@ -477,7 +508,7 @@ app.put('/0505/api/categorias/:id', verificar0505, async (req, res) => {
     } catch (e) { res.status(500).json({ mensaje: 'Error al actualizar.' }); }
 });
 
-app.delete('/0505/api/categorias/:id', verificar0505, async (req, res) => {
+app.delete('/admin/api/categorias/:id', verificar0505, async (req, res) => {
     try {
         const id = parseInt(req.params.id, 10);
         await db.query('UPDATE temas SET categoria_id = NULL WHERE categoria_id = $1', [id]);
@@ -488,46 +519,59 @@ app.delete('/0505/api/categorias/:id', verificar0505, async (req, res) => {
 });
 
 // Temas
-app.delete('/0505/api/temas/:id', verificar0505, async (req, res) => {
+app.post('/admin/api/temas/:id/revisar', verificar0505, async (req, res) => {
     try {
         const id = parseInt(req.params.id, 10);
-        await db.query('DELETE FROM historial_vistas WHERE contenido_id = $1 AND tipo_contenido = $2', [id, 'tema']);
-        await db.query('DELETE FROM comentarios WHERE tema_id = $1', [id]);
-        await db.query('DELETE FROM temas WHERE id = $1', [id]);
-        res.json({ mensaje: 'Tema eliminado.' });
-    } catch (e) { res.status(500).json({ mensaje: 'Error al eliminar.' }); }
+        const r = await db.query('UPDATE temas SET estado = $1 WHERE id = $2 RETURNING titulo, creador_id', ['revisado', id]);
+        if (r.rowCount === 0) return res.status(404).json({ mensaje: 'Tema no encontrado.' });
+        const { titulo, creador_id } = r.rows[0];
+        const notificacion = require('./controllers/notificacionController');
+        await notificacion.crearParaUsuario({
+            usuarioId: creador_id,
+            titulo: 'Contenido verificado',
+            mensaje: `Tu tema "${titulo}" ha sido revisado y su contenido es apropiado. ¡Gracias por aportar!`,
+            enlace: `/ver-tema?id=${id}`
+        });
+        res.json({ mensaje: 'Tema revisado. Se notificó al creador que el contenido es apropiado.' });
+    } catch (e) { res.status(500).json({ mensaje: 'Error al revisar.' }); }
 });
 
-app.post('/0505/api/temas/:id/aprobar', verificar0505, async (req, res) => {
+app.post('/admin/api/temas/:id/pausar', verificar0505, async (req, res) => {
+    try {
+        const id = parseInt(req.params.id, 10);
+        const r = await db.query('UPDATE temas SET estado = $1 WHERE id = $2 RETURNING titulo, creador_id', ['pausado', id]);
+        if (r.rowCount === 0) return res.status(404).json({ mensaje: 'Tema no encontrado.' });
+        const { titulo, creador_id } = r.rows[0];
+        const notificacion = require('./controllers/notificacionController');
+        await notificacion.crearParaUsuario({
+            usuarioId: creador_id,
+            titulo: 'Contenido pausado',
+            mensaje: `Tu tema "${titulo}" ha sido pausado porque incumple las normas de la comunidad. Revisa el contenido.`,
+            enlace: `/dashboard`
+        });
+        res.json({ mensaje: 'Tema pausado. Ya no es visible para la comunidad.' });
+    } catch (e) { res.status(500).json({ mensaje: 'Error al pausar.' }); }
+});
+
+app.post('/admin/api/temas/:id/despausar', verificar0505, async (req, res) => {
     try {
         const id = parseInt(req.params.id, 10);
         const r = await db.query('UPDATE temas SET estado = $1 WHERE id = $2 RETURNING titulo, creador_id', ['aprobado', id]);
         if (r.rowCount === 0) return res.status(404).json({ mensaje: 'Tema no encontrado.' });
         const { titulo, creador_id } = r.rows[0];
-        await db.query(
-            `INSERT INTO notificaciones (usuario_id, titulo, mensaje, enlace) VALUES ($1, $2, $3, $4)`,
-            [creador_id, 'Tema aprobado', `Tu tema "${titulo}" ha sido aprobado y ya está visible.`, `/ver-tema?id=${id}`]
-        );
-        res.json({ mensaje: 'Tema aprobado.' });
-    } catch (e) { res.status(500).json({ mensaje: 'Error al aprobar.' }); }
-});
-
-app.post('/0505/api/temas/:id/rechazar', verificar0505, async (req, res) => {
-    try {
-        const id = parseInt(req.params.id, 10);
-        const r = await db.query('UPDATE temas SET estado = $1 WHERE id = $2 RETURNING titulo, creador_id', ['rechazado', id]);
-        if (r.rowCount === 0) return res.status(404).json({ mensaje: 'Tema no encontrado.' });
-        const { titulo, creador_id } = r.rows[0];
-        await db.query(
-            `INSERT INTO notificaciones (usuario_id, titulo, mensaje, enlace) VALUES ($1, $2, $3, $4)`,
-            [creador_id, 'Tema no aprobado', `Tu tema "${titulo}" no ha sido aprobado. Revisa el contenido e inténtalo de nuevo.`, `/dashboard`]
-        );
-        res.json({ mensaje: 'Tema rechazado.' });
-    } catch (e) { res.status(500).json({ mensaje: 'Error al rechazar.' }); }
+        const notificacion = require('./controllers/notificacionController');
+        await notificacion.crearParaUsuario({
+            usuarioId: creador_id,
+            titulo: 'Contenido restaurado',
+            mensaje: `Tu tema "${titulo}" ha sido revisado y ya está visible nuevamente para la comunidad.`,
+            enlace: `/ver-tema?id=${id}`
+        });
+        res.json({ mensaje: 'Tema restaurado. Ya es visible para la comunidad.' });
+    } catch (e) { res.status(500).json({ mensaje: 'Error al restaurar.' }); }
 });
 
 // Juegos
-app.delete('/0505/api/juegos/:id', verificar0505, async (req, res) => {
+app.delete('/admin/api/juegos/:id', verificar0505, async (req, res) => {
     try {
         const id = parseInt(req.params.id, 10);
         await db.query('UPDATE nivel SET id_juego = NULL WHERE id_juego = $1', [id]);
@@ -538,7 +582,7 @@ app.delete('/0505/api/juegos/:id', verificar0505, async (req, res) => {
 });
 
 // Relatos
-app.delete('/0505/api/relatos/:id', verificar0505, async (req, res) => {
+app.delete('/admin/api/relatos/:id', verificar0505, async (req, res) => {
     try {
         const id = parseInt(req.params.id, 10);
         await db.query('DELETE FROM relatos_community WHERE id = $1', [id]);
@@ -547,7 +591,7 @@ app.delete('/0505/api/relatos/:id', verificar0505, async (req, res) => {
 });
 
 // Feedback
-app.delete('/0505/api/feedback/:id', verificar0505, async (req, res) => {
+app.delete('/admin/api/feedback/:id', verificar0505, async (req, res) => {
     try {
         const id = parseInt(req.params.id, 10);
         await db.query('DELETE FROM feedback WHERE id = $1', [id]);

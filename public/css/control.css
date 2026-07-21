@@ -384,6 +384,199 @@ body {
     background: rgba(255,69,0,0.1);
 }
 
+.denuncia-resolver {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-resolver.apropiado {
+    border-color: #10b981;
+    color: #10b981;
+}
+
+.btn-resolver.apropiado:hover {
+    background: rgba(16,185,129,0.1);
+}
+
+.btn-resolver.inapropiado {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.btn-resolver.inapropiado:hover {
+    background: rgba(239,68,68,0.1);
+}
+
+.denuncia-resuelto {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.3);
+    font-style: italic;
+}
+
+.ctrl-estado.revisado {
+    background: rgba(59,130,246,0.15);
+    color: #64b5f6;
+}
+
+.ctrl-estado.pausado {
+    background: rgba(239,68,68,0.15);
+    color: #ef4444;
+}
+
+/* --- Tema cards --- */
+.tema-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.tema-card {
+    background: #161616;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 14px;
+    padding: 18px 20px;
+    transition: border-color 0.15s;
+    cursor: pointer;
+}
+
+.tema-card:hover {
+    border-color: rgba(255,255,255,0.15);
+    background: #1a1a1a;
+}
+
+.tema-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.tema-card-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.tema-card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+
+.tema-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 10px;
+}
+
+.tema-card-img {
+    margin-bottom: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    max-height: 260px;
+    cursor: pointer;
+}
+
+.tema-card-img img {
+    width: 100%;
+    height: auto;
+    max-height: 260px;
+    object-fit: cover;
+    display: block;
+    border-radius: 10px;
+    transition: opacity 0.15s;
+}
+
+.tema-card-img img:hover {
+    opacity: 0.85;
+}
+
+.tema-card-content {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.ctrl-btn.theme-check:hover {
+    background: rgba(59,130,246,0.1);
+    color: #3b82f6;
+}
+
+.ctrl-btn.theme-pause:hover {
+    background: rgba(245,158,11,0.1);
+    color: #f59e0b;
+}
+
+.ctrl-btn.theme-unpause:hover {
+    background: rgba(16,185,129,0.1);
+    color: #10b981;
+}
+
+/* --- Tema modal --- */
+.tema-modal {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.tema-modal-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.tema-modal-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.tema-modal-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.tema-modal-img {
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 12px 0;
+    max-height: 360px;
+}
+
+.tema-modal-img img {
+    width: 100%;
+    height: auto;
+    max-height: 360px;
+    object-fit: cover;
+    display: block;
+    border-radius: 10px;
+}
+
+.tema-modal-content {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.modal-card {
+    max-width: 640px;
+}
+
 @media (max-width: 768px) {
   .panel-body { flex-direction: column; }
   .panel-sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.04); padding: 10px; }

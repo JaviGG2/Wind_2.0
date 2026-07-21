@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelector('.btn-eliminar-modulo')?.addEventListener('click', async function() {
       if (!confirm('¿Estás seguro de eliminar este módulo? Se borrarán todos sus niveles y juegos. Esta acción no se puede deshacer.')) return;
       try {
-        const res = await fetch(`/admin/api/modulos/${this.dataset.id}`, { method: 'DELETE', credentials: 'include' });
+        const res = await fetch(`/api/modulos-admin/${this.dataset.id}`, { method: 'DELETE', credentials: 'include' });
         if (!res.ok) { const d = await res.json(); alert(d.mensaje || 'Error'); return; }
         window.location.href = '/modulos';
       } catch { alert('Error de conexión.'); }

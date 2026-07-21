@@ -12,7 +12,7 @@ $('#login-form').addEventListener('submit', async e => {
   const btn = e.target.querySelector('.login-btn');
   btn.disabled = true; btn.textContent = 'Verificando...'; err.textContent = '';
   try {
-    const r = await fetch('/0505/auth', {
+    const r = await fetch('/admin/auth', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ usuario: user, contrasena: pass })
     });
@@ -29,7 +29,7 @@ $('#login-form').addEventListener('submit', async e => {
 });
 
 $('#btn-logout').addEventListener('click', async () => {
-  await fetch('/0505/logout', { method: 'POST' });
+  await fetch('/admin/logout', { method: 'POST' });
   location.reload();
 });
 
@@ -37,20 +37,19 @@ $('#btn-logout').addEventListener('click', async () => {
 async function iniciarPanel() {
   $('#panel-content').innerHTML = '<img src="/images/loading.svg" class="anim-loading" alt="Cargando...">';
   try {
-    const [usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, recientes, denuncias] = await Promise.all([
-      fetch('/0505/api/usuarios').then(r => r.ok ? r.json() : []),
-      fetch('/0505/api/categorias').then(r => r.ok ? r.json() : []),
-      fetch('/0505/api/juegos').then(r => r.ok ? r.json() : []),
-      fetch('/0505/api/temas').then(r => r.ok ? r.json() : []),
-      fetch('/0505/api/relatos').then(r => r.ok ? r.json() : []),
-      fetch('/0505/api/modulos').then(r => r.ok ? r.json() : []),
-      fetch('/0505/api/feedback').then(r => r.ok ? r.json() : []),
-      fetch('/0505/api/solicitudes').then(r => r.ok ? r.json() : []),
-      fetch('/0505/api/temas/recientes').then(r => r.ok ? r.json() : []),
-      fetch('/0505/api/denuncias').then(r => r.ok ? r.json() : []),
+    const [usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, denuncias] = await Promise.all([
+      fetch('/admin/api/usuarios').then(r => r.ok ? r.json() : []),
+      fetch('/admin/api/categorias').then(r => r.ok ? r.json() : []),
+      fetch('/admin/api/juegos').then(r => r.ok ? r.json() : []),
+      fetch('/admin/api/temas').then(r => r.ok ? r.json() : []),
+      fetch('/admin/api/relatos').then(r => r.ok ? r.json() : []),
+      fetch('/admin/api/modulos').then(r => r.ok ? r.json() : []),
+      fetch('/admin/api/feedback').then(r => r.ok ? r.json() : []),
+      fetch('/admin/api/solicitudes').then(r => r.ok ? r.json() : []),
+      fetch('/admin/api/denuncias').then(r => r.ok ? r.json() : []),
       new Promise(r => setTimeout(r, 1000))
     ]);
-    cache = { usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, recientes, denuncias };
+    cache = { usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, denuncias };
     mostrarResumen();
     configurarNavegacion();
   } catch { $('#panel-content').innerHTML = '<div style="color:#ef4444;padding:40px;text-align:center;">Error al cargar datos.</div>'; }
@@ -62,23 +61,21 @@ function programarRecarga() {
     const active = $('.panel-nav-item.active');
     const tab = active ? active.dataset.tab : 'resumen';
     try {
-      const [usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, recientes, denuncias] = await Promise.all([
-        fetch('/0505/api/usuarios').then(r => r.ok ? r.json() : []),
-        fetch('/0505/api/categorias').then(r => r.ok ? r.json() : []),
-        fetch('/0505/api/juegos').then(r => r.ok ? r.json() : []),
-        fetch('/0505/api/temas').then(r => r.ok ? r.json() : []),
-        fetch('/0505/api/relatos').then(r => r.ok ? r.json() : []),
-        fetch('/0505/api/modulos').then(r => r.ok ? r.json() : []),
-        fetch('/0505/api/feedback').then(r => r.ok ? r.json() : []),
-        fetch('/0505/api/solicitudes').then(r => r.ok ? r.json() : []),
-        fetch('/0505/api/temas/recientes').then(r => r.ok ? r.json() : []),
-        fetch('/0505/api/denuncias').then(r => r.ok ? r.json() : [])
+      const [usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, denuncias] = await Promise.all([
+        fetch('/admin/api/usuarios').then(r => r.ok ? r.json() : []),
+        fetch('/admin/api/categorias').then(r => r.ok ? r.json() : []),
+        fetch('/admin/api/juegos').then(r => r.ok ? r.json() : []),
+        fetch('/admin/api/temas').then(r => r.ok ? r.json() : []),
+        fetch('/admin/api/relatos').then(r => r.ok ? r.json() : []),
+        fetch('/admin/api/modulos').then(r => r.ok ? r.json() : []),
+        fetch('/admin/api/feedback').then(r => r.ok ? r.json() : []),
+        fetch('/admin/api/solicitudes').then(r => r.ok ? r.json() : []),
+        fetch('/admin/api/denuncias').then(r => r.ok ? r.json() : [])
       ]);
-      cache = { usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, recientes, denuncias };
+      cache = { usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, denuncias };
       if (tab === 'resumen') mostrarResumen();
       else if (tab === 'usuarios') mostrarUsuarios();
       else if (tab === 'temas') mostrarTemas();
-      else if (tab === 'recientes') mostrarRecientes();
       else if (tab === 'juegos') mostrarJuegos();
       else if (tab === 'relatos') mostrarRelatos();
       else if (tab === 'modulos') mostrarModulos();
@@ -99,7 +96,6 @@ function configurarNavegacion() {
       if (tab === 'resumen') mostrarResumen();
       else if (tab === 'usuarios') mostrarUsuarios();
       else if (tab === 'temas') mostrarTemas();
-      else if (tab === 'recientes') mostrarRecientes();
       else if (tab === 'juegos') mostrarJuegos();
       else if (tab === 'relatos') mostrarRelatos();
       else if (tab === 'modulos') mostrarModulos();
@@ -126,14 +122,16 @@ function cerrarModal() {
   if (ov) ov.remove();
 }
 
-function confirmar(mensaje) {
+function confirmar(mensaje, titulo, btnLabel) {
   return new Promise(resolve => {
+    if (!titulo) titulo = 'Confirmar';
+    if (!btnLabel) btnLabel = 'Eliminar';
     const card = modal(`
-      <h3>Confirmar</h3>
+      <h3>${titulo}</h3>
       <p class="modal-desc">${mensaje}</p>
       <div class="modal-actions">
         <button class="modal-btn secondary" id="modal-cancel">Cancelar</button>
-        <button class="modal-btn danger" id="modal-confirm">Eliminar</button>
+        <button class="modal-btn danger" id="modal-confirm">${btnLabel}</button>
       </div>
     `);
     card.querySelector('#modal-confirm').addEventListener('click', () => { cerrarModal(); resolve(true); });
@@ -181,6 +179,7 @@ function mostrarResumen() {
         <div class="ctrl-stat"><div class="ctrl-stat-num">${n}</div><div class="ctrl-stat-label">Naturales</div></div>
         <div class="ctrl-stat"><div class="ctrl-stat-num">${pts}</div><div class="ctrl-stat-label">Puntos totales</div></div>
         <div class="ctrl-stat"><div class="ctrl-stat-num">${(temas||[]).length}</div><div class="ctrl-stat-label">Temas</div></div>
+        <div class="ctrl-stat"><div class="ctrl-stat-num" style="${(temas||[]).filter(t=>t.estado==='pausado').length > 0 ? 'color:#ef4444' : ''}">${(temas||[]).filter(t=>t.estado==='pausado').length}</div><div class="ctrl-stat-label">Pausados</div></div>
         <div class="ctrl-stat"><div class="ctrl-stat-num">${(juegos||[]).length}</div><div class="ctrl-stat-label">Juegos</div></div>
         <div class="ctrl-stat"><div class="ctrl-stat-num">${(relatos||[]).length}</div><div class="ctrl-stat-label">Relatos</div></div>
         <div class="ctrl-stat"><div class="ctrl-stat-num">${(modulos||[]).length}</div><div class="ctrl-stat-label">Módulos</div></div>
@@ -200,7 +199,7 @@ function mostrarUsuarios() {
       ${list.length === 0 ? '<div class="ctrl-empty">Sin datos.</div>' : `
       <div class="ctrl-card" style="overflow-x:auto;">
         <table class="ctrl-table">
-          <thead><tr><th>ID</th><th>Nombre</th><th>Username</th><th>Rol</th><th>Puntos</th><th>Activo</th><th style="width:100px;">Acción</th></tr></thead>
+          <thead><tr><th>ID</th><th>Nombre</th><th>Username</th><th>Rol</th><th>Puntos</th><th>Activo</th><th style="width:80px;">Advertencia</th></tr></thead>
           <tbody>${list.map(u => `
             <tr>
               <td>${u.id}</td>
@@ -209,53 +208,13 @@ function mostrarUsuarios() {
               <td><span class="ctrl-badge-rol ${(u.rol||'').toLowerCase()}">${esc(u.rol)}</span></td>
               <td>${u.puntos || 0}</td>
               <td>${u.cuenta_activa ? '✓' : '✗'}</td>
-              <td><div class="ctrl-actions">
-                <button class="ctrl-btn edit" onclick='editarUsuario(${u.id},"${escAttr(u.nombre)}","${escAttr(u.username)}","${escAttr(u.rol)}")' title="Editar"><span class="material-symbols-outlined">edit</span></button>
+              <td>
                 <button class="ctrl-btn warn" onclick='advertirUsuario(${u.id},"${escAttr(u.nombre)}")' title="Advertir"><span class="material-symbols-outlined">warning</span></button>
-                <button class="ctrl-btn delete" onclick="eliminar('/0505/api/usuarios/${u.id}','usuario #${u.id}')" title="Eliminar"><span class="material-symbols-outlined">delete</span></button>
-              </div></td>
+              </td>
             </tr>`).join('')}</tbody>
         </table>
       </div>`}
     </div>`;
-}
-
-function editarUsuario(id, nombre, username, rol) {
-  const card = modal(`
-    <button class="modal-close" onclick="cerrarModal()"><span class="material-symbols-outlined">close</span></button>
-    <h3>Editar Usuario #${id}</h3>
-    <p class="modal-desc">Actualiza los datos del usuario.</p>
-    <form class="modal-form" id="form-edit-usuario">
-      <div class="modal-field"><label>Nombre</label><input class="modal-input" id="eu-nombre" value="${nombre}"></div>
-      <div class="modal-field"><label>Username</label><input class="modal-input" id="eu-username" value="${username}"></div>
-      <div class="modal-field"><label>Rol</label>
-        <select class="modal-input" id="eu-rol">
-          <option value="Natural" ${rol==='Natural'?'selected':''}>Natural</option>
-          <option value="Especialista" ${rol==='Especialista'?'selected':''}>Especialista</option>
-        </select>
-      </div>
-      <div class="modal-actions">
-        <button type="button" class="modal-btn secondary" onclick="cerrarModal()">Cancelar</button>
-        <button type="submit" class="modal-btn primary">Guardar</button>
-      </div>
-      <div id="eu-msg" class="modal-msg"></div>
-    </form>
-  `);
-  card.querySelector('#form-edit-usuario').addEventListener('submit', async e => {
-    e.preventDefault();
-    const btn = e.target.querySelector('.modal-btn.primary');
-    btn.disabled = true; btn.textContent = 'Guardando...';
-    try {
-      const r = await apiCall('PUT', `/0505/api/usuarios/${id}`, {
-        nombre: $('#eu-nombre').value.trim(),
-        username: $('#eu-username').value.trim(),
-        rol: $('#eu-rol').value
-      });
-      const d = await r.json();
-      if (r.ok) { cerrarModal(); notificar('Usuario actualizado.', 'success'); programarRecarga(); }
-      else { $('#eu-msg').textContent = d.mensaje; $('#eu-msg').className = 'modal-msg error'; btn.disabled = false; btn.textContent = 'Guardar'; }
-    } catch { $('#eu-msg').textContent = 'Error de conexión.'; $('#eu-msg').className = 'modal-msg error'; btn.disabled = false; btn.textContent = 'Guardar'; }
-  });
 }
 
 function advertirUsuario(id, nombre) {
@@ -281,7 +240,7 @@ function advertirUsuario(id, nombre) {
     const btn = e.target.querySelector('.modal-btn.primary');
     btn.disabled = true; btn.textContent = 'Enviando...';
     try {
-      const r = await apiCall('POST', `/0505/api/usuarios/${id}/advertir`, { titulo, mensaje });
+      const r = await apiCall('POST', `/admin/api/usuarios/${id}/advertir`, { titulo, mensaje });
       const d = await r.json();
       if (r.ok) { cerrarModal(); notificar('Advertencia enviada.', 'success'); }
       else { $('#aw-msg').textContent = d.mensaje; $('#aw-msg').className = 'modal-msg error'; btn.disabled = false; btn.textContent = 'Enviar advertencia'; }
@@ -308,7 +267,7 @@ function mostrarCategorias() {
               <td><span class="ctrl-badge juegos">${c.conteo_juegos || 0}</span></td>
               <td><div class="ctrl-actions">
                 <button class="ctrl-btn edit" onclick='editarCategoria(${c.id},"${escAttr(c.nombre)}")' title="Editar"><span class="material-symbols-outlined">edit</span></button>
-                <button class="ctrl-btn delete" onclick="eliminar('/0505/api/categorias/${c.id}','categoría #${c.id}')" title="Eliminar"><span class="material-symbols-outlined">delete</span></button>
+                <button class="ctrl-btn delete" onclick="eliminar('/admin/api/categorias/${c.id}','categoría #${c.id}')" title="Eliminar"><span class="material-symbols-outlined">delete</span></button>
               </div></td>
             </tr>`).join('')}</tbody>
         </table>
@@ -337,7 +296,7 @@ function agregarCategoria() {
     const btn = e.target.querySelector('.modal-btn.primary');
     btn.disabled = true; btn.textContent = 'Creando...';
     try {
-      const r = await apiCall('POST', '/0505/api/categorias', { nombre });
+      const r = await apiCall('POST', '/admin/api/categorias', { nombre });
       if (r.ok) { cerrarModal(); notificar('Categoría creada.', 'success'); programarRecarga(); }
       else { const d = await r.json(); $('#ac-msg').textContent = d.mensaje; $('#ac-msg').className = 'modal-msg error'; btn.disabled = false; btn.textContent = 'Crear'; }
     } catch { $('#ac-msg').textContent = 'Error.'; $('#ac-msg').className = 'modal-msg error'; btn.disabled = false; btn.textContent = 'Crear'; }
@@ -365,7 +324,7 @@ function editarCategoria(id, nombre) {
     const btn = e.target.querySelector('.modal-btn.primary');
     btn.disabled = true; btn.textContent = 'Guardando...';
     try {
-      const r = await apiCall('PUT', `/0505/api/categorias/${id}`, { nombre });
+      const r = await apiCall('PUT', `/admin/api/categorias/${id}`, { nombre });
       if (r.ok) { cerrarModal(); notificar('Categoría actualizada.', 'success'); programarRecarga(); }
       else { $('#ec-msg').textContent = 'Error.'; $('#ec-msg').className = 'modal-msg error'; btn.disabled = false; btn.textContent = 'Guardar'; }
     } catch { $('#ec-msg').textContent = 'Error.'; $('#ec-msg').className = 'modal-msg error'; btn.disabled = false; btn.textContent = 'Guardar'; }
@@ -379,60 +338,80 @@ function mostrarTemas() {
     <div class="panel-tab">
       <h2><span class="material-symbols-outlined">article</span>Temas (${list.length})</h2>
       ${list.length === 0 ? '<div class="ctrl-empty">Sin datos.</div>' : `
-      <div class="ctrl-card" style="overflow-x:auto;">
-        <table class="ctrl-table">
-          <thead><tr><th>ID</th><th>Título</th><th>Categoría</th><th>Creador</th><th>Likes</th><th>Estado</th><th style="width:60px;">Acción</th></tr></thead>
-          <tbody>${list.map(t => `
-            <tr>
-              <td>${t.id}</td>
-              <td class="truncate">${esc(t.titulo)}</td>
-              <td>${esc(t.categoria_nombre || '—')}</td>
-              <td>${esc(t.creador_nombre || t.creador_username || '—')}</td>
-              <td>${t.likes || 0}</td>
-              <td><span class="ctrl-estado ${t.estado}">${t.estado || 'aprobado'}</span></td>
-              <td><div class="ctrl-actions">
-                <button class="ctrl-btn delete" onclick="eliminar('/0505/api/temas/${t.id}','tema #${t.id}')" title="Eliminar"><span class="material-symbols-outlined">delete</span></button>
-              </div></td>
-            </tr>`).join('')}</tbody>
-        </table>
-      </div>`}
+      <div class="tema-grid">${list.map(t => `
+        <div class="tema-card" onclick='verTemaCompleto(${JSON.stringify(t).replace(/'/g,"&#39;")})'>
+          <div class="tema-card-top">
+            <span class="ctrl-estado ${t.estado}">${t.estado || 'aprobado'}</span>
+            <div class="tema-card-actions" onclick="event.stopPropagation()">
+              ${t.estado === 'aprobado' ? `<button class="ctrl-btn theme-check" onclick="revisarTema(${t.id})" title="Marcar revisado"><span class="material-symbols-outlined">verified</span></button>` : ''}
+              ${t.estado !== 'pausado' ? `<button class="ctrl-btn theme-pause" onclick="pausarTema(${t.id})" title="Pausar"><span class="material-symbols-outlined">pause_circle</span></button>` : ''}
+              ${t.estado === 'pausado' ? `<button class="ctrl-btn theme-unpause" onclick="despausarTema(${t.id})" title="Restaurar"><span class="material-symbols-outlined">play_circle</span></button>` : ''}
+            </div>
+          </div>
+          <h3 class="tema-card-title">${esc(t.titulo)}</h3>
+          <div class="tema-card-meta">
+            <span>${esc(t.creador_nombre || t.creador_username || '—')}</span>
+            <span>${esc(t.categoria_nombre || '—')}</span>
+            <span>${t.fecha_publicacion ? new Date(t.fecha_publicacion).toLocaleDateString() : '—'}</span>
+            <span>❤️ ${t.likes || 0}</span>
+          </div>
+          ${t.imagen_portada ? `<div class="tema-card-img"><img src="${escAttr(t.imagen_portada)}" alt=""></div>` : ''}
+          <p class="tema-card-content">${esc(stripHtml(t.contenido).substring(0, 300))}${t.contenido && stripHtml(t.contenido).length > 300 ? '...' : ''}</p>
+        </div>`).join('')}</div>`}
     </div>`;
 }
 
-// --- Revisar temas ---
-function mostrarRecientes() {
-  const list = cache.recientes || [];
-  $('#panel-content').innerHTML = `
-    <div class="panel-tab">
-      <h2><span class="material-symbols-outlined">rate_review</span>Revisar Temas (${list.length})</h2>
-      ${list.length === 0 ? '<div class="ctrl-empty">No hay temas para revisar.</div>' : `
-      <div class="ctrl-card" style="overflow-x:auto;">
-        <table class="ctrl-table">
-          <thead><tr><th>ID</th><th>Título</th><th>Categoría</th><th>Creador</th><th>Estado</th><th>Fecha</th><th style="width:100px;">Acción</th></tr></thead>
-          <tbody>${list.map(t => `
-            <tr>
-              <td>${t.id}</td>
-              <td class="truncate">${esc(t.titulo)}</td>
-              <td>${esc(t.categoria_nombre || '—')}</td>
-              <td>${esc(t.creador_nombre || t.creador_username || '—')}</td>
-              <td><span class="ctrl-estado ${t.estado}">${t.estado || 'aprobado'}</span></td>
-              <td>${t.fecha_publicacion ? new Date(t.fecha_publicacion).toLocaleDateString() : '—'}</td>
-              <td><div class="ctrl-actions">
-                ${t.estado !== 'rechazado' ? `<button class="ctrl-btn reject" onclick="rechazarTema(${t.id})" title="Rechazar"><span class="material-symbols-outlined">close</span></button>` : ''}
-                <button class="ctrl-btn delete" onclick="eliminar('/0505/api/temas/${t.id}','tema #${t.id}')" title="Eliminar"><span class="material-symbols-outlined">delete</span></button>
-              </div></td>
-            </tr>`).join('')}</tbody>
-        </table>
-      </div>`}
-    </div>`;
+function verTemaCompleto(t) {
+  modal(`
+    <button class="modal-close" onclick="cerrarModal()"><span class="material-symbols-outlined">close</span></button>
+    <div class="tema-modal">
+      <div class="tema-modal-top">
+        <span class="ctrl-estado ${t.estado}">${t.estado || 'aprobado'}</span>
+        <div class="tema-modal-actions">
+          ${t.estado === 'aprobado' ? `<button class="ctrl-btn theme-check" onclick="cerrarModal();revisarTema(${t.id})" title="Marcar revisado"><span class="material-symbols-outlined">verified</span></button>` : ''}
+          ${t.estado !== 'pausado' ? `<button class="ctrl-btn theme-pause" onclick="cerrarModal();pausarTema(${t.id})" title="Pausar"><span class="material-symbols-outlined">pause_circle</span></button>` : ''}
+          ${t.estado === 'pausado' ? `<button class="ctrl-btn theme-unpause" onclick="cerrarModal();despausarTema(${t.id})" title="Restaurar"><span class="material-symbols-outlined">play_circle</span></button>` : ''}
+        </div>
+      </div>
+      <h2 class="tema-modal-title">${esc(t.titulo)}</h2>
+      <div class="tema-card-meta">
+        <span>${esc(t.creador_nombre || t.creador_username || '—')}</span>
+        <span>${esc(t.categoria_nombre || '—')}</span>
+        <span>${t.fecha_publicacion ? new Date(t.fecha_publicacion).toLocaleDateString() : '—'}</span>
+        <span>❤️ ${t.likes || 0}</span>
+      </div>
+      ${t.imagen_portada ? `<div class="tema-modal-img"><img src="${escAttr(t.imagen_portada)}" alt=""></div>` : ''}
+      <div class="tema-modal-content">${esc(stripHtml(t.contenido))}</div>
+    </div>
+  `);
 }
 
-async function rechazarTema(id) {
-  if (!await confirmar('¿Rechazar este tema? Se notificará al creador y el tema dejará de ser visible.')) return;
+async function revisarTema(id) {
+  if (!await confirmar('¿Marcar este tema como revisado? Se notificará al creador que el contenido es apropiado.', 'Revisar', 'Aceptar')) return;
   try {
-    const r = await apiCall('POST', `/0505/api/temas/${id}/rechazar`);
+    const r = await apiCall('POST', `/admin/api/temas/${id}/revisar`);
     const d = await r.json();
-    if (r.ok) { notificar(d.mensaje || 'Rechazado.', 'success'); programarRecarga(); }
+    if (r.ok) { notificar(d.mensaje || 'Revisado.', 'success'); programarRecarga(); }
+    else { notificar(d.mensaje || 'Error.', 'error'); }
+  } catch { notificar('Error de conexión.', 'error'); }
+}
+
+async function pausarTema(id) {
+  if (!await confirmar('¿Pausar este tema? El contenido dejará de ser visible para la comunidad.', 'Pausar', 'Sí, pausar')) return;
+  try {
+    const r = await apiCall('POST', `/admin/api/temas/${id}/pausar`);
+    const d = await r.json();
+    if (r.ok) { notificar(d.mensaje || 'Pausado.', 'success'); programarRecarga(); }
+    else { notificar(d.mensaje || 'Error.', 'error'); }
+  } catch { notificar('Error de conexión.', 'error'); }
+}
+
+async function despausarTema(id) {
+  if (!await confirmar('¿Restaurar este tema? El contenido volverá a ser visible para la comunidad.', 'Restaurar', 'Sí, restaurar')) return;
+  try {
+    const r = await apiCall('POST', `/admin/api/temas/${id}/despausar`);
+    const d = await r.json();
+    if (r.ok) { notificar(d.mensaje || 'Restaurado.', 'success'); programarRecarga(); }
     else { notificar(d.mensaje || 'Error.', 'error'); }
   } catch { notificar('Error de conexión.', 'error'); }
 }
@@ -455,7 +434,7 @@ function mostrarJuegos() {
               <td>${esc(j.categoria_nombre || '—')}</td>
               <td>${j.puntos_recompensa || 10}</td>
               <td><div class="ctrl-actions">
-                <button class="ctrl-btn delete" onclick="eliminar('/0505/api/juegos/${j.id}','juego #${j.id}')" title="Eliminar"><span class="material-symbols-outlined">delete</span></button>
+                <button class="ctrl-btn delete" onclick="eliminar('/admin/api/juegos/${j.id}','juego #${j.id}')" title="Eliminar"><span class="material-symbols-outlined">delete</span></button>
               </div></td>
             </tr>`).join('')}</tbody>
         </table>
@@ -480,7 +459,7 @@ function mostrarRelatos() {
               <td>${esc(r.autor_nombre || r.autor_username || '—')}</td>
               <td>${r.fecha_publicacion ? new Date(r.fecha_publicacion).toLocaleDateString() : '—'}</td>
               <td><div class="ctrl-actions">
-                <button class="ctrl-btn delete" onclick="eliminar('/0505/api/relatos/${r.id}','relato #${r.id}')" title="Eliminar"><span class="material-symbols-outlined">delete</span></button>
+                <button class="ctrl-btn delete" onclick="eliminar('/admin/api/relatos/${r.id}','relato #${r.id}')" title="Eliminar"><span class="material-symbols-outlined">delete</span></button>
               </div></td>
             </tr>`).join('')}</tbody>
         </table>
@@ -541,7 +520,7 @@ async function mostrarSolicitudes() {
 async function aprobarSolicitud(id) {
   if (!await confirmar('¿Aprobar esta solicitud? El usuario se convertirá en Especialista.')) return;
   try {
-    const r = await apiCall('PUT', `/0505/api/solicitudes/${id}/aprobar`);
+    const r = await apiCall('PUT', `/admin/api/solicitudes/${id}/aprobar`);
     const d = await r.json();
     if (r.ok) { notificar(d.mensaje || 'Aprobada.', 'success'); programarRecarga(); }
     else { notificar(d.mensaje || 'Error.', 'error'); }
@@ -551,7 +530,7 @@ async function aprobarSolicitud(id) {
 async function rechazarSolicitud(id) {
   if (!await confirmar('¿Rechazar esta solicitud?')) return;
   try {
-    const r = await apiCall('PUT', `/0505/api/solicitudes/${id}/rechazar`);
+    const r = await apiCall('PUT', `/admin/api/solicitudes/${id}/rechazar`);
     const d = await r.json();
     if (r.ok) { notificar(d.mensaje || 'Rechazada.', 'success'); programarRecarga(); }
     else { notificar(d.mensaje || 'Error.', 'error'); }
@@ -575,7 +554,7 @@ function mostrarFeedback() {
               <td class="truncate">${esc(f.mensaje)}</td>
               <td>${f.fecha_creacion ? new Date(f.fecha_creacion).toLocaleDateString() : '—'}</td>
               <td><div class="ctrl-actions">
-                <button class="ctrl-btn delete" onclick="eliminar('/0505/api/feedback/${f.id}','feedback #${f.id}')" title="Eliminar"><span class="material-symbols-outlined">delete</span></button>
+                <button class="ctrl-btn delete" onclick="eliminar('/admin/api/feedback/${f.id}','feedback #${f.id}')" title="Eliminar"><span class="material-symbols-outlined">delete</span></button>
               </div></td>
             </tr>`).join('')}</tbody>
         </table>
@@ -600,17 +579,39 @@ function mostrarDenuncias() {
                         <p class="denuncia-motivo">${esc(d.motivo)}</p>
                         <p class="denuncia-tema">Tema: <a href="/ver-tema?id=${d.tema_id}" target="_blank">${esc(d.tema_titulo)}</a></p>
                         <small class="denuncia-fecha">${new Date(d.fecha_creacion).toLocaleDateString()}</small>
-                        ${d.estado === 'pendiente' ? `<button class="btn-resolver" data-id="${d.id}">Marcar revisada</button>` : ''}
+                        ${d.estado === 'pendiente' ? `
+                        <div class="denuncia-resolver">
+                            <button class="btn-resolver apropiado" data-id="${d.id}">✅ Contenido apropiado</button>
+                            <button class="btn-resolver inapropiado" data-id="${d.id}">🚫 Contenido inapropiado</button>
+                        </div>` : '<span class="denuncia-resuelto">Resuelta</span>'}
                     </div>
                 `).join('')}
             </div>
         </div>`;
 
-    document.querySelectorAll('.btn-resolver').forEach(btn => {
+    document.querySelectorAll('.btn-resolver.apropiado').forEach(btn => {
         btn.addEventListener('click', async () => {
             const id = btn.dataset.id;
-            await fetch('/0505/api/denuncias/' + id + '/resolver', { method: 'POST' });
-            programarRecarga();
+            if (!await confirmar('¿Notificar al denunciante que el contenido NO incumple normas?', 'Resolver denuncia', 'Apropiado')) return;
+            try {
+                const r = await fetch('/admin/api/denuncias/' + id + '/resolver-apropiado', { method: 'POST' });
+                const d = await r.json();
+                if (r.ok) { notificar(d.mensaje || 'Resuelta.', 'success'); programarRecarga(); }
+                else { notificar(d.mensaje || 'Error.', 'error'); }
+            } catch { notificar('Error de conexión.', 'error'); }
+        });
+    });
+
+    document.querySelectorAll('.btn-resolver.inapropiado').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const id = btn.dataset.id;
+            if (!await confirmar('¿El contenido es inapropiado? Se pausará el tema y se notificará al denunciante.', 'Resolver denuncia', 'Inapropiado')) return;
+            try {
+                const r = await fetch('/admin/api/denuncias/' + id + '/resolver-inapropiado', { method: 'POST' });
+                const d = await r.json();
+                if (r.ok) { notificar(d.mensaje || 'Resuelta.', 'success'); programarRecarga(); }
+                else { notificar(d.mensaje || 'Error.', 'error'); }
+            } catch { notificar('Error de conexión.', 'error'); }
         });
     });
 }
@@ -623,4 +624,10 @@ function esc(s) {
 }
 function escAttr(s) {
   return esc(s).replace(/'/g, '&#39;');
+}
+function stripHtml(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.innerHTML = String(s);
+  return d.textContent || d.innerText || '';
 }

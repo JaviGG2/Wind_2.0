@@ -65,7 +65,7 @@
 
 
                 </div>
-                <div class="nivel-bar" id="nivel-bar">
+                <div class="nivel-bar" id="nivel-bar" style="display:none">
                     <div class="nivel-header">
                         <span class="nivel-badge" id="nivel-badge">Nv 1</span>
                         <span class="nivel-titulo" id="nivel-titulo">Novato</span>
@@ -78,8 +78,8 @@
                         <span><span id="nivel-next-label">Próximo nivel</span>: <span id="nivel-puntos-siguiente">100</span> pts</span>
                     </div>
                 </div>
-                <a href="/rachas" class="racha-card" id="racha-card">
-                    <div class="racha-icon" id="racha-icon"><img src="/img/icons8-elemento-fuego.gif" alt="Racha" class="racha-gif" style="border-radius: 50%;"></div>
+                <a href="/rachas" class="racha-card" id="racha-card" style="display:none">
+                    <div class="racha-icon" id="racha-icon"><img src="/img/Fire_Streak_Orange.svg" alt="Racha" class="racha-gif" style="border-radius: 50%;"></div>
                     <div class="racha-info">
                         <span class="racha-num" id="racha-num">0</span>
                         <span class="racha-label" id="racha-label">días creando</span>
@@ -128,31 +128,35 @@
 
               <div class="accordion-item">
                 <button class="accordion-trigger" aria-expanded="false">
-                  <span class="accordion-title">Mis Contenidos</span>
+                  <span class="accordion-title" id="contenidos-accordion-title">Mis Contenidos</span>
                   <span class="accordion-icon material-symbols-outlined">add</span>
                 </button>
                 <div class="accordion-panel">
-                  <section id="seccion-contenidos" class="zona-modulo" style="border:none;padding:0;margin:0;">
-                    <p class="muted">Explora y administra tus temas y juegos desde un solo lugar.</p>
-                    <div class="tabs-container">
-                      <div class="tabs-header">
-                        <button class="tab-button active" onclick="switchTab('juegos')">Juegos</button>
-                        <button class="tab-button" onclick="switchTab('temas')">Temas</button>
+                  <section id="seccion-contenidos" class="contenidos-section">
+                    <div class="contenidos-header">
+                      <span class="material-symbols-outlined contenidos-header-icon" id="contenidos-icon">history</span>
+                      <div>
+                        <h3 id="contenidos-title">Historial</h3>
+                        <p id="contenidos-desc" class="muted">Registro de tu actividad en la plataforma.</p>
                       </div>
-                      <div id="tab-juegos" class="tab-content active">
-                        <div class="juego-panel" style="margin-top: 15px;">
-                          <h4>Juegos Publicados</h4>
-                          <p class="muted">Estos juegos ya están disponibles para la comunidad.</p>
-                          <div id="lista-juegos-publicados" class="lista-juegos">
-                            <p class="muted center">Cargando juegos publicados...</p>
-                          </div>
+                    </div>
+                    <div class="contenidos-grid">
+                      <div class="contenidos-block">
+                        <div class="contenidos-block-header">
+                          <span class="material-symbols-outlined">sports_esports</span>
+                          <h4>Juegos</h4>
+                        </div>
+                        <div id="lista-juegos-publicados" class="contenidos-list">
+                          <p class="muted center">Cargando...</p>
                         </div>
                       </div>
-                      <div id="tab-temas" class="tab-content" style="display: none;">
-                        <h4>Temas Subidos</h4>
-                        <p class="muted">Tus temas históricos publicados en la plataforma.</p>
-                        <div id="lista-temas-subidos" class="lista-temas" style="margin-top:12px;">
-                          <p class="muted center">Cargando temas subidos...</p>
+                      <div class="contenidos-block">
+                        <div class="contenidos-block-header">
+                          <span class="material-symbols-outlined">article</span>
+                          <h4>Temas</h4>
+                        </div>
+                        <div id="lista-temas-subidos" class="contenidos-list">
+                          <p class="muted center">Cargando...</p>
                         </div>
                       </div>
                     </div>
@@ -174,7 +178,7 @@
                         <button class="tab-button" onclick="switchAdminTab('crear-tema')">Crear Tema</button>
                         <button class="tab-button" onclick="switchAdminTab('crear-modulo')">Crear Módulo</button>
                         
-                        <button class="tab-button" onclick="switchAdminTab('feedback')">Feedback</button>
+                        
                       </div>
                       <div id="admin-tab-crear-juego" class="tab-content active" style="margin-top:16px;">
                         <p class="muted">Diseña una nueva trivia patrimonial.</p>
@@ -193,12 +197,7 @@
                       </div>
                       
                       
-                      <div id="admin-tab-feedback" class="tab-content" style="display:none; margin-top:16px;">
-                        <p class="muted">Mensajes de feedback enviados por los usuarios.</p>
-                        <div id="lista-feedback" class="lista-temas">
-                          <p class="muted center">Cargando feedback...</p>
-                        </div>
-                      </div>
+                      
                     </div>
                   </section>
                 </div>
@@ -216,19 +215,6 @@
     <script src="/js/dashboard.js?v={{ cacheVersion }}"></script>
     
     <script>
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-                content.style.display = 'none';
-            });
-            
-            event.currentTarget.classList.add('active');
-            const targetTab = document.getElementById('tab-' + tabId);
-            targetTab.classList.add('active');
-            targetTab.style.display = 'block';
-        }
-
         function switchAdminTab(tabId) {
             const container = document.getElementById('seccion-admin');
             container.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));

@@ -32,7 +32,7 @@ exports.crearDenuncia = async (req, res) => {
                     usuarioId: adminRes.rows[0].id,
                     titulo: 'Nueva denuncia',
                     mensaje: `Motivo: ${motivo}`,
-                    enlace: `/0505`
+                    enlace: `/admin`
                 });
             }
         } catch {}

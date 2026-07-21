@@ -93,7 +93,7 @@ function mostrarJuego(juego) {
         });
         opcionesEl.appendChild(grid);
     } else if (tipo === 'Match') {
-        const conceptos = (juego.pregunta || '').split(',').map(p => p.trim()).filter(Boolean);
+        const conceptos = (juego.pregunta || '').split(',').map((p, i) => ({ texto: p.trim(), idx: i })).filter(p => p.texto).sort(() => Math.random() - 0.5);
         const respuestas = (juego.opcion_a || '').split(',').map((r, i) => ({ texto: r.trim(), idx: i })).filter(r => r.texto).sort(() => Math.random() - 0.5);
         state.matchTotal = conceptos.length;
         $('#play-pregunta').textContent = 'Conecta cada concepto con su respuesta';
@@ -106,9 +106,9 @@ function mostrarJuego(juego) {
         conceptos.forEach((c, i) => {
             const btn = document.createElement('button');
             btn.className = 'match-btn';
-            btn.textContent = c;
+            btn.textContent = c.texto;
             btn.dataset.tipo = 'concepto';
-            btn.dataset.pos = i;
+            btn.dataset.pos = c.idx;
             btn.addEventListener('click', () => seleccionarMatch(btn, juego));
             colTemas.appendChild(btn);
         });

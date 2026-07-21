@@ -106,14 +106,26 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function configurarVistasPorRol(rol) {
         const accordionAdmin = document.getElementById('accordion-admin');
+        const icon = document.getElementById('contenidos-icon');
+        const title = document.getElementById('contenidos-title');
+        const desc = document.getElementById('contenidos-desc');
+        const accordionTitle = document.getElementById('contenidos-accordion-title');
 
         if (rol === 'Especialista') {
             if (accordionAdmin) accordionAdmin.style.display = '';
+            if (icon) icon.textContent = 'dashboard';
+            if (title) title.textContent = 'Mis Contenidos';
+            if (desc) desc.textContent = 'Administra tus juegos y temas publicados.';
+            if (accordionTitle) accordionTitle.textContent = 'Mis Contenidos';
             if (typeof cargarMisTemas === 'function') cargarMisTemas();
             if (typeof cargarMisJuegosCreados === 'function') cargarMisJuegosCreados();
             cargarCategorias();
         } else {
             if (accordionAdmin) accordionAdmin.style.display = 'none';
+            if (icon) icon.textContent = 'history';
+            if (title) title.textContent = 'Historial';
+            if (desc) desc.textContent = 'Registro de tu actividad en la plataforma.';
+            if (accordionTitle) accordionTitle.textContent = 'Historial';
             cargarHistorial();
         }
     }
@@ -417,19 +429,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function cargarNivel(rol) {
+    const bar = document.getElementById('nivel-bar');
+    if (rol === 'Especialista') {
+        if (bar) bar.style.display = 'none';
+        return;
+    }
+    if (bar) bar.style.display = '';
     try {
-        const isEsp = rol === 'Especialista';
-        const url = isEsp ? '/api/usuario/reputacion' : '/api/usuario/nivel';
-        const res = await fetch(url);
+        const res = await fetch('/api/usuario/nivel');
         if (!res.ok) return;
         const data = await res.json();
-        document.getElementById('nivel-badge').textContent = isEsp ? data.titulo : `Nv ${data.nivel}`;
+        document.getElementById('nivel-badge').textContent = `Nv ${data.nivel}`;
         document.getElementById('nivel-titulo').textContent = data.titulo;
         document.getElementById('nivel-progreso-bar').style.width = `${data.progreso}%`;
         document.getElementById('nivel-puntos-actual').textContent = data.puntos;
         document.getElementById('nivel-puntos-siguiente').textContent = data.puntosSiguiente;
         const label = document.getElementById('nivel-next-label');
-        if (label) label.textContent = isEsp ? 'Próximo rango' : 'Próximo nivel';
+        if (label) label.textContent = 'Próximo nivel';
     } catch {}
 }
 

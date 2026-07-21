@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function cargarModulos() {
     try {
-      const res = await fetch('/admin/api/modulos', { credentials: 'include' });
+      const res = await fetch('/api/modulos-admin', { credentials: 'include' });
       if (!res.ok) throw new Error();
       const modulos = await res.json();
 
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         btn.addEventListener('click', async function() {
           if (!confirm('¿Eliminar este módulo? Se borrarán todos sus niveles y juegos.')) return;
           try {
-            const res = await fetch(`/admin/api/modulos/${this.dataset.id}`, { method: 'DELETE', credentials: 'include' });
+            const res = await fetch(`/api/modulos-admin/${this.dataset.id}`, { method: 'DELETE', credentials: 'include' });
             if (!res.ok) { const d = await res.json(); alert(d.mensaje || 'Error'); return; }
             await cargarModulos();
           } catch { alert('Error de conexión.'); }

@@ -24,11 +24,11 @@ router.get('/admin/editar-modulo', verificarSesion, esEspecialista, (req, res) =
 });
 router.get('/api/modulos', moduloController.listarModulos);
 router.get('/api/modulos/:id', moduloController.obtenerModulo);
-router.get('/admin/api/modulos', verificarSesion, moduloController.misModulos);
-router.post('/admin/api/modulos', verificarSesion, moduloController.crearModulo);
-router.post('/admin/api/modulos/:id/niveles', verificarSesion, moduloController.agregarNivel);
-router.delete('/admin/api/modulos/:id/niveles/:nivelId', verificarSesion, moduloController.eliminarNivel);
-router.delete('/admin/api/modulos/:id', verificarSesion, moduloController.eliminarModulo);
+router.get('/api/modulos-admin', verificarSesion, moduloController.misModulos);
+router.post('/api/modulos-admin', verificarSesion, moduloController.crearModulo);
+router.post('/api/modulos-admin/:id/niveles', verificarSesion, moduloController.agregarNivel);
+router.delete('/api/modulos-admin/:id/niveles/:nivelId', verificarSesion, moduloController.eliminarNivel);
+router.delete('/api/modulos-admin/:id', verificarSesion, moduloController.eliminarModulo);
 router.post('/api/modulos/:id/niveles/:nivelId/completar', verificarSesion, moduloController.completarNivel);
 router.post('/api/modulos/:id/like', verificarSesion, moduloController.likeModulo);
 

@@ -71,7 +71,7 @@ document.getElementById('form-agregar-nivel').addEventListener('submit', async (
   }
 
   try {
-    const res = await fetch(`/admin/api/modulos/${moduloId}/niveles`, {
+    const res = await fetch(`/api/modulos-admin/${moduloId}/niveles`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -133,7 +133,7 @@ async function cargarNiveles() {
     container.querySelectorAll('.btn-eliminar-nivel').forEach(btn => {
       btn.addEventListener('click', async () => {
         if (!confirm('¿Eliminar este nivel?')) return;
-        await fetch(`/admin/api/modulos/${moduloId}/niveles/${btn.dataset.nivelId}`, { method: 'DELETE', credentials: 'include' });
+        await fetch(`/api/modulos-admin/${moduloId}/niveles/${btn.dataset.nivelId}`, { method: 'DELETE', credentials: 'include' });
         await cargarNiveles();
       });
     });
