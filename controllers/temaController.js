@@ -129,7 +129,7 @@ exports.listarTemas = async (req, res) => {
 
         const commentCountSubquery = ', (SELECT COUNT(*) FROM comentarios WHERE tema_id = t.id) AS comentarios_count';
 
-        const baseSelect = `SELECT t.id, t.titulo, t.contenido, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes, t.latitud, t.longitud
+        const baseSelect = `SELECT t.id, t.titulo, t.imagen_portada, t.fecha_publicacion, t.creador_id, t.likes, t.latitud, t.longitud
             ${usuarioId ? puntuacionSubquery.replace('$1', `$${idx}`) : ', null AS mi_puntuacion'}
             ${promedioSubquery}
             ${commentCountSubquery},

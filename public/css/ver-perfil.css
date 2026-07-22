@@ -57,6 +57,18 @@
     margin-top: 2px;
 }
 
+.reputacion-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255, 69, 0, 0.06);
+    color: var(--c-muted, #6b7280);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
 .nivel-bar {
     background: linear-gradient(135deg, #2d1200, #1a0a00);
     border-radius: 16px;

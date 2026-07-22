@@ -17,6 +17,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Wind">
     <link rel="apple-touch-icon" href="/img/app.png">
+    <link rel="icon" href="/img/logo2.png">
     <link rel="stylesheet" href="/css/animaciones.css?v={{ cacheVersion }}">
     <meta name="theme-color" content="#ff4500">
 </head>
@@ -41,6 +42,7 @@
                             <div id="username" class="muted username">&nbsp;</div>
                             <div class="perfil-meta">
                                 <span id="rol-usuario" class="rol-usuario">...</span>
+                                <span id="reputacion-badge" class="reputacion-badge" style="display:none;"></span>
                                 <div id="perfil-actions" class="perfil-actions-wrap"></div>
                             </div>
                         </div>
@@ -55,7 +57,7 @@
 
                 
 
-                <div class="nivel-bar" id="nivel-bar">
+                <div class="nivel-bar" id="nivel-bar" style="display:none">
                     <div class="nivel-header">
                         <span class="nivel-badge" id="nivel-badge">Nv 1</span>
                         <span class="nivel-titulo" id="nivel-titulo">Novato</span>
@@ -64,7 +66,7 @@
                         <div class="nivel-progreso-bar" id="nivel-progreso-bar"></div>
                     </div>
                     <div class="nivel-puntos">
-                        <span><span id="nivel-puntos-actual">0</span> pts</span>
+                        <span><span id="nivel-puntos-actual">0</span> <span id="nivel-puntos-label">pts</span></span>
                         <span><span id="nivel-next-label">Próximo nivel</span>: <span id="nivel-puntos-siguiente">100</span> pts</span>
                     </div>
                 </div>

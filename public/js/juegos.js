@@ -3,7 +3,10 @@ async function cargarMisJuegosCreados() {
     if (!contenedorLista) return;
 
     try {
-        const respuesta = await fetch('/admin/mis-juegos', { credentials: 'include' });
+        const [respuesta, perfilRes] = await Promise.all([
+            fetch('/admin/mis-juegos', { credentials: 'include' }),
+            fetch('/auth/perfil', { credentials: 'include' }).catch(() => null)
+        ]);
         if (!respuesta.ok) {
             contenedorLista.innerHTML = '<p style="color: red; font-size: 0.85rem;">No se pudo cargar el historial.</p>';
             return;
@@ -17,22 +20,21 @@ async function cargarMisJuegosCreados() {
         }
 
         contenedorLista.innerHTML = '';
-        try {
-            const perfilRes = await fetch('/auth/perfil', { credentials: 'include' });
-            if (perfilRes.ok) {
-                const perfil = await perfilRes.json();
-                if (perfil.rol === 'Especialista') {
-                    const rr = await fetch('/api/rachas');
-                    if (rr.ok) {
-                        const rd = await rr.json();
-                        const banner = document.createElement('div');
-                        banner.style.cssText = 'background:rgba(255,69,0,0.08);border:1px solid rgba(255,69,0,0.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:10px;font-size:0.85rem;color:#ff4500;';
-                        banner.innerHTML = `<span class="material-symbols-outlined" style="font-size:20px;">local_fire_department</span><span><strong>${rd.racha_creacion_actual || 0}</strong> días de racha · Máx: <strong>${rd.racha_creacion_maxima || 0}</strong></span>`;
-                        contenedorLista.appendChild(banner);
-                    }
+        let perfil = null;
+        if (perfilRes && perfilRes.ok) perfil = await perfilRes.json();
+
+        if (perfil && perfil.rol === 'Especialista') {
+            try {
+                const rr = await fetch('/api/rachas');
+                if (rr.ok) {
+                    const rd = await rr.json();
+                    const banner = document.createElement('div');
+                    banner.style.cssText = 'background:rgba(255,69,0,0.08);border:1px solid rgba(255,69,0,0.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:10px;font-size:0.85rem;color:#ff4500;';
+                    banner.innerHTML = `<span class="material-symbols-outlined" style="font-size:20px;">local_fire_department</span><span><strong>${rd.racha_creacion_actual || 0}</strong> días de racha · Máx: <strong>${rd.racha_creacion_maxima || 0}</strong></span>`;
+                    contenedorLista.appendChild(banner);
                 }
-            }
-        } catch {}
+            } catch {}
+        }
 
         juegos.forEach(juego => {
             const tarjeta = document.createElement('div');
@@ -102,23 +104,16 @@ async function cargarJuegosPublicados() {
 
         const juegos = await res.json();
         if (!juegos || juegos.length === 0) {
-            await new Promise(r => setTimeout(r, 1000));
             contenedor.innerHTML = '<p style="font-size: 0.95rem; color: #777; text-align:center;">No hay juegos publicados aún.</p>';
             return;
         }
 
-        await new Promise(r => setTimeout(r, 1000));
         contenedor.innerHTML = '';
-            let perfil = null;
-            try {
-                const r = await fetch('/auth/perfil', { credentials: 'include' });
-                if (r.ok) perfil = await r.json();
-            } catch (err) {
-                console.warn('No se pudo obtener perfil para permisos:', err);
-            }
-
-            if (perfil && perfil.rol === 'Especialista') {
-                try {
+        try {
+            const r = await fetch('/auth/perfil', { credentials: 'include' });
+            if (r.ok) {
+                const perfil = await r.json();
+                if (perfil.rol === 'Especialista') {
                     const rr = await fetch('/api/rachas');
                     if (rr.ok) {
                         const rd = await rr.json();
@@ -127,8 +122,9 @@ async function cargarJuegosPublicados() {
                         banner.innerHTML = `<span class="material-symbols-outlined" style="font-size:20px;">local_fire_department</span><span><strong>${rd.racha_creacion_actual || 0}</strong> días de racha · Máx: <strong>${rd.racha_creacion_maxima || 0}</strong></span>`;
                         contenedor.appendChild(banner);
                     }
-                } catch {}
+                }
             }
+        } catch {}
 
             juegos.forEach(juego => {
                 const tarjeta = document.createElement('div');
@@ -206,18 +202,15 @@ async function cargarMisTemas() {
     try {
         const res = await fetch('/admin/mis-temas', { credentials: 'include' });
         if (!res.ok) {
-            await new Promise(r => setTimeout(r, 1000));
             cont.innerHTML = '<p style="text-align:center; color:red;">No se pudieron cargar tus temas.</p>';
             return;
         }
         const temas = await res.json();
         if (!temas || temas.length === 0) {
-            await new Promise(r => setTimeout(r, 1000));
             cont.innerHTML = '<p style="text-align:center; color:#777;">Aún no has subido temas.</p>';
             return;
         }
 
-        await new Promise(r => setTimeout(r, 1000));
         cont.innerHTML = '';
         temas.forEach(t => {
             const item = document.createElement('div');
@@ -286,19 +279,16 @@ async function cargarModuloJuegos() {
     try {
         const respuesta = await fetch('/api/juegos');
         if (!respuesta.ok) {
-            await new Promise(r => setTimeout(r, 1000));
             contenedor.innerHTML = '<p style="color: red; font-size: 0.85rem;">No se pudo cargar el módulo de juegos.</p>';
             return;
         }
 
         const juegos = await respuesta.json();
         if (!juegos || juegos.length === 0) {
-            await new Promise(r => setTimeout(r, 1000));
             contenedor.innerHTML = '<p style="font-size: 0.95rem; color: #777;">No hay juegos disponibles por ahora.</p>';
             return;
         }
 
-        await new Promise(r => setTimeout(r, 1000));
         contenedor.innerHTML = '';
         juegos.slice(0, 5).forEach(juego => {
             const tarjeta = document.createElement('article');

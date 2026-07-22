@@ -34,18 +34,18 @@ async function cargarPerfil(id) {
             rolEl.textContent = user.rol || 'Natural';
         }
 
+        const nivelBar = document.getElementById('nivel-bar');
+        const repBadge = document.getElementById('reputacion-badge');
         if (user.nivel) {
-            const isEsp = user.rol === 'Especialista';
-            const rango = user.reputacionRango;
-            if (isEsp && rango && typeof rango.titulo === 'string') {
-                document.getElementById('nivel-badge').textContent = rango.titulo;
-                document.getElementById('nivel-titulo').textContent = rango.titulo;
-                document.getElementById('nivel-puntos-actual').textContent = rango.puntos;
-                document.getElementById('nivel-puntos-siguiente').textContent = rango.puntosSiguiente;
-                document.getElementById('nivel-progreso-bar').style.width = `${rango.progreso}%`;
-                const label = document.getElementById('nivel-next-label');
-                if (label) label.textContent = 'Próximo rango';
+            if (user.rol === 'Especialista' && user.reputacionRango) {
+                if (nivelBar) nivelBar.style.display = 'none';
+                if (repBadge) {
+                    repBadge.style.display = 'inline';
+                    repBadge.textContent = `${user.reputacionRango.titulo} · ${user.reputacionRango.puntos} rep`;
+                }
             } else {
+                if (nivelBar) nivelBar.style.display = '';
+                if (repBadge) repBadge.style.display = 'none';
                 document.getElementById('nivel-badge').textContent = `Nv ${user.nivel.nivel}`;
                 document.getElementById('nivel-titulo').textContent = user.nivel.titulo;
                 document.getElementById('nivel-puntos-actual').textContent = user.nivel.puntos;

@@ -46,8 +46,7 @@ async function iniciarPanel() {
       fetch('/admin/api/modulos').then(r => r.ok ? r.json() : []),
       fetch('/admin/api/feedback').then(r => r.ok ? r.json() : []),
       fetch('/admin/api/solicitudes').then(r => r.ok ? r.json() : []),
-      fetch('/admin/api/denuncias').then(r => r.ok ? r.json() : []),
-      new Promise(r => setTimeout(r, 1000))
+      fetch('/admin/api/denuncias').then(r => r.ok ? r.json() : [])
     ]);
     cache = { usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, denuncias };
     mostrarResumen();
@@ -61,18 +60,22 @@ function programarRecarga() {
     const active = $('.panel-nav-item.active');
     const tab = active ? active.dataset.tab : 'resumen';
     try {
-      const [usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, denuncias] = await Promise.all([
-        fetch('/admin/api/usuarios').then(r => r.ok ? r.json() : []),
-        fetch('/admin/api/categorias').then(r => r.ok ? r.json() : []),
-        fetch('/admin/api/juegos').then(r => r.ok ? r.json() : []),
-        fetch('/admin/api/temas').then(r => r.ok ? r.json() : []),
-        fetch('/admin/api/relatos').then(r => r.ok ? r.json() : []),
-        fetch('/admin/api/modulos').then(r => r.ok ? r.json() : []),
-        fetch('/admin/api/feedback').then(r => r.ok ? r.json() : []),
-        fetch('/admin/api/solicitudes').then(r => r.ok ? r.json() : []),
-        fetch('/admin/api/denuncias').then(r => r.ok ? r.json() : [])
-      ]);
-      cache = { usuarios, categorias, juegos, temas, relatos, modulos, feedback, solicitudes, denuncias };
+      const fetches = {
+        usuarios: '/admin/api/usuarios',
+        categorias: '/admin/api/categorias',
+        juegos: '/admin/api/juegos',
+        temas: '/admin/api/temas',
+        relatos: '/admin/api/relatos',
+        modulos: '/admin/api/modulos',
+        feedback: '/admin/api/feedback',
+        solicitudes: '/admin/api/solicitudes',
+        denuncias: '/admin/api/denuncias'
+      };
+      const needed = tab === 'resumen' ? Object.keys(fetches) : [tab];
+      const results = await Promise.all(needed.map(k =>
+        fetch(fetches[k]).then(r => r.ok ? r.json() : [])
+      ));
+      needed.forEach((k, i) => { cache[k] = results[i]; });
       if (tab === 'resumen') mostrarResumen();
       else if (tab === 'usuarios') mostrarUsuarios();
       else if (tab === 'temas') mostrarTemas();

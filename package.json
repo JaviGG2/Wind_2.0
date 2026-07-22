@@ -23,7 +23,6 @@
     "gif-encoder-2": "^1.0.5",
 
     "multer": "^2.1.1",
-    "natural": "^8.1.1",
     "nodemailer": "^8.0.10",
     "nunjucks": "^3.2.4",
     "pg": "^8.21.0",
