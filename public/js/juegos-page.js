@@ -15,10 +15,10 @@ const state = { puntosUsuario: 0 };
 function $(sel) { return document.querySelector(sel); }
 
 const TIPO_INFO = {
-    Quiz: { icon: 'quiz', label: 'Trivia', desc: 'Responde correctamente las preguntas', color: '#3b82f6' },
-    Memory: { icon: 'memory', label: 'Memoria', desc: 'Encuentra todas las parejas', color: '#10b981' },
-    Match: { icon: 'link', label: 'Relacionar', desc: 'Conecta conceptos con sus respuestas', color: '#8b5cf6' },
-    Scramblee: { icon: 'abc', label: 'Ordenar', desc: 'Ordena las letras para formar la palabra', color: '#f59e0b' }
+    Quiz: { icon: 'quiz', label: 'Quiz', desc: 'Responde correctamente las preguntas', color: '#3b82f6' },
+    Memory: { icon: 'memory', label: 'Memory', desc: 'Encuentra todas las parejas', color: '#10b981' },
+    Match: { icon: 'link', label: 'Match', desc: 'Conecta conceptos con sus respuestas', color: '#8b5cf6' },
+    Scramblee: { icon: 'abc', label: 'Scrumble', desc: 'Ordena las letras para formar la palabra', color: '#f59e0b' }
 };
 
 async function cargarDatosJuegos() {
