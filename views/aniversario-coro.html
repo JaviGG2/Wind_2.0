@@ -1003,36 +1003,39 @@
                 ctxPreview.textAlign = 'center';
                 ctxPreview.textBaseline = 'middle';
 
-                // Arriba: "Celebrando 499 años"
-                const fontSizeTop = Math.max(Math.floor(h * 0.065), 20);
-                ctxPreview.font = `bold ${fontSizeTop}px "Rethink Sans", sans-serif`;
+                const fontSizeTitulo = Math.max(Math.floor(h * 0.06), 18);
+                ctxPreview.font = `bold ${fontSizeTitulo}px "Rethink Sans", sans-serif`;
                 ctxPreview.fillStyle = '#ffffff';
                 ctxPreview.shadowBlur = 10;
                 ctxPreview.shadowOffsetX = 2;
                 ctxPreview.shadowOffsetY = 2;
-                const topY = h * 0.12;
-                ctxPreview.fillText("Celebrando 499 años", w / 2, topY);
+                ctxPreview.fillText("¡Yo tambien celebro", w / 2, h * 0.10);
 
-                // Arriba: "Santa Ana de Coro"
-                const fontSizeSub = Math.max(Math.floor(fontSizeTop * 0.5), 14);
+                const fontSizeSub = Math.max(Math.floor(fontSizeTitulo * 0.6), 14);
                 ctxPreview.font = `bold ${fontSizeSub}px "Rethink Sans", sans-serif`;
                 ctxPreview.fillStyle = '#fce4c4';
-                ctxPreview.shadowBlur = 6;
+                ctxPreview.shadowBlur = 8;
                 ctxPreview.shadowOffsetX = 2;
                 ctxPreview.shadowOffsetY = 2;
-                ctxPreview.fillText("Santa Ana de Coro", w / 2, topY + (fontSizeTop * 0.7));
+                ctxPreview.fillText("499 años de Coro!", w / 2, h * 0.10 + (fontSizeTitulo * 0.7));
 
-                // Abajo: nombre del usuario
                 if (texto) {
-                    const fontSizeName = Math.max(Math.floor(h * 0.05), 16);
+                    const fontSizeName = Math.max(Math.floor(h * 0.045), 14);
                     ctxPreview.font = `bold ${fontSizeName}px "Rethink Sans", sans-serif`;
-                    ctxPreview.fillStyle = '#ffffff';
+                    ctxPreview.fillStyle = '#fce4c4';
                     ctxPreview.shadowBlur = 10;
                     ctxPreview.shadowOffsetX = 2;
                     ctxPreview.shadowOffsetY = 2;
-                    const nameY = h - (h * 0.08);
-                    ctxPreview.fillText(texto, w / 2, nameY);
+                    ctxPreview.fillText(texto, w / 2, h * 0.82);
                 }
+
+                const fontSizeMsg = Math.max(Math.floor(h * 0.035), 12);
+                ctxPreview.font = `bold ${fontSizeMsg}px "Rethink Sans", sans-serif`;
+                ctxPreview.fillStyle = '#ffffff';
+                ctxPreview.shadowBlur = 8;
+                ctxPreview.shadowOffsetX = 2;
+                ctxPreview.shadowOffsetY = 2;
+                ctxPreview.fillText("Unete y preservemos nuestra historia", w / 2, h * 0.88);
 
                 ctxPreview.shadowBlur = 0;
                 ctxPreview.shadowOffsetX = 0;
@@ -1102,34 +1105,39 @@
                 ctxOff.textAlign = 'center';
                 ctxOff.textBaseline = 'middle';
 
-                // Arriba: "Celebrando 499 años"
-                const fontSizeTop = Math.max(Math.floor(alto * 0.065), 28);
-                ctxOff.font = `bold ${fontSizeTop}px "Rethink Sans", sans-serif`;
+                const fontSizeTitulo = Math.max(Math.floor(alto * 0.06), 24);
+                ctxOff.font = `bold ${fontSizeTitulo}px "Rethink Sans", sans-serif`;
                 ctxOff.fillStyle = '#ffffff';
                 ctxOff.shadowBlur = 12;
                 ctxOff.shadowOffsetX = 3;
                 ctxOff.shadowOffsetY = 3;
-                const topY = alto * 0.12;
-                ctxOff.fillText("Celebrando 499 años", ancho / 2, topY);
+                ctxOff.fillText("¡Yo tambien celebro!", ancho / 2, alto * 0.10);
 
-                // Arriba: "Santa Ana de Coro"
-                const fontSizeSub = Math.max(Math.floor(fontSizeTop * 0.5), 18);
+                const fontSizeSub = Math.max(Math.floor(fontSizeTitulo * 0.6), 18);
                 ctxOff.font = `bold ${fontSizeSub}px "Rethink Sans", sans-serif`;
                 ctxOff.fillStyle = '#fce4c4';
                 ctxOff.shadowBlur = 8;
                 ctxOff.shadowOffsetX = 2;
                 ctxOff.shadowOffsetY = 2;
-                ctxOff.fillText("Santa Ana de Coro", ancho / 2, topY + (fontSizeTop * 0.7));
+                ctxOff.fillText("¡499 años de Coro!", ancho / 2, alto * 0.10 + (fontSizeTitulo * 0.7));
 
-                // Abajo: nombre del usuario
-                const fontSizeName = Math.max(Math.floor(alto * 0.05), 24);
-                ctxOff.font = `bold ${fontSizeName}px "Rethink Sans", sans-serif`;
+                if (texto) {
+                    const fontSizeName = Math.max(Math.floor(alto * 0.045), 20);
+                    ctxOff.font = `bold ${fontSizeName}px "Rethink Sans", sans-serif`;
+                    ctxOff.fillStyle = '#fce4c4';
+                    ctxOff.shadowBlur = 12;
+                    ctxOff.shadowOffsetX = 3;
+                    ctxOff.shadowOffsetY = 3;
+                    ctxOff.fillText(texto, ancho / 2, alto * 0.82);
+                }
+
+                const fontSizeMsg = Math.max(Math.floor(alto * 0.035), 18);
+                ctxOff.font = `bold ${fontSizeMsg}px "Rethink Sans", sans-serif`;
                 ctxOff.fillStyle = '#ffffff';
-                ctxOff.shadowBlur = 12;
-                ctxOff.shadowOffsetX = 3;
-                ctxOff.shadowOffsetY = 3;
-                const nameY = alto - (alto * 0.08);
-                ctxOff.fillText(texto, ancho / 2, nameY);
+                ctxOff.shadowBlur = 10;
+                ctxOff.shadowOffsetX = 2;
+                ctxOff.shadowOffsetY = 2;
+                ctxOff.fillText("Unete y preservemos nuestra historia", ancho / 2, alto * 0.88);
 
                 ctxOff.shadowBlur = 0;
                 ctxOff.shadowOffsetX = 0;
