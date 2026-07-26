@@ -70,7 +70,7 @@ formulario.addEventListener('submit', async (evento) => {
         if (respuesta.ok) {
             mostrarAlert(resultado.mensaje || '¡Bienvenido!', 'exito');
             formulario.reset();
-            setTimeout(() => window.location.href = 'home', 1200);
+            setTimeout(() => window.location.href = 'aniversario-coro', 1200);
         } else if (respuesta.status === 403 && resultado.requiereVerificacion) {
             mostrarAlert('', '');
             mostrarVerificacion(resultado.correo);

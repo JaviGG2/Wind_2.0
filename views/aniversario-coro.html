@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: url('/img/fondo.png') center/cover no-repeat fixed;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0.82) 100%);
+            z-index: 0;
+        }
+
+        .particulas {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particula {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--primario);
+            border-radius: 50%;
+            opacity: 0;
+            animation: flotarParticula linear infinite;
+        }
+
+        @keyframes flotarParticula {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 0.6;
+            }
+
+            80% {
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: translateY(-10vh) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .particula:nth-child(1) {
+            left: 5%;
+            animation-duration: 12s;
+            animation-delay: 0s;
+            width: 5px;
+            height: 5px;
+            background: #ff6b35;
+        }
+
+        .particula:nth-child(2) {
+            left: 15%;
+            animation-duration: 15s;
+            animation-delay: 1s;
+            width: 8px;
+            height: 8px;
+            background: #ffd700;
+        }
+
+        .particula:nth-child(3) {
+            left: 25%;
+            animation-duration: 10s;
+            animation-delay: 2s;
+            width: 4px;
+            height: 4px;
+            background: #ff4500;
+        }
+
+        .particula:nth-child(4) {
+            left: 35%;
+            animation-duration: 14s;
+            animation-delay: 0.5s;
+            width: 7px;
+            height: 7px;
+            background: #ff8c00;
+        }
+
+        .particula:nth-child(5) {
+            left: 45%;
+            animation-duration: 11s;
+            animation-delay: 3s;
+            width: 5px;
+            height: 5px;
+            background: #ffd700;
+        }
+
+        .particula:nth-child(6) {
+            left: 55%;
+            animation-duration: 13s;
+            animation-delay: 1.5s;
+            width: 6px;
+            height: 6px;
+            background: #ff6b35;
+        }
+
+        .particula:nth-child(7) {
+            left: 65%;
+            animation-duration: 9s;
+            animation-delay: 4s;
+            width: 4px;
+            height: 4px;
+            background: #ff4500;
+        }
+
+        .particula:nth-child(8) {
+            left: 75%;
+            animation-duration: 16s;
+            animation-delay: 0.8s;
+            width: 7px;
+            height: 7px;
+            background: #ffd700;
+        }
+
+        .particula:nth-child(9) {
+            left: 85%;
+            animation-duration: 11s;
+            animation-delay: 2.5s;
+            width: 5px;
+            height: 5px;
+            background: #ff8c00;
+        }
+
+        .particula:nth-child(10) {
+            left: 92%;
+            animation-duration: 13s;
+            animation-delay: 1.2s;
+            width: 6px;
+            height: 6px;
+            background: #ff6b35;
+        }
+
+        .particula:nth-child(11) {
+            left: 10%;
+            animation-duration: 14s;
+            animation-delay: 3.5s;
+            width: 3px;
+            height: 3px;
+            background: #ffd700;
+        }
+
+        .particula:nth-child(12) {
+            left: 50%;
+            animation-duration: 12s;
+            animation-delay: 4.2s;
+            width: 8px;
+            height: 8px;
+            background: #ff4500;
+        }
+
+        .particula:nth-child(13) {
+            left: 70%;
+            animation-duration: 10s;
+            animation-delay: 5s;
+            width: 4px;
+            height: 4px;
+            background: #ff8c00;
+        }
+
+        .particula:nth-child(14) {
+            left: 30%;
+            animation-duration: 15s;
+            animation-delay: 2.8s;
+            width: 6px;
+            height: 6px;
+            background: #ffd700;
+        }
+
+        .particula:nth-child(15) {
+            left: 80%;
+            animation-duration: 11s;
+            animation-delay: 3.2s;
+            width: 5px;
+            height: 5px;
+            background: #ff6b35;
+        }
+
+        .contenedor-principal {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>499 Años de Coro - Wind</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/css/base.css?v={{ cacheVersion }}">
+    <link rel="stylesheet" href="/css/estilos.css?v={{ cacheVersion }}">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="/css/animaciones.css?v={{ cacheVersion }}">
+    <link rel="icon" href="/img/logo2.png">
+    <style>
+        .aniversario-card {
+            text-align: center;
+            padding: 0 0 30px;
+            max-width: 520px;
+            width: 100%;
+            background: linear-gradient(145deg, #ffffff 0%, #fefaf5 100%);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.6s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes fadeInPopup {
+            from {
+                opacity: 0;
+                transform: scale(0.92);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* --- Imagen de portada --- */
+        .hero-portada {
+            width: 100%;
+            display: block;
+            border-radius: 24px 24px 0 0;
+            object-fit: contain;
+            max-height: 340px;
+            background: #f5f0eb;
+        }
+
+        /* --- Contenido interno --- */
+        .contenido-card {
+            padding: 24px 28px 0;
+        }
+
+        .titulo-aniversario {
+            font-size: 2.6rem;
+            margin-bottom: 2px;
+            color: var(--primario);
+            font-weight: 900;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+        .subtitulo-aniversario {
+            font-size: 1.2rem;
+            color: var(--texto);
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .año-texto {
+            font-size: 0.9rem;
+            color: var(--texto-sec);
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        .texto-aniversario {
+            font-size: 1rem;
+            color: var(--texto-sec);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .progreso-500 {
+            margin-bottom: 20px;
+        }
+
+        .progreso-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--texto-sec);
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .progreso-bar {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progreso-fill {
+            height: 100%;
+            width: 99.8%;
+            background: linear-gradient(90deg, var(--primario), #ff8c00, #ffd700);
+            border-radius: 999px;
+            transition: width 1.5s ease;
+        }
+
+        .progreso-porcentaje {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: var(--texto-muted);
+            margin-top: 3px;
+        }
+
+        .datos-curiosos {
+            background: linear-gradient(135deg, var(--primario-light) 0%, #fff5ee 100%);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 22px;
+            border: 1px solid rgba(255, 69, 0, 0.1);
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dato-texto {
+            font-size: 0.9rem;
+            color: var(--texto);
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .dato-texto .material-symbols-outlined {
+            font-size: 1.1rem;
+            vertical-align: middle;
+            color: var(--primario);
+            margin-right: 6px;
+        }
+
+        /* --- Acciones principales --- */
+        .acciones-principales {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-primario {
+            background: var(--primario);
+            color: white;
+            padding: 14px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px var(--primario-glow);
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-primario:hover {
+            background: var(--primario-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--primario-glow);
+        }
+
+        .btn-primario:active {
+            transform: translateY(0);
+        }
+
+        .btn-secundario {
+            background: transparent;
+            color: var(--primario);
+            border: 2px solid var(--primario);
+            padding: 12px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: transform 0.2s, background 0.2s, color 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-secundario:hover {
+            background: var(--primario);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--primario-glow);
+        }
+
+        .btn-secundario:active {
+            transform: translateY(0);
+        }
+
+        .footer-aniversario {
+            margin-top: 18px;
+            font-size: 0.7rem;
+            color: var(--texto-muted);
+        }
+
+        /* --- POPUP POSTAL --- */
+        .popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .popup-overlay.abierto {
+            display: flex;
+        }
+
+        .popup-card {
+            background: linear-gradient(145deg, #ffffff 0%, #fefaf5 100%);
+            border-radius: 24px;
+            max-width: 520px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 28px 28px 24px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+            animation: fadeInPopup 0.3s ease-out;
+            position: relative;
+        }
+
+        .popup-card .btn-cerrar {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: #f3f4f6;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--texto-sec);
+            transition: background 0.2s;
+        }
+
+        .popup-card .btn-cerrar:hover {
+            background: #e5e7eb;
+        }
+
+        .popup-titulo {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--texto);
+            margin-bottom: 4px;
+        }
+
+        .popup-subtitulo {
+            font-size: 0.85rem;
+            color: var(--texto-sec);
+            margin-bottom: 16px;
+        }
+
+        /* Preview postal en popup */
+        .seccion-postal {
+            border: 2px dashed #e5e7eb;
+            border-radius: 14px;
+            padding: 6px;
+            background: #f9fafb;
+            margin-bottom: 12px;
+            transition: border-color 0.3s;
+        }
+
+        .seccion-postal.personalizada {
+            border-color: var(--primario);
+            border-style: solid;
+        }
+
+        #canvas-preview {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+            background: #eee;
+        }
+
+        .postal-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 36px 20px;
+            color: var(--texto-muted);
+            gap: 8px;
+        }
+
+        .postal-placeholder .material-symbols-outlined {
+            font-size: 2.5rem;
+        }
+
+        .postal-placeholder p {
+            font-size: 0.85rem;
+        }
+
+        .credito-imagen {
+            font-size: 0.65rem;
+            color: var(--texto-muted);
+            margin: 2px 0 12px;
+            text-align: center;
+        }
+
+        .credito-imagen a {
+            color: var(--texto-muted);
+            text-decoration: underline;
+        }
+
+        .grupo-nombre {
+            margin-bottom: 12px;
+            text-align: left;
+        }
+
+        .grupo-nombre label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--texto);
+            margin-bottom: 5px;
+        }
+
+        .grupo-nombre .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .grupo-nombre .input-wrapper .material-symbols-outlined {
+            position: absolute;
+            left: 12px;
+            color: var(--texto-muted);
+            font-size: 1.2rem;
+            pointer-events: none;
+        }
+
+        .grupo-nombre input {
+            width: 100%;
+            padding: 12px 14px 12px 40px;
+            border-radius: 10px;
+            border: 1.5px solid var(--borde);
+            background: var(--bg-surface);
+            color: var(--texto);
+            outline: none;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .grupo-nombre input:focus {
+            border-color: var(--primario);
+            box-shadow: 0 0 0 3px var(--primario-glow);
+        }
+
+        .popup-acciones {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .popup-acciones .fila {
+            display: flex;
+            gap: 8px;
+        }
+
+        .popup-acciones .fila .btn-accion {
+            flex: 1;
+            padding: 12px 10px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            transition: transform 0.2s, background 0.2s, color 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            border: 2px solid var(--primario);
+            background: transparent;
+            color: var(--primario);
+        }
+
+        .popup-acciones .fila .btn-accion:hover {
+            background: var(--primario);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--primario-glow);
+        }
+
+        .popup-acciones .fila .btn-accion:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-accion.btn-verde {
+            border-color: #25D366;
+            color: #25D366;
+        }
+
+        .btn-accion.btn-verde:hover {
+            background: #25D366;
+            color: white;
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+        }
+
+        .toast-notificacion {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: #1f2937;
+            color: white;
+            padding: 12px 22px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 99999;
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .toast-notificacion.visible {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast-notificacion .material-symbols-outlined {
+            color: #4ade80;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .contenido-card {
+                padding: 18px 16px 0;
+            }
+
+            .titulo-aniversario {
+                font-size: 2rem;
+            }
+
+            .subtitulo-aniversario {
+                font-size: 1rem;
+            }
+
+            .popup-card {
+                padding: 20px 16px 18px;
+                max-height: 95vh;
+            }
+
+            .popup-acciones .fila {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="particulas">
+        <div class="particula"></div>
+        <div class="particula"></div>
+        <div class="particula"></div>
+        <div class="particula"></div>
+        <div class="particula"></div>
+        <div class="particula"></div>
+        <div class="particula"></div>
+        <div class="particula"></div>
+        <div class="particula"></div>
+        <div class="particula"></div>
+        <div class="particula"></div>
+        <div class="particula"></div>
+        <div class="particula"></div>
+        <div class="particula"></div>
+        <div class="particula"></div>
+    </div>
+
+    <main class="contenedor-principal">
+        <div class="tarjeta-registro aniversario-card">
+            <div onclick="history.back()"
+                style="position:absolute;top:14px;left:14px;z-index:10;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,0.35);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;border:none;backdrop-filter:blur(4px);"
+                onmouseover="this.style.background='rgba(0,0,0,0.55)'"
+                onmouseout="this.style.background='rgba(0,0,0,0.35)'">
+                <span class="material-symbols-outlined" style="font-size:1.3rem;">close</span>
+            </div>
+
+            <img src="/img/ANV499.png" alt="Aniversario 499" class="hero-portada" crossorigin="anonymous">
+
+            <div class="contenido-card">
+                <h1 class="titulo-aniversario">¡499 Años!</h1>
+                <h2 class="subtitulo-aniversario">Santa Ana de Coro</h2>
+                <p class="año-texto">Primera capital de Venezuela · Patrimonio de la Humanidad</p>
+                <p class="texto-aniversario">
+                    Celebramos un nuevo aniversario de nuestra hermosa ciudad. Rumbo a sus 500 años, sigamos preservando
+                    la historia y el viento que nos une. ¡Gracias por ser parte de Wind!
+                </p>
+
+                <div class="progreso-500">
+                    <div class="progreso-label">
+                        <span>1527</span>
+                        <span>Rumbo a los 500 años</span>
+                        <span>2027</span>
+                    </div>
+                    <div class="progreso-bar">
+                        <div class="progreso-fill" style="width:99.8%"></div>
+                    </div>
+                    <div class="progreso-porcentaje">
+                        <span>Fundación</span>
+                        <span id="porcentaje-texto">99.8%</span>
+                        <span>500</span>
+                    </div>
+                </div>
+
+                <div class="datos-curiosos">
+                    <p class="dato-texto">
+                        <span class="material-symbols-outlined">auto_stories</span>
+                        <span id="dato-contenido">Cargando...</span>
+                    </p>
+                </div>
+
+                <div class="acciones-principales">
+                    <button type="button" class="btn-secundario" id="btn-abrir-popup">
+                        <span class="material-symbols-outlined">photo_frame</span>
+                        Crear postal personalizada
+                    </button>
+                    <a href="/home" class="btn-primario">
+                        Continuar a Wind
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                    </a>
+                </div>
+
+                <p class="footer-aniversario">Wind · Preservando la historia de Coro</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- POPUP POSTAL -->
+    <div class="popup-overlay" id="popup-postal">
+        <div class="popup-card">
+            <button type="button" class="btn-cerrar" id="btn-cerrar-popup">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+
+            <h2 class="popup-titulo">Crea tu postal</h2>
+            <p class="popup-subtitulo">Escribe tu nombre y elige una foto de Coro para compartir</p>
+
+            <div class="seccion-postal" id="seccion-postal">
+                <canvas id="canvas-preview"></canvas>
+                <div class="postal-placeholder" id="postal-placeholder">
+                    <span class="material-symbols-outlined">travel_explore</span>
+                    <p>Cargando imágenes de Coro...</p>
+                </div>
+            </div>
+            <p class="credito-imagen" id="credito-imagen"></p>
+
+            <div class="grupo-nombre">
+                <label for="input-nombre">Nombre, frase, etc.</label>
+                <div class="input-wrapper">
+                    <span class="material-symbols-outlined">person</span>
+                    <input type="text" id="input-nombre" placeholder="Escribe tu nombre..." maxlength="40"
+                        autocomplete="off">
+                </div>
+            </div>
+
+            <div class="popup-acciones">
+                <div class="fila">
+                    <button type="button" class="btn-accion" id="btn-cambiar-imagen">
+                        <span class="material-symbols-outlined">shuffle</span>
+                        Otra imagen
+                    </button>
+                    <button type="button" class="btn-accion" id="btn-descargar">
+                        <span class="material-symbols-outlined">download</span>
+                        Descargar
+                    </button>
+                </div>
+                <button type="button" class="btn-accion btn-verde" id="btn-whatsapp">
+                    <span class="material-symbols-outlined">share</span>
+                    Compartir en WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-notificacion" id="toast">
+        <span class="material-symbols-outlined">check_circle</span>
+        <span id="toast-mensaje">Postal lista</span>
+    </div>
+
+    <canvas id="canvas-offscreen" style="display:none;"></canvas>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const inputNombre = document.getElementById('input-nombre');
+            const canvasPreview = document.getElementById('canvas-preview');
+            const canvasOff = document.getElementById('canvas-offscreen');
+            const ctxPreview = canvasPreview.getContext('2d');
+            const ctxOff = canvasOff.getContext('2d');
+            const btnDescargar = document.getElementById('btn-descargar');
+            const btnWhatsapp = document.getElementById('btn-whatsapp');
+            const btnCambiar = document.getElementById('btn-cambiar-imagen');
+            const btnAbrir = document.getElementById('btn-abrir-popup');
+            const btnCerrar = document.getElementById('btn-cerrar-popup');
+            const popup = document.getElementById('popup-postal');
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-mensaje');
+            const datoContenido = document.getElementById('dato-contenido');
+            const seccionPostal = document.getElementById('seccion-postal');
+            const postalPlaceholder = document.getElementById('postal-placeholder');
+            const credito = document.getElementById('credito-imagen');
+
+            let nombre = '';
+            let imagenesCoro = [];
+            let indiceActual = -1;
+            let imagenActual = null;
+            let imagenesCargadas = false;
+
+            // --- Obtener nombre del perfil ---
+            try {
+                const res = await fetch('/auth/perfil');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.nombre) { nombre = data.nombre; inputNombre.value = nombre; }
+                }
+            } catch (err) { console.error(err); }
+
+            // --- Abrir / cerrar popup ---
+            btnAbrir.addEventListener('click', () => {
+                popup.classList.add('abierto');
+                document.body.style.overflow = 'hidden';
+                if (!imagenesCargadas) cargarImagenes();
+            });
+
+            function cerrarPopup() {
+                popup.classList.remove('abierto');
+                document.body.style.overflow = '';
+            }
+
+            btnCerrar.addEventListener('click', cerrarPopup);
+            popup.addEventListener('click', (e) => {
+                if (e.target === popup) cerrarPopup();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') cerrarPopup();
+            });
+
+            // --- Buscar imágenes de Coro en Wikimedia Commons ---
+            async function cargarImagenes() {
+                postalPlaceholder.innerHTML = `
+                    <div class="spinner" style="border-color:rgba(0,0,0,0.1);border-top-color:var(--primario);"></div>
+                    <p>Buscando imágenes de Coro...</p>
+                `;
+
+                const categorias = [
+                    'Santa_Ana_de_Coro', 'Coro,_Venezuela', 'Catedral_de_Coro',
+                    'Museo_Diocesano_de_Coro', 'Casa_del_Cabo_(Coro)'
+                ];
+                const todas = [];
+
+                for (const cat of categorias) {
+                    try {
+                        const url = `https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=categorymembers&gcmtitle=Category:${encodeURIComponent(cat)}&gcmnamespace=6&gcmlimit=30&prop=imageinfo&iiprop=url|size|mime&origin=*`;
+                        const res = await fetch(url);
+                        const data = await res.json();
+                        if (data.query && data.query.pages) {
+                            for (const id in data.query.pages) {
+                                const p = data.query.pages[id];
+                                if (p.imageinfo && p.imageinfo[0]) {
+                                    const info = p.imageinfo[0];
+                                    const mime = (info.mime || '').toLowerCase();
+                                    if (!mime.startsWith('image/jpeg') && !mime.startsWith('image/png')) continue;
+                                    if (info.width && info.width < 600) continue;
+                                    todas.push({
+                                        url: info.url, width: info.width, height: info.height,
+                                        title: p.title, desc: info.descriptionurl || ''
+                                    });
+                                }
+                            }
+                        }
+                    } catch (e) { }
+                }
+
+                if (todas.length === 0) {
+                    postalPlaceholder.innerHTML = `
+                        <span class="material-symbols-outlined">photo_camera</span>
+                        <p>No se encontraron imágenes.</p>
+                    `;
+                    return;
+                }
+
+                for (let i = todas.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [todas[i], todas[j]] = [todas[j], todas[i]];
+                }
+
+                imagenesCoro = todas;
+                imagenesCargadas = true;
+                aplicarImagen(0);
+            }
+
+            function mostrarEstado(mensaje) {
+                postalPlaceholder.style.display = 'flex';
+                canvasPreview.style.display = 'none';
+                seccionPostal.classList.remove('personalizada');
+                postalPlaceholder.innerHTML = `
+                    <div class="spinner" style="border-color:rgba(0,0,0,0.1);border-top-color:var(--primario);"></div>
+                    <p>${mensaje}</p>
+                `;
+                credito.textContent = '';
+            }
+
+            function mostrarImagenEnPostal(img) {
+                imagenActual = img;
+                canvasPreview.style.display = 'block';
+                postalPlaceholder.style.display = 'none';
+                seccionPostal.classList.add('personalizada');
+
+                const contenedor = seccionPostal;
+                const maxW = (contenedor.clientWidth || 460) - 12;
+                const ratio = img.naturalWidth / img.naturalHeight;
+                let w = Math.min(maxW, 560);
+                let h = w / ratio;
+                if (h > 380) { h = 380; w = h * ratio; }
+
+                canvasPreview.width = w;
+                canvasPreview.height = h;
+                canvasPreview.style.width = w + 'px';
+                canvasPreview.style.height = h + 'px';
+                ctxPreview.drawImage(img, 0, 0, w, h);
+                dibujarTextoEnPreview(w, h);
+            }
+
+            function dibujarTextoEnPreview(w, h) {
+                if (!imagenActual) return;
+                const texto = inputNombre.value.trim();
+
+                ctxPreview.shadowColor = 'rgba(0, 0, 0, 0.8)';
+                ctxPreview.textAlign = 'center';
+                ctxPreview.textBaseline = 'middle';
+
+                // Arriba: "Celebrando 499 años"
+                const fontSizeTop = Math.max(Math.floor(h * 0.065), 20);
+                ctxPreview.font = `bold ${fontSizeTop}px "Rethink Sans", sans-serif`;
+                ctxPreview.fillStyle = '#ffffff';
+                ctxPreview.shadowBlur = 10;
+                ctxPreview.shadowOffsetX = 2;
+                ctxPreview.shadowOffsetY = 2;
+                const topY = h * 0.12;
+                ctxPreview.fillText("Celebrando 499 años", w / 2, topY);
+
+                // Arriba: "Santa Ana de Coro"
+                const fontSizeSub = Math.max(Math.floor(fontSizeTop * 0.5), 14);
+                ctxPreview.font = `bold ${fontSizeSub}px "Rethink Sans", sans-serif`;
+                ctxPreview.fillStyle = '#fce4c4';
+                ctxPreview.shadowBlur = 6;
+                ctxPreview.shadowOffsetX = 2;
+                ctxPreview.shadowOffsetY = 2;
+                ctxPreview.fillText("Santa Ana de Coro", w / 2, topY + (fontSizeTop * 0.7));
+
+                // Abajo: nombre del usuario
+                if (texto) {
+                    const fontSizeName = Math.max(Math.floor(h * 0.05), 16);
+                    ctxPreview.font = `bold ${fontSizeName}px "Rethink Sans", sans-serif`;
+                    ctxPreview.fillStyle = '#ffffff';
+                    ctxPreview.shadowBlur = 10;
+                    ctxPreview.shadowOffsetX = 2;
+                    ctxPreview.shadowOffsetY = 2;
+                    const nameY = h - (h * 0.08);
+                    ctxPreview.fillText(texto, w / 2, nameY);
+                }
+
+                ctxPreview.shadowBlur = 0;
+                ctxPreview.shadowOffsetX = 0;
+                ctxPreview.shadowOffsetY = 0;
+            }
+
+            function aplicarImagen(indice) {
+                if (indice < 0 || indice >= imagenesCoro.length) return;
+                indiceActual = indice;
+                const imgData = imagenesCoro[indice];
+                mostrarEstado('Cargando imagen...');
+
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = () => {
+                    mostrarImagenEnPostal(img);
+                    const match = imgData.desc.match(/File:(.+)$/);
+                    const nombreArchivo = match ? match[1] : (imgData.title || '');
+                    credito.innerHTML = ` <a href="${imgData.desc}" target="_blank" rel="noopener">${nombreArchivo}</a> · Wikimedia`;
+                };
+                img.onerror = () => {
+                    if (indiceActual < imagenesCoro.length - 1) aplicarImagen(indiceActual + 1);
+                    else mostrarEstado('No se pudo cargar la imagen.');
+                };
+                img.src = imgData.url;
+            }
+
+            btnCambiar.addEventListener('click', () => {
+                if (imagenesCoro.length === 0) { mostrarToast('No hay imágenes', 'info'); return; }
+                aplicarImagen((indiceActual + 1) % imagenesCoro.length);
+            });
+
+            // --- Preview en vivo ---
+            let timeoutPreview = null;
+            inputNombre.addEventListener('input', () => {
+                clearTimeout(timeoutPreview);
+                timeoutPreview = setTimeout(() => {
+                    if (imagenActual) {
+                        const contenedor = seccionPostal;
+                        const maxW = (contenedor.clientWidth || 460) - 12;
+                        const ratio = imagenActual.naturalWidth / imagenActual.naturalHeight;
+                        let w = Math.min(maxW, 560);
+                        let h = w / ratio;
+                        if (h > 380) { h = 380; w = h * ratio; }
+                        canvasPreview.width = w;
+                        canvasPreview.height = h;
+                        canvasPreview.style.width = w + 'px';
+                        canvasPreview.style.height = h + 'px';
+                        ctxPreview.drawImage(imagenActual, 0, 0, w, h);
+                        dibujarTextoEnPreview(w, h);
+                    }
+                }, 200);
+            });
+
+            // --- Renderizar en resolución completa ---
+            async function renderizarCompleto() {
+                const texto = inputNombre.value.trim();
+                if (!imagenActual || !texto) return null;
+
+                const ancho = imagenActual.naturalWidth;
+                const alto = imagenActual.naturalHeight;
+                canvasOff.width = ancho;
+                canvasOff.height = alto;
+                ctxOff.drawImage(imagenActual, 0, 0, ancho, alto);
+
+                ctxOff.shadowColor = 'rgba(0, 0, 0, 0.85)';
+                ctxOff.textAlign = 'center';
+                ctxOff.textBaseline = 'middle';
+
+                // Arriba: "Celebrando 499 años"
+                const fontSizeTop = Math.max(Math.floor(alto * 0.065), 28);
+                ctxOff.font = `bold ${fontSizeTop}px "Rethink Sans", sans-serif`;
+                ctxOff.fillStyle = '#ffffff';
+                ctxOff.shadowBlur = 12;
+                ctxOff.shadowOffsetX = 3;
+                ctxOff.shadowOffsetY = 3;
+                const topY = alto * 0.12;
+                ctxOff.fillText("Celebrando 499 años", ancho / 2, topY);
+
+                // Arriba: "Santa Ana de Coro"
+                const fontSizeSub = Math.max(Math.floor(fontSizeTop * 0.5), 18);
+                ctxOff.font = `bold ${fontSizeSub}px "Rethink Sans", sans-serif`;
+                ctxOff.fillStyle = '#fce4c4';
+                ctxOff.shadowBlur = 8;
+                ctxOff.shadowOffsetX = 2;
+                ctxOff.shadowOffsetY = 2;
+                ctxOff.fillText("Santa Ana de Coro", ancho / 2, topY + (fontSizeTop * 0.7));
+
+                // Abajo: nombre del usuario
+                const fontSizeName = Math.max(Math.floor(alto * 0.05), 24);
+                ctxOff.font = `bold ${fontSizeName}px "Rethink Sans", sans-serif`;
+                ctxOff.fillStyle = '#ffffff';
+                ctxOff.shadowBlur = 12;
+                ctxOff.shadowOffsetX = 3;
+                ctxOff.shadowOffsetY = 3;
+                const nameY = alto - (alto * 0.08);
+                ctxOff.fillText(texto, ancho / 2, nameY);
+
+                ctxOff.shadowBlur = 0;
+                ctxOff.shadowOffsetX = 0;
+                ctxOff.shadowOffsetY = 0;
+
+                return canvasOff.toDataURL('image/png');
+            }
+
+            function mostrarToast(mensaje, icono) {
+                toastMsg.textContent = mensaje;
+                if (icono) toast.querySelector('.material-symbols-outlined').textContent = icono;
+                toast.classList.add('visible');
+                setTimeout(() => toast.classList.remove('visible'), 3000);
+            }
+
+            // --- Descargar ---
+            btnDescargar.addEventListener('click', async () => {
+                const texto = inputNombre.value.trim();
+                if (!texto) { mostrarToast('Escribe tu nombre primero', 'edit'); inputNombre.focus(); return; }
+                if (!imagenActual) { mostrarToast('Espera a que cargue la imagen', 'hourglass_top'); return; }
+
+                btnDescargar.disabled = true;
+                btnDescargar.innerHTML = '<span class="spinner"></span> Generando...';
+
+                const dataUrl = await renderizarCompleto();
+                if (!dataUrl) { btnDescargar.disabled = false; btnDescargar.innerHTML = 'Descargar'; return; }
+
+                const a = document.createElement('a');
+                a.href = dataUrl;
+                a.download = `postal_499_coro_${texto.replace(/\s+/g, '_')}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                btnDescargar.disabled = false;
+                btnDescargar.innerHTML = '<span class="material-symbols-outlined">download</span> Descargar';
+                mostrarToast('¡Postal descargada!', 'check_circle');
+            });
+
+            // --- WhatsApp ---
+            btnWhatsapp.addEventListener('click', async () => {
+                const texto = inputNombre.value.trim();
+                if (!texto) { mostrarToast('Escribe tu nombre primero', 'edit'); inputNombre.focus(); return; }
+                if (!imagenActual) { mostrarToast('Espera a que cargue la imagen', 'hourglass_top'); return; }
+
+                btnWhatsapp.disabled = true;
+                btnWhatsapp.innerHTML = '<span class="spinner"></span> Preparando...';
+
+                await renderizarCompleto();
+
+                const msg = `🎉 ¡Yo también celebro los 499 años de Santa Ana de Coro con Wind! 🎂\n\nÚnete y preservemos nuestra historia. 🌬️✨`;
+
+                try {
+                    const blob = await new Promise(resolve => canvasOff.toBlob(resolve, 'image/png'));
+                    const file = new File([blob], `postal_499_coro_${texto.replace(/\s+/g, '_')}.png`, { type: 'image/png' });
+                    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share({ files: [file], text: msg });
+                        mostrarToast('¡Compartido!', 'check_circle');
+                        btnWhatsapp.disabled = false;
+                        btnWhatsapp.innerHTML = '<span class="material-symbols-outlined">share</span> Compartir en WhatsApp';
+                        return;
+                    }
+                } catch (e) {
+                    if (e.name === 'AbortError') {
+                        btnWhatsapp.disabled = false;
+                        btnWhatsapp.innerHTML = '<span class="material-symbols-outlined">share</span> Compartir en WhatsApp';
+                        return;
+                    }
+                }
+
+                const dataUrl = canvasOff.toDataURL('image/png');
+                const a = document.createElement('a');
+                a.href = dataUrl;
+                a.download = `postal_499_coro_${texto.replace(/\s+/g, '_')}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                window.open(`https://wa.me/?text=${encodeURIComponent(msg + '\n\n📸 Te comparto mi postal.')}`, '_blank');
+
+                btnWhatsapp.disabled = false;
+                btnWhatsapp.innerHTML = '<span class="material-symbols-outlined">share</span> Compartir en WhatsApp';
+                mostrarToast('Postal descargada y WhatsApp abierto', 'check_circle');
+            });
+
+            // --- Datos curiosos ---
+            const datosCoro = [
+                'Santa Ana de Coro fue fundada el 26 de julio de 1527 por Juan de Ampíes.',
+                'Es la ciudad más antigua de Venezuela y su primera capital.',
+                'Coro fue declarada Patrimonio de la Humanidad por la UNESCO en 1993.',
+                'Su casco histórico conserva más de 300 edificios coloniales de barro.',
+                'Coro es conocida como la "Ciudad del Viento" por sus constantes brisas.',
+                'La Catedral de Coro es la más antigua de Venezuela continental.',
+                'Los Médanos de Coro son el único desierto de Venezuela con dunas activas.',
+                'El Museo Diocesano de Coro alberga la mayor colección de arte colonial del país.',
+                'Coro fue capital de la provincia de Venezuela hasta 1578.',
+                'El nombre "Coro" proviene de la voz indígena "Coro" que significa "viento".'
+            ];
+
+            let idx = 0;
+            function mostrarDato() { datoContenido.textContent = datosCoro[idx]; idx = (idx + 1) % datosCoro.length; }
+            mostrarDato();
+            setInterval(mostrarDato, 5000);
+
+            // --- Progreso ---
+            function actualizarProgreso() {
+                const fundacion = new Date(1527, 6, 26);
+                const ahora = new Date();
+                const anos = (ahora - fundacion) / (86400000 * 365.25);
+                const pct = Math.min(100, (anos / 500) * 100);
+                const fill = document.querySelector('.progreso-fill');
+                const text = document.getElementById('porcentaje-texto');
+                if (fill) fill.style.width = Math.min(100, pct) + '%';
+                if (text) text.textContent = pct.toFixed(2) + '%';
+            }
+            actualizarProgreso();
+        });
+    </script>
+</body>
+
+</html>

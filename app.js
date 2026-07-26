@@ -237,6 +237,7 @@ app.get('/ajustes-perfil', verificarSesion, (req, res) => res.render('ajustes-pe
 app.get('/select-avatar', verificarSesion, (req, res) => res.render('select-avatar'));
 app.get('/recuperar-contrasena', (req, res) => res.render('recuperar-contrasena'));
 app.get('/restablecer-contrasena', (req, res) => res.render('restablecer-contrasena'));
+app.get('/aniversario-coro', verificarSesion, (req, res) => res.render('aniversario-coro'));
 app.get('/', (req, res) => res.render('login'));
 
 // --- Panel de control admin (read-only, admin/Wind2.0) ---
