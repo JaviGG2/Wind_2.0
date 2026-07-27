@@ -1,15 +1,19 @@
 /* === ANIVERSARIO CORO === */
 
+html {
+    height: 100%;
+}
+
 body {
     margin: 0;
     padding: 0;
-    min-height: 100vh;
+    min-height: 100%;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
     background: url('/img/fondo.png') center/cover no-repeat fixed;
     position: relative;
     overflow-x: hidden;
+    overflow-y: auto;
 }
 
 body::before {
@@ -67,6 +71,7 @@ body::before {
     display: flex;
     justify-content: center;
     padding: 20px;
+    margin: auto;
 }
 
 /* --- Card principal --- */
