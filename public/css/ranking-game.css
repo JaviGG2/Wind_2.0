@@ -23,6 +23,7 @@
     width: 150px;
     height: 150px;
     object-fit: contain;
+    box-shadow: none;
 }
 .ranking-hero-title {
     font-size: 2rem;

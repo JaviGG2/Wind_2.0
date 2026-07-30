@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="/css/menu.css?v={{ cacheVersion }}">
    
     <link rel="stylesheet" href="/css/ranking-game.css?v={{ cacheVersion }}">
+    <link rel="stylesheet" href="/css/info-popup.css?v={{ cacheVersion }}">
     <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" href="/css/animaciones.css?v={{ cacheVersion }}">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -49,6 +50,11 @@
                         <span class="img"><img src="/img/Ranking.png" alt="Ranking"></span>
                     </div>
                     <h1 class="ranking-hero-title">Ranking Global</h1>
+                    <div style="display:flex;justify-content:center;">
+                        <button type="button" class="btn-info-icono" data-info="batalla-ranking" aria-label="Cómo funciona la batalla">
+                            <span class="material-symbols-outlined">help</span>
+                        </button>
+                    </div>
                     <div id="top3-podium" class="top3-podium" aria-label="Top 3 del ranking"></div>
                 </div>
             </section>
@@ -67,5 +73,6 @@
     </div>
 
     <script src="/js/ranking-game.js?v={{ cacheVersion }}"></script>
+    <script type="module" src="/js/info-burbuja.js?v={{ cacheVersion }}"></script>
 </body>
 </html>

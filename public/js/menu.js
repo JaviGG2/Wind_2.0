@@ -235,6 +235,26 @@ function restaurarScroll() {
   intentar(20);
 }
 
+// --- Service Worker + PWA Install ---
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+
+let deferredInstallPrompt = null;
+window.deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  window.deferredInstallPrompt = e;
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null;
+  window.deferredInstallPrompt = null;
+  const banner = document.getElementById('install-banner');
+  if (banner) banner.style.display = 'none';
+});
+
 window.addEventListener('pageshow', () => {
   const saved = sessionStorage.getItem(SCROLL_KEY);
   if (saved === null) return;

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Web - Wind</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/css/base.css?v={{ cacheVersion }}">
+    <link rel="stylesheet" href="/css/estilos.css?v={{ cacheVersion }}">
+    <link rel="stylesheet" href="/css/menu.css?v={{ cacheVersion }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="/css/info-popup.css?v={{ cacheVersion }}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Wind">
+    <link rel="apple-touch-icon" href="/img/app.png">
+    <link rel="icon" href="/img/logo2.png">
+    <meta name="theme-color" content="#ff4500">
+    <style>
+        .webapp-hero {
+            text-align: center;
+            padding: 24px 0 8px;
+        }
+        .webapp-hero picture img {
+            width: 230px;
+            height: 220px;
+            margin: 0 auto 12px;
+            border-radius: 0px;
+            display: block;
+        }
+        @media (pointer: fine), (min-width: 1024px) {
+            .webapp-hero picture img {
+                width: 900px;
+                height: auto;
+            }
+        }
+        .webapp-hero h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0;
+        }
+        .webapp-hero p {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 6px 0 0;
+        }
+        .webapp-section {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 14px;
+        }
+        .webapp-section h2 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin: 0 0 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .webapp-section h2 .material-symbols-outlined {
+            color: #ff4500;
+            font-size: 20px;
+        }
+        .webapp-section p, .webapp-section li {
+            font-size: 0.88rem;
+            color: #555;
+            line-height: 1.6;
+            margin: 4px 0;
+        }
+        .webapp-section ul {
+            padding-left: 20px;
+            margin: 6px 0;
+        }
+        .webapp-install-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: auto;
+            padding: 10px 24px;
+            background: linear-gradient(135deg, #ff4500, #e63e00);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 22px auto 12px;
+        }
+        .webapp-install-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(255,69,0,0.3);
+        }
+        .webapp-install-btn:disabled {
+            background: #ccc;
+            cursor: default;
+            transform: none;
+            box-shadow: none;
+        }
+        .webapp-install-status {
+            text-align: center;
+            font-size: 0.82rem;
+            color: #999;
+            margin: 0 0 24px;
+        }
+    </style>
+</head>
+<body>
+    <script src="/js/menu.js?v={{ cacheVersion }}"></script>
+    <script type="module" src="/js/info-burbuja.js?v={{ cacheVersion }}"></script>
+
+    <div class="app-layout">
+        <div id="menu-placeholder"></div>
+        <main class="contenido-principal anim-fade-down">
+            <a href="javascript:history.back()" class="btn-retroceder" aria-label="Volver">
+                <span class="material-symbols-outlined back-icon">arrow_back</span>
+                Atrás
+            </a>
+
+            <div class="webapp-hero">
+                <picture>
+                    <source srcset="/img/install_web_app_PC.png" media="(pointer: fine) and (hover: hover)">
+                    <source srcset="/img/install_web_app_PC.png" media="(min-width: 1024px)">
+                    <img src="/img/install_web_app.png" alt="Wind App">
+                </picture>
+                <p>Instala Wind en tu dispositivo para tener acceso directo</p>
+            </div>
+
+            <button id="btn-instalar" class="webapp-install-btn">
+                <span class="material-symbols-outlined">download</span> Instalar App
+            </button>
+            <p id="install-status" class="webapp-install-status"></p>
+
+            <div id="mensaje-consola" class="mensaje-oculto"></div>
+        </main>
+    </div>
+
+    <script>
+        const btn = document.getElementById('btn-instalar');
+        const status = document.getElementById('install-status');
+
+        function actualizarEstado() {
+            if (window.deferredInstallPrompt) {
+                btn.disabled = false;
+                status.textContent = 'Toca el botón para instalar Wind en tu dispositivo.';
+            } else if (window.matchMedia('(display-mode: standalone)').matches) {
+                btn.disabled = true;
+                status.textContent = '✓ Wind ya está instalado en este dispositivo.';
+            } else {
+                btn.disabled = true;
+                status.textContent = 'Para instalar, abre esta página en Chrome y usa "Agregar a pantalla de inicio" desde el menú.';
+            }
+        }
+
+        // Revisar si ya está instalado
+        actualizarEstado();
+
+        // Escuchar el evento por si llega tarde
+        window.addEventListener('beforeinstallprompt', () => {
+            setTimeout(actualizarEstado, 100);
+        });
+
+        window.addEventListener('appinstalled', () => {
+            actualizarEstado();
+        });
+
+        // Intentar cada segundo por 10 segundos por si el evento tarda
+        let intentos = 0;
+        const intervalo = setInterval(() => {
+            if (window.deferredInstallPrompt || window.matchMedia('(display-mode: standalone)').matches) {
+                actualizarEstado();
+                clearInterval(intervalo);
+            }
+            intentos++;
+            if (intentos >= 10) clearInterval(intervalo);
+        }, 1000);
+
+        btn.addEventListener('click', async () => {
+            const prompt = window.deferredInstallPrompt;
+            if (!prompt) return;
+            try {
+                prompt.prompt();
+                const result = await prompt.userChoice;
+                window.deferredInstallPrompt = null;
+                if (result.outcome === 'accepted') {
+                    status.textContent = '✓ Wind se está instalando...';
+                } else {
+                    status.textContent = 'Instalación cancelada.';
+                }
+                btn.disabled = true;
+            } catch (e) {
+                status.textContent = 'Error al instalar. Usa el menú del navegador > "Agregar a pantalla de inicio".';
+            }
+        });
+    </script>
+</body>
+</html>

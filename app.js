@@ -260,6 +260,7 @@ app.get('/recuperar-contrasena', (req, res) => res.render('recuperar-contrasena'
 app.get('/restablecer-contrasena', (req, res) => res.render('restablecer-contrasena'));
 app.get('/onboarding', verificarSesion, (req, res) => res.render('onboarding'));
 app.get('/aniversario-coro', verificarSesion, (req, res) => res.render('aniversario-coro'));
+app.get('/web-app', verificarSesion, (req, res) => res.render('web-app'));
 app.get('/', (req, res) => res.render('login'));
 
 // --- Panel de control admin (read-only, admin/Wind2.0) ---

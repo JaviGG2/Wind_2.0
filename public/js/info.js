@@ -39,6 +39,9 @@ export const baseDeConocimiento = {
     "Crear Relato Oficial o Módulo": {
         titulo: "¿Para qué sirve?",
         contenido: "<p>Para registrar contenido estructurado o documentos de apoyo histórico avalados por la cronología institucional de la ciudad.</p>"
+    },
+    "batalla-ranking": {
+        titulo: "¿Cómo funciona la Batalla?",
+        contenido: "<p><strong>Batalla semanal</strong></p><p>Cada semana se activa una batalla con <strong>10 preguntas</strong>. Para participar solo debes responder correctamente la mayor cantidad posible.</p><p><strong>Puntaje:</strong></p><ul><li>Acierto: <strong>3 puntos</strong></li><li>Fallar: <strong>0 puntos</strong></li></ul><p><strong>Top 3:</strong> Al final de la semana, los 3 mejores del ranking reciben una recompensa especial. ¡Entre más aciertos, más arriba estarás!</p>"
     }
-
 };
