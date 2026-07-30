@@ -125,7 +125,8 @@ function insertarBarra() {
 
   const banner = document.getElementById('migration-banner');
   const dismissBtn = document.getElementById('dismiss-migration');
-  if (banner && !sessionStorage.getItem('migration_dismissed')) {
+  const allowedPages = ['/home', '/comunidad', '/juegos', '/dashboard'];
+  if (banner && allowedPages.includes(window.location.pathname) && !sessionStorage.getItem('migration_dismissed')) {
     banner.classList.add('show');
   }
   if (dismissBtn) {
