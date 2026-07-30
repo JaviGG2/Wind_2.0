@@ -157,14 +157,13 @@ exports.listarPublicos = async (req, res) => {
                 : '';
             const jugadoSelect = currentUserId ? ', CASE WHEN hv.id IS NOT NULL THEN true ELSE false END AS jugado' : ', false AS jugado';
             const miPuntSelect = currentUserId ? `, (SELECT puntuacion FROM juegos_likes WHERE juego_id = j.id AND usuario_id = $1 LIMIT 1) AS mi_puntuacion` : ', null AS mi_puntuacion';
-            const userFilter = currentUserId ? 'j.usuario_id = $1 AND' : '';
             params = currentUserId ? [currentUserId] : [];
             queryTexto = `
                 SELECT j.id, j.titulo, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, j.likes, j.source, ROUND(COALESCE((SELECT AVG(puntuacion) FROM juegos_likes WHERE juego_id = j.id), 0), 1)::float AS promedio_valoracion${miPuntSelect}, c.nombre AS categoria_nombre${jugadoSelect}
                 FROM juegos j
                 LEFT JOIN categorias c ON j.categoria_id = c.id
                 ${jugadoJoin}
-                WHERE ${userFilter} j.id NOT IN (SELECT id_juego FROM nivel WHERE id_juego IS NOT NULL)
+                WHERE j.id NOT IN (SELECT id_juego FROM nivel WHERE id_juego IS NOT NULL)
                 ORDER BY j.id DESC
                 LIMIT 100
             `;
