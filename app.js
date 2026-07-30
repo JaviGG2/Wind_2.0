@@ -79,7 +79,8 @@ const notificacionRoutes = require('./routes/notificacionRoutes');
 const recomendacionRoutes = require('./routes/recomendacionRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
 const denunciaRoutes = require('./routes/denunciaRoutes');
-const albumRoutes = require('./routes/albumRoutes');
+let albumRoutes;
+try { albumRoutes = require('./routes/albumRoutes'); } catch (_) {}
 const seguidoresController = require('./controllers/seguidoresController');
 const traduccionController = require('./controllers/traduccionController');
 const { verificarSesion, esEspecialista } = require('./middlewares/autenticacion');
@@ -170,7 +171,7 @@ app.use(notificacionRoutes);
 app.use(recomendacionRoutes);
 app.use(feedbackRoutes);
 app.use(denunciaRoutes);
-app.use(albumRoutes);
+if (albumRoutes) app.use(albumRoutes);
 const batallaRoutes = require('./routes/batallaRoutes');
 app.use(batallaRoutes);
 app.post('/api/seguir/:id', seguidoresController.toggleSeguir);
