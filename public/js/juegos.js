@@ -220,7 +220,7 @@ async function cargarMisTemas() {
             contentWrapper.className = 'lista-item-content';
 
             const img = document.createElement('img');
-            img.src = t.imagen_portada || '/img/placeholder.png';
+            img.src = t.imagen_portada || '/img/app.png';
             img.className = 'lista-item-img';
 
             const meta = document.createElement('div');
