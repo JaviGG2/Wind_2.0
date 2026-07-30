@@ -58,6 +58,7 @@
                 
 
                 <div class="nivel-bar" id="nivel-bar" style="display:none">
+                    <span class="nivel-shimmer"></span>
                     <div class="nivel-header">
                         <span class="nivel-badge" id="nivel-badge">Nv 1</span>
                         <span class="nivel-titulo" id="nivel-titulo">Novato</span>
@@ -66,8 +67,8 @@
                         <div class="nivel-progreso-bar" id="nivel-progreso-bar"></div>
                     </div>
                     <div class="nivel-puntos">
-                        <span><span id="nivel-puntos-actual">0</span> <span id="nivel-puntos-label">pts</span></span>
-                        <span><span id="nivel-next-label">Próximo nivel</span>: <span id="nivel-puntos-siguiente">100</span> pts</span>
+                        <span class="puntos-actual-wrap"><span id="nivel-puntos-actual">0</span> <span id="nivel-puntos-label">pts</span></span>
+                        <span class="puntos-siguiente-wrap"><span id="nivel-next-label">Próximo nivel</span>: <span id="nivel-puntos-siguiente">100</span> pts</span>
                     </div>
                 </div>
 
@@ -88,6 +89,11 @@
                         <span class="material-symbols-outlined stat-icon">stadia_controller</span>
                         <div class="stat-num" id="stat-juegos">0</div>
                         <div class="stat-label">Juegos</div>
+                    </div>
+                    <div class="stat-card" data-tipo="albumes" onclick="toggleContenido('albumes')">
+                        <span class="material-symbols-outlined stat-icon">photo_album</span>
+                        <div class="stat-num" id="stat-albumes">0</div>
+                        <div class="stat-label">Álbumes</div>
                     </div>
                 </div>
                 <div id="perfil-contenido-expandido" class="perfil-contenido-expandido"></div>

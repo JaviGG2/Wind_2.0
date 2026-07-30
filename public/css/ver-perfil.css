@@ -70,55 +70,155 @@
 }
 
 .nivel-bar {
-    background: linear-gradient(135deg, #2d1200, #1a0a00);
+    background:
+        radial-gradient(ellipse at 30% 50%, rgba(255,69,0,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 50%, rgba(255,107,53,0.08) 0%, transparent 60%),
+        linear-gradient(135deg, #2a1100, #180900);
     border-radius: 16px;
     padding: 20px 24px;
     margin-bottom: 24px;
     color: #fff;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255,69,0,0.2);
+    box-shadow: none;
+}
+
+.nivel-bar .nivel-shimmer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #ff4500, #ff8a65, #ff4500, transparent);
+    background-size: 200% 100%;
+    animation: nivelShimmer 3s ease-in-out infinite;
+    z-index: 1;
+}
+
+@keyframes nivelShimmer {
+    0%, 100% { background-position: -50% 0; }
+    50% { background-position: 150% 0; }
 }
 
 .nivel-header {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
 }
 
 .nivel-badge {
-    background: var(--c-primario, #ff4500);
-    padding: 3px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: linear-gradient(135deg, #ff4500, #d63a00);
+    padding: 4px 14px 4px 8px;
     border-radius: 999px;
-    font-size: 0.82rem;
-    font-weight: 700;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.03em;
+    box-shadow: 0 2px 8px rgba(255,69,0,0.3);
+    position: relative;
 }
 
+.nivel-badge::before {
+    font-family: 'Material Symbols Outlined';
+    font-size: 16px;
+    font-weight: 400;
+    content: 'stars';
+}
+
+.nivel-bar[data-nivel="1"] .nivel-badge::before,
+.nivel-bar[data-nivel="2"] .nivel-badge::before { content: 'eco'; }
+.nivel-bar[data-nivel="3"] .nivel-badge::before,
+.nivel-bar[data-nivel="4"] .nivel-badge::before { content: 'explore'; }
+.nivel-bar[data-nivel="5"] .nivel-badge::before,
+.nivel-bar[data-nivel="6"] .nivel-badge::before { content: 'travel_explore'; }
+.nivel-bar[data-nivel="7"] .nivel-badge::before,
+.nivel-bar[data-nivel="8"] .nivel-badge::before { content: 'auto_awesome'; }
+.nivel-bar[data-nivel="9"] .nivel-badge::before,
+.nivel-bar[data-nivel="10"] .nivel-badge::before { content: 'military_tech'; }
+.nivel-bar[data-nivel="11"] .nivel-badge::before,
+.nivel-bar[data-nivel="12"] .nivel-badge::before { content: 'workspace_premium'; }
+
 .nivel-titulo {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: rgba(255,255,255,0.7);
+    font-size: 1rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.8);
+    letter-spacing: -0.01em;
 }
 
 .nivel-progreso {
-    height: 8px;
-    background: rgba(255,255,255,0.15);
+    height: 10px;
+    background: rgba(255,255,255,0.1);
     border-radius: 999px;
     margin-bottom: 8px;
     overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
 }
 
 .nivel-progreso-bar {
     height: 100%;
-    background: linear-gradient(90deg, var(--c-primario, #ff4500), #ff6b35);
+    background: linear-gradient(90deg, #ff4500, #ff6b35, #ff8a65, #ff6b35);
+    background-size: 200% 100%;
     border-radius: 999px;
     width: 0%;
-    transition: width 600ms ease;
+    transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
+    animation: barShimmer 3s ease-in-out infinite;
+}
+
+@keyframes barShimmer {
+    0% { background-position: 0% 0; }
+    50% { background-position: 100% 0; }
+    100% { background-position: 0% 0; }
+}
+
+.nivel-progreso-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 24px;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25));
+    border-radius: 999px;
 }
 
 .nivel-puntos {
     display: flex;
     justify-content: space-between;
-    font-size: 0.82rem;
-    color: rgba(255,255,255,0.6);
+    font-size: 0.76rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.5);
+}
+
+.nivel-puntos .puntos-actual-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #ff8a65;
+    font-weight: 700;
+}
+
+.nivel-puntos .puntos-actual-wrap::before {
+    content: 'bolt';
+    font-family: 'Material Symbols Outlined';
+    font-size: 14px;
+    font-weight: 400;
+    color: #ff8a65;
+}
+
+.nivel-puntos .puntos-siguiente-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: rgba(255,255,255,0.4);
 }
 
 .perfil-follow-stats {

@@ -31,20 +31,21 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    background: var(--c-card);
-    padding: 8px 14px;
-    border-radius: 12px;
+    background: none;
+    padding: 8px 16px;
+    border-radius: 25px;
     border: 1px solid var(--c-border);
     text-decoration: none;
     color: var(--c-texto);
-    transition: all 180ms ease;
+    transition: all 0.2s;
     flex: 1;
     min-width: 0;
+    cursor: pointer;
 }
 
 .juego-stat-link:hover {
-    border-color: var(--c-primario);
-    box-shadow: 0 2px 8px var(--c-primario-glow);
+    color: var(--c-primario);
+    background: var(--c-primario-light);
 }
 
 .juego-stat .material-symbols-outlined,
@@ -336,6 +337,34 @@ body {
 
 .juego-pts .material-symbols-outlined {
     font-size: 0.85rem;
+}
+
+.source-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.source-badge .material-symbols-outlined {
+    font-size: 0.75rem;
+}
+
+.source-badge--wind {
+    color: #16a34a;
+    background: #f0fdf4;
+}
+
+.source-badge--gemini {
+    color: #d97706;
+    background: #fffbeb;
 }
 
 .juego-card-titulo {
@@ -802,8 +831,8 @@ body {
     .juego-stat,
     .juego-stat-link {
         flex: none;
-        padding: 10px 12px;
-        border-radius: 10px;
+        padding: 10px 14px;
+        border-radius: 25px;
     }
 
     .juego-stat strong,

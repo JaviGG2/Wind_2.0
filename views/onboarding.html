@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><script>window.WIND_CACHE_VERSION='{{ cacheVersion }}'</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Wind</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="stylesheet" href="/css/base.css?v={{ cacheVersion }}">
+  <link rel="stylesheet" href="/css/onboarding.css?v={{ cacheVersion }}">
+  <link rel="icon" href="/img/logo2.png">
+  <link rel="stylesheet" href="/css/animaciones.css?v={{ cacheVersion }}">
+</head>
+<body>
+  <div class="ob-wrapper" id="app">
+    <div class="ob-carousel" id="carousel">
+      <div class="ob-slide">
+        <div class="ob-hero ">
+          <a class="ob-new-title ">Nuevo</a>
+          <span class="ob-icon anim-fade-up"><img src="/img/tools_resumir.png"></span>
+        </div>
+        <p class="ob-desc " >Ahora puedes resumir y organizar tu contenido de manera más eficiente.</p>
+      </div>
+      <div class="ob-slide">
+        <div class="ob-hero ">
+          <a class="ob-new-title ">Nuevo</a>
+          <span class="ob-icon anim-fade-up"><img src="/img/tools_traducir.png"></span>
+        </div>
+        <p class="ob-desc " >Traduce tu contenido a diferentes idiomas con facilidad.</p>
+      </div>
+      <div class="ob-slide">
+        <div class="ob-hero ">
+          <a class="ob-new-title ">Nuevo</a>
+          <span class="ob-icon anim-fade-up"><img src="/img/ranking_global.png"></span>
+        </div>
+        <p class="ob-desc " >Descubre quién lidera el ranking global de jugadores.</p>
+      </div>
+      <div class="ob-slide">
+        <div class="ob-hero ">
+          <a class="ob-new-title ">Nuevo</a>
+          <span class="ob-icon anim-fade-up"><img src="/img/gana_leer.png"></span>
+        </div>
+        <p class="ob-desc " >Gana puntos y desbloquea recompensas al leer contenido interesante.</p>
+      </div>
+      <div class="ob-slide">
+        <div class="ob-hero ">
+          <a class="ob-new-title ">Nuevo</a>
+          <span class="ob-icon anim-fade-up"><img src="/img/war_ranking.png"></span>
+        </div>
+        <p class="ob-desc " >Compite en batallas estratégicas contra otros jugadores para estar en el primer lugar.</p>
+      </div>
+      
+    </div>
+
+    <div class="ob-footer">
+      <div class="ob-dots" id="dots"></div>
+      <button class="ob-btn" id="btnContinue">Continuar</button>
+      <button class="ob-skip" id="btnSkip">Saltar</button>
+    </div>
+  </div>
+
+  <script src="/js/onboarding.js?v={{ cacheVersion }}"></script>
+</body>
+</html>

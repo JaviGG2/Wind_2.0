@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><style>body{background:#1a1a2e}</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados Batalla — Wind</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="/css/base.css?v={{ cacheVersion }}">
+    <link rel="stylesheet" href="/css/home.css?v={{ cacheVersion }}">
+    <link rel="stylesheet" href="/css/menu.css?v={{ cacheVersion }}">
+    <link rel="stylesheet" href="/css/batalla.css?v={{ cacheVersion }}">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="/css/animaciones.css?v={{ cacheVersion }}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Wind">
+    <link rel="apple-touch-icon" href="/img/app.png">
+    <link rel="icon" href="/img/logo2.png">
+    <meta name="theme-color" content="#ff4500">
+</head>
+<body>
+    <script src="/js/menu.js?v={{ cacheVersion }}"></script>
+    <div class="app-layout">
+        <div id="menu-placeholder"></div>
+        <main class="contenido-principal anim-fade-in">
+            <a href="/ranking-game" class="btn-retroceder" aria-label="Volver">
+                <span class="material-symbols-outlined back-icon">arrow_back</span>
+                Atrás
+            </a>
+
+            <section class="batalla-section">
+                <div class="batalla-resultados-hero">
+                    <span class="material-symbols-outlined" style="font-size:48px;color:#ffd700;">emoji_events</span>
+                    <h1>Resultados de la Batalla</h1>
+                    <p class="muted">Los 3 mejores se enfrentaron. Esto fue lo que pasó.</p>
+                </div>
+
+                <div class="batalla-podium" id="batalla-podium"></div>
+
+                <div class="batalla-tabla" id="batalla-tabla"></div>
+            </section>
+        </main>
+    </div>
+    <script src="/js/batalla-resultados.js?v={{ cacheVersion }}"></script>
+</body>
+</html>

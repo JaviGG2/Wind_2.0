@@ -1,0 +1,141 @@
+.ob-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  background: #fff;
+  overflow: hidden;
+}
+
+.ob-carousel {
+  flex: 1;
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.ob-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.ob-slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 32px;
+  text-align: center;
+}
+
+.ob-icon-wrap {
+  
+}
+
+.ob-icon {
+  font-size: 48px;
+  color: var(--primario);
+}
+
+.ob-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--texto);
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.ob-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.ob-new-title {
+  margin: 0;
+  color: #ff4500;
+  font-size: 20px;
+  
+}
+
+.ob-hero-image img {
+  display: block;
+  width: min(220px, 70vw);
+  max-width: 220px;
+  height: auto;
+}
+
+.ob-desc {
+  font-size: 16px;
+  color: var(--texto-sec);
+  line-height: 1.6;
+  max-width: 320px;
+  margin: 0 auto;
+  margin-top: 24px;
+}
+
+.ob-footer {
+  padding: 20px 24px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.ob-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.ob-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d1d5db;
+  transition: all 0.3s;
+}
+
+.ob-dot.active {
+  width: 26px;
+  border-radius: 4px;
+  background: var(--primario);
+}
+
+.ob-btn {
+  width: 100%;
+  max-width: 320px;
+  padding: 16px;
+  border-radius: 50px;
+  background: var(--primario);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px var(--primario-glow);
+}
+
+.ob-btn:active {
+  transform: scale(0.97);
+  opacity: 0.9;
+}
+
+.ob-skip {
+  background: none;
+  border: none;
+  color: var(--texto-sec);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.ob-skip:hover {
+  color: var(--texto);
+}

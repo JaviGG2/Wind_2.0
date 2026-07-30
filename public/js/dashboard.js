@@ -446,6 +446,7 @@ async function cargarNivel(rol) {
         document.getElementById('nivel-puntos-siguiente').textContent = data.puntosSiguiente;
         const label = document.getElementById('nivel-next-label');
         if (label) label.textContent = 'Próximo nivel';
+        if (bar) bar.setAttribute('data-nivel', data.nivel);
     } catch {}
 }
 

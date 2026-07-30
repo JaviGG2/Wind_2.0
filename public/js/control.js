@@ -189,7 +189,7 @@ function mostrarResumen() {
         <div class="ctrl-stat"><div class="ctrl-stat-num">${(categorias||[]).length}</div><div class="ctrl-stat-label">Categorías</div></div>
         <div class="ctrl-stat"><div class="ctrl-stat-num">${(feedback||[]).length}</div><div class="ctrl-stat-label">Feedbacks</div></div>
         <div class="ctrl-stat"><div class="ctrl-stat-num">${(cache.denuncias||[]).length}</div><div class="ctrl-stat-label">Denuncias</div></div>
-      </div>
+        </div>
     </div>`;
 }
 
@@ -442,7 +442,46 @@ function mostrarJuegos() {
             </tr>`).join('')}</tbody>
         </table>
       </div>`}
+      <div class="ctrl-card" style="margin-top:16px;padding:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <span style="font-weight:600;font-size:0.9rem;">🤖 Generar juegos con IA:</span>
+        <input type="number" id="ia-cantidad" value="3" min="1" max="10" style="width:60px;padding:6px 8px;border:1px solid var(--borde);border-radius:8px;font-size:0.85rem;">
+        <button class="ctrl-btn" onclick="generarJuegosIA()" id="btn-ia-generar">
+          <span class="material-symbols-outlined">auto_awesome</span> Generar
+        </button>
+        <span id="ia-result" style="font-size:0.8rem;color:var(--texto-sec);"></span>
+      </div>
     </div>`;
+}
+
+async function generarJuegosIA() {
+  const cantidad = parseInt(document.getElementById('ia-cantidad').value, 10) || 3;
+  const btn = document.getElementById('btn-ia-generar');
+  const result = document.getElementById('ia-result');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="material-symbols-outlined">sync</span> Generando...';
+  result.textContent = 'Generando juegos...';
+  try {
+    const res = await fetch('/admin/api/ia/generar-juegos', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cantidad })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      result.innerHTML = `<span style="color:#16a34a;">${data.mensaje}</span>`;
+      setTimeout(() => window.location.reload(), 2000);
+    } else if (res.status === 429) {
+      result.innerHTML = `<span style="color:#dc2626;">Límite diario alcanzado (${data.quota?.limite || 10})</span>`;
+    } else {
+      result.innerHTML = `<span style="color:#dc2626;">${data.error || 'Error'}</span>`;
+    }
+  } catch (e) {
+    result.innerHTML = '<span style="color:#dc2626;">Error de conexión</span>';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<span class="material-symbols-outlined">auto_awesome</span> Generar';
+  }
 }
 
 // --- Relatos ---

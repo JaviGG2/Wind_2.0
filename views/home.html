@@ -73,6 +73,14 @@
     <a class="Fin" href="#" style="position: relative; top: -10px; bottom: 10px; text-align: center; display: block;">Has llegado al final</a>
 
     <script>
+        (function() {
+            var seen = (function(){ try { return localStorage.getItem('wind_onboarding_v'); } catch(e) { return null; } })();
+            var ver = window.WIND_CACHE_VERSION || '';
+            if (seen !== ver) {
+                window.location.href = '/onboarding';
+            }
+        })();
+
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js');
         }

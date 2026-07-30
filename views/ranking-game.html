@@ -32,15 +32,24 @@
         <div id="buscar-placeholder"></div>
         <div id="menu-placeholder"></div>
 
+      
         <main class="contenido-principal anim-fade-down">
+
+            <a href="/juegos" class="btn-retroceder" aria-label="Volver">
+            <span class="material-symbols-outlined back-icon">arrow_back</span>
+                Atrás
+             <span class="back-text"></span>
+            </a>
+            
+
 
             <section class="ranking-hero">
                 <div class="ranking-hero-content">
                     <div class="ranking-hero-icon">
-                        <span class="material-symbols-outlined">leaderboard</span>
+                        <span class="img"><img src="/img/ranking.png" alt="Ranking"></span>
                     </div>
                     <h1 class="ranking-hero-title">Ranking Global</h1>
-                    <p class="ranking-hero-subtitle">Los mejores jugadores de la comunidad patrimonial. Responde trivias, gana puntos y escala posiciones.</p>
+                    <div id="top3-podium" class="top3-podium" aria-label="Top 3 del ranking"></div>
                 </div>
             </section>
 

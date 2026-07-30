@@ -79,11 +79,13 @@ const notificacionRoutes = require('./routes/notificacionRoutes');
 const recomendacionRoutes = require('./routes/recomendacionRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
 const denunciaRoutes = require('./routes/denunciaRoutes');
+const albumRoutes = require('./routes/albumRoutes');
 const seguidoresController = require('./controllers/seguidoresController');
 const traduccionController = require('./controllers/traduccionController');
 const { verificarSesion, esEspecialista } = require('./middlewares/autenticacion');
 const { calcularNivel } = require('./utils/niveles');
 const { calcularRangoReputacion } = require('./utils/reputacion');
+const iaUtils = require('./utils/ia');
 
 app.get('/api/usuario/nivel', verificarSesion, async (req, res) => {
     try {
@@ -120,10 +122,11 @@ app.get('/api/usuarios/:id/perfil', verificarSesion, async (req, res) => {
         const user = r.rows[0];
         const nivel = calcularNivel(user.puntos || 0);
 
-        let conteo_relatos = 0, conteo_temas = 0, conteo_juegos = 0;
+        let conteo_relatos = 0, conteo_temas = 0, conteo_juegos = 0, conteo_albumes = 0;
         try { const q = await db.query('SELECT COUNT(*)::int as c FROM relatos_community WHERE usuario_id = $1', [id]); conteo_relatos = q.rows[0].c; } catch (_) {}
         try { const q = await db.query('SELECT COUNT(*)::int as c FROM temas WHERE creador_id = $1 AND estado = $2', [id, 'aprobado']); conteo_temas = q.rows[0].c; } catch (_) {}
         try { const q = await db.query('SELECT COUNT(*)::int as c FROM juegos WHERE usuario_id = $1', [id]); conteo_juegos = q.rows[0].c; } catch (_) {}
+        try { const q = await db.query('SELECT COUNT(*)::int as c FROM albumes WHERE usuario_id = $1', [id]); conteo_albumes = q.rows[0].c; } catch (_) {}
 
         let seguidores_count = 0, siguiendo_count = 0, siguiendo = false;
         try {
@@ -147,7 +150,7 @@ app.get('/api/usuarios/:id/perfil', verificarSesion, async (req, res) => {
             reputacionRango = calcularRangoReputacion(user.reputacion || 0);
         } catch (_) {}
 
-        res.json({ ...user, nivel, reputacionRango, conteo_relatos, conteo_temas, conteo_juegos, seguidores_count, siguiendo_count, siguiendo });
+        res.json({ ...user, nivel, reputacionRango, conteo_relatos, conteo_temas, conteo_juegos, conteo_albumes, seguidores_count, siguiendo_count, siguiendo });
     } catch (e) {
         console.error('Error al obtener perfil:', e);
         res.status(500).json({ mensaje: 'Error al cargar perfil.' });
@@ -167,6 +170,9 @@ app.use(notificacionRoutes);
 app.use(recomendacionRoutes);
 app.use(feedbackRoutes);
 app.use(denunciaRoutes);
+app.use(albumRoutes);
+const batallaRoutes = require('./routes/batallaRoutes');
+app.use(batallaRoutes);
 app.post('/api/seguir/:id', seguidoresController.toggleSeguir);
 app.get('/api/seguidores/:id', seguidoresController.obtenerSeguidores);
 app.get('/api/siguiendo/:id', seguidoresController.obteniendoSigo);
@@ -190,6 +196,18 @@ app.get('/ver-relato', verificarSesion, (req, res) => {
 
 app.get('/crear-relato', verificarSesion, (req, res) => {
     res.render('crear-relato');
+});
+
+app.get('/albumes', verificarSesion, (req, res) => {
+    res.render('albumes');
+});
+
+app.get('/crear-album', verificarSesion, (req, res) => {
+    res.render('crear-album');
+});
+
+app.get('/ver-album', verificarSesion, (req, res) => {
+    res.render('ver-album');
 });
 
 app.get('/subir-tema', verificarSesion, esEspecialista, (req, res) => {
@@ -229,6 +247,8 @@ app.get('/mapa', verificarSesion, (req, res) => res.render('mapa'));
 app.get('/prueba-qr', (req, res) => res.render('prueba-qr'));
 app.get('/play-game', verificarSesion, (req, res) => res.render('play-game'));
 app.get('/ranking-game', verificarSesion, (req, res) => res.render('ranking-game'));
+app.get('/batalla', verificarSesion, (req, res) => res.render('batalla'));
+app.get('/batalla-resultados', verificarSesion, (req, res) => res.render('batalla-resultados'));
 app.get('/barra_navegacion', (req, res) => res.render('barra_navegacion'));
 app.get('/registro', (req, res) => res.render('Registro'));
 app.get('/login', (req, res) => res.render('login'));
@@ -237,6 +257,7 @@ app.get('/ajustes-perfil', verificarSesion, (req, res) => res.render('ajustes-pe
 app.get('/select-avatar', verificarSesion, (req, res) => res.render('select-avatar'));
 app.get('/recuperar-contrasena', (req, res) => res.render('recuperar-contrasena'));
 app.get('/restablecer-contrasena', (req, res) => res.render('restablecer-contrasena'));
+app.get('/onboarding', verificarSesion, (req, res) => res.render('onboarding'));
 app.get('/aniversario-coro', verificarSesion, (req, res) => res.render('aniversario-coro'));
 app.get('/', (req, res) => res.render('login'));
 
@@ -288,7 +309,7 @@ app.get('/admin/api/categorias', verificar0505, async (req, res) => {
 app.get('/admin/api/juegos', verificar0505, async (req, res) => {
     try {
         const r = await db.query(`
-            SELECT j.id, j.titulo, j.pregunta, j.tipo, j.puntos_recompensa, c.nombre AS categoria_nombre
+            SELECT j.id, j.titulo, j.pregunta, j.tipo, j.puntos_recompensa, j.source, c.nombre AS categoria_nombre
             FROM juegos j LEFT JOIN categorias c ON j.categoria_id = c.id
             ORDER BY j.id DESC LIMIT 100`);
         res.json(r.rows);
@@ -582,6 +603,65 @@ app.delete('/admin/api/juegos/:id', verificar0505, async (req, res) => {
     } catch (e) { res.status(500).json({ mensaje: 'Error al eliminar.' }); }
 });
 
+// IA — Generar juegos automaticamente desde temas
+app.post('/admin/api/ia/generar-juegos', verificar0505, async (req, res) => {
+    try {
+        const cantidad = Math.min(10, Math.max(1, parseInt(req.body.cantidad, 10) || 3));
+
+        const quota = await iaUtils.verificarQuota({ usuarioId: req.session.usuarioId, tipo: 'generar_juego', db });
+        if (!quota.permitido) {
+            return res.status(429).json({ error: 'Limite diario alcanzado', quota });
+        }
+
+        const temasRes = await db.query(`
+            SELECT id, titulo, contenido, categoria_id FROM temas
+            WHERE contenido IS NOT NULL AND contenido != ''
+            ORDER BY RANDOM() LIMIT $1
+        `, [cantidad]);
+        const temas = temasRes.rows;
+
+        if (!temas.length) {
+            return res.status(400).json({ error: 'No hay temas con contenido disponible.' });
+        }
+
+        const resultados = [];
+        for (let i = 0; i < temas.length; i++) {
+            try {
+                const juegoData = await iaUtils.generarJuego({ tema: temas[i], indice: i });
+                const insertRes = await db.query(`
+                    INSERT INTO juegos (categoria_id, titulo, pregunta, opcion_a, opcion_b, opcion_c, opcion_correcta, tipo, puntos_recompensa, usuario_id, source)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'gemini')
+                    RETURNING id
+                `, [
+                    juegoData.categoria_id,
+                    juegoData.titulo,
+                    juegoData.pregunta,
+                    juegoData.opcion_a,
+                    juegoData.opcion_b,
+                    juegoData.opcion_c,
+                    juegoData.opcion_correcta,
+                    juegoData.tipo,
+                    juegoData.puntos_recompensa,
+                    req.session.usuarioId
+                ]);
+                resultados.push({ id: insertRes.rows[0].id, titulo: juegoData.titulo, tipo: juegoData.tipo });
+            } catch (err) {
+                console.error(`Error generando juego para tema #${temas[i].id}:`, err.message);
+                resultados.push({ error: err.message, tema_id: temas[i].id });
+            }
+        }
+
+        await iaUtils.registrarUso({ usuarioId: req.session.usuarioId, tipo: 'generar_juego', db });
+
+        const generados = resultados.filter(r => r.id).length;
+        const errores = resultados.filter(r => r.error).length;
+        res.json({ mensaje: `Generados ${generados} juego(s). Errores: ${errores}.`, resultados, quota });
+    } catch (e) {
+        console.error('[ia/generar-juegos] Error:', e.message);
+        res.status(500).json({ error: 'Error al generar juegos.' });
+    }
+});
+
 // Relatos
 app.delete('/admin/api/relatos/:id', verificar0505, async (req, res) => {
     try {
@@ -792,6 +872,29 @@ app.listen(PORT, async () => {
     }
 
     try {
+        await db.query(`ALTER TABLE juegos ADD COLUMN IF NOT EXISTS source VARCHAR(20) DEFAULT 'wind'`);
+        console.log('Columna source en juegos lista.');
+    } catch (err) {
+        console.error('Error agregando source a juegos:', err.message);
+    }
+
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS uso_ia (
+                id SERIAL PRIMARY KEY,
+                usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+                fecha DATE NOT NULL DEFAULT CURRENT_DATE,
+                tipo VARCHAR(50) NOT NULL,
+                conteo INTEGER DEFAULT 1,
+                UNIQUE(usuario_id, fecha, tipo)
+            )
+        `);
+        console.log('Tabla uso_ia lista.');
+    } catch (err) {
+        console.error('Error creando uso_ia:', err.message);
+    }
+
+    try {
         await db.query(`
             CREATE TABLE IF NOT EXISTS relatos_likes (
                 id SERIAL PRIMARY KEY,
@@ -867,6 +970,72 @@ app.listen(PORT, async () => {
         console.error('Error agregando columna likes:', err.message);
     }
 
+    // tabla batallas para el sistema de batalla top 3
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS batallas (
+                id SERIAL PRIMARY KEY,
+                creador_id INTEGER NOT NULL REFERENCES usuarios(id),
+                estado VARCHAR(20) DEFAULT 'pendiente',
+                fecha_creacion TIMESTAMP DEFAULT NOW(),
+                fecha_completada TIMESTAMP
+            )
+        `);
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS batallas_participantes (
+                id SERIAL PRIMARY KEY,
+                batalla_id INTEGER NOT NULL REFERENCES batallas(id) ON DELETE CASCADE,
+                usuario_id INTEGER NOT NULL REFERENCES usuarios(id),
+                aciertos INTEGER DEFAULT 0,
+                total_preguntas INTEGER DEFAULT 0,
+                tiempo_total_segundos INTEGER DEFAULT 0,
+                completado BOOLEAN DEFAULT FALSE,
+                fecha_completado TIMESTAMP,
+                UNIQUE (batalla_id, usuario_id)
+            )
+        `);
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS batallas_preguntas (
+                id SERIAL PRIMARY KEY,
+                batalla_id INTEGER NOT NULL REFERENCES batallas(id) ON DELETE CASCADE,
+                pregunta TEXT NOT NULL,
+                opciones JSONB NOT NULL,
+                respuesta_correcta VARCHAR(255) NOT NULL,
+                orden INTEGER NOT NULL
+            )
+        `);
+        console.log('Tablas batalla listas.');
+    } catch (err) {
+        console.error('Error creando tablas batalla:', err.message);
+    }
+
+    // tabla albumes para el sistema de recuerdos
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS albumes (
+                id SERIAL PRIMARY KEY,
+                titulo VARCHAR(255) NOT NULL,
+                descripcion TEXT,
+                lugar VARCHAR(255),
+                usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+                fecha_creacion TIMESTAMP DEFAULT NOW(),
+                updated_at TIMESTAMP DEFAULT NOW()
+            )
+        `);
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS album_fotos (
+                id SERIAL PRIMARY KEY,
+                album_id INTEGER NOT NULL REFERENCES albumes(id) ON DELETE CASCADE,
+                url TEXT NOT NULL,
+                orden INTEGER DEFAULT 0,
+                created_at TIMESTAMP DEFAULT NOW()
+            )
+        `);
+        console.log('Tablas albumes listas.');
+    } catch (err) {
+        console.error('Error creando tablas albumes:', err.message);
+    }
+
     // Crear índices para rendimiento
     const indices = [
         'CREATE INDEX IF NOT EXISTS idx_historial_usuario_tipo ON historial_vistas(usuario_id, tipo_contenido, fecha_vista DESC)',
@@ -875,6 +1044,8 @@ app.listen(PORT, async () => {
         'CREATE INDEX IF NOT EXISTS idx_juegos_categoria ON juegos(categoria_id)',
         'CREATE INDEX IF NOT EXISTS idx_relatos_usuario_fecha ON relatos_community(usuario_id, fecha_publicacion DESC)',
         'CREATE INDEX IF NOT EXISTS idx_notificaciones_usuario_leida ON notificaciones(usuario_id, leida)',
+        'CREATE INDEX IF NOT EXISTS idx_albumes_usuario_fecha ON albumes(usuario_id, fecha_creacion DESC)',
+        'CREATE INDEX IF NOT EXISTS idx_album_fotos_album ON album_fotos(album_id)',
         'CREATE INDEX IF NOT EXISTS idx_usuarios_puntos ON usuarios(puntos DESC)',
         'CREATE INDEX IF NOT EXISTS idx_nivel_modulo ON nivel(id_modulo)',
         'CREATE INDEX IF NOT EXISTS idx_nivel_juego ON nivel(id_juego)',

@@ -1,3 +1,15 @@
 .env
 node_modules
+IA
+
+# Album feature
+controllers/albumController.js
+routes/albumRoutes.js
+views/albumes.html
+views/crear-album.html
+views/ver-album.html
+public/js/albumes.js
+public/js/crear-album.js
+public/js/ver-album.js
+public/css/albumes.css
 

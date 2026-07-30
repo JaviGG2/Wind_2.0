@@ -51,12 +51,14 @@ async function cargarPerfil(id) {
                 document.getElementById('nivel-puntos-actual').textContent = user.nivel.puntos;
                 document.getElementById('nivel-puntos-siguiente').textContent = user.nivel.puntosSiguiente;
                 document.getElementById('nivel-progreso-bar').style.width = `${user.nivel.progreso}%`;
+                if (nivelBar) nivelBar.setAttribute('data-nivel', user.nivel.nivel);
             }
         }
 
         document.getElementById('stat-relatos').textContent = user.conteo_relatos;
         document.getElementById('stat-temas').textContent = user.conteo_temas;
         document.getElementById('stat-juegos').textContent = user.conteo_juegos;
+        document.getElementById('stat-albumes').textContent = user.conteo_albumes;
 
         const followStats = document.getElementById('perfil-follow-stats');
         if (followStats) {
@@ -122,6 +124,7 @@ async function toggleContenido(tipo) {
     if (!cachedData[tipo]) {
         const url = tipo === 'relatos' ? `/api/relatos?usuario_id=${usuarioId}`
             : tipo === 'temas' ? `/api/temas?creador_id=${usuarioId}`
+            : tipo === 'albumes' ? `/api/albumes?usuario_id=${usuarioId}`
             : `/api/juegos?usuario_id=${usuarioId}`;
         try {
             const res = await fetch(url, { credentials: 'include' });
@@ -141,6 +144,7 @@ async function toggleContenido(tipo) {
 
     if (tipo === 'relatos') renderRelatos(items, container);
     else if (tipo === 'temas') renderTemas(items, container);
+    else if (tipo === 'albumes') renderAlbumes(items, container);
     else renderJuegos(items, container);
 }
 
@@ -191,15 +195,26 @@ function renderJuegos(lista, container) {
         const a = document.createElement('a');
         a.className = 'perfil-item-card';
         a.href = `/play-game?id=${j.id}`;
-        const tipoIcon = { Quiz: 'quiz', Memory: 'memory', Match: 'link', Scramblee: 'abc' }[j.tipo] || 'stadia_controller';
-        a.innerHTML = `
-            <div class="perfil-item-icon"><span class="material-symbols-outlined">${tipoIcon}</span></div>
+        grid.appendChild(a);
+    });
+}
+
+function renderAlbumes(lista, container) {
+    container.innerHTML = '<div class="perfil-grid-contenido"></div>';
+    const grid = container.querySelector('.perfil-grid-contenido');
+    lista.slice(0, 20).forEach(a => {
+        const card = document.createElement('a');
+        card.className = 'perfil-item-card';
+        card.href = `/ver-album?id=${a.id}`;
+        const fecha = a.fecha_creacion ? new Date(a.fecha_creacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : '';
+        card.innerHTML = `
+            <div class="perfil-item-icon"><span class="material-symbols-outlined">photo_album</span></div>
             <div class="perfil-item-body">
-                <h4>${j.titulo || 'Sin título'}</h4>
-                <small>${j.categoria_nombre || 'General'} · ${j.tipo || 'Juego'} · ${j.puntos_recompensa || 0} pts</small>
+                <h4>${a.titulo || 'Sin título'}</h4>
+                <small>${a.lugar || ''}${a.lugar && fecha ? ' · ' : ''}${fecha} · ${a.num_fotos || 0} foto(s)</small>
             </div>
             <span class="material-symbols-outlined perfil-item-arrow">chevron_right</span>
         `;
-        grid.appendChild(a);
+        grid.appendChild(card);
     });
 }

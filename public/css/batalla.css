@@ -1,0 +1,407 @@
+.batalla-section {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 24px 16px;
+}
+
+.batalla-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.batalla-progress-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.batalla-progress-bar {
+    flex: 1;
+    height: 8px;
+    background: #2a2a3e;
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.batalla-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ffd700, #ff8c00);
+    border-radius: 99px;
+    transition: width 0.3s ease;
+}
+
+.batalla-progress-text {
+    color: #aaa;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.batalla-timer {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #ffd700;
+    font-weight: 700;
+    font-size: 18px;
+    font-variant-numeric: tabular-nums;
+}
+
+.batalla-timer .material-symbols-outlined {
+    font-size: 22px;
+}
+
+.batalla-card {
+    background: #22223a;
+    border-radius: 20px;
+    padding: 32px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.batalla-question-num {
+    color: #ffd700;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+.batalla-question {
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.5;
+    margin: 0 0 24px;
+}
+
+.batalla-opciones {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.batalla-opcion {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #2e2e4a;
+    border: 2px solid transparent;
+    border-radius: 14px;
+    padding: 14px 18px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    color: #eee;
+    font-size: 16px;
+    font-family: inherit;
+}
+
+.batalla-opcion:hover {
+    background: #3a3a5a;
+    border-color: #555;
+}
+
+.batalla-opcion.selected {
+    background: #1a3a2a;
+    border-color: #16a34a;
+}
+
+.batalla-opcion-letra {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #3a3a5a;
+    font-weight: 700;
+    font-size: 14px;
+    color: #ccc;
+    flex-shrink: 0;
+}
+
+.batalla-opcion.selected .batalla-opcion-letra {
+    background: #16a34a;
+    color: #fff;
+}
+
+.batalla-opcion.correcta {
+    background: #16a34a33;
+    border-color: #16a34a;
+}
+
+.batalla-opcion.correcta .batalla-opcion-letra {
+    background: #16a34a;
+    color: #fff;
+}
+
+.batalla-opcion.incorrecta {
+    background: #dc262633;
+    border-color: #dc2626;
+}
+
+.batalla-opcion.incorrecta .batalla-opcion-letra {
+    background: #dc2626;
+    color: #fff;
+}
+
+.batalla-timer.timer-warning {
+    color: #dc2626;
+    animation: timerPulse 0.5s ease infinite alternate;
+}
+
+@keyframes timerPulse {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.15); }
+}
+
+.batalla-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 32px;
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    color: #1a1a2e;
+    font-weight: 700;
+    font-size: 16px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    text-decoration: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.batalla-btn:hover { opacity: 0.9; }
+.batalla-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.batalla-btn-final {
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    color: #fff;
+}
+
+/* Participantes status */
+.batalla-participantes-status {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.batalla-status-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #22223a;
+    border-radius: 14px;
+    padding: 12px 16px;
+}
+
+.batalla-status-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.batalla-status-nombre {
+    flex: 1;
+    font-weight: 500;
+    color: #eee;
+}
+
+.batalla-status-indicator {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 99px;
+}
+
+.batalla-status-indicator.pendiente {
+    background: #2a2a4a;
+    color: #888;
+}
+
+.batalla-status-indicator.completado {
+    background: #16a34a22;
+    color: #16a34a;
+}
+
+/* Completado */
+.batalla-completado-content,
+.batalla-espera-content {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.batalla-completado-icon,
+.batalla-espera-icon {
+    font-size: 64px !important;
+    margin-bottom: 16px;
+}
+
+.batalla-completado-icon { color: #16a34a; }
+.batalla-espera-icon { color: #ffd700; }
+
+.batalla-completado-content h2,
+.batalla-espera-content h2 {
+    color: #fff;
+    margin: 0 0 8px;
+}
+
+.batalla-completado-content p,
+.batalla-espera-content p {
+    color: #aaa;
+    margin: 0 0 20px;
+}
+
+/* Resultados */
+.batalla-resultados-hero {
+    text-align: center;
+    padding: 40px 20px 20px;
+}
+
+.batalla-resultados-hero h1 {
+    color: #fff;
+    margin: 8px 0;
+}
+
+.batalla-podium {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 16px;
+    padding: 20px 16px 40px;
+    flex-wrap: wrap;
+}
+
+.batalla-podium-card {
+    background: #22223a;
+    border-radius: 20px;
+    padding: 24px 20px;
+    text-align: center;
+    min-width: 160px;
+    animation: fadeUp 0.5s ease both;
+    border: 2px solid var(--podium-color, #555);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+
+.batalla-podium-medalla {
+    font-size: 40px;
+    margin-bottom: 8px;
+}
+
+.batalla-podium-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 8px;
+    border: 3px solid var(--podium-color, #555);
+}
+
+.batalla-podium-nombre {
+    font-weight: 700;
+    color: #fff;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.batalla-podium-aciertos {
+    font-size: 24px;
+    font-weight: 800;
+    color: #000;
+}
+
+.batalla-podium-tiempo {
+    font-size: 14px;
+    color: #555;
+    margin-top: 2px;
+}
+
+.batalla-podium-puntos {
+    font-size: 14px;
+    font-weight: 700;
+    color: #000;
+    margin-top: 6px;
+}
+
+.batalla-tabla {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 0 16px 40px;
+}
+
+.batalla-tabla-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #22223a;
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+}
+
+.batalla-tabla-pos {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #2a2a4a;
+    font-weight: 700;
+    font-size: 14px;
+    color: #ccc;
+    flex-shrink: 0;
+}
+
+.batalla-tabla-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.batalla-tabla-info {
+    flex: 1;
+}
+
+.batalla-tabla-nombre {
+    font-weight: 600;
+    color: #eee;
+    font-size: 14px;
+}
+
+.batalla-tabla-stats {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #000;
+    font-size: 13px;
+}
+
+.batalla-tabla-puntos {
+    color: #000;
+    font-weight: 700;
+}
+
+@keyframes fadeUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+    .batalla-card { padding: 24px 16px; }
+    .batalla-question { font-size: 17px; }
+    .batalla-podium-card { min-width: 130px; padding: 16px; }
+    .batalla-podium-avatar { width: 48px; height: 48px; }
+}

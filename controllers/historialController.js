@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const PUNTOS_POR_TEMA = 2;
 
 exports.registrarVista = async (req, res) => {
     if (!req.session.usuarioId) return res.status(401).json({ mensaje: 'No autorizado.' });
@@ -9,6 +10,21 @@ exports.registrarVista = async (req, res) => {
     }
 
     try {
+        const yaVisto = await db.query(
+            'SELECT id FROM historial_vistas WHERE usuario_id = $1 AND tipo_contenido = $2 AND contenido_id = $3',
+            [req.session.usuarioId, tipo_contenido, contenido_id]
+        );
+        const esNuevo = yaVisto.rows.length === 0;
+        let puntos_ganados = 0;
+
+        if (tipo_contenido === 'tema' && esNuevo) {
+            const user = await db.query('SELECT rol FROM usuarios WHERE id = $1', [req.session.usuarioId]);
+            if (user.rows[0]?.rol !== 'Especialista') {
+                await db.query('UPDATE usuarios SET puntos = COALESCE(puntos,0) + $1 WHERE id = $2', [PUNTOS_POR_TEMA, req.session.usuarioId]);
+                puntos_ganados = PUNTOS_POR_TEMA;
+            }
+        }
+
         await db.query(`
             INSERT INTO historial_vistas (usuario_id, tipo_contenido, contenido_id, fecha_vista)
             VALUES ($1, $2, $3, NOW())
@@ -16,7 +32,7 @@ exports.registrarVista = async (req, res) => {
             DO UPDATE SET fecha_vista = NOW()
         `, [req.session.usuarioId, tipo_contenido, contenido_id]);
 
-        return res.json({ mensaje: 'Vista registrada.' });
+        return res.json({ mensaje: 'Vista registrada.', puntos_ganados, esNuevo });
     } catch (error) {
         console.error('Error al registrar vista:', error);
         return res.status(500).json({ mensaje: 'Error al registrar la vista.' });

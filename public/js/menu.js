@@ -2,6 +2,68 @@
 const barraHTML = `
   <!-- Importar Material Symbols -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <style>
+    .migration-banner {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      border-bottom: 2px solid #ff4500;
+      color: #e0e0e0;
+      font-size: 0.85rem;
+      text-align: center;
+      position: relative;
+      z-index: 999;
+      flex-wrap: wrap;
+      animation: slideDown 0.4s ease;
+    }
+    @keyframes slideDown {
+      from { max-height: 0; opacity: 0; padding: 0 20px; }
+      to { max-height: 80px; opacity: 1; padding: 12px 20px; }
+    }
+    .migration-banner.show { display: flex; }
+    .migration-banner .material-symbols-outlined {
+      font-size: 20px;
+      color: #ff6b35;
+      flex-shrink: 0;
+    }
+    .migration-banner a {
+      color: #ff8a65;
+      font-weight: 700;
+      text-decoration: none;
+      border-bottom: 1px dotted #ff8a65;
+    }
+    .migration-banner a:hover { color: #fff; border-bottom-color: #fff; }
+    .migration-dismiss {
+      background: rgba(255,255,255,0.08);
+      border: none;
+      color: #999;
+      font-size: 1.1rem;
+      cursor: pointer;
+      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .migration-dismiss:hover {
+      background: rgba(255,69,0,0.3);
+      color: #fff;
+    }
+    @media (max-width: 480px) {
+      .migration-banner { font-size: 0.78rem; padding: 10px 14px; gap: 8px; }
+    }
+  </style>
+  <div id="migration-banner" class="migration-banner">
+    <span class="material-symbols-outlined">open_in_new</span>
+    <span>Wind cambia de casa: <a href="https://wind-2-0-2.onrender.com" target="_blank">wind-2-0-2.onrender.com</a></span>
+    <button id="dismiss-migration" class="migration-dismiss">&times;</button>
+  </div>
   <nav class="barra-navegacion">
     <div class="logo-menu">
       <img src="/img/logo2.png?v=${window.WIND_CACHE_VERSION || Date.now()}" alt="Wind">
@@ -58,6 +120,18 @@ function insertarBarra() {
   if (notifBtn) {
     notifBtn.addEventListener('click', () => {
       window.location.href = '/notificaciones';
+    });
+  }
+
+  const banner = document.getElementById('migration-banner');
+  const dismissBtn = document.getElementById('dismiss-migration');
+  if (banner && !sessionStorage.getItem('migration_dismissed')) {
+    banner.classList.add('show');
+  }
+  if (dismissBtn) {
+    dismissBtn.addEventListener('click', () => {
+      banner.classList.remove('show');
+      sessionStorage.setItem('migration_dismissed', '1');
     });
   }
 

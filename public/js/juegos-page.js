@@ -78,6 +78,10 @@ function crearCard(juego, index) {
     const tipo = juego.tipo || 'Quiz';
     const info = TIPO_INFO[tipo] || { icon: 'quiz', label: tipo, color: '#FF4500' };
     const jugado = juego.jugado === true;
+    const source = juego.source || 'wind';
+    const sourceBadge = source === 'gemini'
+        ? '<span class="source-badge source-badge--gemini"><span class="material-symbols-outlined">auto_awesome</span> Generado por IA</span>'
+        : '';
     const tarjeta = document.createElement('article');
     tarjeta.className = `juego-card${jugado ? ' jugado' : ''}`;
     tarjeta.style.animationDelay = `${index * 60}ms`;
@@ -89,6 +93,7 @@ function crearCard(juego, index) {
         <div class="juego-card-body">
             <div class="juego-card-meta">
                 <span class="juego-cat">${juego.categoria_nombre || 'General'}</span>
+                ${sourceBadge}
                 <span class="juego-pts">
                     <span class="material-symbols-outlined">star</span>
                     ${juego.puntos_recompensa || 10} pts

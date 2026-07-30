@@ -55,6 +55,9 @@
                         <span class="material-symbols-outlined anim-fade-down icon-noti">notifications</span>
                         <span class="notif-badge" style="display:none;">0</span>
                     </a>
+                        <a href="/onboarding" class="btn-icono-config" aria-label="Novedades">
+                            <span class="material-symbols-outlined anim-fade-down">newspaper</span>
+                        </a>
                         <a href="/ajustes-perfil" class="btn-icono-config" aria-label="Configuración">
                             <span class="material-symbols-outlined anim-fade-down">settings</span>
                         </a>
@@ -67,6 +70,7 @@
 
                 </div>
                 <div class="nivel-bar" id="nivel-bar" style="display:none">
+                    <span class="nivel-shimmer"></span>
                     <div class="nivel-header">
                         <span class="nivel-badge" id="nivel-badge">Nv 1</span>
                         <span class="nivel-titulo" id="nivel-titulo">Novato</span>
@@ -75,8 +79,8 @@
                         <div class="nivel-progreso-bar" id="nivel-progreso-bar"></div>
                     </div>
                     <div class="nivel-puntos">
-                        <span><span id="nivel-puntos-actual">0</span> pts</span>
-                        <span><span id="nivel-next-label">Próximo nivel</span>: <span id="nivel-puntos-siguiente">100</span> pts</span>
+                        <span class="puntos-actual-wrap"><span id="nivel-puntos-actual">0</span> pts</span>
+                        <span class="puntos-siguiente-wrap"><span id="nivel-next-label">Próximo nivel</span>: <span id="nivel-puntos-siguiente">100</span> pts</span>
                     </div>
                 </div>
                 <a href="/rachas" class="racha-card" id="racha-card" style="display:none">
@@ -89,7 +93,16 @@
                         <span>Máx: </span><span id="racha-max">0</span>
                     </div>
                 </a>
-                
+                <!--
+                <a href="/albumes" class="recom-card-btn" style="margin-top:12px;">
+                    <span class="material-symbols-outlined recom-card-icon">photo_album</span>
+                    <span class="recom-card-text">
+                        <strong>Álbumes de Recuerdos</strong>
+                        <small>Crea álbumes con fotos de tus lugares visitados</small>
+                    </span>
+                    <span class="material-symbols-outlined recom-card-arrow">chevron_right</span>
+                </a>
+                -->
             </header>
 
             <a href="/recomendaciones" class="recom-card-btn">
@@ -108,14 +121,7 @@
               </a>
             </div>
 
-            <a href="/aniversario-coro" class="recom-card-btn" style="border-left:4px solid #ff4500;background:linear-gradient(135deg,#fff5f0 0%,#fff 100%);">
-              <span class="material-symbols-outlined recom-card-icon" style="color:#ff4500;">celebration</span>
-              <span class="recom-card-text">
-                <strong>¡499 Años de Coro!</strong>
-                <small>Crea tu postal personalizada y compártela</small>
-              </span>
-              <span class="material-symbols-outlined recom-card-arrow">chevron_right</span>
-            </a>
+           
 
             <div class="accordion">
               <div class="accordion-item">

@@ -70,7 +70,11 @@ formulario.addEventListener('submit', async (evento) => {
         if (respuesta.ok) {
             mostrarAlert(resultado.mensaje || '¡Bienvenido!', 'exito');
             formulario.reset();
-            setTimeout(() => window.location.href = 'aniversario-coro', 1200);
+            setTimeout(function () {
+                const seen = (function(){ try { return localStorage.getItem('wind_onboarding_v'); } catch(e) { return null; } })();
+                const ver = window.WIND_CACHE_VERSION || '';
+                window.location.href = seen === ver ? '/home' : '/onboarding';
+            }, 1200);
         } else if (respuesta.status === 403 && resultado.requiereVerificacion) {
             mostrarAlert('', '');
             mostrarVerificacion(resultado.correo);

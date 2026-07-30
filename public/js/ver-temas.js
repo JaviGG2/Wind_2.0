@@ -27,6 +27,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const tema = await respuesta.json();
 
+        function aplicarStagger(texto) {
+            const limpio = texto.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+            const palabras = limpio.split(/\s+/).filter(Boolean);
+            return palabras.map((p, i) =>
+                `<span class="stagger-word" style="--i:${i}">${p}</span>`
+            ).join(' ');
+        }
+
         document.getElementById('txt-titulo').textContent = tema.titulo || 'Sin título';
         document.getElementById('txt-categoria').textContent = tema.categoria_nombre || 'General';
         document.getElementById('txt-cuerpo').innerHTML = tema.contenido || 'Contenido vacío';
@@ -49,12 +57,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             imgPortadaEl.style.backgroundImage = `url('/img/app.png')`;
         }
 
-        fetch('/api/historial/registrar', {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tipo_contenido: 'tema', contenido_id: tema.id })
-        }).catch(() => {});
+        try {
+            const resHist = await fetch('/api/historial/registrar', {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tipo_contenido: 'tema', contenido_id: tema.id })
+            });
+            const histData = await resHist.json();
+            if (histData.puntos_ganados > 0) {
+                mostrarToast(`+${histData.puntos_ganados} puntos por leer este tema`);
+            }
+        } catch (e) {}
 
         await new Promise(r => setTimeout(r, 500));
         bloqueCarga.style.display = 'none';
@@ -92,8 +106,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
                 const data = await res.json();
                 if (data.traducciones) {
-                    document.getElementById('txt-titulo').textContent = data.traducciones[0] || originalTitulo;
-                    document.getElementById('txt-cuerpo').innerHTML = data.traducciones[1] || originalContenido;
+                    document.getElementById('txt-titulo').innerHTML = aplicarStagger(data.traducciones[0] || originalTitulo);
+                    document.getElementById('txt-cuerpo').innerHTML = aplicarStagger(data.traducciones[1] || originalContenido);
                     btnOriginal.style.display = 'inline-block';
                 }
             } catch (err) {
@@ -120,6 +134,88 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         initValoracion(tema);
+
+        // Resumir
+        const btnResumir = document.getElementById('btn-resumir');
+        let resumenVisible = false;
+        let resumenCacheado = '';
+
+        function cerrarResumen() {
+            const popup = document.getElementById('resumen-popup');
+            const backdrop = document.getElementById('resumen-backdrop');
+            if (popup) popup.remove();
+            if (backdrop) backdrop.remove();
+            resumenVisible = false;
+            btnResumir.style.color = '#888';
+        }
+
+        function resumirContenido(html) {
+            const texto = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+            const oraciones = texto.match(/[^.!?]+[.!?]+/g);
+            if (!oraciones || oraciones.length < 2) return texto.substring(0, 300);
+
+            const puntajes = oraciones.map((raw, i) => {
+                const oracion = raw.trim();
+                const palabras = oracion.split(/\s+/).filter(Boolean);
+                const palabrasLargas = palabras.filter(p => p.length >= 6);
+                let score = 0;
+                if (i < 2) score += 3;
+                else if (i < 4) score += 2;
+                else if (i < 6) score += 1;
+                if (palabras.length >= 8 && palabras.length <= 40) score += 2;
+                score += Math.min(3, palabrasLargas.length);
+                if (/\d/.test(oracion)) score += 1;
+                if (/[A-ZÁÉÍÓÚÑ]/.test(oracion)) score += 1;
+                return { texto: oracion, score, idx: i };
+            });
+
+            const seleccionadas = puntajes
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 4)
+                .sort((a, b) => a.idx - b.idx)
+                .map(s => s.texto);
+
+            return seleccionadas.join(' ');
+        }
+
+        btnResumir.addEventListener('click', () => {
+            if (resumenVisible) { cerrarResumen(); return; }
+
+            if (!resumenCacheado) {
+                resumenCacheado = resumirContenido(tema.contenido || '');
+            }
+
+            const palabras = resumenCacheado.split(/\s+/).filter(Boolean);
+            const textoHTML = palabras.map((p, i) =>
+                `<span class="stagger-word" style="--i:${i}">${p}</span>`
+            ).join(' ');
+
+            const popup = document.createElement('div');
+            popup.id = 'resumen-popup';
+            popup.className = 'resumen-popup';
+            popup.innerHTML = `
+                <div class="resumen-popup-header">
+                    <span class="material-symbols-outlined">auto_awesome</span>
+                    <span>Resumen</span>
+                    <button type="button" class="resumen-popup-close">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <div class="resumen-popup-body">${textoHTML}</div>
+            `;
+            popup.querySelector('.resumen-popup-close').addEventListener('click', cerrarResumen);
+            popup.addEventListener('click', (e) => e.stopPropagation());
+
+            const backdrop = document.createElement('div');
+            backdrop.id = 'resumen-backdrop';
+            backdrop.className = 'resumen-backdrop';
+            backdrop.addEventListener('click', cerrarResumen);
+
+            document.body.appendChild(backdrop);
+            document.body.appendChild(popup);
+            resumenVisible = true;
+            btnResumir.style.color = '#2E7D32';
+        });
 
     } catch (error) {
         console.error("Error en ver-tema.js:", error);
@@ -327,3 +423,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 });
+
+function mostrarToast(texto) {
+    const div = document.createElement('div');
+    div.textContent = texto;
+    Object.assign(div.style, {
+        position: 'fixed',
+        bottom: '24px', left: '50%', transform: 'translateX(-50%)',
+        background: '#16a34a', color: '#fff',
+        padding: '12px 24px', borderRadius: '12px',
+        fontSize: '14px', fontWeight: 600,
+        boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
+        zIndex: 10000,
+        opacity: '0', transition: 'opacity 0.3s ease'
+    });
+    document.body.appendChild(div);
+    requestAnimationFrame(() => div.style.opacity = '1');
+    setTimeout(() => {
+        div.style.opacity = '0';
+        setTimeout(() => div.remove(), 300);
+    }, 3000);
+}

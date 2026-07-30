@@ -124,7 +124,7 @@ exports.listarPublicos = async (req, res) => {
 
         if (filtroUsuario && !Number.isNaN(filtroUsuario)) {
             queryTexto = `
-                SELECT j.id, j.titulo, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, j.likes, ROUND(COALESCE((SELECT AVG(puntuacion) FROM juegos_likes WHERE juego_id = j.id), 0), 1)::float AS promedio_valoracion, null AS mi_puntuacion, c.nombre AS categoria_nombre, false AS jugado
+                SELECT j.id, j.titulo, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, j.likes, j.source, ROUND(COALESCE((SELECT AVG(puntuacion) FROM juegos_likes WHERE juego_id = j.id), 0), 1)::float AS promedio_valoracion, null AS mi_puntuacion, c.nombre AS categoria_nombre, false AS jugado
                 FROM juegos j
                 LEFT JOIN categorias c ON j.categoria_id = c.id
                 WHERE j.usuario_id = $1
@@ -133,34 +133,38 @@ exports.listarPublicos = async (req, res) => {
             `;
             params = [filtroUsuario];
         } else if (categoriaId && !Number.isNaN(categoriaId)) {
-            const jugadoJoin = usuarioSesion
+            const currentUserId = req.session?.usuarioId || null;
+            const jugadoJoin = currentUserId
                 ? `LEFT JOIN historial_vistas hv ON hv.contenido_id = j.id AND hv.tipo_contenido = 'juego' AND hv.usuario_id = $2`
                 : '';
-            const jugadoSelect = usuarioSesion ? ', CASE WHEN hv.id IS NOT NULL THEN true ELSE false END AS jugado' : ', false AS jugado';
-            const miPuntSelect = usuarioSesion ? `, (SELECT puntuacion FROM juegos_likes WHERE juego_id = j.id AND usuario_id = $2 LIMIT 1) AS mi_puntuacion` : ', null AS mi_puntuacion';
-            params = usuarioSesion ? [categoriaId, usuarioSesion] : [categoriaId];
+            const jugadoSelect = currentUserId ? ', CASE WHEN hv.id IS NOT NULL THEN true ELSE false END AS jugado' : ', false AS jugado';
+            const miPuntSelect = currentUserId ? `, (SELECT puntuacion FROM juegos_likes WHERE juego_id = j.id AND usuario_id = $2 LIMIT 1) AS mi_puntuacion` : ', null AS mi_puntuacion';
+            const userFilter = currentUserId ? 'j.usuario_id = $2 AND' : '';
+            params = currentUserId ? [categoriaId, currentUserId] : [categoriaId];
             queryTexto = `
-                SELECT j.id, j.titulo, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, j.likes, ROUND(COALESCE((SELECT AVG(puntuacion) FROM juegos_likes WHERE juego_id = j.id), 0), 1)::float AS promedio_valoracion${miPuntSelect}, c.nombre AS categoria_nombre${jugadoSelect}
+                SELECT j.id, j.titulo, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, j.likes, j.source, ROUND(COALESCE((SELECT AVG(puntuacion) FROM juegos_likes WHERE juego_id = j.id), 0), 1)::float AS promedio_valoracion${miPuntSelect}, c.nombre AS categoria_nombre${jugadoSelect}
                 FROM juegos j
                 LEFT JOIN categorias c ON j.categoria_id = c.id
                 ${jugadoJoin}
-                WHERE j.id NOT IN (SELECT id_juego FROM nivel WHERE id_juego IS NOT NULL) AND j.categoria_id = $1
+                WHERE ${userFilter} j.id NOT IN (SELECT id_juego FROM nivel WHERE id_juego IS NOT NULL) AND j.categoria_id = $1
                 ORDER BY j.id DESC
                 LIMIT 100
             `;
         } else {
-            const jugadoJoin = usuarioSesion
+            const currentUserId = req.session?.usuarioId || null;
+            const jugadoJoin = currentUserId
                 ? `LEFT JOIN historial_vistas hv ON hv.contenido_id = j.id AND hv.tipo_contenido = 'juego' AND hv.usuario_id = $1`
                 : '';
-            const jugadoSelect = usuarioSesion ? ', CASE WHEN hv.id IS NOT NULL THEN true ELSE false END AS jugado' : ', false AS jugado';
-            const miPuntSelect = usuarioSesion ? `, (SELECT puntuacion FROM juegos_likes WHERE juego_id = j.id AND usuario_id = $1 LIMIT 1) AS mi_puntuacion` : ', null AS mi_puntuacion';
-            params = usuarioSesion ? [usuarioSesion] : [];
+            const jugadoSelect = currentUserId ? ', CASE WHEN hv.id IS NOT NULL THEN true ELSE false END AS jugado' : ', false AS jugado';
+            const miPuntSelect = currentUserId ? `, (SELECT puntuacion FROM juegos_likes WHERE juego_id = j.id AND usuario_id = $1 LIMIT 1) AS mi_puntuacion` : ', null AS mi_puntuacion';
+            const userFilter = currentUserId ? 'j.usuario_id = $1 AND' : '';
+            params = currentUserId ? [currentUserId] : [];
             queryTexto = `
-                SELECT j.id, j.titulo, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, j.likes, ROUND(COALESCE((SELECT AVG(puntuacion) FROM juegos_likes WHERE juego_id = j.id), 0), 1)::float AS promedio_valoracion${miPuntSelect}, c.nombre AS categoria_nombre${jugadoSelect}
+                SELECT j.id, j.titulo, j.pregunta, j.opcion_a, j.opcion_b, j.opcion_c, j.opcion_correcta, j.tipo, j.categoria_id, j.puntos_recompensa, j.likes, j.source, ROUND(COALESCE((SELECT AVG(puntuacion) FROM juegos_likes WHERE juego_id = j.id), 0), 1)::float AS promedio_valoracion${miPuntSelect}, c.nombre AS categoria_nombre${jugadoSelect}
                 FROM juegos j
                 LEFT JOIN categorias c ON j.categoria_id = c.id
                 ${jugadoJoin}
-                WHERE j.id NOT IN (SELECT id_juego FROM nivel WHERE id_juego IS NOT NULL)
+                WHERE ${userFilter} j.id NOT IN (SELECT id_juego FROM nivel WHERE id_juego IS NOT NULL)
                 ORDER BY j.id DESC
                 LIMIT 100
             `;
@@ -175,16 +179,20 @@ exports.listarPublicos = async (req, res) => {
 
 exports.rankingGlobal = async (req, res) => {
     try {
-        const result = await db.query(
-            `SELECT id, nombre, username, puntos, imagen_perfil, avatar_fondo
-             FROM usuarios
-             WHERE puntos > 0 AND (rol IS NULL OR rol != 'Especialista')
-             ORDER BY puntos DESC
-             LIMIT 100`
-        );
+        const result = await db.query(`
+            SELECT u.id, u.nombre, u.username, u.puntos, u.imagen_perfil, u.avatar_fondo,
+(SELECT TRUE FROM batallas_participantes
+                     WHERE usuario_id = u.id AND completado = TRUE
+                     AND fecha_completado >= date_trunc('week', NOW())
+                     LIMIT 1) AS batallo_esta_semana
+            FROM usuarios u
+            WHERE u.puntos > 0 AND (u.rol IS NULL OR u.rol != 'Especialista')
+            ORDER BY u.puntos DESC
+            LIMIT 100
+        `);
         return res.json(result.rows);
     } catch (error) {
-        console.error('Error al obtener ranking:', error.message);
+        console.error('Error al obtener ranking:', error);
         return res.status(500).json({ mensaje: 'Error al cargar ranking.' });
     }
 };
