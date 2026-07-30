@@ -64,11 +64,14 @@
                         <small>Por niveles</small>
                     </div>
                 </a>
-                <a href="/ranking-game" class="juego-stat-link">
+                <a href="/ranking-game" class="juego-stat-link" id="ranking-card">
                     <span class="material-symbols-outlined">leaderboard</span>
                     <div>
                         <strong>Ranking</strong>
                         <small>Global</small>
+                    </div>
+                    <div class="ranking-top3-avatares" id="ranking-top3-avatares">
+                        <span class="top3-placeholder">—</span>
                     </div>
                 </a>
                 
@@ -90,6 +93,49 @@
 
     <script src="/js/popup-valoracion.js?v={{ cacheVersion }}"></script>
     <script src="/js/juegos-page.js?v={{ cacheVersion }}"></script>
+
+    <style>
+        .ranking-top3-avatares {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+        .ranking-top3-avatares .top3-avatar-mini {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            display: block;
+        }
+        .top3-placeholder {
+            font-size: 0.7rem;
+            color: #bbb;
+        }
+    </style>
+
+    <script>
+        // Cargar top 3 avatares en la card del ranking
+        fetch('/api/juegos/ranking')
+            .then(r => r.ok ? r.json() : [])
+            .then(data => {
+                const container = document.getElementById('ranking-top3-avatares');
+                if (!container || !data.length) return;
+                container.innerHTML = '';
+                data.slice(0, 3).forEach(u => {
+                    const img = document.createElement('img');
+                    img.className = 'top3-avatar-mini';
+                    img.src = u.imagen_perfil || '/img/avatar.svg';
+                    img.alt = u.nombre || '';
+                    img.loading = 'lazy';
+                    container.appendChild(img);
+                });
+            })
+            .catch(() => {});
+    </script>
 </body>
 
 </html>
