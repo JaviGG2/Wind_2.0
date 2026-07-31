@@ -2,6 +2,7 @@ const db = require('../config/db');
 const notificacion = require('./notificacionController');
 const { verificarRolDesdeDB } = require('../middlewares/autenticacion');
 const { actualizarRachaCreacion } = require('../utils/rachas');
+const { limpiarTexto, limpiarJuego } = require('../utils/sanitizar');
 
 exports.crearJuego = async (req, res) => {
     if (!await verificarRolDesdeDB(req)) {
@@ -20,6 +21,14 @@ exports.crearJuego = async (req, res) => {
         return res.status(400).json({ mensaje: 'La pregunta/datos del juego son obligatorios.' });
     }
 
+    const preguntaLimpia = limpiarTexto(pregunta, 500);
+    const tituloLimpio = limpiarTexto(titulo, 200);
+    const opcionesLimpias = {
+        a: limpiarTexto(opcion_a, 500),
+        b: limpiarTexto(opcion_b, 500),
+        c: limpiarTexto(opcion_c, 500)
+    };
+
     try {
         let queryTexto;
         let valores;
@@ -31,7 +40,7 @@ exports.crearJuego = async (req, res) => {
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
             `;
             valores = [
-                categoriaValida, (titulo || '').trim(), pregunta || '', opcion_a || '', opcion_b || '', opcion_c || '', opcion_correcta || 'A', tipoJuego,
+                categoriaValida, tituloLimpio, preguntaLimpia || '', opcionesLimpias.a, opcionesLimpias.b, opcionesLimpias.c, opcion_correcta || 'A', tipoJuego,
                 parseInt(puntos_recompensa, 10) || 10,
                 usuarioId
             ];
@@ -41,7 +50,7 @@ exports.crearJuego = async (req, res) => {
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
             `;
             valores = [
-                (titulo || '').trim(), pregunta || '', opcion_a || '', opcion_b || '', opcion_c || '', opcion_correcta || 'A', tipoJuego,
+                tituloLimpio, preguntaLimpia || '', opcionesLimpias.a, opcionesLimpias.b, opcionesLimpias.c, opcion_correcta || 'A', tipoJuego,
                 parseInt(puntos_recompensa, 10) || 10,
                 usuarioId
             ];
@@ -57,7 +66,7 @@ exports.crearJuego = async (req, res) => {
         notificacion.crear({
             creadorId: req.session.usuarioId,
             titulo: 'Nueva trivia patrimonial',
-            mensaje: `"${(titulo || pregunta || '').substring(0, 80)}" ha sido agregado.`,
+            mensaje: `"${(tituloLimpio || preguntaLimpia || '').substring(0, 80)}" ha sido agregado.`,
             enlace: `/juegos`,
             soloSeguidores: true
         });
@@ -83,7 +92,7 @@ exports.misJuegos = async (req, res) => {
             ORDER BY j.id DESC
         `;
         const resultado = await db.query(queryTexto, [req.session.usuarioId]);
-        return res.json(resultado.rows);
+        return res.json(resultado.rows.map(limpiarJuego));
     } catch (error) {
         console.error('Error en el historial del dashboard:', error.message);
         return res.status(500).json({ mensaje: 'Error al cargar el historial de trivias.' });
@@ -107,7 +116,7 @@ exports.obtenerJuego = async (req, res) => {
             usuarioSes ? [id, usuarioSes] : [id]
         );
         if (result.rows.length === 0) return res.status(404).json({ mensaje: 'Juego no encontrado.' });
-        return res.json(result.rows[0]);
+        return res.json(limpiarJuego(result.rows[0]));
     } catch (error) {
         console.error('Error al obtener juego:', error.message);
         return res.status(500).json({ mensaje: 'Error al cargar juego.' });
@@ -169,7 +178,7 @@ exports.listarPublicos = async (req, res) => {
             `;
         }
         const resultado = await db.query(queryTexto, params);
-        return res.json(resultado.rows);
+        return res.json(resultado.rows.map(limpiarJuego));
     } catch (error) {
         console.error('Error al listar juegos públicos:', error.message);
         return res.status(500).json({ mensaje: 'Error al cargar juegos publicados.' });

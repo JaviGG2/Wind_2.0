@@ -368,8 +368,8 @@ function mostrarResultado(juego, esCorrecta, puntosGanados) {
     $('#play-resultado').style.display = 'block';
 
     $('#resultado-icon').innerHTML = esCorrecta
-        ? '<span class="material-symbols-outlined" style="color:#28a745;font-size:3rem;">check_circle</span>'
-        : '<span class="material-symbols-outlined" style="color:#dc3545;font-size:3rem;">cancel</span>';
+        ? '<span class="material-symbols-outlined" style="color:var(--success-text);font-size:3rem;">check_circle</span>'
+        : '<span class="material-symbols-outlined" style="color:var(--danger-text);font-size:3rem;">cancel</span>';
 
     $('#resultado-titulo').textContent = esCorrecta ? '¡Correcto!' : 'Incorrecto';
     $('#resultado-mensaje').textContent = esCorrecta

@@ -160,7 +160,7 @@ formVerificar.addEventListener('submit', async (evento) => {
         if (respuesta.ok) {
             seccionCodigo.innerHTML = `
                 <h3 style="color: #2ecc71; text-align: center;">${resultado.mensaje}</h3>
-                <p style="text-align: center; color: #666;">Redirigiendo al inicio de sesión...</p>
+                <p style="text-align: center; color: var(--texto-sec);">Redirigiendo al inicio de sesión...</p>
             `;
             setTimeout(() => { window.location.href = '/login'; }, 3000);
         } else {

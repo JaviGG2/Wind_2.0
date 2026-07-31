@@ -1,4 +1,5 @@
 const { GoogleGenAI } = require('@google/genai');
+const { limpiarTexto } = require('./sanitizar');
 
 const IA_KEY = process.env.IA_KEY;
 const GEMINI_KEY = process.env.GEMINI_IA;
@@ -102,11 +103,11 @@ async function generarJuego({ tema, indice }) {
     if (jsonMatch) {
       const datos = JSON.parse(jsonMatch[0]);
       return {
-        titulo: (datos.titulo || '').trim().substring(0, 200) || `Juego: ${(tema.titulo || '').substring(0, 40)}`,
-        pregunta: (datos.pregunta || '').trim(),
-        opcion_a: (datos.opcion_a || '').trim(),
-        opcion_b: (datos.opcion_b || '').trim(),
-        opcion_c: (datos.opcion_c || '').trim(),
+        titulo: limpiarTexto(datos.titulo, 200) || `Juego: ${(tema.titulo || '').substring(0, 40)}`,
+        pregunta: limpiarTexto(datos.pregunta, 500),
+        opcion_a: limpiarTexto(datos.opcion_a, 500),
+        opcion_b: limpiarTexto(datos.opcion_b, 500),
+        opcion_c: limpiarTexto(datos.opcion_c, 500),
         opcion_correcta: ['A', 'B', 'C'].includes((datos.opcion_correcta || '').trim().toUpperCase()) ? datos.opcion_correcta.trim().toUpperCase() : 'A',
         tipo, puntos_recompensa: tipo === 'Scramblee' ? 15 : tipo === 'Quiz' ? 10 : 8, categoria_id: tema.categoria_id || null
       };

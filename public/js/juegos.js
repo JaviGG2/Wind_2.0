@@ -95,7 +95,7 @@ async function cargarJuegosPublicados() {
     const contenedor = document.getElementById('lista-juegos-publicados');
     if (!contenedor) return;
 
-    contenedor.innerHTML = '<p style="font-size: 0.95rem; color: #666; text-align:center;">Cargando juegos publicados...</p>';
+    contenedor.innerHTML = '<p style="font-size: 0.95rem; color: var(--texto-sec); text-align:center;">Cargando juegos publicados...</p>';
     try {
         const res = await fetch('/api/juegos');
         if (!res.ok) {
@@ -275,7 +275,7 @@ async function cargarModuloJuegos() {
     const contenedor = document.getElementById('juegos-disponibles');
     if (!contenedor) return;
 
-    contenedor.innerHTML = '<p style="font-size: 0.95rem; color: #666;">Cargando el módulo de juegos...</p>';
+    contenedor.innerHTML = '<p style="font-size: 0.95rem; color: var(--texto-sec);">Cargando el módulo de juegos...</p>';
 
     try {
         const respuesta = await fetch('/api/juegos');
@@ -294,22 +294,22 @@ async function cargarModuloJuegos() {
         juegos.slice(0, 5).forEach(juego => {
             const tarjeta = document.createElement('article');
             tarjeta.style.cssText = `
-                background: #ffffff;
-                color: #333;
+                background: var(--bg-card);
+                color: var(--texto);
                 padding: 16px;
                 border-radius: 12px;
                 margin-bottom: 12px;
-                border: 1px solid #eef2f5;
+                border: 1px solid var(--borde);
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                box-shadow: var(--sombra-sm);
             `;
             tarjeta.innerHTML = `
                 <div>
-                    <small style="color: #0056b3; font-weight: bold; text-transform: uppercase; font-size: 0.7rem;">${esc(juego.categoria_nombre) || 'General'}</small>
-                    <h3 style="margin: 5px 0; font-size: 1rem; color: #121212;">${esc(juego.pregunta)}</h3>
-                    <span style="font-size: 0.8rem; color: #666;">Recompensa: <strong style="color: #28a745;">+${juego.puntos_recompensa || 10} Pts</strong></span>
+                    <small style="color: var(--primario); font-weight: bold; text-transform: uppercase; font-size: 0.7rem;">${esc(juego.categoria_nombre) || 'General'}</small>
+                    <h3 style="margin: 5px 0; font-size: 1rem; color: var(--texto);">${esc(juego.pregunta)}</h3>
+                    <span style="font-size: 0.8rem; color: var(--texto-sec);">Recompensa: <strong style="color: var(--success-text);">+${juego.puntos_recompensa || 10} Pts</strong></span>
                 </div>
                 <button class="boton-enviar" onclick="window.location.href='/juegos?juego=${juego.id}'" style="padding: 8px 16px; font-size: 0.85rem; border-radius: 8px; cursor: pointer;">
                     Jugar
