@@ -102,7 +102,7 @@
     transition: color 180ms;
 }
 .creator-link:hover {
-    color: #ff4500;
+    color: var(--primario);
 }
 
 .tema-footer {

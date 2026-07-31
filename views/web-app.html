@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>App Web - Wind</title>
+    <link rel0="stylesheet" href="/css/animaciones.css?v={{ cacheVersion }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="/css/base.css?v={{ cacheVersion }}">
@@ -17,7 +18,7 @@
     <meta name="apple-mobile-web-app-title" content="Wind">
     <link rel="apple-touch-icon" href="/img/app.png">
     <link rel="icon" href="/img/logo2.png">
-    <meta name="theme-color" content="#ff4500">
+    <meta name="theme-color" content="#ff4500" id="meta-theme-color">
     <style>
         .webapp-hero {
             text-align: center;
@@ -128,11 +129,11 @@
                     <source srcset="/img/install_web_app_PC.png" media="(min-width: 1024px)">
                     <img src="/img/install_web_app.png" alt="Wind App">
                 </picture>
-                <p>Instala Wind en tu dispositivo para tener acceso directo</p>
+                <p >Instala Wind en tu dispositivo para tener acceso directo</p>
             </div>
 
-            <button id="btn-instalar" class="webapp-install-btn">
-                <span class="material-symbols-outlined">download</span> Instalar App
+            <button id="btn-instalar" class="webapp-install-btn ">
+                <span class="material-symbols-outlined" >download</span> Instalar App
             </button>
             <p id="install-status" class="webapp-install-status"></p>
 

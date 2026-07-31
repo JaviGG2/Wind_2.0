@@ -313,4 +313,70 @@ img.anim-loading {
   100% { stroke-dashoffset: 0; }
 }
 
+/* === HighlightText === */
+.anim-highlight {
+  display: inline-block;
+  position: relative;
+  z-index: 0;
+}
+.anim-highlight::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,200,50,0.35) 50%, transparent 100%);
+  background-size: 200% 100%;
+  background-position: 200% 0;
+  animation: animHighlight 0.6s ease-out var(--anim-delay) forwards;
+  border-radius: 0.2em;
+}
+@keyframes animHighlight {
+  to { background-position: 0 0; }
+}
 
+/* === ShimmeringText === */
+.anim-shimmer-text {
+  background: linear-gradient(
+    90deg,
+    currentColor 0%,
+    currentColor 25%,
+    transparent 40%,
+    transparent 60%,
+    currentColor 75%,
+    currentColor 100%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: animShimmerText 2s linear infinite;
+}
+.anim-shimmer-text--wave {
+  background: linear-gradient(
+    90deg,
+    currentColor 0%,
+    transparent 25%,
+    currentColor 50%,
+    transparent 75%,
+    currentColor 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: animShimmerWave 2.5s ease-in-out infinite;
+}
+.anim-shimmer-text--fast {
+  animation-duration: 1s;
+}
+.anim-shimmer-text--slow {
+  animation-duration: 4s;
+}
+@keyframes animShimmerText {
+  from { background-position: 300% 0; }
+  to { background-position: -300% 0; }
+}
+@keyframes animShimmerWave {
+  0%, 100% { background-position: 0% 0; }
+  50% { background-position: 100% 0; }
+}

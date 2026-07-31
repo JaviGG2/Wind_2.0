@@ -50,13 +50,13 @@
 }
 
 .mensaje-alerta.exito {
-    background: #d4edda;
+    background: var(--success-bg);
     color: #155724;
     border: 1px solid #c3e6cb;
 }
 
 .mensaje-alerta.error {
-    background: #f8d7da;
+    background: var(--danger-bg);
     color: #721c24;
     border: 1px solid #f5c6cb;
 }
@@ -69,22 +69,22 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    background: #f0f0f0;
-    border: 2px dashed #ccc;
+    background: var(--bg-surface);
+    border: 2px dashed var(--borde);
     border-radius: 12px;
     padding: 14px 18px;
     width: 100%;
     font-size: 14px;
-    color: #555;
+    color: var(--texto-sec);
     cursor: pointer;
     transition: all .2s;
     font-family: inherit;
 }
 
 .btn-agregar-ubicacion:hover {
-    background: #e8e8e8;
-    border-color: #FF4500;
-    color: #FF4500;
+    background: var(--bg-surface);
+    border-color: var(--primario);
+    color: var(--primario);
 }
 
 .btn-agregar-ubicacion .material-symbols-outlined {
@@ -95,7 +95,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    background: #e8f5e9;
+    background: var(--success-bg);
     border: 1px solid #a5d6a7;
     border-radius: 10px;
     padding: 10px 14px;
@@ -111,7 +111,7 @@
 .ubicacion-editar-btn {
     background: none;
     border: none;
-    color: #666;
+    color: var(--texto-sec);
     cursor: pointer;
     padding: 2px;
     margin-left: auto;
@@ -120,7 +120,7 @@
 }
 
 .ubicacion-editar-btn:hover {
-    color: #FF4500;
+    color: var(--primario);
 }
 
 /* Modal overlay */
@@ -141,7 +141,7 @@
 }
 
 .modal-contenido {
-    background: #fff;
+    background: var(--bg-card);
     border-radius: 16px;
     width: 90%;
     max-width: 520px;
@@ -173,21 +173,21 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: #888;
+    color: var(--texto-sec);
     padding: 4px;
     border-radius: 8px;
     display: flex;
 }
 
 .modal-cerrar-btn:hover {
-    background: #f0f0f0;
-    color: #333;
+    background: var(--bg-surface);
+    color: var(--texto);
 }
 
 .input-ubicacion-modal {
     width: 100%;
     padding: 10px 14px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--borde);
     border-radius: 10px;
     font-size: 14px;
     margin-bottom: 10px;
@@ -199,7 +199,7 @@
     height: 300px;
     border-radius: 12px;
     overflow: hidden;
-    border: 1px solid #eee;
+    border: 1px solid var(--borde-light);
 }
 
 .coord-info {
@@ -207,15 +207,15 @@
     gap: 20px;
     margin-top: 10px;
     font-size: 13px;
-    color: #888;
+    color: var(--texto-sec);
 }
 
 .coord-info strong {
-    color: #333;
+    color: var(--texto);
 }
 
 .bad-word-marker {
-    background: #fde8e8;
+    background: var(--danger-bg);
     color: #c0392b;
     border-radius: 3px;
     padding: 0 2px;
@@ -224,7 +224,7 @@
 
 .bad-word-input {
     border-color: #e74c3c !important;
-    background: #fef0f0 !important;
+    background: var(--danger-bg) !important;
 }
 
 .bad-word-adv {
@@ -233,7 +233,7 @@
     color: #c0392b;
     font-weight: 500;
     padding: 6px 10px;
-    background: #fef0f0;
+    background: var(--danger-bg);
     border-radius: 6px;
     border: 1px solid #f5c6cb;
 }

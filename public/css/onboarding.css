@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   height: 100dvh;
-  background: #fff;
+  background: var(--bg-card);
   overflow: hidden;
 }
 
@@ -57,7 +57,7 @@
 
 .ob-new-title {
   margin: 0;
-  color: #ff4500;
+  color: var(--primario);
   font-size: 20px;
   
 }
@@ -95,7 +95,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #d1d5db;
+  background: var(--borde);
   transition: all 0.3s;
 }
 

@@ -17,7 +17,7 @@
 }
 .ranking-hero-icon .material-symbols-outlined {
     font-size: 32px;
-    color: #ff4500;
+    color: var(--primario);
 }
 .ranking-hero-icon img {
     width: 150px;
@@ -54,7 +54,7 @@
     color: #fff;
     box-shadow: 0 12px 30px rgba(0,0,0,0.18);
     animation: top3Reveal 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-    background: linear-gradient(135deg, rgba(255,69,0,0.95), rgba(255,140,0,0.82));
+    background: linear-gradient(135deg, var(--primario-glow), rgba(255,140,0,0.82));
 }
 .top3-card::before {
     content: "";
@@ -193,7 +193,7 @@
 .ranking-puntos {
     font-weight: 700;
     font-size: 0.95rem;
-    color: #ff4500;
+    color: var(--primario);
     display: flex;
     align-items: center;
     gap: 4px;

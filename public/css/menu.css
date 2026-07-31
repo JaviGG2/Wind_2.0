@@ -26,7 +26,7 @@
     position: absolute;
     top: -4px;
     right: -4px;
-    background: #ff4500;
+    background: var(--primario);
     color: #fff;
     font-size: 0.55rem;
     font-weight: 700;
@@ -57,7 +57,7 @@
 
 .nav-link:hover {
     background-color: #121212;
-    color: #ff4500;
+    color: var(--primario);
     opacity: 0.8;
 }
 
@@ -76,7 +76,7 @@
 .nav-link.active {
     opacity: 1;
     color: #ffffff;
-    background: #ff4500;
+    background: var(--primario);
     border-radius: 25px;
     box-shadow: #ff4400da 0 0 10px;
     transform: scale(1.0);
@@ -245,7 +245,7 @@
     }
 
     .nav-link.active { 
-        background: #ff4500;
+        background: var(--primario);
         opacity: 1;
         font-weight: 600;
     }

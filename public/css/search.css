@@ -1,16 +1,4 @@
 
-:root {
-    --search-bg: #121212;
-    --search-accent: #ff4500;
-    --search-text: #ffffff;
-    --search-muted: rgba(255, 255, 255, 0.55);
-    --search-item-bg: rgba(255, 255, 255, 0.1);
-    --search-radius-pill: 999px;
-    --search-radius-panel: 12px;
-    --search-float-gap: 20px;
-    --search-float-top: 16px;
-}
-
 #buscar-placeholder,
 .search-page-body {
     font-family: arial, 'segoe ui', sans-serif;
@@ -19,7 +7,7 @@
 .search-page-body {
     margin: 0;
     min-height: 100vh;
-    background: #f5f6f8;
+    background: var(--bg);
 }
 
 .search-page-body .app-layout {
@@ -50,7 +38,7 @@
 body:not(.search-page-body) .wind-search-shell {
     position: fixed;
     z-index: 200;
-    top: var(--search-float-top);
+    top: 16px;
     left: 12px;
     right: 12px;
     width: auto;
@@ -78,7 +66,7 @@ body.modal-open .wind-search-shell {
     right: 0;
     max-height: 260px;
     overflow-y: auto;
-    background: #fff;
+    background: var(--bg-card);
     border-radius: 14px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.15);
     z-index: 300;
@@ -107,20 +95,20 @@ body.modal-open .wind-search-shell {
     font-family: inherit;
     font-size: 0.85rem;
     font-weight: 500;
-    color: #333;
+    color: var(--texto);
     cursor: pointer;
     text-align: left;
     transition: all 0.15s ease;
 }
 
 .cat-select-item:hover {
-    background: rgba(255, 69, 0, 0.08);
-    color: #e63e00;
+    background: var(--primario-glow);
+    color: var(--primario-hover);
 }
 
 .cat-select-item.selected {
-    background: rgba(255, 69, 0, 0.1);
-    color: #e63e00;
+    background: var(--primario-glow);
+    color: var(--primario-hover);
     font-weight: 600;
 }
 
@@ -136,7 +124,7 @@ body.modal-open .wind-search-shell {
 
 .cat-select-item.selected .cat-select-check {
     opacity: 1;
-    color: #e63e00;
+    color: var(--primario-hover);
 }
 
 .cat-select-item-text {
@@ -149,7 +137,7 @@ body.modal-open .wind-search-shell {
     font-size: 1.35rem;
     font-weight: 800;
     letter-spacing: -0.01em;
-    background: linear-gradient(90deg, #ff4500, #ff6b35, #ff8a65, #ffa07a, #ff8a65, #ff6b35, #ff4500);
+    background: linear-gradient(90deg, var(--primario), #ff6b35, #ff8a65, #ffa07a, #ff8a65, #ff6b35, var(--primario));
     background-size: 400% 400%;
     -webkit-background-clip: text;
     background-clip: text;
@@ -157,7 +145,7 @@ body.modal-open .wind-search-shell {
     animation: gradientShift 5s ease infinite, textGlow 3s ease-in-out infinite alternate;
     display: inline-block;
     padding: 0 5px;
-    text-shadow: 0 0 10px rgba(255, 69, 0, 0.2);
+    text-shadow: 0 0 10px var(--primario-glow);
 }
 
 @keyframes gradientShift {
@@ -174,19 +162,19 @@ body.modal-open .wind-search-shell {
 
 @keyframes textGlow {
     0% {
-        text-shadow: 0 0 10px rgba(255, 69, 0, 0.2),
-                    0 0 20px rgba(255, 69, 0, 0.1);
+        text-shadow: 0 0 10px var(--primario-glow),
+                    0 0 20px var(--primario-glow);
     }
     100% {
-        text-shadow: 0 0 15px rgba(255, 69, 0, 0.4),
-                    0 0 25px rgba(255, 69, 0, 0.2),
-                    0 0 35px rgba(255, 69, 0, 0.1);
+        text-shadow: 0 0 15px var(--primario-glow),
+                    0 0 25px var(--primario-glow),
+                    0 0 35px var(--primario-glow);
     }
 }
 
 .wind-search-capsule {
-    background: var(--search-bg);
-    border-radius: var(--search-radius-pill);
+    background: var(--bg-elevated);
+    border-radius: 999px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     transition: border-radius 0.28s ease, box-shadow 0.28s ease;
     backdrop-filter: blur(12px) saturate(180%);
@@ -196,15 +184,15 @@ body.modal-open .wind-search-shell {
 }
 
 .wind-search-capsule--expanded {
-    border-radius: var(--search-radius-panel);
+    border-radius: 12px;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     background-color: rgba(18, 18, 18, 0.9);
 }
 
 .wind-search-capsule:focus-within {
-    box-shadow: 0 0 24px rgba(255, 69, 0, 0.35);
-    border-color: rgba(255, 69, 0, 0.3);
+    box-shadow: 0 0 24px var(--primario-glow);
+    border-color: var(--primario-glow);
     background-color: rgba(18, 18, 18, 0.95);
 }
 
@@ -221,7 +209,7 @@ body.modal-open .wind-search-shell {
 }
 
 .wind-search-icon {
-    color: var(--search-text);
+    color: var(--texto);
     font-size: 20px;
     flex-shrink: 0;
     opacity: 0.9;
@@ -232,7 +220,7 @@ body.modal-open .wind-search-shell {
     min-width: 0;
     border: none;
     background: transparent;
-    color: var(--search-text);
+    color: var(--texto);
     font-family: inherit;
     font-size: 1rem;
     font-weight: 600;
@@ -253,15 +241,15 @@ body.modal-open .wind-search-shell {
     border: none;
     border-radius: 20px;
     background: rgba(255, 255, 255, 0.08);
-    color: var(--search-text);
+    color: var(--texto);
     cursor: pointer;
     flex-shrink: 0;
     transition: background 0.15s ease, color 0.15s ease;
 }
 
 .wind-search-clear:hover {
-    background: rgba(255, 69, 0, 0.25);
-    color: var(--search-accent);
+    background: var(--primario-glow);
+    color: var(--primario);
 }
 
 .wind-search-clear .material-symbols-outlined {
@@ -277,15 +265,15 @@ body.modal-open .wind-search-shell {
     border: none;
     border-radius: 20px;
     background: rgba(255, 255, 255, 0.08);
-    color: var(--search-text);
+    color: var(--texto);
     cursor: pointer;
     flex-shrink: 0;
     transition: background 0.15s ease, color 0.15s ease;
 }
 
 .wind-search-filter-btn:hover {
-    background: rgba(255, 69, 0, 0.25);
-    color: var(--search-accent);
+    background: var(--primario-glow);
+    color: var(--primario);
 }
 
 .wind-search-filter-btn .material-symbols-outlined {
@@ -324,7 +312,7 @@ body.modal-open .wind-search-shell {
 .search-filter-popup .filtros-chips .chip {
     border: 1px solid rgba(255, 255, 255, 0.12);
     background: transparent;
-    color: var(--search-muted);
+    color: var(--texto-sec);
     padding: 8px 14px;
     border-radius: 8px;
     font-size: 0.82rem;
@@ -337,13 +325,13 @@ body.modal-open .wind-search-shell {
 }
 
 .search-filter-popup .filtros-chips .chip:hover {
-    border-color: rgba(255, 69, 0, 0.5);
-    color: var(--search-text);
+    border-color: var(--primario-glow);
+    color: var(--texto);
 }
 
 .search-filter-popup .filtros-chips .chip.active {
-    background: var(--search-accent);
-    border-color: var(--search-accent);
+    background: var(--primario);
+    border-color: var(--primario);
     color: #fff;
 }
 
@@ -360,15 +348,15 @@ body.modal-open .wind-search-shell {
     font-size: 0.82rem;
     font-weight: 600;
     font-family: inherit;
-    color: var(--search-muted);
+    color: var(--texto-sec);
     text-decoration: none;
     cursor: pointer;
     transition: all 0.15s ease;
 }
 
 .popup-link:hover {
-    background: rgba(255, 69, 0, 0.15);
-    color: var(--search-accent);
+    background: var(--primario-glow);
+    color: var(--primario);
 }
 
 .search-filter-popup .cat-select-wrapper {
@@ -384,7 +372,7 @@ body.modal-open .wind-search-shell {
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 8px;
     background: transparent;
-    color: var(--search-muted);
+    color: var(--texto-sec);
     font-family: inherit;
     font-size: 0.82rem;
     font-weight: 600;
@@ -393,8 +381,8 @@ body.modal-open .wind-search-shell {
 }
 
 .search-filter-popup .cat-select-trigger:hover {
-    border-color: rgba(255, 69, 0, 0.5);
-    color: var(--search-text);
+    border-color: var(--primario-glow);
+    color: var(--texto);
 }
 
 .search-filter-popup .cat-select-arrow {
@@ -432,7 +420,7 @@ body.modal-open .wind-search-shell {
     padding: 9px 14px;
     border: none;
     background: transparent;
-    color: var(--search-muted);
+    color: var(--texto-sec);
     font-family: inherit;
     font-size: 0.82rem;
     font-weight: 500;
@@ -443,7 +431,7 @@ body.modal-open .wind-search-shell {
 
 .search-filter-popup .cat-select-item:hover {
     background: rgba(255, 255, 255, 0.06);
-    color: var(--search-text);
+    color: var(--texto);
 }
 
 .search-filter-popup .cat-select-check {
@@ -455,7 +443,7 @@ body.modal-open .wind-search-shell {
     flex-shrink: 0;
     opacity: 0;
     transition: opacity 0.15s ease;
-    color: var(--search-accent);
+    color: var(--primario);
 }
 
 .search-filter-popup .cat-select-item.selected .cat-select-check {
@@ -463,7 +451,7 @@ body.modal-open .wind-search-shell {
 }
 
 .search-filter-popup .cat-select-item.selected {
-    color: var(--search-text);
+    color: var(--texto);
 }
 
 .wind-search-capsule {
@@ -498,13 +486,13 @@ body.modal-open .wind-search-shell {
     margin: 0;
     font-size: 0.82rem;
     font-weight: 600;
-    color: var(--search-muted);
+    color: var(--texto-sec);
     text-transform: none;
 }
 
 .wind-search-capsule .search-total {
     font-size: 0.75rem;
-    color: var(--search-muted);
+    color: var(--texto-sec);
 }
 
 .wind-search-capsule .filtros-chips {
@@ -516,7 +504,7 @@ body.modal-open .wind-search-shell {
 .wind-search-capsule .chip {
     border: 1px solid rgba(255, 255, 255, 0.12);
     background: transparent;
-    color: var(--search-muted);
+    color: var(--texto-sec);
     padding: 6px 12px;
     border-radius: 999px;
     font-size: 0.78rem;
@@ -527,15 +515,15 @@ body.modal-open .wind-search-shell {
 }
 
 .wind-search-capsule .chip:hover {
-    border-color: rgba(255, 69, 0, 0.5);
-    color: var(--search-text);
+    border-color: var(--primario-glow);
+    color: var(--texto);
 }
 
 .wind-search-capsule .chip.active {
-    background: var(--search-accent);
-    border-color: var(--search-accent);
+    background: var(--primario);
+    border-color: var(--primario);
     color: #fff;
-    box-shadow: #ff4400da 0 0 10px;
+    box-shadow: var(--primario-glow) 0 0 10px;
 }
 
 .search-results {
@@ -565,14 +553,14 @@ body.modal-open .wind-search-shell {
     margin: 8px 0 8px 2px;
     font-size: 0.78rem;
     font-weight: 700;
-    color: var(--search-muted);
+    color: var(--texto-sec);
     text-transform: uppercase;
     letter-spacing: 0.04em;
 }
 
 .search-section-title .material-symbols-outlined {
     font-size: 16px;
-    color: var(--search-accent);
+    color: var(--primario);
 }
 
 .search-result-list {
@@ -586,10 +574,10 @@ body.modal-open .wind-search-shell {
     align-items: center;
     gap: 12px;
     padding: 10px 12px;
-    background: var(--search-item-bg);
+    background: var(--bg-surface);
     border-radius: 14px;
     text-decoration: none;
-    color: var(--search-text);
+    color: var(--texto);
     transition: background 0.15s ease, transform 0.15s ease;
 }
 
@@ -618,7 +606,7 @@ body.modal-open .wind-search-shell {
 
 .search-result-thumb .material-symbols-outlined {
     font-size: 22px;
-    color: var(--search-accent);
+    color: var(--primario);
 }
 
 .search-result-info {
@@ -639,7 +627,7 @@ body.modal-open .wind-search-shell {
 
 .search-result-type {
     font-size: 0.72rem;
-    color: var(--search-muted);
+    color: var(--texto-sec);
     font-weight: 600;
 }
 
@@ -648,7 +636,7 @@ body.modal-open .wind-search-shell {
 .search-no-results {
     padding: 16px 8px 8px;
     text-align: center;
-    color: var(--search-muted);
+    color: var(--texto-sec);
     font-size: 0.88rem;
 }
 
@@ -689,7 +677,7 @@ body.modal-open .wind-search-shell {
     .wind-search-title {
         font-size: 1.15rem;
         margin-bottom: 10px;
-        background: linear-gradient(90deg, #ff4500, #ff6b35, #ff8a65, #ff6b35, #ff4500);
+        background: linear-gradient(90deg, var(--primario), #ff6b35, #ff8a65, #ff6b35, var(--primario));
         background-size: 300% 300%;
         -webkit-background-clip: text;
         background-clip: text;
@@ -737,7 +725,7 @@ body.modal-open .wind-search-shell {
         text-align: left;
         font-size: 1.25rem;
         margin-bottom: 12px;
-        background: linear-gradient(90deg, #ff4500, #ff6b35, #ff8a65, #ff6b35, #ff4500);
+        background: linear-gradient(90deg, var(--primario), #ff6b35, #ff8a65, #ff6b35, var(--primario));
         background-size: 300% 300%;
         -webkit-background-clip: text;
         background-clip: text;
@@ -793,7 +781,7 @@ body.modal-open .wind-search-shell {
 
     .search-page-body .wind-search-title {
         text-align: center;
-        background: linear-gradient(90deg, #ff4500, #ff6b35, #ff8a65, #ff6b35, #ff4500);
+        background: linear-gradient(90deg, var(--primario), #ff6b35, #ff8a65, #ff6b35, var(--primario));
         background-size: 300% 300%;
         -webkit-background-clip: text;
         background-clip: text;

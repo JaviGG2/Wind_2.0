@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
-<head><style>body{background:#f5f6f8}</style>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajustes de Perfil - Wind</title>
@@ -19,7 +19,7 @@
     <link rel="apple-touch-icon" href="/img/app.png">
     <link rel="icon" href="/img/logo2.png">
     <link rel="stylesheet" href="/css/animaciones.css?v={{ cacheVersion }}">
-    <meta name="theme-color" content="#ff4500">
+    <meta name="theme-color" content="#ff4500" id="meta-theme-color">
 </head>
 <body>
     <script src="/js/menu.js?v={{ cacheVersion }}"></script>
@@ -98,6 +98,26 @@
                 </div>
 
                 <div class="ajustes-seccion">
+                    <h4>Modo Oscuro</h4>
+                    <p class="muted" style="margin-bottom:10px;">Cambia la apariencia de la aplicación a tema oscuro.</p>
+                    <label class="theme-toggle">
+                        <span class="theme-toggle-label">Modo oscuro</span>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="dark-mode-toggle">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </label>
+                    <script>
+                        document.getElementById('dark-mode-toggle').addEventListener('change', function() {
+                            var tema = this.checked ? 'dark' : 'light';
+                            if (window.__setTheme) window.__setTheme(tema);
+                        });
+                        var cur = document.documentElement.getAttribute('data-theme');
+                        document.getElementById('dark-mode-toggle').checked = cur === 'dark';
+                    </script>
+                </div>
+
+                <div class="ajustes-seccion">
                     <h4>Enviar Feedback</h4>
                     <p class="muted" style="margin-bottom:10px;">Envía tus sugerencias, reportes o comentarios sobre la plataforma.</p>
                     <textarea id="feedback-mensaje" class="input" rows="4" placeholder="Escribe tu mensaje..." maxlength="1000" style="width:100%;padding:12px;resize:vertical;box-sizing:border-box;"></textarea>
@@ -122,12 +142,12 @@
             <div class="ajustes-seccion ajustes-peligro">
                 <h4>Eliminar Cuenta</h4>
                 <p class="muted" style="margin-bottom:10px;">Esta acción eliminará tu cuenta y todos tus datos de forma permanente. No se puede deshacer.</p>
-                <details style="margin-top:8px;">
-                    <summary style="cursor:pointer;color:#dc2626;font-weight:600;font-size:0.85rem;">Eliminar mi cuenta</summary>
-                    <div style="margin-top:12px;padding:16px;background:#fef2f2;border-radius:12px;border:1px solid #fecaca;">
-                        <p style="font-size:0.85rem;color:#dc2626;margin:0 0 10px;">Confirma tu contraseña para eliminar la cuenta:</p>
-                        <input type="password" id="input-eliminar-contrasena" class="input" placeholder="Tu contraseña actual" style="margin-bottom:10px;border-color:#fecaca;">
-                        <button id="btn-eliminar-cuenta" class="boton-enviar" style="background:#dc2626;width:auto;">Eliminar cuenta permanentemente</button>
+                    <details style="margin-top:8px;">
+                        <summary style="cursor:pointer;color:var(--danger-text);font-weight:600;font-size:0.85rem;">Eliminar mi cuenta</summary>
+                        <div style="margin-top:12px;padding:16px;background:var(--danger-bg);border-radius:12px;border:1px solid var(--danger-text);">
+                            <p style="font-size:0.85rem;color:var(--danger-text);margin:0 0 10px;">Confirma tu contraseña para eliminar la cuenta:</p>
+                            <input type="password" id="input-eliminar-contrasena" class="input" placeholder="Tu contraseña actual" style="margin-bottom:10px;border-color:var(--danger-text);">
+                            <button id="btn-eliminar-cuenta" class="boton-enviar" style="background:var(--danger-text);width:auto;">Eliminar cuenta permanentemente</button>
                         <div id="mensaje-eliminar" class="ajustes-mensaje"></div>
                     </div>
                 </details>

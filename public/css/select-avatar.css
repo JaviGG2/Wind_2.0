@@ -148,7 +148,7 @@
     right: 4px;
     font-size: 20px;
     color: var(--primario);
-    background: #fff;
+    background: var(--bg-card);
     border-radius: 50%;
     font-variation-settings: 'FILL' 1;
 }
@@ -207,11 +207,11 @@
 }
 
 .selavatar-msg.success {
-    color: #16a34a;
+    color: var(--success-text);
 }
 
 .selavatar-msg.error {
-    color: #dc2626;
+    color: var(--danger-text);
 }
 
 .selavatar-color-section {

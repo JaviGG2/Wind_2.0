@@ -16,7 +16,7 @@
 .ser-title {
     font-size: 2rem;
     font-weight: 800;
-    color: #000000;
+    color: var(--texto);
     margin: 0 0 8px;
 }
 .ser-subtitle {
@@ -33,7 +33,7 @@
 .ser-benefits-title {
     font-size: 1.3rem;
     font-weight: 700;
-    color: #000000;
+    color: var(--texto);
     margin: 0 0 24px;
     text-align: center;
 }
@@ -147,7 +147,7 @@
 }
 .ser-input:focus {
     outline: none;
-    border-color: #ff4500;
+    border-color: var(--primario);
 }
 .ser-input-readonly {
     color: rgba(255,255,255,0.45);
@@ -167,7 +167,7 @@
 }
 .ser-textarea:focus {
     outline: none;
-    border-color: #ff4500;
+    border-color: var(--primario);
 }
 .ser-textarea::placeholder {
     color: rgba(255,255,255,0.25);
@@ -187,8 +187,8 @@
     width: fit-content;
 }
 .ser-file-label:hover {
-    border-color: #ff4500;
-    background: #222;
+    border-color: var(--primario);
+    background: var(--texto);
     color: #fff;
 }
 .ser-file-label .material-symbols-outlined {
@@ -231,7 +231,7 @@
     justify-content: center;
     gap: 8px;
     padding: 14px 32px;
-    background: #ff4500;
+    background: var(--primario);
     color: #fff;
     border: none;
     border-radius: 12px;
@@ -242,7 +242,7 @@
     width: 100%;
 }
 .ser-cta-btn:hover {
-    background: #e63e00;
+    background: var(--primario-hover);
     transform: scale(1.01);
 }
 .ser-cta-btn:disabled {

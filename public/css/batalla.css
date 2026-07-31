@@ -35,7 +35,7 @@
 }
 
 .batalla-progress-text {
-    color: #aaa;
+    color: var(--texto-muted);
     font-size: 14px;
     font-weight: 600;
     white-space: nowrap;
@@ -97,7 +97,7 @@
     cursor: pointer;
     transition: all 0.2s ease;
     text-align: left;
-    color: #eee;
+    color: var(--borde-light);
     font-size: 16px;
     font-family: inherit;
 }
@@ -109,7 +109,7 @@
 
 .batalla-opcion.selected {
     background: #1a3a2a;
-    border-color: #16a34a;
+    border-color: var(--success-text);
 }
 
 .batalla-opcion-letra {
@@ -122,37 +122,37 @@
     background: #3a3a5a;
     font-weight: 700;
     font-size: 14px;
-    color: #ccc;
+    color: var(--texto-muted);
     flex-shrink: 0;
 }
 
 .batalla-opcion.selected .batalla-opcion-letra {
-    background: #16a34a;
+    background: var(--success-text);
     color: #fff;
 }
 
 .batalla-opcion.correcta {
-    background: #16a34a33;
-    border-color: #16a34a;
+    background: rgba(22, 163, 74, 0.2);
+    border-color: var(--success-text);
 }
 
 .batalla-opcion.correcta .batalla-opcion-letra {
-    background: #16a34a;
+    background: var(--success-text);
     color: #fff;
 }
 
 .batalla-opcion.incorrecta {
-    background: #dc262633;
-    border-color: #dc2626;
+    background: rgba(220, 38, 38, 0.2);
+    border-color: var(--danger-text);
 }
 
 .batalla-opcion.incorrecta .batalla-opcion-letra {
-    background: #dc2626;
+    background: var(--danger-text);
     color: #fff;
 }
 
 .batalla-timer.timer-warning {
-    color: #dc2626;
+    color: var(--danger-text);
     animation: timerPulse 0.5s ease infinite alternate;
 }
 
@@ -183,7 +183,7 @@
 .batalla-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .batalla-btn-final {
-    background: linear-gradient(135deg, #16a34a, #15803d);
+    background: linear-gradient(135deg, var(--success-text), #15803d);
     color: #fff;
 }
 
@@ -214,7 +214,7 @@
 .batalla-status-nombre {
     flex: 1;
     font-weight: 500;
-    color: #eee;
+    color: var(--borde-light);
 }
 
 .batalla-status-indicator {
@@ -226,12 +226,12 @@
 
 .batalla-status-indicator.pendiente {
     background: #2a2a4a;
-    color: #888;
+    color: var(--texto-sec);
 }
 
 .batalla-status-indicator.completado {
-    background: #16a34a22;
-    color: #16a34a;
+    background: rgba(22, 163, 74, 0.13);
+    color: var(--success-text);
 }
 
 /* Completado */
@@ -247,7 +247,7 @@
     margin-bottom: 16px;
 }
 
-.batalla-completado-icon { color: #16a34a; }
+.batalla-completado-icon { color: var(--success-text); }
 .batalla-espera-icon { color: #ffd700; }
 
 .batalla-completado-content h2,
@@ -258,7 +258,7 @@
 
 .batalla-completado-content p,
 .batalla-espera-content p {
-    color: #aaa;
+    color: var(--texto-muted);
     margin: 0 0 20px;
 }
 
@@ -359,7 +359,7 @@
     background: #2a2a4a;
     font-weight: 700;
     font-size: 14px;
-    color: #ccc;
+    color: var(--texto-muted);
     flex-shrink: 0;
 }
 
@@ -377,7 +377,7 @@
 
 .batalla-tabla-nombre {
     font-weight: 600;
-    color: #eee;
+    color: var(--borde-light);
     font-size: 14px;
 }
 

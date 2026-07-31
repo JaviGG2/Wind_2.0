@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
 
-<head><style>body{background:#f5f6f8}</style>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Juegos — Wind</title>
@@ -25,7 +25,7 @@
     <meta name="apple-mobile-web-app-title" content="Wind">
     <link rel="apple-touch-icon" href="/img/app.png">
     <link rel="icon" href="/img/logo2.png">
-    <meta name="theme-color" content="#ff4500">
+    <meta name="theme-color" content="#ff4500" id="meta-theme-color">
 </head>
 
 <body>
@@ -95,12 +95,19 @@
     <script src="/js/juegos-page.js?v={{ cacheVersion }}"></script>
 
     <style>
-        .ranking-top3-avatares {
+        a.juego-stat-link .ranking-top3-avatares {
             display: flex;
             flex-direction: row;
-            gap: 2px;
+            gap: 4px;
             margin-left: auto;
             flex-shrink: 0;
+            flex-wrap: nowrap;
+            align-items: center;
+        }
+        .ranking-top3-avatar-wrap {
+            position: relative;
+            width: 28px;
+            height: 28px;
         }
         .ranking-top3-avatares .top3-avatar-mini {
             width: 28px;
@@ -108,12 +115,22 @@
             border-radius: 50%;
             object-fit: cover;
             display: block;
+            border: 2px solid #fff;
+            background: #e8e8e8;
+        }
+        .top3-avatar-fallback {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
             background: #e8e8e8;
             color: #666;
             font-weight: 600;
             font-size: 0.65rem;
-            text-align: center;
-            line-height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #fff;
+            box-sizing: border-box;
         }
         .top3-placeholder {
             font-size: 0.7rem;
@@ -129,13 +146,26 @@
                 const container = document.getElementById('ranking-top3-avatares');
                 if (!container || !data.length) return;
                 container.innerHTML = '';
-                data.slice(0, 3).forEach(u => {
+                data.slice(0, 3).forEach((u, i) => {
+                    const wrap = document.createElement('div');
+                    wrap.className = 'ranking-top3-avatar-wrap';
+                    wrap.style.zIndex = 3 - i;
+                    const nombre = u.nombre || u.username || '';
+                    const iniciales = nombre ? nombre.split(' ').map(s => s[0]).join('').slice(0, 2).toUpperCase() : '?';
                     const img = document.createElement('img');
                     img.className = 'top3-avatar-mini';
                     img.src = u.imagen_perfil || '/img/avatar.svg';
-                    img.alt = u.nombre || '';
+                    img.alt = nombre;
                     img.loading = 'lazy';
-                    container.appendChild(img);
+                    img.onerror = () => {
+                        img.style.display = 'none';
+                        const fb = document.createElement('div');
+                        fb.className = 'top3-avatar-fallback';
+                        fb.textContent = iniciales;
+                        wrap.appendChild(fb);
+                    };
+                    wrap.appendChild(img);
+                    container.appendChild(wrap);
                 });
             })
             .catch(() => {});

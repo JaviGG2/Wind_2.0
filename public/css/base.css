@@ -76,6 +76,13 @@ ul, ol {
     --borde: #e5e7eb;
     --borde-light: #f3f4f6;
 
+    --danger-bg: #fee2e2;
+    --danger-text: #dc2626;
+    --success-bg: #dcfce7;
+    --success-text: #16a34a;
+    --star: #f59e0b;
+    --star-empty: #d1d5db;
+
     --sombra-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
     --sombra-md: 0 4px 12px rgba(0,0,0,0.08);
     --sombra-lg: 0 8px 30px rgba(0,0,0,0.1);
@@ -104,6 +111,37 @@ ul, ol {
 
     --transition: 0.2s ease;
     --transition-slow: 0.35s ease;
+}
+
+[data-theme="dark"] {
+    --primario: #ff6b35;
+    --primario-hover: #ff824f;
+    --primario-light: #2a1a12;
+    --primario-glow: rgba(255, 107, 53, 0.25);
+
+    --bg: #0f0f12;
+    --bg-card: #1a1a20;
+    --bg-surface: #141418;
+    --bg-elevated: #22222a;
+
+    --texto: #e8e8ed;
+    --texto-sec: #9a9aa8;
+    --texto-muted: #6a6a7a;
+
+    --borde: #2a2a32;
+    --borde-light: #1e1e26;
+
+    --danger-bg: #3b1a1a;
+    --danger-text: #f87171;
+    --success-bg: #1a3b1a;
+    --success-text: #6ee76e;
+    --star: #fbbf24;
+    --star-empty: #4a4a58;
+
+    --sombra-sm: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+    --sombra-md: 0 4px 12px rgba(0,0,0,0.4);
+    --sombra-lg: 0 8px 30px rgba(0,0,0,0.5);
+    --sombra-xl: 0 20px 60px rgba(0,0,0,0.6);
 }
 
 .btn {
@@ -155,12 +193,13 @@ ul, ol {
 }
 
 .btn-danger {
-    background: #fee2e2;
-    color: #dc2626;
+    background: var(--danger-bg);
+    color: var(--danger-text);
 }
 
 .btn-danger:hover {
-    background: #fecaca;
+    background: var(--danger-bg);
+    filter: brightness(0.9);
 }
 
 .btn-sm {
@@ -314,13 +353,13 @@ select.input {
 }
 
 .alert-error {
-    background: #fee2e2;
-    color: #dc2626;
+    background: var(--danger-bg);
+    color: var(--danger-text);
 }
 
 .alert-success {
-    background: #dcfce7;
-    color: #16a34a;
+    background: var(--success-bg);
+    color: var(--success-text);
 }
 
 .alert-info {
@@ -335,11 +374,11 @@ select.input {
     align-items: center;
     gap: 8px;
     padding: 8px 12px;
-    background: rgba(255,255,255,0.92);
-    color: #111;
+    background: var(--bg-elevated);
+    color: var(--texto);
     text-decoration: none;
     border-radius: 999px;
-    box-shadow: 0 8px 18px rgba(15,15,15,0.08);
+    box-shadow: var(--sombra-sm);
     transition: transform 0.12s ease, background 0.12s ease, color 0.12s ease;
     font-weight: 600;
     border: none;
@@ -428,11 +467,11 @@ select.input {
 }
 
 .popup-valoracion-contenido {
-    background: #fff;
+    background: var(--bg-card);
     border-radius: 20px;
     padding: 32px 40px;
     text-align: center;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    box-shadow: var(--sombra-xl);
     animation: popupFadeIn 0.2s ease;
 }
 
@@ -445,7 +484,7 @@ select.input {
     font-size: 1.2rem;
     font-weight: 700;
     margin-bottom: 16px;
-    color: #111827;
+    color: var(--texto);
 }
 
 .popup-valoracion-estrellas {
@@ -457,7 +496,7 @@ select.input {
 
 .popup-star {
     cursor: pointer;
-    color: #d1d5db;
+    color: var(--star-empty);
     transition: color 0.1s, transform 0.1s;
 }
 
@@ -469,11 +508,11 @@ select.input {
 .popup-star.active .material-symbols-outlined,
 .popup-star:hover .material-symbols-outlined {
     font-variation-settings: 'FILL' 1;
-    color: #f59e0b;
+    color: var(--star);
 }
 
 .popup-star.active {
-    color: #f59e0b;
+    color: var(--star);
 }
 
 .popup-star:hover {
@@ -482,18 +521,18 @@ select.input {
 
 .popup-btn-cancelar {
     padding: 8px 24px;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--borde);
     border-radius: 999px;
-    background: #fff;
-    color: #6b7280;
+    background: var(--bg-card);
+    color: var(--texto-sec);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.15s;
 }
 
 .popup-btn-cancelar:hover {
-    background: #f3f4f6;
-    border-color: #9ca3af;
+    background: var(--bg-surface);
+    border-color: var(--texto-muted);
 }
 
 /* --- Botón de valoración compacto (cards) --- */
@@ -502,38 +541,38 @@ select.input {
     align-items: center;
     gap: 4px;
     padding: 4px 10px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--borde);
     border-radius: 999px;
-    background: #fff;
+    background: var(--bg-card);
     cursor: pointer;
     font-size: 0.8rem;
     font-weight: 600;
-    color: #6b7280;
+    color: var(--texto-sec);
     transition: all 0.15s;
     line-height: 1;
     font-family: inherit;
 }
 
 .btn-valoracion:hover {
-    border-color: #f59e0b;
-    color: #f59e0b;
-    background: #fffbeb;
+    border-color: var(--star);
+    color: var(--star);
+    background: var(--primario-light);
 }
 
 .btn-val-icon {
     font-size: 1rem !important;
     font-variation-settings: 'FILL' 0;
-    color: #d1d5db;
+    color: var(--star-empty);
 }
 
 .btn-val-icon.rated {
     font-variation-settings: 'FILL' 1;
-    color: #f59e0b;
+    color: var(--star);
 }
 
 .btn-valoracion:hover .btn-val-icon {
     font-variation-settings: 'FILL' 1;
-    color: #f59e0b;
+    color: var(--star);
 }
 
 .btn-val-promedio {
@@ -543,5 +582,5 @@ select.input {
 
 .btn-val-count {
     font-size: 0.7rem;
-    color: #9ca3af;
+    color: var(--texto-muted);
 }

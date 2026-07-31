@@ -255,6 +255,26 @@ window.addEventListener('appinstalled', () => {
   if (banner) banner.style.display = 'none';
 });
 
+// --- Dark Mode ---
+(function() {
+  var KEY = 'wind-theme';
+  function aplicar(tema) {
+    document.documentElement.setAttribute('data-theme', tema);
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.content = tema === 'dark' ? '#0f0f12' : '#ff4500';
+  }
+  var guardado = localStorage.getItem(KEY);
+  if (guardado === 'dark') { aplicar('dark'); }
+  else if (guardado === 'light') { aplicar('light'); }
+  else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    aplicar('dark');
+  }
+  window.__setTheme = function(tema) {
+    localStorage.setItem(KEY, tema);
+    aplicar(tema);
+  };
+})();
+
 window.addEventListener('pageshow', () => {
   const saved = sessionStorage.getItem(SCROLL_KEY);
   if (saved === null) return;

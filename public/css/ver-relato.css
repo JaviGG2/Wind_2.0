@@ -16,13 +16,13 @@
     align-items: center;
     justify-content: center;
     padding: 80px 20px;
-    color: #888;
+    color: var(--texto-muted);
 }
 
 
 
 .articulo-relato {
-    background: #fff;
+    background: var(--bg-card);
     border-radius: 20px;
     box-shadow: 0 4px 24px rgba(18, 18, 18, 0.07);
     padding: 32px 28px;
@@ -40,8 +40,8 @@
     height: 48px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid rgba(255,69,0,0.15);
-    background: linear-gradient(135deg, #ff6b35, #ff4500);
+    border: 2px solid var(--primario-glow);
+    background: linear-gradient(135deg, #ff6b35, var(--primario));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -81,7 +81,7 @@
 .relato-autor-nombre {
     font-size: 1rem;
     font-weight: 700;
-    color: #111827;
+    color: var(--texto);
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -92,18 +92,18 @@
     transition: color 180ms;
 }
 .autor-perfil-link:hover {
-    color: #ff4500;
+    color: var(--primario);
 }
 
 .relato-autor-fecha {
     font-size: 0.83rem;
-    color: #6b7280;
+    color: var(--texto-sec);
 }
 
 .relato-titulo-principal {
     font-size: 1.65rem;
     font-weight: 800;
-    color: #111827;
+    color: var(--texto);
     margin: 0 0 20px;
     line-height: 1.25;
 }

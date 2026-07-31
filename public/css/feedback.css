@@ -5,10 +5,10 @@
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    background: #FF4500;
+    background: var(--primario);
     color: #fff;
     border: none;
-    box-shadow: 0 4px 20px rgba(255, 69, 0, 0.4);
+    box-shadow: 0 4px 20px var(--primario-glow);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -18,7 +18,7 @@
 }
 .fab-feedback:hover {
     transform: scale(1.08);
-    box-shadow: 0 6px 28px rgba(255, 69, 0, 0.55);
+    box-shadow: 0 6px 28px var(--primario-glow);
 }
 .fab-feedback .material-symbols-outlined {
     font-size: 26px;
@@ -40,7 +40,7 @@
     display: flex !important;
 }
 .feedback-modal {
-    background: #fff;
+    background: var(--bg-card);
     width: 100%;
     max-width: 420px;
     border-radius: 20px;
@@ -67,24 +67,24 @@
     width: 36px;
     height: 36px;
     border: none;
-    background: #f3f4f6;
+    background: var(--bg-surface);
     border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #6b7280;
+    color: var(--texto-sec);
     transition: background 0.15s;
 }
 .feedback-modal-close:hover {
-    background: #e5e7eb;
+    background: var(--borde);
 }
 .feedback-seccion {
     font-size: 0.82rem;
-    color: #9ca3af;
+    color: var(--texto-muted);
     margin-bottom: 16px;
     padding: 10px 14px;
-    background: #f9fafb;
+    background: var(--bg-surface);
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -97,7 +97,7 @@
     width: 100%;
     min-height: 120px;
     padding: 14px;
-    border: 2px solid #e5e7eb;
+    border: 2px solid var(--borde);
     border-radius: 12px;
     font-family: inherit;
     font-size: 0.92rem;
@@ -107,13 +107,13 @@
     box-sizing: border-box;
 }
 .feedback-textarea:focus {
-    border-color: #FF4500;
+    border-color: var(--primario);
 }
 .feedback-btn {
     width: 100%;
     padding: 14px;
     margin-top: 16px;
-    background: #FF4500;
+    background: var(--primario);
     color: #fff;
     border: none;
     border-radius: 12px;
@@ -127,7 +127,7 @@
     gap: 8px;
 }
 .feedback-btn:hover {
-    background: #e63e00;
+    background: var(--primario-hover);
     transform: scale(1.01);
 }
 .feedback-btn:disabled {
@@ -142,8 +142,8 @@
     text-align: center;
     display: none;
 }
-.feedback-msg.success { color: #16a34a; display: block; }
-.feedback-msg.error { color: #dc3545; display: block; }
+.feedback-msg.success { color: var(--success-text); display: block; }
+.feedback-msg.error { color: var(--danger-text); display: block; }
 
 @media (max-width: 480px) {
 .fab-feedback {

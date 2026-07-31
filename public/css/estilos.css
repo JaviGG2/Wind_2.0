@@ -6,7 +6,7 @@
     align-items: center;
     justify-content: center;
     padding: 26px 18px;
-    background: linear-gradient(135deg, #f5f6f8 0%, #e8eaef 100%);
+    background: var(--bg);
 }
 
 .tarjeta-registro {
@@ -86,14 +86,14 @@
     gap: 8px;
     margin: 6px 0 4px;
     font-size: 0.85rem;
-    color: #666;
+    color: var(--texto-sec);
     cursor: pointer;
     user-select: none;
 }
 
 .mantener-sesion input[type="checkbox"] {
     width: auto;
-    accent-color: #FF4500;
+    accent-color: var(--primario);
     margin: 0;
 }
 
@@ -158,7 +158,7 @@
     border-radius: var(--radius-md);
     background: var(--primario-light);
     color: var(--primario);
-    border: 1px solid rgba(255, 69, 0, 0.18);
+    border: 1px solid var(--primario-glow);
     font-size: var(--font-sm);
     font-weight: 500;
 }
@@ -185,7 +185,7 @@
     padding: 4px;
     display: flex;
     align-items: center;
-    color: var(--texto-muted, #888);
+    color: var(--texto-muted);
     transition: color 150ms;
 }
 
@@ -219,17 +219,17 @@
 .input-ayuda {
     display: block;
     font-size: .75rem;
-    color: var(--texto-muted, #888);
+    color: var(--texto-muted);
     margin-top: 4px;
     line-height: 1.4;
 }
 
 .input-ayuda.valido {
-    color: #16a34a;
+    color: var(--success-text);
 }
 
 .input-ayuda.invalido {
-    color: #dc2626;
+    color: var(--danger-text);
 }
 
 .login-split {
@@ -238,7 +238,7 @@
     gap: 0;
     height: 100vh;
     overflow: hidden;
-    background: linear-gradient(135deg, #f5f6f8 0%, #e8eaef 100%);
+    background: var(--bg);
     position: relative;
 }
 
@@ -302,7 +302,7 @@
 
 @media (min-width: 900px) {
     .login-split {
-        background: #fff;
+        background: var(--bg);
     }
 
     .login-panel-bienvenida {
@@ -313,7 +313,7 @@
         flex: 1;
         padding: 40px;
         background: linear-gradient(135deg, #FCC78C 30%);
-        color: #ff4500;
+        color: var(--primario);
         text-align: center;
         position: relative;
         overflow: hidden;
@@ -391,7 +391,7 @@
     .login-panel-bienvenida .logo-icono {
         font-size: 4rem;
         margin-bottom: 16px;
-        color: #ff4500;
+        color: var(--primario);
         font-variation-settings: 'FILL' 1;
     }
 
@@ -399,7 +399,7 @@
         font-size: 2rem;
         font-weight: 800;
         margin: 0 0 12px;
-        color: #ff4500;
+        color: var(--primario);
     }
 
     .login-panel-bienvenida p {
@@ -458,10 +458,10 @@
 
 .btn-secundario {
     padding: 10px 20px;
-    border: 1.5px solid #d1d5db;
+    border: 1.5px solid var(--borde);
     border-radius: var(--radius-md);
-    background: #fff;
-    color: #374151;
+    background: var(--bg-card);
+    color: var(--texto);
     font-weight: 600;
     font-size: 0.9rem;
     cursor: pointer;
@@ -470,8 +470,8 @@
 }
 
 .btn-secundario:hover {
-    border-color: #9ca3af;
-    background: #f9fafb;
+    border-color: var(--borde);
+    background: var(--bg-surface);
 }
 
 .btn-secundario:disabled {
@@ -490,15 +490,15 @@
 }
 
 .mensaje-alerta.exito {
-    background: #f0fdf4;
-    color: #16a34a;
+    background: var(--success-bg);
+    color: var(--success-text);
     border: 1px solid #bbf7d0;
 }
 
 .mensaje-alerta.error {
-    background: #fef2f2;
-    color: #dc2626;
-    border: 1px solid #fecaca;
+    background: var(--danger-bg);
+    color: var(--danger-text);
+    border: 1px solid var(--danger-bg);
 }
 
 .mensaje-oculto {
