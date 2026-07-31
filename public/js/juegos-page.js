@@ -13,6 +13,7 @@ const juegosCache = [];
 const state = { puntosUsuario: 0 };
 
 function $(sel) { return document.querySelector(sel); }
+function esc(str) { var d = document.createElement('div'); d.appendChild(document.createTextNode(str||'')); return d.innerHTML; }
 
 const TIPO_INFO = {
     Quiz: { icon: 'quiz', label: 'Quiz', desc: 'Responde correctamente las preguntas', color: '#3b82f6' },
@@ -92,14 +93,14 @@ function crearCard(juego, index) {
         </div>
         <div class="juego-card-body">
             <div class="juego-card-meta">
-                <span class="juego-cat">${juego.categoria_nombre || 'General'}</span>
+                <span class="juego-cat">${esc(juego.categoria_nombre) || 'General'}</span>
                 ${sourceBadge}
                 <span class="juego-pts">
                     <span class="material-symbols-outlined">star</span>
                     ${juego.puntos_recompensa || 10} pts
                 </span>
             </div>
-            <h3 class="juego-card-titulo">${juego.titulo || juego.pregunta}</h3>
+            <h3 class="juego-card-titulo">${esc(juego.titulo || juego.pregunta)}</h3>
         </div>
         <div class="juego-card-footer">
             ${jugado ? '<span class="jugado-badge"><span class="material-symbols-outlined">check_circle</span> Jugado</span>' : ''}

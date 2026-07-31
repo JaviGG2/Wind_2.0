@@ -36,6 +36,7 @@ async function cargarMisJuegosCreados() {
             } catch {}
         }
 
+        function esc(s) { var d = document.createElement('div'); d.appendChild(document.createTextNode(s||'')); return d.innerHTML; }
         juegos.forEach(juego => {
             const tarjeta = document.createElement('div');
             tarjeta.className = 'lista-item-card';
@@ -46,8 +47,8 @@ async function cargarMisJuegosCreados() {
             const info = document.createElement('div');
             info.className = 'lista-item-info';
             info.innerHTML = `
-                <div class="lista-item-titulo">${juego.pregunta}</div>
-                <div class="lista-item-subtitulo">${juego.categoria_nombre || 'General'}</div>
+                <div class="lista-item-titulo">${esc(juego.pregunta)}</div>
+                <div class="lista-item-subtitulo">${esc(juego.categoria_nombre) || 'General'}</div>
             `;
             contentWrapper.appendChild(info);
 
@@ -136,8 +137,8 @@ async function cargarJuegosPublicados() {
                 const info = document.createElement('div');
                 info.className = 'lista-item-info';
                 info.innerHTML = `
-                    <div class="lista-item-titulo">${juego.pregunta}</div>
-                    <div class="lista-item-subtitulo">${juego.categoria_nombre || 'General'}</div>
+                    <div class="lista-item-titulo">${esc(juego.pregunta)}</div>
+                    <div class="lista-item-subtitulo">${esc(juego.categoria_nombre) || 'General'}</div>
                 `;
                 contentWrapper.appendChild(info);
 
@@ -225,7 +226,7 @@ async function cargarMisTemas() {
 
             const meta = document.createElement('div');
             meta.className = 'lista-item-info';
-            meta.innerHTML = `<div class="lista-item-titulo">${t.titulo}</div><div class="lista-item-subtitulo">${t.categoria_nombre || 'General'}</div>`;
+            meta.innerHTML = `<div class="lista-item-titulo">${esc(t.titulo)}</div><div class="lista-item-subtitulo">${esc(t.categoria_nombre) || 'General'}</div>`;
 
             contentWrapper.appendChild(img);
             contentWrapper.appendChild(meta);
@@ -306,8 +307,8 @@ async function cargarModuloJuegos() {
             `;
             tarjeta.innerHTML = `
                 <div>
-                    <small style="color: #0056b3; font-weight: bold; text-transform: uppercase; font-size: 0.7rem;">${juego.categoria_nombre || 'General'}</small>
-                    <h3 style="margin: 5px 0; font-size: 1rem; color: #121212;">${juego.pregunta}</h3>
+                    <small style="color: #0056b3; font-weight: bold; text-transform: uppercase; font-size: 0.7rem;">${esc(juego.categoria_nombre) || 'General'}</small>
+                    <h3 style="margin: 5px 0; font-size: 1rem; color: #121212;">${esc(juego.pregunta)}</h3>
                     <span style="font-size: 0.8rem; color: #666;">Recompensa: <strong style="color: #28a745;">+${juego.puntos_recompensa || 10} Pts</strong></span>
                 </div>
                 <button class="boton-enviar" onclick="window.location.href='/juegos?juego=${juego.id}'" style="padding: 8px 16px; font-size: 0.85rem; border-radius: 8px; cursor: pointer;">

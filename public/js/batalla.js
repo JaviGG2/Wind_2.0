@@ -1,3 +1,4 @@
+function esc(s) { var d = document.createElement('div'); d.appendChild(document.createTextNode(s||'')); return d.innerHTML; }
 const TIEMPO_PREGUNTA = 15;
 let batallaId = null;
 let preguntas = [];
@@ -93,7 +94,7 @@ function mostrarPregunta(idx) {
             btn.className = 'batalla-opcion';
             btn.dataset.valor = letra;
             btn.dataset.correcta = p.respuesta_correcta;
-            btn.innerHTML = `<span class="batalla-opcion-letra">${letra}</span><span class="batalla-opcion-texto">${opt}</span>`;
+            btn.innerHTML = `<span class="batalla-opcion-letra">${letra}</span><span class="batalla-opcion-texto">${esc(opt)}</span>`;
             btn.addEventListener('click', () => seleccionarOpcion(btn, letra, p.respuesta_correcta));
             opcionesDiv.appendChild(btn);
         });

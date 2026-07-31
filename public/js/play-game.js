@@ -14,6 +14,7 @@ const state = {
 };
 
 function $(sel) { return document.querySelector(sel); }
+function esc(str) { var d = document.createElement('div'); d.appendChild(document.createTextNode(str||'')); return d.innerHTML; }
 
 if (!juegoId) {
     $('#bloque-carga').innerHTML = '<p>No se especificó un juego.</p>';
@@ -68,7 +69,7 @@ function mostrarJuego(juego) {
             if (!opcion) return;
             const btn = document.createElement('button');
             btn.className = 'opcion-btn';
-            btn.innerHTML = `<span>${letra})</span> ${opcion}`;
+            btn.innerHTML = `<span>${letra})</span> ${esc(opcion)}`;
             btn.dataset.letra = letra;
             btn.addEventListener('click', () => responderTrivia(juego, letra, btn));
             opcionesEl.appendChild(btn);
@@ -87,7 +88,7 @@ function mostrarJuego(juego) {
             carta.dataset.index = i;
             const delayClass = i < 4 ? 'd-' + (i + 1) : '';
             carta.className = 'memory-carta ' + delayClass;
-            carta.innerHTML = `<span class="memory-front">?</span><span class="memory-back">${palabra}</span>`;
+            carta.innerHTML = `<span class="memory-front">?</span><span class="memory-back">${esc(palabra)}</span>`;
             carta.addEventListener('click', () => voltearMemory(carta, juego));
             grid.appendChild(carta);
         });
