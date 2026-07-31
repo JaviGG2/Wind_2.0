@@ -14,7 +14,7 @@
 .ajustes-header h2 {
     margin: 0;
     font-size: 1.3rem;
-    color: #ff4500;
+    color: var(--primario);
 }
 
 .ajustes-seccion {
@@ -174,7 +174,7 @@
     height: 20px;
     left: 3px;
     bottom: 3px;
-    background: #fff;
+    background: var(--bg-card);
     border-radius: 50%;
     transition: 0.25s;
 }

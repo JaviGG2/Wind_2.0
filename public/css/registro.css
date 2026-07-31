@@ -18,7 +18,7 @@
 
 #mensaje-codigo {
     margin-top: 15px;
-    color: #ff4d4d;
+    color: var(--danger-text);
 }
 
 .btn-naranja {
@@ -27,7 +27,7 @@
     border: none;
     border-radius: var(--radius-md);
     background: var(--primario);
-    color: #fff;
+    color: var(--bg-card);
     font-weight: 700;
     font-size: var(--font-sm);
     cursor: pointer;

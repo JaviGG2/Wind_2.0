@@ -51,14 +51,14 @@
 
 .mensaje-alerta.exito {
     background: var(--success-bg);
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    color: var(--success-text);
+    border: 1px solid var(--success-bg);
 }
 
 .mensaje-alerta.error {
     background: var(--danger-bg);
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    color: var(--danger-text);
+    border: 1px solid var(--danger-bg);
 }
 
 .ubicacion-campo {
@@ -96,11 +96,11 @@
     align-items: center;
     gap: 6px;
     background: var(--success-bg);
-    border: 1px solid #a5d6a7;
+    border: 1px solid var(--success-bg);
     border-radius: 10px;
     padding: 10px 14px;
     font-size: 13px;
-    color: #2e7d32;
+    color: var(--success-text);
     margin-bottom: 8px;
 }
 
@@ -127,7 +127,7 @@
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.5);
+    background: var(--popup-overlay);
     z-index: 9999;
     display: flex;
     align-items: center;
@@ -147,7 +147,7 @@
     max-width: 520px;
     max-height: 90vh;
     padding: 24px;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+    box-shadow: var(--sombra-md);
     animation: slideUp .25s ease;
     overflow-y: auto;
 }
@@ -216,24 +216,24 @@
 
 .bad-word-marker {
     background: var(--danger-bg);
-    color: #c0392b;
+    color: var(--danger-text);
     border-radius: 3px;
     padding: 0 2px;
-    text-decoration: underline wavy #e74c3c;
+    text-decoration: underline wavy var(--danger-text);
 }
 
 .bad-word-input {
-    border-color: #e74c3c !important;
+    border-color: var(--danger-text) !important;
     background: var(--danger-bg) !important;
 }
 
 .bad-word-adv {
     margin-top: 6px;
     font-size: 0.8rem;
-    color: #c0392b;
+    color: var(--danger-text);
     font-weight: 500;
     padding: 6px 10px;
     background: var(--danger-bg);
     border-radius: 6px;
-    border: 1px solid #f5c6cb;
+    border: 1px solid var(--danger-bg);
 }

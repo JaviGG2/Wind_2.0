@@ -129,7 +129,7 @@ body {
 }
 .chip.active {
     background: var(--primario);
-    color: #ffffff;
+    color: var(--bg-card);
     border-color: var(--primario);
     transform: translateY(0); 
     box-shadow: 0 8px 20px var(--primario-glow);
@@ -253,7 +253,7 @@ body {
 
 .juego-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(18, 18, 18, 0.08);
+    box-shadow: var(--sombra-md);
     border-color: rgba(255, 69, 0, 0.2);
 }
 
@@ -607,7 +607,7 @@ body {
 
 .opcion-btn:hover .opcion-letra {
     border-color: var(--primario);
-    color: #ffffff;
+    color: var(--bg-card);
     background: var(--primario);
 }
 
@@ -626,7 +626,7 @@ body {
 }
 
 .opcion-btn.incorrecta {
-    background: #fef2f2;
+    background: var(--danger-bg);
     border-color: #ef4444;
     cursor: default;
     transform: none;
@@ -658,13 +658,13 @@ body {
 }
 
 .resultado-icon.success {
-    background: #d1fae5;
-    color: #065f46;
+    background: var(--success-bg);
+    color: var(--success-text);
 }
 
 .resultado-icon.error {
-    background: #fee2e2;
-    color: #991b1b;
+    background: var(--danger-bg);
+    color: var(--danger-text);
 }
 
 .resultado-icon .material-symbols-outlined {
@@ -706,7 +706,7 @@ body {
 }
 
 .resultado-respuesta-correcta {
-    background: #f8fafc;
+    background: var(--bg-surface);
     padding: 24px;
     border-radius: 16px;
     margin-bottom: 32px;

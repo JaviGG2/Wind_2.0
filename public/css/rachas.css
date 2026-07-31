@@ -134,7 +134,7 @@
 
 .rachas-tip .material-symbols-outlined {
     font-size: 1.5rem;
-    color: #ff8c00;
+    color: var(--primario-hover);
     flex-shrink: 0;
 }
 

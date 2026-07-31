@@ -1,5 +1,5 @@
 * { box-sizing: border-box; }
-body { background: #f5f6f8; }
+body { background: var(--bg); }
 
 .mapa-page {
     display: flex;
@@ -32,7 +32,7 @@ body { background: #f5f6f8; }
 
 .mapa-header-left .sub {
     font-size: 12px;
-    color: #888;
+    color: var(--texto-muted);
     margin: 0;
     white-space: nowrap;
 }
@@ -47,16 +47,16 @@ body { background: #f5f6f8; }
 .mapa-buscar input {
     width: 100%;
     padding: 8px 14px 8px 36px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--borde);
     border-radius: 20px;
     font-size: 13px;
-    background: #fff;
+    background: var(--bg-card);
     outline: none;
     transition: border .2s;
 }
 
 .mapa-buscar input:focus {
-    border-color: #FF4500;
+    border-color: var(--primario);
 }
 
 .mapa-buscar .material-symbols-outlined {
@@ -65,7 +65,7 @@ body { background: #f5f6f8; }
     top: 50%;
     transform: translateY(-50%);
     font-size: 17px;
-    color: #aaa;
+    color: var(--texto-muted);
     pointer-events: none;
 }
 
@@ -80,25 +80,25 @@ body { background: #f5f6f8; }
 .mapa-filtro-btn {
     padding: 5px 12px;
     border-radius: 14px;
-    border: 1px solid #ddd;
-    background: #fff;
+    border: 1px solid var(--borde);
+    background: var(--bg-card);
     font-size: 11px;
     cursor: pointer;
     transition: all .2s;
     font-family: inherit;
-    color: #555;
+    color: var(--texto-sec);
     white-space: nowrap;
 }
 
 .mapa-filtro-btn:hover {
-    border-color: #FF4500;
-    color: #FF4500;
+    border-color: var(--primario);
+    color: var(--primario);
 }
 
 .mapa-filtro-btn.activo {
-    background: #FF4500;
+    background: var(--primario);
     color: #fff;
-    border-color: #FF4500;
+    border-color: var(--primario);
 }
 
 /* == Map == */
@@ -106,7 +106,7 @@ body { background: #f5f6f8; }
     flex: 1;
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    box-shadow: var(--sombra-sm);
     margin-top: 10px;
     min-height: 400px;
     position: relative;
@@ -120,10 +120,10 @@ body { background: #f5f6f8; }
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: #f9f9f9;
+    background: var(--bg-surface);
     z-index: 2;
     border-radius: 16px;
-    color: #888;
+    color: var(--texto-muted);
     gap: 12px;
     transition: opacity .4s;
 }
@@ -133,7 +133,7 @@ body { background: #f5f6f8; }
     pointer-events: none;
 }
 
-.mapa-loading .material-symbols-outlined { font-size: 48px; color: #ccc; }
+.mapa-loading .material-symbols-outlined { font-size: 48px; color: var(--texto-muted); }
 
 .mapa-vacio {
     position: absolute;
@@ -142,14 +142,14 @@ body { background: #f5f6f8; }
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: #f9f9f9;
+    background: var(--bg-surface);
     z-index: 2;
     border-radius: 16px;
-    color: #888;
+    color: var(--texto-muted);
     gap: 8px;
 }
 
-.mapa-vacio .material-symbols-outlined { font-size: 56px; color: #ccc; }
+.mapa-vacio .material-symbols-outlined { font-size: 56px; color: var(--texto-muted); }
 .mapa-vacio p { margin: 0; font-size: 15px; }
 
 /* == Map overlays == */
@@ -158,11 +158,11 @@ body { background: #f5f6f8; }
     bottom: 24px;
     left: 16px;
     z-index: 1000;
-    background: rgba(255,255,255,0.95);
+    background: var(--bg-elevated);
     backdrop-filter: blur(8px);
     padding: 10px 14px;
     border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    box-shadow: var(--sombra-md);
     font-size: 12px;
     display: flex;
     flex-direction: column;
@@ -189,21 +189,21 @@ body { background: #f5f6f8; }
     z-index: 1000;
     width: 42px; height: 42px;
     border-radius: 50%;
-    background: #fff;
-    border: 1px solid #ddd;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    background: var(--bg-card);
+    border: 1px solid var(--borde);
+    box-shadow: var(--sombra-md);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #555;
+    color: var(--texto-sec);
     transition: all .2s;
 }
 
 .mapa-milugar-btn:hover {
-    background: #FF4500;
+    background: var(--primario);
     color: #fff;
-    border-color: #FF4500;
+    border-color: var(--primario);
 }
 
 .mapa-milugar-btn .material-symbols-outlined { font-size: 20px; }
@@ -213,14 +213,14 @@ body { background: #f5f6f8; }
     top: 16px;
     right: 16px;
     z-index: 1000;
-    background: rgba(255,255,255,0.95);
+    background: var(--bg-elevated);
     backdrop-filter: blur(8px);
     padding: 6px 14px;
     border-radius: 20px;
     font-size: 12px;
     font-weight: 500;
-    color: #555;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    color: var(--texto-sec);
+    box-shadow: var(--sombra-sm);
     display: flex;
     align-items: center;
     gap: 4px;
@@ -228,14 +228,14 @@ body { background: #f5f6f8; }
 
 .mapa-contador .material-symbols-outlined {
     font-size: 16px;
-    color: #FF4500;
+    color: var(--primario);
 }
 
 /* == Popup == */
 .leaflet-popup-content-wrapper {
     border-radius: 14px !important;
     font-family: 'Rethink Sans', sans-serif;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important;
+    box-shadow: var(--sombra-lg) !important;
     overflow: hidden;
     padding: 0 !important;
 }
@@ -258,7 +258,7 @@ body { background: #f5f6f8; }
 .popup-mapa-img-wrap {
     width: 100%; height: 120px;
     overflow: hidden;
-    background: #eee;
+    background: var(--bg-surface);
 }
 
 .popup-mapa-img { width: 100%; height: 100%; object-fit: cover; }
@@ -268,14 +268,14 @@ body { background: #f5f6f8; }
 .popup-mapa-titulo {
     font-size: 15px;
     font-weight: 600;
-    color: #111;
+    color: var(--texto);
     margin: 0 0 4px;
     line-height: 1.3;
 }
 
 .popup-mapa-autor {
     font-size: 12px;
-    color: #888;
+    color: var(--texto-muted);
     margin: 0 0 10px;
 }
 
@@ -289,7 +289,7 @@ body { background: #f5f6f8; }
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    background: #FF4500;
+    background: var(--primario);
     color: #fff;
     padding: 7px 16px;
     border-radius: 8px;
@@ -299,7 +299,7 @@ body { background: #f5f6f8; }
     transition: background .2s;
 }
 
-.popup-mapa-link:hover { background: #e03d00; }
+.popup-mapa-link:hover { background: var(--primario-hover); }
 .popup-mapa-link .material-symbols-outlined { font-size: 16px; }
 
 /* == Custom marker == */
@@ -353,7 +353,7 @@ body { background: #f5f6f8; }
     position: absolute;
     top: -6px;
     right: -6px;
-    background: #222;
+    background: var(--texto);
     color: #fff;
     font-size: 10px;
     font-weight: 700;
@@ -380,8 +380,8 @@ body { background: #f5f6f8; }
     padding: 12px 16px 8px;
     font-size: 13px;
     font-weight: 600;
-    color: #555;
-    border-bottom: 1px solid #eee;
+    color: var(--texto-sec);
+    border-bottom: 1px solid var(--borde-light);
 }
 
 .popup-mapa-grupo-item {
@@ -392,7 +392,7 @@ body { background: #f5f6f8; }
     text-decoration: none;
     color: inherit;
     transition: background .15s;
-    border-bottom: 1px solid #f5f5f5;
+    border-bottom: 1px solid var(--borde-light);
 }
 
 .popup-mapa-grupo-item:last-child {
@@ -400,7 +400,7 @@ body { background: #f5f6f8; }
 }
 
 .popup-mapa-grupo-item:hover {
-    background: #fafafa;
+    background: var(--bg-surface);
 }
 
 .popup-mapa-grupo-dot {
@@ -413,13 +413,13 @@ body { background: #f5f6f8; }
     flex: 1;
     font-size: 13px;
     font-weight: 500;
-    color: #222;
+    color: var(--texto);
     line-height: 1.3;
 }
 
 .popup-mapa-grupo-arrow {
     font-size: 18px !important;
-    color: #bbb;
+    color: var(--texto-muted);
 }
 
 /* == PC layout == */
@@ -477,7 +477,7 @@ body { background: #f5f6f8; }
         padding: 12px 16px;
         font-size: 13px;
         max-width: 180px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+        box-shadow: var(--sombra-md);
     }
 
     .mapa-milugar-btn {
@@ -485,7 +485,7 @@ body { background: #f5f6f8; }
         right: 20px;
         width: 46px;
         height: 46px;
-        box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+        box-shadow: var(--sombra-md);
     }
 
     .mapa-milugar-btn:hover {

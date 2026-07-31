@@ -111,8 +111,8 @@
   padding: 16px;
   border-radius: 50px;
   background: var(--primario);
-  color: #fff;
-  font-size: 17px;
+    color: var(--bg-card);
+    font-size: 17px;
   font-weight: 700;
   border: none;
   cursor: pointer;

@@ -82,6 +82,7 @@ ul, ol {
     --success-text: #16a34a;
     --star: #f59e0b;
     --star-empty: #d1d5db;
+    --popup-overlay: rgba(0,0,0,0.5);
 
     --sombra-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
     --sombra-md: 0 4px 12px rgba(0,0,0,0.08);
@@ -137,6 +138,7 @@ ul, ol {
     --success-text: #6ee76e;
     --star: #fbbf24;
     --star-empty: #4a4a58;
+    --popup-overlay: rgba(0,0,0,0.7);
 
     --sombra-sm: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
     --sombra-md: 0 4px 12px rgba(0,0,0,0.4);
@@ -401,14 +403,14 @@ select.input {
 
 .btn-retroceder:hover,
 .btn-volver:hover {
-    background: #ff4500;
-    color: #fff;
+    background: var(--primario);
+    color: var(--bg-card);
     transform: translateY(-2px);
 }
 
 .btn-retroceder:focus,
 .btn-volver:focus {
-    box-shadow: 0 0 0 4px rgba(255,69,0,0.14);
+    box-shadow: 0 0 0 4px var(--primario-glow);
     outline: none;
 }
 
@@ -459,7 +461,7 @@ select.input {
 .popup-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.5);
+    background: var(--popup-overlay);
     display: flex;
     align-items: center;
     justify-content: center;

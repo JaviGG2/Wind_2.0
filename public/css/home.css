@@ -178,7 +178,7 @@
 
 .btn-explorar:hover {
     background: var(--primario);
-    color: #fff;
+    color: var(--bg-card);
 }
 
 @media (max-width: 820px) {

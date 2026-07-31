@@ -6,7 +6,7 @@
     height: 56px;
     border-radius: 50%;
     background: var(--primario);
-    color: #fff;
+    color: var(--bg-card);
     border: none;
     box-shadow: 0 4px 20px var(--primario-glow);
     cursor: pointer;
@@ -114,7 +114,7 @@
     padding: 14px;
     margin-top: 16px;
     background: var(--primario);
-    color: #fff;
+    color: var(--bg-card);
     border: none;
     border-radius: 12px;
     font-weight: 700;

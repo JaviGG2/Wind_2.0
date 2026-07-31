@@ -25,11 +25,11 @@
 }
 
 .editor-toolbar button:hover {
-    background: rgba(0,0,0,0.06);
+    background: var(--bg-surface);
 }
 
 .editor-toolbar button:active {
-    background: rgba(0,0,0,0.1);
+    background: var(--bg-surface);
 }
 
 .editor-toolbar .separador {

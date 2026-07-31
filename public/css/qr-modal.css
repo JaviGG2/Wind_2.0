@@ -3,7 +3,7 @@
 .qr-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(10, 4, 0, 0.72);
+    background: var(--popup-overlay);
     backdrop-filter: blur(8px);
     z-index: 9999;
     display: flex;
@@ -19,11 +19,11 @@
 }
 
 .qr-modal {
-    background: #fff;
+    background: var(--bg-elevated);
     border-radius: 22px;
     max-width: 420px;
     width: 100%;
-    box-shadow: 0 24px 80px rgba(0,0,0,0.22);
+    box-shadow: var(--sombra-lg);
     animation: qrSlideUp .24s cubic-bezier(0.34, 1.56, 0.64, 1);
     overflow: hidden;
 }
@@ -44,7 +44,7 @@
     margin: 0;
     font-size: 1.1rem;
     font-weight: 700;
-    color: #111827;
+    color: var(--texto);
 }
 
 .qr-modal-close {
@@ -57,13 +57,13 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #888;
+    color: var(--texto-muted);
     transition: all .15s;
 }
 
 .qr-modal-close:hover {
-    background: rgba(255,69,0,0.1);
-    color: #FF4500;
+    background: var(--primario-light);
+    color: var(--primario);
 }
 
 .qr-modal-body {
@@ -101,7 +101,7 @@
 
 .qr-loading-text {
     font-size: 0.9rem;
-    color: #888;
+    color: var(--texto-muted);
     font-weight: 500;
 }
 
@@ -128,7 +128,7 @@
     justify-content: center;
     padding: 12px;
     background: #fff;
-    border: 2px solid #f3f4f6;
+    border: 2px solid var(--borde-light);
     border-radius: 12px;
 }
 
@@ -147,13 +147,13 @@
     margin: 0 0 4px;
     font-size: 0.95rem;
     font-weight: 600;
-    color: #111827;
+    color: var(--texto);
     word-break: break-word;
 }
 
 .qr-info .qr-url {
     font-size: 0.78rem;
-    color: #888;
+    color: var(--texto-muted);
     word-break: break-all;
 }
 
@@ -161,7 +161,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: #FF4500;
+    background: var(--primario);
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -174,7 +174,7 @@
 }
 
 .qr-descargar-btn:hover {
-    background: #e63e00;
+    background: var(--primario-hover);
     transform: translateY(-1px);
 }
 

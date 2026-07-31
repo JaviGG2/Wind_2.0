@@ -14,13 +14,13 @@
 .modulos-header-icon {
   width: 56px;
   height: 56px;
-  background: linear-gradient(135deg, #FF4500, #ff7300);
+  background: linear-gradient(135deg, var(--primario), var(--primario-hover));
   border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 8px 24px rgba(255,69,0,0.25);
+  box-shadow: 0 8px 24px var(--primario-glow);
 }
 
 .modulos-header-icon .material-symbols-outlined {
@@ -32,12 +32,12 @@
   font-size: 1.6rem;
   font-weight: 800;
   margin: 0 0 4px;
-  color: #111827;
+  color: var(--texto);
 }
 
 .modulos-header-text p {
   margin: 0;
-  color: #6b7280;
+  color: var(--texto-sec);
   font-size: 0.92rem;
 }
 
@@ -55,7 +55,7 @@
   display: none;
   text-align: center;
   padding: 60px 20px;
-  color: #9ca3af;
+  color: var(--texto-muted);
 }
 
 .modulos-empty .material-symbols-outlined {
@@ -76,11 +76,11 @@
 
 .mod-card {
   display: block;
-  background: #fff;
-  border-radius: 20px;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
   text-decoration: none;
   color: inherit;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  box-shadow: var(--sombra-sm);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   animation: modFadeIn 400ms ease forwards;
   opacity: 0;
@@ -89,7 +89,7 @@
 
 .mod-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+  box-shadow: var(--sombra-md);
 }
 
 .mod-card-header {
@@ -102,7 +102,7 @@
 .mod-card-icon {
   width: 52px;
   height: 52px;
-  background: linear-gradient(135deg, #fff0eb, #ffe0d6);
+  background: linear-gradient(135deg, var(--primario-light), var(--primario-light));
   border-radius: 14px;
   display: flex;
   align-items: center;
@@ -111,7 +111,7 @@
 }
 
 .mod-card-icon .material-symbols-outlined {
-  color: #FF4500;
+  color: var(--primario);
   font-size: 26px;
 }
 
@@ -124,7 +124,7 @@
   font-size: 1.1rem;
   font-weight: 700;
   margin: 0 0 6px;
-  color: #111827;
+  color: var(--texto);
   line-height: 1.3;
 }
 
@@ -134,7 +134,7 @@
   gap: 4px;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #FF4500;
+  color: var(--primario);
   background: rgba(255,69,0,0.08);
   padding: 3px 10px;
   border-radius: 999px;
@@ -150,7 +150,7 @@
 
 .mod-card-body p {
   font-size: 0.85rem;
-  color: #6b7280;
+  color: var(--texto-sec);
   margin: 0;
   line-height: 1.55;
   display: -webkit-box;
@@ -164,7 +164,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 14px 26px 20px;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid var(--borde);
 }
 
 .mod-card-footer-left {
@@ -179,7 +179,7 @@
   align-items: center;
   gap: 6px;
   font-size: 0.8rem;
-  color: #9ca3af;
+  color: var(--texto-muted);
   cursor: pointer;
 }
 
@@ -188,17 +188,17 @@
 }
 
 .mod-card-author:hover .mod-card-author-nombre {
-  color: #FF4500;
+  color: var(--primario);
 }
 
 .mod-card-author-nombre {
-  color: #9ca3af;
+  color: var(--texto-muted);
   font-weight: 500;
   transition: color 0.18s;
 }
 
 .mod-card-arrow {
-  color: #FF4500;
+  color: var(--primario);
   display: flex;
   align-items: center;
 }

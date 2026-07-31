@@ -24,7 +24,7 @@
 }
 .modulos-page-hero .hero-icon {
   width: 64px; height: 64px;
-  background: linear-gradient(135deg, #FF4500, #ff7300);
+  background: linear-gradient(135deg, var(--primario), var(--primario-hover));
   border-radius: 18px;
   display: inline-flex;
   align-items: center;
@@ -52,32 +52,32 @@
 }
 .modulo-card {
   display: block;
-  background: #fff;
+  background: var(--bg-card);
   border-radius: 20px;
   text-decoration: none;
   color: inherit;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  box-shadow: var(--sombra-sm);
   transition: all 0.35s ease;
   animation: cardFadeIn 400ms ease forwards;
   opacity: 0;
 }
 .modulo-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 20px 48px rgba(0,0,0,0.1);
+  box-shadow: var(--sombra-md);
 }
 
 .modulo-card-top {
-  background: linear-gradient(135deg, #fff5f0 0%, #ffe8e0 100%);
+  background: var(--primario-light);
   padding: 28px 24px 24px;
   display: flex;
   align-items: center;
   gap: 16px;
-  border-bottom: 1px solid rgba(0,0,0,0.04);
+  border-bottom: 1px solid var(--borde-light);
   border-radius: 20px 20px 0 0;
 }
 .modulo-card-icon {
   width: 52px; height: 52px;
-  background: linear-gradient(135deg, #FF4500, #ff7300);
+  background: linear-gradient(135deg, var(--primario), var(--primario-hover));
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -100,8 +100,8 @@
   gap: 4px;
   font-size: 0.8rem;
   font-weight: 600;
-  color: #FF4500;
-  background: rgba(255,69,0,0.1);
+  color: var(--primario);
+  background: var(--primario-light);
   padding: 3px 10px;
   border-radius: 999px;
 }
@@ -114,7 +114,7 @@
   border-radius: 0 0 20px 20px;
 }
 .modulo-card-body p {
-  font-size: 0.88rem; color: #6b7280; margin: 0; line-height: 1.55;
+  font-size: 0.88rem; color: var(--texto-sec); margin: 0; line-height: 1.55;
 }
 .modulo-card-footer {
   display: flex;
@@ -122,26 +122,26 @@
   justify-content: space-between;
   margin-top: 16px;
   padding-top: 14px;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid var(--borde-light);
 }
 .modulo-card-footer .creador {
   display: flex;
   align-items: center;
   gap: 5px;
   font-size: 0.8rem;
-  color: #9ca3af;
+  color: var(--texto-muted);
 }
 .modulo-card-footer .creador .material-symbols-outlined {
   font-size: 0.95rem;
 }
 .modulo-card-footer .creador-link {
-  color: #9ca3af;
+  color: var(--texto-muted);
   text-decoration: none;
   font-weight: 500;
   transition: color 180ms;
 }
 .modulo-card-footer .creador-link:hover {
-  color: #ff4500;
+  color: var(--primario);
 }
 .modulo-card-footer .niveles-count {
   display: flex;
@@ -149,7 +149,7 @@
   gap: 4px;
   font-weight: 600;
   font-size: 0.82rem;
-  color: #FF4500;
+  color: var(--primario);
 }
 .modulo-card-footer .niveles-count .material-symbols-outlined {
   font-size: 0.95rem;

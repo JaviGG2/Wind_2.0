@@ -64,13 +64,13 @@
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: #ff4500;
+    background: var(--primario);
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    box-shadow: 0 2px 6px rgba(255,69,0,0.3);
+    box-shadow: 0 2px 6px var(--primario-glow);
     transition: transform 0.15s, background 0.15s;
 }
 
@@ -79,7 +79,7 @@
 }
 
 .avatar-edit-btn:hover {
-    background: #e63e00;
+    background: var(--primario-hover);
     transform: scale(1.1);
 }
 
@@ -357,8 +357,8 @@
 }
 .tag-borrar:hover {
     opacity: 1;
-    background: rgba(255,0,0,0.15);
-    color: #dc2626;
+    background: var(--danger-bg);
+    color: var(--danger-text);
 }
 .tag-borrar .material-symbols-outlined {
     font-size: 14px;
@@ -428,7 +428,7 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, transparent, #ff4500, #ff8a65, #ff4500, transparent);
+    background: linear-gradient(90deg, transparent, var(--primario), #ff8a65, var(--primario), transparent);
     background-size: 200% 100%;
     animation: nivelShimmer 3s ease-in-out infinite;
     z-index: 1;
@@ -474,7 +474,7 @@
     padding: 5px 14px 5px 8px;
     border-radius: 999px;
     letter-spacing: 0.03em;
-    box-shadow: 0 2px 8px rgba(255,69,0,0.3);
+    box-shadow: 0 2px 8px var(--primario-glow);
     position: relative;
 }
 
@@ -534,7 +534,7 @@
 .nivel-progreso {
     width: 100%;
     height: 12px;
-    background: rgba(0,0,0,0.06);
+    background: var(--borde-light);
     border-radius: 999px;
     overflow: hidden;
     margin-bottom: 8px;
@@ -562,7 +562,7 @@
 /* --- Progress fill --- */
 .nivel-progreso-bar {
     height: 100%;
-    background: linear-gradient(90deg, #ff4500, #ff6b35, #ff8a65, #ff6b35);
+    background: linear-gradient(90deg, var(--primario), #ff6b35, #ff8a65, #ff6b35);
     background-size: 200% 100%;
     border-radius: 999px;
     transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
@@ -624,7 +624,7 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    color: #ff4500;
+    color: var(--primario);
     font-weight: 700;
 }
 
@@ -633,7 +633,7 @@
     font-family: 'Material Symbols Outlined';
     font-size: 14px;
     font-weight: 400;
-    color: #ff4500;
+    color: var(--primario);
 }
 
 .nivel-puntos .puntos-siguiente-wrap {
@@ -676,7 +676,7 @@
 
 .racha-card:hover {
     border-color: var(--primario);
-    box-shadow: 0 4px 16px rgba(255,69,0,0.15);
+    box-shadow: 0 4px 16px var(--primario-glow);
     transform: translateY(-1px);
 }
 
@@ -707,7 +707,7 @@
 .racha-num {
     font-size: 45px;
     font-weight: 800;
-    color: #ff4500;
+    color: var(--primario);
     line-height: 1.1;
 }
 
@@ -837,7 +837,7 @@
 
 .lista-temas .muted.center.error,
 .lista-juegos .muted.center.error {
-    color: #dc2626;
+    color: var(--danger-text);
 }
 
 /* --- List item card --- */
@@ -940,7 +940,7 @@
     max-height: 400px;
     background: var(--bg-elevated);
     border-radius: var(--radius-lg);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    box-shadow: var(--sombra-xl);
     z-index: 9999;
     overflow: hidden;
     display: flex;
@@ -1066,7 +1066,7 @@
 
 .icon-noti{
 
-    background: rgba(255,255,255,0.04);
+    background: var(--bg-surface);
     
     
     
@@ -1080,7 +1080,7 @@
     margin: 24px 0 12px;
     padding: 16px 20px;
     background: linear-gradient(135deg, var(--primario-light), var(--bg-card));
-    border: 1px solid rgba(255,69,0,0.15);
+    border: 1px solid var(--primario-glow);
     border-radius: var(--radius-lg);
     text-decoration: none;
     color: var(--texto);
