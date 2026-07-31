@@ -8,12 +8,14 @@
 
 .barra-navegacion {
     background: var(--bg-elevated);
+    background: color-mix(in srgb, var(--bg-elevated) 88%, transparent);
     display: flex;
     z-index: 9999;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     transition: all 0.3s ease;
     font-family:'arial', 'segoe ui';
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     gap: 12px;
 }
 
@@ -178,6 +180,7 @@
         box-sizing: border-box;
         border-radius: 18px;
         background: var(--bg-elevated);
+        background: color-mix(in srgb, var(--bg-elevated) 92%, transparent);
         border: 1px solid var(--borde);
     }
 
